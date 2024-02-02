@@ -1,0 +1,198 @@
+﻿@{
+    ViewBag.Title = "Create";
+}
+<!-- select2 -->
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+@{
+    string ConvertToDateTimeString(DateTime? dateTime)
+    {
+        return String.Format("{0:yyyy/MM/dd HH:mm}", dateTime);
+    }
+}
+<section class="content-header">
+    <h1>
+        Start Load/Uload
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        <a class="btn btn-block btn-info btn-sm" href="@System.Web.HttpContext.Current.Request.UrlReferrer">Back To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-6">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title"></h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form name="ThisForm" class="form-horizontal" method="post" action="/LoadingBayUtilization/StartLoadingUnloading">
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-12">
+                            <label class="col-md-4 control-label">Vehicle*</label>
+                            <div class="col-md-8">
+                                <select name="FK_Vehicle" class="form-control" onchange="relodFK_LocationBuildingAndBay()"></select>
+                                @*@Html.DropDownList("FK_Vehicle", ViewBag.Vehicles as SelectList, "Select", new { @class = "form-control" })*@
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_Vehicle"></b>
+                                <script>
+                                    validatorArray.push(
+                                        function () {
+                                            var check = $('select[name=FK_Vehicle]').val();
+                                            console.log(check);
+                                            if (check == "") {
+                                                formValidity = false;
+                                                $('b[name=error_FK_Vehicle]').html("required");
+                                            }
+                                        });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-12">
+                            <label class="col-md-4 control-label">Building*</label>
+                            <div class="col-md-8">
+                                <select name="FK_LocationBuilding" class="form-control" onchange="relodFK_LoadingBay()"></select>
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_LocationBuilding"></b>
+                                <script>
+                                    validatorArray.push(
+                                        function () {
+                                            var check = $('select[name=FK_LocationBuilding]').val();
+                                            if (check == "") {
+                                                formValidity = false;
+                                                $('b[name=error_FK_LocationBuilding]').html("required");
+                                            }
+                                        });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-12">
+                            <label class="col-md-4 control-label">Loading Bay*</label>
+                            <div class="col-md-8">
+                                <select name="FK_LoadingBay" class="form-control"></select>
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_LoadingBay"></b>
+                                <script>
+                                    validatorArray.push(
+                                        function () {
+                                            var check = $('select[name=FK_LoadingBay]').val();
+                                            if (check == "") {
+                                                formValidity = false;
+                                                $('b[name=error_FK_LoadingBay]').html("required");
+                                            }
+                                        });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-12">
+                            <label class="col-md-4 control-label">Use Type*</label>
+                            <div class="col-md-8">
+                                <select name="UseType" class="form-control">
+                                    <option value="">Select</option>
+                                    <option value="Load">Load</option>
+                                    <option value="Unload">Unload</option>
+                                </select>
+                                <b class="errorMessage" data-category="errorMessage" name="error_UseType"></b>
+                                <script>
+                                    validatorArray.push(
+                                        function () {
+                                            var check = $('select[name=UseType]').val();
+                                            if (check == "") {
+                                                formValidity = false;
+                                                $('b[name=error_UseType]').html("required");
+                                            }
+                                        });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <input type="button" class="btn btn-info center-block" value="Start" onclick="TrySubmit()" />
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    var VehicleList = [];
+    var LocationBuildingList = [];
+    var LoadingBayList = [];
+    $(function () {
+        $('select').select2();
+        loadFK_Vehicle();
+    });
+    function loadFK_Vehicle() {
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/LoadingBayUtilization/GetLoadUnloadStart_Utilities/",
+            //data: JSON.stringify({ Category: Depo_Category }),
+            success: function (data) {
+                //console.log(data.VehicleList);
+                VehicleList = data.VehicleList;
+                LocationBuildingList = data.LocationBuildingList;
+                LoadingBayList = data.LoadingBayList;
+
+                $('select[name=FK_Vehicle]').html("");
+                var result = "<option value=''>Select</option>";
+                for (var i = 0; i < VehicleList.length; i++) {
+                    result = result + "<option value='" + VehicleList[i].FK_Vehicle + "'>" + VehicleList[i].RegistrationNumber + "</option>";
+                }
+                $('select[name=FK_Vehicle]').html(result);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: loadFK_Vehicle()");
+            }
+        });
+    }
+    function relodFK_LocationBuildingAndBay() {
+        var FK_Vehicle = $('select[name=FK_Vehicle]').val();
+        var vehicle = VehicleList.find(m => m.FK_Vehicle == FK_Vehicle);
+        console.log(vehicle);
+
+        //load LocationBuildingList
+        var result = "<option value=''>Select</option>";
+        for (var i = 0; i < LocationBuildingList.length; i++) {
+            if (LocationBuildingList[i].PK_LocationBuilding == vehicle.FK_LocationBuilding) {
+                result = result + "<option selected value='" + LocationBuildingList[i].PK_LocationBuilding + "'>" + LocationBuildingList[i].LocationBuildingName + "</option>";
+            }
+            else {
+                result = result + "<option value='" + LocationBuildingList[i].PK_LocationBuilding + "'>" + LocationBuildingList[i].LocationBuildingName + "</option>";
+            }
+        }
+        $('select[name=FK_LocationBuilding]').html(result);
+
+        //load LoadinBay
+        var FK_LocationBuilding = $('select[name=FK_LocationBuilding]').val();
+        var _LoadingBayList = LoadingBayList.filter(m => m.FK_LocationBuilding == FK_LocationBuilding);
+        result = "<option value=''>Select</option>";
+        for (var i = 0; i < _LoadingBayList.length; i++) {
+            result = result + "<option value='" + _LoadingBayList[i].PK_LoadingBay + "'>" + _LoadingBayList[i].LoadingBayName + "</option>";
+        }
+        $('select[name=FK_LoadingBay]').html(result);
+    }
+    function relodFK_LoadingBay() {
+        var FK_LocationBuilding = $('select[name=FK_LocationBuilding]').val();
+        var _LoadingBayList = LoadingBayList.filter(m => m.FK_LocationBuilding == FK_LocationBuilding);
+        result = "<option value=''>Select</option>";
+        for (var i = 0; i < _LoadingBayList.length; i++) {
+            result = result + "<option value='" + _LoadingBayList[i].PK_LoadingBay + "'>" + _LoadingBayList[i].LoadingBayName + "</option>";
+        }
+        $('select[name=FK_LoadingBay]').html(result);
+    }
+</script>
+

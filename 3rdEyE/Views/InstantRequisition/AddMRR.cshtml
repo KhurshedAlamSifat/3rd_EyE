@@ -1,0 +1,90 @@
+﻿@model _3rdEyE.Models.InstantRequisition
+@{
+    ViewBag.Title = "Create";
+}
+
+<section class="content-header">
+    <h1>
+        Bill for Instant Requisition
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        <a class="btn btn-block btn-info btn-sm" href="/InstantRequisition/IndexBy_PaymentReceiver">Go To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/InstantRequisition/AddMRR" enctype="multipart/form-data">
+        <input name="PK_InstantRequisition" value="@Model.PK_InstantRequisition" style="display:none;" />
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="col-md-12">
+                        <div class="col-md-12">
+                            @**@
+                            <div class="col-md-6">
+                                <label>বিলের নং:</label>
+                                <label> EV @Model.PK_InstantRequisition.ToString("000000")</label>
+                            </div>
+                            <div class="col-md-6">
+                                <label>বিলের টাইপ:</label>
+                                <label>Expense Voucher</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            @*TotalParent1*@
+                            <div class="col-md-12">
+                                <label>TotalParent1:</label> &nbsp;
+                                <label>@Html.DisplayFor(model => model.TotalParent1)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            @*TotalGiven2*@
+                            <div class="col-md-12">
+                                <label>TotalGiven2:</label> &nbsp;
+                                <label>@Html.DisplayFor(model => model.TotalGiven2)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            @*TotalTaken3*@
+                            <div class="col-md-12">
+                                <label>TotalTaken3:</label> &nbsp;
+                                <label>@Html.DisplayFor(model => model.TotalTaken3)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            @*TotalTaken3*@
+                            <div class="col-md-12">
+                                <label>GrossProfit4:</label> &nbsp;
+                                <label>@Html.DisplayFor(model => model.GrossProfit4)</label>
+                            </div>
+                        </div>
+                        <div class="box-body col-md-12">
+                            @*MRR*@
+                            <div class="form-group col-md-10">
+                                <label class="col-md-4 control-label">MRR</label>
+                                <div class="col-md-8">
+                                    @Html.EditorFor(model => model.MRR, new { htmlAttributes = new { @class = "form-control" } })
+                                    <b class="errorMessage" data-category="errorMessage" name="error_PreDepositedMoney"></b>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        @if (Model.Status == 2)
+                        {
+                            <input type="button" class="btn btn-facebook center-block" value="Add MRR" onclick="TrySubmit()" />
+                        }
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+
+</section>
+

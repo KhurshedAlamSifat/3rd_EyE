@@ -1,0 +1,62 @@
+﻿@model Tuple<List<Dictionary<string, string>>, List<Dictionary<string, string>>>
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Report_1</title>
+    <script src="~/Theme/bower_components/jquery/dist/jquery.min.js"></script>
+    <!-- DataTablesExportable -->
+    <link href="~/Content/ExportableDatatable/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="~/Content/ExportableDatatable/buttons.dataTables.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div>
+        <table id="data_table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            @foreach (var item in Model.Item1)
+            {
+                <tr style="background-color:antiquewhite;">
+                    <td>@item["RegistrationNumber"] Entered at @item["LocationInOutTime"]</td>
+                    <td></td>
+                </tr>
+                foreach (var item2 in Model.Item2.Where(m => m["FK_Vehicle"] == item["PK_Vehicle"]))
+                {
+                    <tr>
+                        <td>@item2["NearestMapLocationDistance"] km from @item2["NearestMapLocation"] At @item2["UpdateTime"]</td>
+                        <td><a href="/Report/ShowMapWithMarker?latitude=@item2["Latitude"]&longitude=@item2["Longitude"]">map</a></td>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
+    <!-- DataTablesExportable -->
+    <script src="~/Scripts/Custom/DataTableExportable/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/Custom/DataTableExportable/dataTables.buttons.min.js"></script>
+    <script src="~/Scripts/Custom/DataTableExportable/buttons.flash.min.js"></script>
+    <script src="~/Scripts/Custom/DataTableExportable/jszip.min.js"></script>
+    <script src="~/Scripts/Custom/DataTableExportable/pdfmake.min.js"></script>
+    <script src="~/Scripts/Custom/DataTableExportable/vfs_fonts.js"></script>
+    <script src="~/Scripts/Custom/DataTableExportable/buttons.html5.min.js"></script>
+    <script src="~/Scripts/Custom/DataTableExportable/buttons.print.min.js"></script>
+    <script>
+        $(function () {
+            $('#data_table').DataTable({
+                "ordering": false,
+                "paging": false,
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
+            });
+        });
+    </script>
+</body>
+</html>

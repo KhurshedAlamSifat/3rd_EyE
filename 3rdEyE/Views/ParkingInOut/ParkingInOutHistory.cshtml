@@ -1,0 +1,295 @@
+﻿@model IEnumerable<_3rdEyE.Models.vw_ParkingInOut>
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+<!-- DataTablesExportable -->
+<link href="~/Content/ExportableDatatable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/ExportableDatatable/buttons.dataTables.min.css" rel="stylesheet" />
+@{
+    string ConvertToDateTimeString(DateTime? dateTime)
+    {
+        return String.Format("{0:yyyy/MM/dd HH:mm}", dateTime);
+    }
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        In Out Report
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        @*<a class="btn btn-block btn-info btn-sm" href="/TemporaryVehicle/Create">Create</a>*@
+    </div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-header">
+                    <h3 class="box-title"></h3>
+                </div>
+                <div class="row">
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Starting Date:</label>
+                            <div class="input-group col-md-8">
+                                <div class="col-md-12 input-append date form_datetime" data-link-field="dtp_input1">
+                                    <input id="StartingDate" name="StartingDate" class="form-control col-md-12" type="text" value="@ViewBag.StartingDate" readonly="readonly" style="background-color: white;">
+                                    <span class="add-on"><i class="icon-remove"></i></span>
+                                    <span class="add-on"><i class="icon-th"></i></span>
+                                </div>
+                                <input type="hidden" id="dtp_input1" value="" style="display:none;" /><br />
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Ending Date:</label>
+                            <div class="input-group col-md-8">
+                                <div class="col-md-12 input-append date form_datetime" data-link-field="dtp_input1">
+                                    <input id="EndingDate" name="EndingDate" class="form-control col-md-12" type="text" value="@ViewBag.EndingDate" readonly="readonly" style="background-color: white;">
+                                    <span class="add-on"><i class="icon-remove"></i></span>
+                                    <span class="add-on"><i class="icon-th"></i></span>
+                                </div>
+                                <input type="hidden" id="dtp_input2" value="" style="display:none;" /><br />
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">PRG Type:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("PRG_Type", ViewBag.PRG_Type as SelectList, "All", new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Location:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Location", ViewBag.Locations as SelectList, "All", new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">User Group:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Depo", ViewBag.Depoes as SelectList, "All", new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Vehicle:</label>
+                            <div class="col-md-8">
+                                <input id="RegistrationNumber" name="RegistrationNumber" value="@ViewBag.RegistrationNumber" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="col-md-2">
+                            <button class="btn btn-facebook" onclick="FilterByInputToRedirectView()">Filter</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body" style="overflow-x:scroll;">
+                <table id="data_table" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                Tr Id
+                            </th>
+                            <th>
+                                PRG_Type
+                            </th>
+                            <th>
+                                Location
+                            </th>
+                            <th>
+                                O/M/D
+                            </th>
+                            <th>
+                                User Group
+                            </th>
+                            <th>
+                                Vehicle
+                            </th>
+                            <th>
+                                Load/Empty
+                            </th>
+                            <th>
+                                Parking In Gate
+                            </th>
+                            <th>
+                                Parking In Time
+                            </th>
+                            <th>
+                                Bay-Time
+                            </th>
+                            <th>
+                                Bay Assigner
+                            </th>
+                            <th>
+                                Parking Out Gate
+                            </th>
+                            <th>
+                                Parking Out Time
+                            </th>
+                            <th>
+                                Factory In Gate
+                            </th>
+                            <th>
+                                Factory In Time
+                            </th>
+                            <th>
+                                Factory Out Gate
+                            </th>
+                            <th>
+                                Factory Out Time
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    P @Html.DisplayFor(modelItem => item.PK_ParkingInOut)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PRG_Type)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ParkingLocation_Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.OWN_MHT_DHT)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.DepoName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RegistrationNumber)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.In_LoadOrEmpty)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ParkingGateIn)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.In_IssueDateTime)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.BayAssign_LoadingBay) <br /> 
+                                    @Html.DisplayFor(modelItem => item.BayAssign_IssueDateTime)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.BayAssigner)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ParkingGateOut)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Out_IssueDateTime)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FactoryGateIn)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FactoryIn_IssueDateTime)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FactoryGateOut)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FactoryOut_IssueDateTime)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+    <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+<script>
+    $(function () {
+        $('select').select2();
+        $('.form_datetime').datetimepicker({
+            format: 'yyyy-mm-dd HH:ii P',
+            todayBtn: 1,
+            autoclose: 1,
+        });
+    });
+</script>
+<!-- DataTablesExportable -->
+<script src="~/Scripts/Custom/DataTableExportable/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.flash.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/jszip.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/pdfmake.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/vfs_fonts.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.html5.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.print.min.js"></script>
+<script>
+    $(function () {
+        $('#data_table').DataTable({
+            "ordering": true,
+            "paging": false,
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+    });
+</script>
+<script>
+    function FilterByInputToRedirectView() {
+        var url = "/ParkingInOut/ParkingInOutHistory?";
+
+        var StartingDate = $("input[name=StartingDate]").val();
+        if (StartingDate != '') {
+            url = url + "StartingDate=" + StartingDate + "&";
+        }
+
+        var EndingDate = $("input[name=EndingDate]").val();
+        if (EndingDate != '') {
+            url = url + "EndingDate=" + EndingDate + "&";
+        }
+
+        var PRG_Type = $("select[name=PRG_Type]").val();
+        if (PRG_Type != '') {
+            url = url + "PRG_Type=" + PRG_Type + "&";
+        }
+
+        var FK_Location = $("select[name=FK_Location]").val();
+        if (FK_Location != '') {
+            url = url + "FK_Location=" + FK_Location + "&";
+        }
+
+        var FK_Depo = $("select[name=FK_Depo]").val();
+        if (FK_Depo != '') {
+            url = url + "FK_Depo=" + FK_Depo + "&";
+        }
+
+        var RegistrationNumber = $("input[name=RegistrationNumber]").val();
+        if (RegistrationNumber != '') {
+            url = url + "RegistrationNumber=" + RegistrationNumber + "&";
+        }
+
+        console.log(url);
+        window.location = url;
+    }
+
+</script>
+

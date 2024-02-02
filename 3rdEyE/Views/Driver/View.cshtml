@@ -1,0 +1,122 @@
+﻿
+@{
+    ViewBag.Title = "View";
+}
+
+
+<section class="content-header">
+    <h1>
+        View Driver
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        <a class="btn btn-block btn-info btn-sm" href="@System.Web.HttpContext.Current.Request.UrlReferrer">Back To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Driver Information</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form name="ThisForm" class="form-horizontal" method="post" action="/Driver/View">
+
+                    @*Name*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Name*</label>
+                            <div class="col-md-10">
+                                <input name="Name" value="@ViewBag.viewModel.Model.Name" type="text" class="form-control" style="text-transform:uppercase">
+                                <b class="errorMessage" data-category="errorMessage" name="error_Name"></b>
+                            </div>
+                        </div>
+                    </div>
+                    @*UniqueIDNumber*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Unique ID Number*</label>
+                            <div class="col-md-10">
+                                <input name="UniqueIDNumber" value="@ViewBag.viewModel.Model.UniqueIDNumber" type="text" class="form-control" style="text-transform:uppercase">
+                                <b class="errorMessage" data-category="errorMessage" name="error_UniqueIDNumber"></b>
+                            </div>
+                        </div>
+                    </div>
+                    @*FK_Depo*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">User Group*</label>
+                            <div class="col-md-10">
+                                <input name="UniqueIDNumber" value="@ViewBag.viewModel.Model.Depo.Name" type="text" class="form-control" style="text-transform:uppercase">
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_Depo"></b>
+                            </div>
+                        </div>
+                    </div>
+                    @*PhoneNumber*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Phone Number</label>
+                            <div class="col-md-10">
+                                <input name="PhoneNumber" value="@ViewBag.viewModel.Model.PhoneNumber" type="text" class="form-control" style="text-transform:uppercase">
+                            </div>
+                        </div>
+                    </div>
+                    @*NID*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">NID</label>
+                            <div class="col-md-10">
+                                <input name="NID" value="@ViewBag.viewModel.Model.NID" type="text" class="form-control" style="text-transform:uppercase">
+                            </div>
+                        </div>
+                    </div>
+                    @*LisenceNumber*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Lisence Number</label>
+                            <div class="col-md-10">
+                                <input name="LisenceNumber" value="@ViewBag.viewModel.Model.LisenceNumber" type="text" class="form-control" style="text-transform:uppercase">
+                            </div>
+                        </div>
+                    </div>
+                    @*LisenceRenewalDate*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Lisence Renewal Date</label>
+                            <div class="col-md-10">
+                                <input name="LisenceRenewalDate" value="@ViewBag.viewModel.LisenceRenewalDate_Text" type="datetime" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    @*IsActive*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Active/Inactive*</label>
+                            <div class="col-md-10">
+                                <input name="LisenceRenewalDate" value="@ViewBag.viewModel.IsActive_Text" type="text" class="form-control" style="text-transform:uppercase">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        @*<a class="btn btn-default" href="/Driver/Index">Back To List</a>*@
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+<script>
+    $('document').ready(function () {
+        $('input').attr("disabled", "disabled");
+        $('textarea').attr("disabled", "disabled");
+        $('select').attr("disabled", "disabled");
+    });
+</script>

@@ -1,0 +1,233 @@
+﻿@model IEnumerable<_3rdEyE.Models.VehicleSharingBidding>
+@{
+    ViewBag.Title = "";
+}
+
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Bidding List : Bidder View
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<a class="btn btn-block btn-facebook btn-sm" href="/VehicleSharing/DemandCreate">Create New</a>*@
+    </div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-body col-md-12">
+                    <div class="form-group col-md-4">
+                        <label class="col-md-4 control-label">Starting Date:</label>
+                        <div class="input-group col-md-8">
+                            <div class="col-md-12 input-append date form_datetime" data-link-field="dtp_input1">
+                                <input id="StartingDate" name="StartingDate" class="form-control col-md-12" type="text" value="@ViewBag.StartingDate" readonly="readonly" style="background-color: white;">
+                                <span class="add-on"><i class="icon-remove"></i></span>
+                                <span class="add-on"><i class="icon-th"></i></span>
+                            </div>
+                            <input type="hidden" id="dtp_input1" value="" style="display:none;" /><br />
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="col-md-4 control-label">Ending Date:</label>
+                        <div class="input-group col-md-8">
+                            <div class="col-md-12 input-append date form_datetime" data-link-field="dtp_input1">
+                                <input id="EndingDate" name="EndingDate" class="form-control col-md-12" type="text" value="@ViewBag.EndingDate" readonly="readonly" style="background-color: white;">
+                                <span class="add-on"><i class="icon-remove"></i></span>
+                                <span class="add-on"><i class="icon-th"></i></span>
+                            </div>
+                            <input type="hidden" id="dtp_input2" value="" style="display:none;" /><br />
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <button class="btn btn-facebook" onclick="getData()">Get Data</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.col -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">All Bidding List</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="data_table" class="table table-bordered table-striped" style="font-size:15px;">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Agent
+                                </th>
+                                <th>
+                                    Created
+                                </th>
+                                <th>
+                                    Dead Line
+                                </th>
+                                <th>
+                                    From
+                                </th>
+                                <th>
+                                    To
+                                </th>
+                                <th>
+                                    Vehicle Required Date Time
+                                </th>
+                                <th>
+                                    Quantity
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                                <th>
+                                    Bid
+                                </th>
+                                <th>
+                                    Cancel
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="detail_tbody">
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.VehicleSharing.AppUser.FullName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.VehicleSharing.CreatedAt)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.VehicleSharing.KeepBidOpenUntil)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.VehicleSharing.Depo.Name) @Html.DisplayFor(modelItem => item.VehicleSharing.StartingLocation)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.VehicleSharing.Depo1.Name) @Html.DisplayFor(modelItem => item.VehicleSharing.FinishingLocation)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.VehicleSharing.PossibleJourneyStartDateTime)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.VehicleSharing.WantedCount)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.StatusText)
+                                    </td>
+                                    <td>
+                                        @if (item.VehicleSharing.Status == 0 && item.VehicleSharing.KeepBidOpenUntil > DateTime.Now && item.StatusText == "Created")
+                                        {
+                                            <a href="/VehicleSharingBidding/ViewForBidder_ToBid?PK_VehicleSharingBidding=@item.PK_VehicleSharingBidding" class="btn btn-info btn-xs">Bid</a>
+                                        }
+                                        else if (item.StatusText == "Bidded")
+                                        {
+                                            <label>Bidded @item.ManagableQuantity vehicle(s) BDT @item.PricePerQuantity each</label>
+                                        }
+                                        else if (item.StatusText == "Approved")
+                                        {
+                                            <label>Approved @item.ManagableQuantity vehicle(s) BDT @item.PricePerQuantity each</label>
+                                        }
+                                        else if (item.StatusText == "Cancelled By Approver")
+                                        {
+                                            <label>Disapproved @item.ManagableQuantity vehicle(s) BDT @item.PricePerQuantity each</label>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if ((item.VehicleSharing.Status == 0 && item.VehicleSharing.KeepBidOpenUntil > DateTime.Now) && (item.StatusText == "Created" || item.StatusText == "Bidded"))
+                                        {
+                                            <button class="btn btn-danger btn-xs" onclick="showModalDelete('@item.PK_VehicleSharingBidding')">Cancel</button>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- DataTablesExportable -->
+<script src="~/Scripts/Custom/DataTableExportable/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.flash.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/jszip.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/pdfmake.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/vfs_fonts.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.html5.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.print.min.js"></script>
+<!-- page script -->
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+<script>
+    $(function () {
+        $('.form_datetime').datetimepicker({
+            format: 'yyyy-mm-dd HH:ii P',
+            todayBtn: 1,
+            autoclose: 1,
+        });
+        @if (Model.Count() > 0)
+        {
+        <text>
+        makeDataTable();
+        </text>
+        }
+    });
+</script>
+<script>
+    function makeDataTable() {
+        var table = $('#data_table').DataTable({
+            paging: false,
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'pdfHtml5',
+                    orientation: 'landscape',
+                    pageSize: 'LEGAL'
+                },
+                {
+                    extend: 'print',
+                    title: 'Event Report [@ViewBag.StartingDate - @ViewBag.EndingDate]',
+                    customize: function (win) {
+                        $(win.document.body)
+                            .css('font-size', '10pt');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', '15px');
+                            }
+                },
+                {
+                    extend: 'excel'
+                }
+            ],
+        });
+    }
+</script>
+<script>
+    function getData() {
+        var StartingDate = $('Input[name=StartingDate]').val();
+        var EndingDate = $('Input[name=EndingDate]').val();
+        if (StartingDate == '' || EndingDate == '') {
+            alert("Please, Select starting date and ending date.");
+            return;
+        }
+        window.location = '/VehicleSharingBidding/Index_Bidder?StartingDate=' + StartingDate + '&EndingDate=' + EndingDate;
+    }
+</script>

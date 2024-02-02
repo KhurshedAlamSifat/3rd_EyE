@@ -1,0 +1,68 @@
+﻿@model IEnumerable<_3rdEyE.Models.Vehicle>
+
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .class_table {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+            .class_table td, .class_table th {
+                border: 1px solid #ddd;
+                padding: 8px;
+            }
+
+            .class_table tr:nth-child(even) {
+                background-color: #f2f2f2;
+            }
+
+            .class_table tr:hover {
+                background-color: #ddd;
+            }
+
+            .class_table th {
+                padding-top: 12px;
+                padding-bottom: 12px;
+                text-align: left;
+                background-color: #04AA6D;
+                color: white;
+            }
+    </style>
+</head>
+<body width='100px'>
+    <h2>#Dear Concern</h2>
+    <p style='font-size:x-large;'>Below vehicles are waitng outside more than standard time.</p>
+    <p style='font-size:x-large;'>Please take N/A.</p>
+    <table class='class_table'>
+        <tr>
+            <th>SL</th>
+            <th>User Group</th>
+            <th>Vehicle</th>
+            <th>Waiting From</th>
+            <th>Waiting Time</th>
+            <th>Location</th>
+            <th>Lat/Long</th>
+        </tr>
+        @foreach (var item in Model.OrderBy(m => m.VehicleTrackingInformation.Vehicle.Depo.Name).ThenBy(m => m.VehicleTrackingInformation.VehicleTracking.EngineStatus_ChangedAt))
+        {
+            <tr>
+                <td>1</td>
+                <td>@item.Depo.Name</td>
+                <td>@item.RegistrationNumber</td>
+                <td>@item.VehicleTrackingInformation.VehicleTracking.Location_ChangedAt</td>
+                <td>@item.VehicleTrackingInformation.VehicleTracking.Location_ChangedAt</td>
+                <td><a href='http://3rdeye.prangroup.com:7698/Report/ShowMapWithMarker?latitude=@item.VehicleTrackingInformation.VehicleTracking.Latitude&longitude=@item.VehicleTrackingInformation.VehicleTracking.Longitude' target='_blank'>map</a></td>
+                <td>@item.VehicleTrackingInformation.VehicleTracking.Latitude, @item.VehicleTrackingInformation.VehicleTracking.Longitude</td>
+            </tr>
+        }
+    </table>
+</body>
+</html>
+
+

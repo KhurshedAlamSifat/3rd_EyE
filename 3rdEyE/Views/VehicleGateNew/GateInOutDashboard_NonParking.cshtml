@@ -1,0 +1,191 @@
+﻿@model IEnumerable<_3rdEyE.Models.VehicleInOutManual>
+
+@{
+    ViewBag.Title = "Vehicle list";
+}
+
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+<!-- DataTablesExportable -->
+<!--<link href="~/Content/ExportableDatatable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/ExportableDatatable/buttons.dataTables.min.css" rel="stylesheet" />-->
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+@{
+    string ConvertToDateTimeString(DateTime? dateTime)
+    {
+        return String.Format("{0:yyyy/MM/dd HH:mm}", dateTime);
+    }
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Factory Dashboard
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        @*<a class="btn btn-block btn-info btn-sm" href="/TemporaryVehicle/Create">Create</a>*@
+    </div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-header">
+                    <h3 class="box-title"></h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body" style="overflow-x:scroll;">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Tr Id
+                                </th>
+                                <th>
+                                    Vehicle
+                                </th>
+                                <th>
+                                    Parking In Time
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.OrderByDescending(m => m.In_IssueDateTime))
+                            {
+                                <tr>
+                                    <td>
+                                        G @Html.DisplayFor(modelItem => item.PK_VehicleInOutManual)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Vehicle.RegistrationNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.In_IssueDateTime)
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+
+            </div>
+
+        </div>
+        <!-- /.box -->
+    </div>
+    <!-- /.col -->
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+<script>
+    $(function () {
+        //$('select').select2();
+        //$('.form_datetime').datetimepicker({
+        //    format: 'yyyy-mm-dd HH:ii P',
+        //    todayBtn: 1,
+        //    autoclose: 1,
+        //});
+    });
+</script>
+<!-- DataTablesExportable -->
+<!--<script src="~/Scripts/Custom/DataTableExportable/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.flash.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/jszip.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/pdfmake.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/vfs_fonts.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.html5.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.print.min.js"></script>-->
+<!-- DataTables -->
+<script src="~/Theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/Theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script>
+    @*function scroll(speed) {
+        $('html, body').animate({ scrollTop: $(document).height() - $(window).height() }, speed, function () {
+            $(this).animate({ scrollTop: 0 }, speed);
+        });
+    }
+    speed = 10000 * @Model.Count();
+    scroll(speed);
+    setInterval(function () { scroll(speed) }, speed * 2);*@
+</script>
+<script>
+    window.setTimeout(function () {
+        location.reload();
+    }, 1000 * 60);
+    //$(function () {
+    //    $('#data_table').DataTable({
+    //        //"ordering": true,
+    //        "paging": false,
+    //        dom: 'Bfrtip',
+    //        buttons: [
+    //            'copy', 'csv', 'excel', 'pdf', 'print'
+    //        ]
+    //    });
+    //});
+    $('#data_table').DataTable({ "ordering": false, "paging": false });
+</script>
+<script>
+    function relode_FK_AppUser_Gate() {
+        var FK_Location = $('select[name=FK_Location]').val();
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/VehicleGateNew/GetAppUserGate_ByLocation/",
+            data: JSON.stringify({ PK_Location: FK_Location }),
+            success: function (data) {
+                $('select[name=FK_AppUser_Gate]').html("");
+                var result = "<option value='all'>" + "All" + "</option>";
+                for (var i = 0; i < data.length; i++) {
+                    result = result + "<option value='" + data[i].Value + "'>" + data[i].Text + "</option>";
+                }
+                $('select[name=FK_AppUser_Gate]').html(result);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: relode_FK_AppUser_Gate()");
+            }
+        });
+    }
+    function FilterByInputToRedirectView() {
+        var url = "/ParkingInOut/ParkingInOutIndex?";
+
+        var FK_Location = $("select[name=FK_Location]").val();
+        if (FK_Location != '') {
+            url = url + "&FK_Location=" + FK_Location;
+        } else {
+            url = url + "&FK_Location=null";
+        }
+
+        var FK_AppUser_Gate = $("select[name=FK_AppUser_Gate]").val();
+        if (FK_AppUser_Gate != '') {
+            url = url + "&FK_AppUser_Gate=" + FK_AppUser_Gate;
+        } else {
+            url = url + "&FK_AppUser_Gate=all";
+        }
+
+        var RegistrationNumber = $("input[name=RegistrationNumber]").val();
+        if (RegistrationNumber != '') {
+            url = url + "&RegistrationNumber=" + RegistrationNumber;
+        } else {
+            url = url + "&RegistrationNumber=";
+        }
+
+        console.log(url);
+        window.location = url;
+    }
+
+</script>
+

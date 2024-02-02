@@ -1,0 +1,24 @@
+﻿#tblTest {
+    height: 100%;
+    width: 100%;
+    margin: 10px;
+    -webkit-animation-name: move;
+    -webkit-animation-duration: 25s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-direction: normal;
+    -webkit-animation-timing-function: linear;
+}
+
+    /*#tblTest:hover {
+        -webkit-animation-play-state: paused;
+    }*/
+
+@-webkit-keyframes move {
+    0% {
+        margin-top:100px;
+    }
+
+    100% {
+        margin-top: -2257px;
+    }
+}

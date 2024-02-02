@@ -1,0 +1,142 @@
+﻿
+@{
+    ViewBag.Title = "Edit";
+}
+
+<section class="content-header">
+    <h1>
+        View Existing Company
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        <a class="btn btn-block btn-info btn-sm" href="@System.Web.HttpContext.Current.Request.UrlReferrer">Back To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Company Information</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form name="ThisForm" class="form-horizontal" method="post" action="/Company/Edit">
+                    @*FK_GroupOfCompany*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Group Of Company</label>
+                            <div class="col-md-10">
+                                <input name="" value="@ViewBag.viewModel.Model.GroupOfCompany.Name" type="text" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    @*Name*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Name</label>
+                            <div class="col-md-10">
+                                <input name="Name" value="@ViewBag.viewModel.Model.Name" type="text" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    @*CompanyRegistrationNumber*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Registration Number</label>
+                            <div class="col-md-10">
+                                <input name="CompanyRegistrationNumber" value="@ViewBag.viewModel.Model.CompanyRegistrationNumber" type="text" class="form-control" style="text-transform:uppercase">
+                            </div>
+                        </div>
+                    </div>
+                    @*CompnayAddress*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Address</label>
+                            <div class="col-md-10">
+                                <textarea name="CompnayAddress" class="form-control">@ViewBag.viewModel.Model.CompnayAddress</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    @*IsActive*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Active/Inactive</label>
+                            <div class="col-md-10">
+                                <input name="" value="@ViewBag.viewModel.IsActive_Text" type="text" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <section data-category="externalOwnerElement">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">External Owner's Information</h3>
+                        </div>
+                        @*ExternalOwnersFullName*@
+                        <div class="box-body">
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Full Name</label>
+                                <div class="col-md-10">
+                                    <input name="ExternalOwnersFullName" value="@ViewBag.viewModel.Model.ExternalOwnersFullName" type="text" class="form-control" style="text-transform:uppercase">
+                                </div>
+                            </div>
+                        </div>
+                        @*ExternalOwnersNID*@
+                        <div class="box-body">
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">NID Number</label>
+                                <div class="col-md-10">
+                                    <input name="ExternalOwnersNID" value="@ViewBag.viewModel.Model.ExternalOwnersNID" type="text" class="form-control" style="text-transform:uppercase">
+                                </div>
+                            </div>
+                        </div>
+                        @*ExternalOwnersFathersName*@
+                        <div class="box-body">
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Father's Name</label>
+                                <div class="col-md-10">
+                                    <input name="ExternalOwnersFathersName" value="@ViewBag.viewModel.Model.ExternalOwnersFathersName" type="text" class="form-control" style="text-transform:uppercase">
+                                </div>
+                            </div>
+                        </div>
+                        @*ExternalOwnersContactNumber*@
+                        <div class="box-body">
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Contact Number</label>
+                                <div class="col-md-10">
+                                    <input name="ExternalOwnersContactNumber" value="@ViewBag.viewModel.Model.ExternalOwnersContactNumber" type="text" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        @*ExternalOwnersAddress*@
+                        <div class="box-body">
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Address</label>
+                                <div class="col-md-10">
+                                    <textarea name="ExternalOwnersAddress" class="form-control">@ViewBag.viewModel.Model.ExternalOwnersAddress</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <div class="box-footer">
+                        @*<a class="btn btn-default" href="/Company/Index">Back To List</a>*@
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+
+<script>
+    $('document').ready(function () {
+        $('input').attr("disabled", "disabled");
+        $('textarea').attr("disabled", "disabled");
+        $('select').attr("disabled", "disabled");
+    });
+</script>

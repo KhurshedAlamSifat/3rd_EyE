@@ -1,0 +1,470 @@
+﻿@model _3rdEyE.Models.InstantRequisition
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Driver Trip Bill</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <br />
+    <div id="printingDiv" style="width:840px; display:flex;">
+
+        <div style="width:380px; margin-left:10px;">
+            @*top*@
+            <div style="font-size:16px;">
+                <div>
+                    <h4>Driver Trip Bill - Accountant copy</h4>
+                </div>
+
+                <div>
+                    <label>বিলের নং:</label>
+                    <label> EV @Model.PK_InstantRequisition.ToString("000000")</label>
+                </div>
+
+                <div>
+                    <label>বিলের টাইপ:</label>
+                    <label>Expense Voucher</label>
+                </div>
+
+                <div>
+                    <label>বিলের তারিখ:</label>
+                    <label>@Model.CreatedAt</label>
+                </div>
+                <div>
+                    <label>গাড়ি নং:</label>
+                    <label>@Model.Vehicle.RegistrationNumber</label>
+                </div>
+
+                <div>
+                    <label>ড্রাইভারের নাম:</label>
+                    <label>@Model.DriverName</label>
+                </div>
+
+                <div>
+                    <label>হেল্পারের তথ্য:</label>
+                    <label>@Model.HelperInfo</label>
+                </div>
+
+                <div>
+                    <label>বুকিং ডিপো:</label>
+                    <label>@Model.Location.Name</label>
+                </div>
+
+                <div>
+                    <label>ডেস্টিনেসন ডিপো:</label>
+                    <label>@Model.Location1.Name</label>
+                </div>
+
+                <div>
+                    <label>মোট দূরত্ব:</label>
+                    @{
+                        var allKilo = (Model.Distance_Empty1 != null ? Model.Distance_Empty1 : 0)
+                            + (Model.Distance_Loaded1 != null ? Model.Distance_Loaded1 : 0)
+                            + (Model.Distance_Loaded_8_To_12_Tons_Out1 != null ? Model.Distance_Loaded_8_To_12_Tons_Out1 : 0)
+                            + (Model.Distance_Loaded_12_To_25_Tons_Out1 != null ? Model.Distance_Loaded_12_To_25_Tons_Out1 : 0);
+                    }
+                    <label>@allKilo KM</label>
+                </div>
+            </div>
+            <br />
+            @*middle*@
+            <div style="font-size:16px;">
+                <table>
+                    <thead>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>নং</td>
+                            <td>খরচের খাত</td>
+                            <td>প্রক্রিত চাহিদা</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>
+                                    ১
+                                </label>
+                            </td>
+                            <td>
+                                <label>
+                                    Driver Allowance
+                                </label>
+                            </td>
+                            <td style="float:right;">
+                                <label>
+                                    @{
+                                        var TripBillDriver1 = Model.TripBillDriver1 != null ? Model.TripBillDriver1 : 0;
+                                    }
+                                    <b>@TripBillDriver1</b>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>
+                                    ২
+                                </label>
+                            </td>
+                            <td>
+                                <label>
+                                    Helper Allowance
+                                </label>
+                            </td>
+                            <td style="float:right;">
+                                <label>
+                                    @{
+                                        var TripBillHelper1 = Model.TripBillHelper1 != null ? Model.TripBillHelper1 : 0;
+                                    }
+                                    <b>@TripBillHelper1</b>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>
+                                    ৩
+                                </label>
+                            </td>
+                            <td>
+                                <label>
+                                    Bridge/Toll/Ferry
+                                </label>
+                            </td>
+                            <td style="float:right;">
+                                <label>
+                                    @{
+                                        var BridgeTollFerryCharge1 = Model.BridgeTollFerryCharge1 != null ? Model.BridgeTollFerryCharge1 : 0;
+                                    }
+                                    <b>@BridgeTollFerryCharge1</b>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>
+                                    ৪
+                                </label>
+                            </td>
+                            <td>
+                                <label>
+                                    Others
+                                </label>
+                            </td>
+                            <td style="float:right;">
+                                <label>
+                                    @{
+                                        var other_all = (Model.AdvancedToDriver1 != null ? Model.AdvancedToDriver1 : 0) + (Model.StayCharge1 != null ? Model.StayCharge1 : 0) + (Model.EntertainmentACharge1 != null ? Model.EntertainmentACharge1 : 0) + (Model.RepairCharge1 != null ? Model.RepairCharge1 : 0) + (Model.OpenBodyCharge1 != null ? Model.OpenBodyCharge1 : 0);
+                                    }
+                                    <b>@other_all</b>
+                                </label>
+                            </td>
+                        </tr>
+                        @{
+                            var FuelExpence1 = Model.FuelExpence1 != null ? Model.FuelExpence1 : 0;
+                        }
+                        @if (Model.FuelExpenceGivenCashOrOil == true)
+                        {
+                            <tr>
+                                <td>
+                                    <label>
+                                        ৫
+                                    </label>
+                                </td>
+                                <td>
+                                    <label>
+                                        Fuel Cash
+                                    </label>
+                                </td>
+                                <td style="float:right;">
+                                    <label>
+                                        <b>@FuelExpence1</b>
+                                    </label>
+                                </td>
+                            </tr>
+                        }
+                        <tr>
+                            <td><label></label></td>
+                            <td>
+                                <label>
+                                    মোট টাকা
+                                </label>
+                            </td>
+                            <td style="float:right;">
+                                <label>
+                                    @{ var net_all = TripBillDriver1 + TripBillHelper1 + BridgeTollFerryCharge1 + other_all;
+                                        if (Model.FuelExpenceGivenCashOrOil == true)
+                                        {
+                                            net_all = TripBillDriver1 + TripBillHelper1 + BridgeTollFerryCharge1 + other_all + FuelExpence1;
+                                        }
+                                        else
+                                        {
+                                            net_all = TripBillDriver1 + TripBillHelper1 + BridgeTollFerryCharge1 + other_all;
+                                        }
+                                    }
+                                    <b>@net_all</b>
+                                </label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <br />
+
+            @*bottom*@
+            <div style="font-size:16px;">
+                <div>
+                    <label>প্রকৃত প্রদান টাকা (অংকে):</label>
+                    <label></label>
+                </div>
+                <div>
+                    <label>প্রকৃত প্রদান টাকা (কথায়):</label>
+                    <label></label>
+                </div>
+                <div>
+                    <label></label>
+                    <label></label>
+                </div>
+                <br />
+                <br />
+                <div>
+                    <label>গ্রহণকারী</label>
+                    <label style="float:right;">প্রস্তুতকারী</label>
+                </div>
+                <br />
+                <br />
+                <div>
+                    <label>প্রদানকারী</label>
+                    <label style="float:right;">অনুমোদনকারী</label>
+                </div>
+                <div>
+                    <label>বিল কর্তনের পরিমাণ:</label>
+                </div>
+            </div>
+        </div>
+        <div style="width:380px; margin-left:70px;">
+            @*top*@
+            <div style="font-size:16px;">
+                <div>
+                    <h4>Driver Trip Bill - Driver copy</h4>
+                </div>
+
+                <div>
+                    <label>বিলের নং:</label>
+                    <label> EV @Model.PK_InstantRequisition.ToString("000000")</label>
+                </div>
+
+                <div>
+                    <label>বিলের টাইপ:</label>
+                    <label>Expense Voucher</label>
+                </div>
+
+                <div>
+                    <label>বিলের তারিখ:</label>
+                    <label>@Model.CreatedAt</label>
+                </div>
+                <div>
+                    <label>গাড়ি নং:</label>
+                    <label>@Model.Vehicle.RegistrationNumber</label>
+                </div>
+
+                <div>
+                    <label>ড্রাইভারের নাম:</label>
+                    <label>@Model.DriverName</label>
+                </div>
+
+                <div>
+                    <label>হেল্পারের তথ্য:</label>
+                    <label>@Model.HelperInfo</label>
+                </div>
+
+                <div>
+                    <label>বুকিং ডিপো:</label>
+                    <label>@Model.Location.Name</label>
+                </div>
+
+                <div>
+                    <label>ডেস্টিনেসন ডিপো:</label>
+                    <label>@Model.Location1.Name</label>
+                </div>
+
+                <div>
+                    <label>মোট দূরত্ব:</label>
+                    <label>@allKilo KM</label>
+                </div>
+            </div>
+            <br />
+            @*middle*@
+            <div style="font-size:16px;">
+                <table>
+                    <thead>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>নং</td>
+                            <td>খরচের খাত</td>
+                            <td>প্রক্রিত চাহিদা</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>
+                                    ১
+                                </label>
+                            </td>
+                            <td>
+                                <label>
+                                    Driver Allowance
+                                </label>
+                            </td>
+                            <td style="float:right;">
+                                <label>
+                                    <b>@TripBillDriver1</b>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>
+                                    ২
+                                </label>
+                            </td>
+                            <td>
+                                <label>
+                                    Helper Allowance
+                                </label>
+                            </td>
+                            <td style="float:right;">
+                                <label>
+                                    <b>@TripBillHelper1</b>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>
+                                    ৩
+                                </label>
+                            </td>
+                            <td>
+                                <label>
+                                    Bridge/Toll/Ferry
+                                </label>
+                            </td>
+                            <td style="float:right;">
+                                <label>
+                                    <b>@BridgeTollFerryCharge1</b>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>
+                                    ৪
+                                </label>
+                            </td>
+                            <td>
+                                <label>
+                                    Others
+                                </label>
+                            </td>
+                            <td style="float:right;">
+                                <label>
+                                    <b>@other_all</b>
+                                </label>
+                            </td>
+                        </tr>
+                        @if (Model.FuelExpenceGivenCashOrOil == true)
+                        {
+                            <tr>
+                                <td>
+                                    <label>
+                                        ৫
+                                    </label>
+                                </td>
+                                <td>
+                                    <label>
+                                        Fuel Cash
+                                    </label>
+                                </td>
+                                <td style="float:right;">
+                                    <label>
+                                        <b>@FuelExpence1</b>
+                                    </label>
+                                </td>
+                            </tr>
+                        }
+                        <tr>
+                            <td><label></label></td>
+                            <td>
+                                <label>
+                                    মোট টাকা
+                                </label>
+                            </td>
+                            <td style="float:right;">
+                                <label>
+                                    <b>@net_all</b>
+                                </label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <br />
+
+            @*bottom*@
+            <div style="font-size:16px;">
+                <div>
+                    <label>প্রকৃত প্রদান টাকা (অংকে):</label>
+                    <label></label>
+                </div>
+                <div>
+                    <label>প্রকৃত প্রদান টাকা (কথায়):</label>
+                    <label></label>
+                </div>
+                <div>
+                    <label></label>
+                    <label></label>
+                </div>
+                <br />
+                <br />
+                <div>
+                    <label>গ্রহণকারী</label>
+                    <label style="float:right;">প্রস্তুতকারী</label>
+                </div>
+                <br />
+                <br />
+                <div>
+                    <label>প্রদানকারী</label>
+                    <label style="float:right;">অনুমোদনকারী</label>
+                </div>
+                <div>
+                    <label>বিল কর্তনের পরিমাণ:</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    function print_div() {
+        //var data = "<html><body><div id='printingDiv' style='width:1100px; display:flex;'>" + $("#printingDiv").html() + "</div></body></html>";
+        var data = document.getElementById("printingDiv").innerHTML;
+        console.log(data);
+        var mywindow = window.open();
+        mywindow.document.write("<html>");
+        mywindow.document.write("<body>");
+        mywindow.document.write("<div style='width:1100px; display:flex;'>");
+        mywindow.document.write(data);
+        mywindow.document.write("</div>");
+        mywindow.document.write("</body>");
+        mywindow.document.write("</html>");
+        mywindow.document.close();
+        mywindow.focus();
+        setTimeout(function () { mywindow.print(); }, 1000);
+
+        return false;
+    }
+</script>

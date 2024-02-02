@@ -1,0 +1,339 @@
+﻿@model Tuple<List<_3rdEyE.Controllers.ParkingInOutController.LocationBuildingUtilizaiton>, List<_3rdEyE.Models.vw_ParkingInOut_Detail>>
+
+@{
+    ViewBag.Title = "Vehicle list";
+}
+<style>
+</style>
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+<!-- DataTablesExportable -->
+<!--<link href="~/Content/ExportableDatatable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/ExportableDatatable/buttons.dataTables.min.css" rel="stylesheet" />-->
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+<style type="text/css">
+    .panel-success {
+        border: 1px solid #DFF0D8;
+    }
+
+    .panel-danger {
+        border: 1px solid #F2DEDE;
+    }
+
+    #modalVehicleOut.modal {
+        text-align: center;
+    }
+
+    @@media screen and (min-width: 768px) {
+        #modalVehicleOut.modal:before {
+            display: inline-block;
+            vertical-align: middle;
+            content: " ";
+            height: 20vh;
+        }
+    }
+
+    #modalVehicleOut.modal-dialog {
+        display: inline-block;
+        text-align: left;
+        vertical-align: middle;
+    }
+</style>
+@{
+    string ConvertToDateTimeString(DateTime? dateTime)
+    {
+        return String.Format("{0:yyyy/MM/dd HH:mm}", dateTime);
+    }
+    var now = DateTime.Now;
+}
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-8">
+            <span style="width:100%; color:red; text-align:center;"><h3>PRAN @Model.Item2.Where(m => m.PRG_Type == "PRAN" && m.Out_IssueDateTime == null).Count() vehicle</h3></span>
+            @foreach (var item in Model.Item1.Where(m => m.PRG_Type == "PRAN").OrderBy(m => m.LocationBuildingName))
+            {
+                <div class="col-md-3 @(item.TakeMoreVehicle == true ? "bg-green" : "bg-red")" style="border: .5px solid #ECF0F5;">
+                    <div class="inner">
+                        <span style="font-size:14px; font-weight:bold;">@item.LocationBuildingName.Replace("PRAN-", "")</span><br />
+                        <span style="font-size:12px;">Veh.InFact:&nbsp;<b> @item.StillInsideVehicleCount </b>&nbsp;&nbsp; Veh.GoingFact:&nbsp; <b>@item.VehicleOnGoingCount </b></span>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="col-md-4">
+            <span style="width:100%; color:red; text-align:center;"><h3>RFL @Model.Item2.Where(m => m.PRG_Type == "RFL" && m.Out_IssueDateTime == null).Count() vehicle</h3></span>
+            @foreach (var item in Model.Item1.Where(m => m.PRG_Type == "RFL").OrderBy(m => m.LocationBuildingName))
+            {
+                <div class="col-md-6 @(item.TakeMoreVehicle == true ? "bg-green" : "bg-red")" style="border: .5px solid #ECF0F5;">
+                    <div class="inner">
+                        <span style="font-size:14px; font-weight:bold;">@item.LocationBuildingName.Replace("PRAN-", "")</span><br />
+                        <span style="font-size:12px;">Veh.InFact:&nbsp;<b> @item.StillInsideVehicleCount </b>&nbsp;&nbsp; Veh.GoingFact:&nbsp; <b>@item.VehicleOnGoingCount </b></span>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="row">
+        <table id="data_table" class="table table-bordered table-striped" style="border:1px solid black;">
+            <thead>
+                <tr>
+                    <th>
+                        Tr Id
+                    </th>
+                    <th>
+                        Vehicle
+                    </th>
+                    <th>
+                        Contact Number
+                    </th>
+                    <th>
+                        Location
+                    </th>
+                    <th>
+                        In Time
+                    </th>
+                    <th>
+                        Demand Tr Id
+                    </th>
+                    <th>
+                        Departemnt-Bay-Time
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Item2.Where(m => m.Out_IssueDateTime == null).OrderBy(m => m.BayAssign_IssueDateTime == null).ThenBy(m => m.BayAssign_IssueDateTime).ThenBy(m => m.In_IssueDateTime))
+                {
+                    var remainingMin = ((item.BayAssign_IssueDateTime ?? now) - now).TotalMinutes;
+                    <tr style='@(item.BayAssign_IssueDateTime != null && remainingMin > 10 ? "color:#196704;" :
+                                    item.BayAssign_IssueDateTime != null && remainingMin <= 10 && remainingMin > 0 ? "color:orange;" :
+                                    item.BayAssign_IssueDateTime != null && remainingMin < 0 ? "color:red;" :
+                                    "" )'>
+                        <td>
+                            P @Html.DisplayFor(modelItem => item.PK_ParkingInOut)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RegistrationNumber)
+                        </td>
+                        <td>
+                            @(item.ContactNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ParkingLocation_Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.In_IssueDateTime)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RequisitionTrackingID)
+                        </td>
+                        <td>
+                            @item.BayAssign_DepartmentCode <br />
+                            @item.BayAssign_LoadingBay <br />
+                            @item.BayAssign_IssueDateTime<br />
+
+                            @if (item.BayAssign_IssueDateTime != null
+                                    && item.Out_IssueDateTime == null
+                                    && (Model.Item1.Where(m => m.PK_LocationBuilding == item.BayAssign_FK_LocationBuilding).FirstOrDefault().TakeMoreVehicle == true)
+                                    )
+                            {
+                                <a href="/ParkingInOut/GateOutFromParking?PK_ParkingInOut=@item.PK_ParkingInOut">Gate Out</a>
+                                <br>
+                            }
+
+                            @*@if (item.BayAssign_IssueDateTime != null
+                                    && item.Out_IssueDateTime == null
+                                    && (Model.Item1.Where(m => m.PK_LocationBuilding == item.BayAssign_FK_LocationBuilding).FirstOrDefault().TakeMoreVehicle == true)
+                                    )
+                            {
+                                <button class="btn btn-github btn-xs" onclick="showModalVehicleOut('@item.PK_ParkingInOut')">Gate Out</button>
+                                <br>
+                            }*@
+
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <!-- /.col -->
+</section>
+@*MODAL DELETE START*@
+<div id="modalVehicleOut" class="modal fade modal-" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div id="modalVehicleOut_PK_ParkingInOut" style="display:none;"></div>
+    <div id="modalVehicleOut_StaffId" style="display:none;"></div>
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="cancelVehicleOut()"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+            </div>
+            <div id="modalVehicleOut_body" class="modal-body">
+                <br />
+
+            </div>
+            <img id="modalVehicleOut_StaffImage" width="250" height="250" style="display:none;">
+            <div class="modal-footer">
+                <button id="confirmButton" type="button" class="btn btn-default" onclick="confirmVehicleOut()">Confirm</button>
+                <button type="button" class="btn btn-primary" onclick="cancelVehicleOut()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*MODAL DELETE END*@
+<!-- /.content -->
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+<script>
+    $(function () {
+        //$('select').select2();
+        //$('.form_datetime').datetimepicker({
+        //    format: 'yyyy-mm-dd HH:ii P',
+        //    todayBtn: 1,
+        //    autoclose: 1,
+        //});
+    });
+</script>
+<!-- DataTablesExportable -->
+<!--<script src="~/Scripts/Custom/DataTableExportable/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.flash.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/jszip.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/pdfmake.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/vfs_fonts.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.html5.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.print.min.js"></script>-->
+<!-- DataTables -->
+<script src="~/Theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/Theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script>
+    @*function scroll(speed) {
+        $('html, body').animate({ scrollTop: $(document).height() - $(window).height() }, speed, function () {
+            $(this).animate({ scrollTop: 0 }, speed);
+        });
+    }
+    speed = 10000 * @Model.Count();
+    scroll(speed);
+    setInterval(function () { scroll(speed) }, speed * 2);*@
+</script>
+<script>
+    window.setTimeout(function () {
+        location.reload();
+    }, 1000 * 30);
+    //$(function () {
+    //    $('#data_table').DataTable({
+    //        //"ordering": true,
+    //        "paging": false,
+    //        dom: 'Bfrtip',
+    //        buttons: [
+    //            'copy', 'csv', 'excel', 'pdf', 'print'
+    //        ]
+    //    });
+    //});
+    $('#data_table').DataTable({ "ordering": false, "paging": false });
+
+    var timerId;
+    var tryCount = 0;
+
+    function showModalVehicleOut(model_id) {
+        $('#modalVehicleOut_PK_ParkingInOut').html(model_id);
+        $('#modalVehicleOut_StaffId').html('');
+        $('#modalVehicleOut_body').html("Keep driver's finger on the finger punch machine.");
+        $('#confirmButton').hide();
+        $("#modalVehicleOut").modal('show');
+        $.ajax({
+            traditional: true,
+            async: false,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/ParkingInOut/GetCurrentFingerGivenDriver",
+            success: function (data) {
+                if (data.status == 'SUCCESS') {
+                    $('#modalVehicleOut_StaffId').html(data.staff_Id);
+                    $('#modalVehicleOut_body').html("Found Driver: " + data.staff_Id + (data.employee_name != undefined ? '  ' + data.employee_name : ''));
+                    if (data.image_url != undefined && data.image_url != null && data.image_url != "") {
+                        $('#modalVehicleOut_StaffImage').attr("src", data.image_url);
+                        $('#modalVehicleOut_StaffImage').show();
+                    } else {
+                        $('#modalVehicleOut_StaffImage').hide();
+                    }
+                    $('#confirmButton').show();
+                } else {
+                    tryCount = 0;
+                    timerId = setInterval(GetCurrentFingerGivenDriver, 5000);
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                $('#modalVehicleOut_body').html("Network Error(Ajax). Please try later.");
+                $('#modalVehicleOut_StaffId').html('');
+                clearTimeout(timerId);
+            }
+        });
+    }
+
+    function GetCurrentFingerGivenDriver() {
+        tryCount++;
+        $.ajax({
+            traditional: true,
+            async: false,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/ParkingInOut/GetCurrentFingerGivenDriver",
+            success: function (data) {
+                if (tryCount == 6) {
+                    $('#modalVehicleOut_body').html("Please, press 'Cancel' button and try again.");
+                    clearTimeout(timerId);
+                } else if (data.status == 'SUCCESS') {
+                    $('#modalVehicleOut_StaffId').html(data.staff_Id);
+                    $('#modalVehicleOut_body').html("Found Driver: " + data.staff_Id + (data.employee_name != undefined ? '  ' + data.employee_name : ''));
+                    if (data.image_url != undefined && data.image_url != null && data.image_url != "") {
+                        $('#modalVehicleOut_StaffImage').attr("src", data.image_url);
+                        $('#modalVehicleOut_StaffImage').show();
+                    } else {
+                        $('#modalVehicleOut_StaffImage').hide();
+                    }
+                    $('#confirmButton').show();
+                    clearTimeout(timerId);
+                } else if (data.status == 'FAIL') {
+                    $('#modalVehicleOut_body').html(data.message);
+                } else if (data.status == 'NETWORK ERROR') {
+                    $('#modalVehicleOut_body').html(data.message);
+                } else if (data.status == 'SERVER ERROR') {
+                    $('#modalVehicleOut_body').html(data.message);
+                } else if (data.status == 'SERVER ERROR') {
+                    $('#modalVehicleOut_body').html(data.message);
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                $('#modalVehicleOut_body').html("Network Error(Ajax). Please try later.");
+                $('#modalVehicleOut_StaffId').html('');
+                clearTimeout(timerId);
+            }
+        });
+    }
+
+    function confirmVehicleOut() {
+        var PK_ParkingInOut = $("#modalVehicleOut_PK_ParkingInOut").html();
+        var StaffId = $("#modalVehicleOut_StaffId").html();
+        window.location.href = "/ParkingInOut/GateOutFromParking?PK_ParkingInOut=" + PK_ParkingInOut + "&StaffId=" + StaffId;
+    }
+    function cancelVehicleOut() {
+        clearTimeout(timerId);
+        $('#modalVehicleOut_PK_ParkingInOut').html('');
+        $('#modalVehicleOut_StaffId').html('');
+        $('#modalVehicleOut_body').html("");
+        $('#modalVehicleOut_StaffImage').hide();
+        $("#modalVehicleOut").modal('hide');
+    }
+</script>
+
+

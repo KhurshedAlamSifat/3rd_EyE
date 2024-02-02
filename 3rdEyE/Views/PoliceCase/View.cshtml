@@ -1,0 +1,288 @@
+﻿@model _3rdEyE.ViewModels.VM_PoliceCase
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        View Police Case
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        <a class="btn btn-block btn-info btn-sm" href="@Request.ServerVariables["HTTP_REFERER"]">Back to PoliceCase List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/PoliceCase/Create" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Police Case Information</h3>
+                            </div>
+                            <!-- /.box-header -->
+                            <!-- form start -->
+                            @*FK_Vehicle*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Vehicle*</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(viewModel => viewModel.Model.Vehicle.RegistrationNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                            </div>
+                            @*CaseID*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Case ID:</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(viewModel => viewModel.Model.CaseID, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                            </div>
+                            @*PoliceContactNumber*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Police Contact:</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(viewModel => viewModel.Model.PoliceContactNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                            </div>
+                            @*AccusedDriverStaffID*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Driver:</label>
+                                    <div class="col-md-8">
+                                        @*@Html.EditorFor(viewModel => viewModel.Model.AccusedDriverStaffID + "-" + viewModel.Model.AccusedDriverName, new { htmlAttributes = new { @class = "form-control" } })*@
+                                        <input value="@Model.Model.AccusedDriverStaffID-@Model.Model.AccusedDriverName" class="form-control"/>
+                                    </div>
+                                </div>
+                            </div>
+                            @*FK_Vehicle*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">User Group</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(viewModel => viewModel.Model.Vehicle.Depo.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                            </div>
+                            @*Location*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Location</label>
+                                    <div class="col-md-4">
+                                        @Html.EditorFor(viewModel => viewModel.Model.District.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                    <div class="col-md-4">
+                                        @Html.EditorFor(viewModel => viewModel.Model.Upazila.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                            </div>
+                            @*Note*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Type*</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(viewModel => viewModel.Model.Note, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                            </div>
+                            @*IssueDate*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Issue Date</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(viewModel => viewModel.IssueDate_Text, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                            </div>
+                            @*PointOfLaws*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Law</label>
+                                    <div class="col-md-8">
+                                        <textarea class="form-control" readonly="readonly">
+                                        @foreach (var item in Model.Model.PoliceCase_PoliceCaseLaw)
+                                        {
+                                            @item.FK_PoliceCaseLaw <text>,</text>
+                                        }
+                                        </textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            @*TypeOfFault*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Fault</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(viewModel => viewModel.Model.TypeOfFault, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                            </div>
+                            @*PrimaryAmount*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Primary Amount</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(viewModel => viewModel.Model.PrimaryAmount, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                            </div>
+                            @*OtherAmount*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Other Amount</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(viewModel => viewModel.Model.OtherAmount, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                            </div>
+                            @*OtherNote*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Other Note</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(viewModel => viewModel.Model.OtherNote, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                            </div>
+                            @*TotalAmount*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Total Amount</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(viewModel => viewModel.Model.TotalAmount, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                            </div>
+                            @*Note*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Note</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(viewModel => viewModel.Model.Note, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                            </div>
+                            @*IsAlertable*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Alertable</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(viewModel => viewModel.IsAlertable_Text, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                            </div>
+                            @*AlertDate*@
+                            <div class="box-body" data-category="yes_IsAlertable_Element">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Alert Date</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(viewModel => viewModel.AlertDate_Text, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                            </div>
+                            @*IsAlertable*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Is Solved</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(viewModel => viewModel.IsSolved_Text, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                            </div>
+                            @*AlertDate*@
+                            <div class="box-body" data-category="yes_IsAlertable_Element">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Solved On</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(viewModel => viewModel.SolvedOn_Text, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-8">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Document List</h3>
+                                <input type="text" name="rowCount" id="rowCount" value="0" style="display:none" />
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table id="data_table" class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 5%">
+                                                        SL
+                                                    </th>
+                                                    <th style="width: 30%">
+                                                        Document Type
+                                                    </th>
+                                                    <th style="width: 20%">
+                                                        Name
+                                                    </th>
+                                                    <th style="width: 20%">
+                                                        Number
+                                                    </th>
+                                                    <th style="width: 25%">
+                                                        Download
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbody">
+                                                @{
+                                                    int i = 0;
+                                                }
+                                                @foreach (var item in Model.PoliceCaseDocuments)
+                                                {
+                                                    i = i + 1;
+                                                    <tr>
+                                                        <td>@i</td>
+                                                        <td>@item.Title</td>
+                                                        <td>@item.IdentitficaitonKey</td>
+                                                        <td>@item.IdentitficaitonValue</td>
+                                                        <td><a href="/PoliceCase/DownloadFile?id=@item.PK_PoliceCaseDocument" class="btn btn-block btn-success btn-xs">Download</a></td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-footer">
+                        @*<a class="btn btn-default" href="/PoliceCase/Index">Back To List</a>*@
+                        @*<input type="button" class="btn btn-facebook center-block" value="Create" onclick="TrySubmit()" />*@
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+
+</section>
+<!-- /.content -->
+
+
+<script>
+    $('document').ready(function () {
+        $('input').attr("disabled", "disabled");
+        $('textarea').attr("disabled", "disabled");
+        $('select').attr("disabled", "disabled");
+    });
+</script>

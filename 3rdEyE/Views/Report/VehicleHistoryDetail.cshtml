@@ -1,0 +1,219 @@
+﻿
+@{
+    ViewBag.Title = "Halt Report";
+}
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Vehicle Movement History
+        <small></small>
+    </h1>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-body col-md-12">
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 control-label">Vehicles:</label>
+                        <div class="col-md-10">
+                            @Html.DropDownList("FK_Vehicle", ViewBag.Vehicles as SelectList, "Select", new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body col-md-12">
+                    <div class="form-group col-md-4">
+                        <label class="col-md-4 control-label">Starting Date:</label>
+                        <div class="col-md-8">
+                            <input name="StartingDate" type="date" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="col-md-4 control-label">Einding Date:</label>
+                        <div class="col-md-8">
+                            <input name="EndingDate" type="date" class="form-control">
+                        </div>
+                    </div>
+                    @*<div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Time lap:</label>
+                            <div class="col-md-8">
+                                <select name="TimeLap" class="form-control">
+                                    <option value="1">1 Minute</option>
+                                    <option value="2">2 Minute</option>
+                                    <option value="5">5 Minute</option>
+                                    <option value="10">10 Minute</option>
+                                    <option value="30">30 Minute</option>
+                                    <option value="60">1 Hour</option>
+                                </select>
+                            </div>
+                        </div>*@
+                </div>
+                <div class="box-body col-md-12">
+                    <button class="btn btn-facebook" onclick="getData()">Get Data</button>
+                    <button class="btn btn-facebook" onclick="downloadExcel()">Download (Current)</button>
+                    <button class="btn btn-facebook" onclick="downloadExcel2()">Download</button>
+                </div>
+            </div>
+        </div>
+        <!-- /.col -->
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Halt Report</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr style="background-color:#3B5998; color:white;">
+                                <td>Time</td>
+                                <td>Speed</td>
+                                <td>Engine Status</td>
+                                <td>Location Near By</td>
+                                <td>View map</td>
+                            </tr>
+                        </thead>
+                        <tbody id="data_tbody"></tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <div class="col-md-4">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Halt Report</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="data_table2" class="table table-bordered table-striped">
+                        <thead>
+                            <tr style="background-color:#3B5998; color:white;">
+                                <td>Bar</td>
+                            </tr>
+                        </thead>
+                        <tbody id="data_tbody2"></tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+@*MODAL Company START*@
+<div id="modalPreload" class="modal  modal-" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content" style="background-color:transparent; margin-top:200px;">
+            <img src="~/Content/Images/Preload.gif" />
+        </div>
+    </div>
+</div>
+@*MODAL Company END*@
+<!-- /.content -->
+<!-- DataTables -->
+<script src="~/Theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/Theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<!-- page script -->
+<script>
+    $(function () {
+        //$('#data_table').DataTable({ "scrollX": true });
+    });
+</script>
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $('select[name=FK_Vehicle]').select2();
+    });
+</script>
+<script>
+    function getData() {
+        var FK_Vehicle = $('select[name=FK_Vehicle]').val();
+        var StartingDate = $('Input[name=StartingDate]').val();
+        var EndingDate = $('Input[name=EndingDate]').val();
+        if (FK_Vehicle == '' || StartingDate == '' || EndingDate == '') {
+            alert("Please, Select vehicle, starting date and ending date.");
+            $('#data_tbody').html("");
+            return;
+        }
+        $("#modalPreload").css("display", "block");
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/Report/GetVehicleHistoryDetail/",
+            data: JSON.stringify({ FK_Vehicle: FK_Vehicle, StartingDate: StartingDate, EndingDate: EndingDate }),
+            success: function (list) {
+                console.log(list);
+                if (list.length == 0) {
+                    alert("No data is found for given condition.");
+                }
+                $('#data_tbody').html("");
+                var res = "";
+                for (var i = 0; i < list.length; i++) {
+                    res = res + "<tr>";
+                    res = res + "<td>" + list[i].UpdateTime + "</td>";
+                    res = res + "<td>" + list[i].Speed + " K.M</td>";
+                    if (list[i].EngineStatus == "1") {
+                        res = res + "<td>" + "On" + "</td>";
+
+                    } else {
+                        res = res + "<td>" + "Off" + "</td>";
+
+                    }
+                    res = res + "<td>" + list[i].NearestMapLocationDistance + " K.M far from " + list[i].NearestMapLocation + "</td>";
+                    res = res + "<td><a target='_blank' href='/Report/ShowMapWithMarker?latitude=" + list[i].Latitude + "&longitude=" + list[i].Longitude + "'>" + "Map link" + "</a></td>";
+                    res = res + "</tr>";
+                }
+                $('#data_tbody').html(res);
+                $("#modalPreload").css("display", "none");
+                makeBar(list);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: getData()");
+                $("#modalPreload").css("display", "none");
+            }
+        });
+    }
+    function makeBar(list) {
+        $('#data_tbody2').html("");
+        var res = "";
+        var style = "";
+        for (var i = 0; i < list.length; i++) {
+            if (list[i].EngineStatus == "1" && list[i].Speed != "0") {
+                style = "background-color:green; color: black;";
+            } else if (list[i].EngineStatus == "0" && list[i].Speed != "0") {
+                style = "background-color:#41f449; color: black;";
+            } else if (list[i].EngineStatus == "1" && list[i].Speed == "0") {
+                style = "background-color:#4174f4; color: black;";
+            }
+            else {
+                style = "background-color:red; color: white;";
+            }
+            res = res + "<tr>";
+            res = res + "<td style='" + style + "'>" + list[i].UpdateTime + "</td>";
+            res = res + "</tr>";
+        }
+        $('#data_tbody2').html(res);
+    }
+    function downloadExcel() {
+        tableToExcel('data_table', 'Halt Report', 'Halt report.xls')
+    }
+    function downloadExcel2() {
+        tableToExcel('data_table2', 'Halt Report', 'Halt report.xls')
+    }
+</script>
+

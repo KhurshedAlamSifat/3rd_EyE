@@ -1,0 +1,260 @@
+﻿@{
+    Layout = null;
+}
+@model IEnumerable<_3rdEyE.Models.VehicleInOutManual>
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        /*th, td {
+            padding: 15px;
+        }*/
+    </style>
+</head>
+<body style="width:100%;">
+    @{
+        int sl_detail = 0;
+        int sl_summary = 0;
+        var Now = Convert.ToDateTime(ViewBag.Now);
+        string ConvertToDateTimeString(DateTime? dateTime)
+        {
+            return String.Format("{0:yyyy/MM/dd HH:mm}", dateTime);
+        }
+    }
+    <h3>Dear Sir</h3>
+    <p>Here is Vehicle Stay time report</p>
+    <p>Total Vehicles: @Model.Count() </p>
+    <p>Report Time: @ViewBag.Now</p>
+    <br />
+    <br />
+    <h3>Summary Report</h3>
+    <table id="data_table" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th align="center" style="padding:5px;">
+                    SL.
+                </th>
+                <th align="center" style="padding:5px;">
+                    Phy Loaction
+                </th>
+
+                <th align="center" style="padding:5px;">
+                    OWN Entry
+                </th>
+                <th align="center" style="padding:5px;">
+                    OWN Avg Stay Time (hh:mm)
+                </th>
+
+                <th align="center" style="padding:5px;">
+                    MHT Entry
+                </th>
+                <th align="center" style="padding:5px;">
+                    MHT Avg Stay Time (hh:mm)
+                </th>
+
+                <th align="center" style="padding:5px;">
+                    DHT Entry
+                </th>
+                <th align="center" style="padding:5px;">
+                    DHT Avg Stay Time (hh:mm)
+                </th>
+
+                <th align="center" style="padding:5px;">
+                    Total Entry
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model.OrderBy(m => m.Location.Name).GroupBy(m => m.Location.Name))
+            {
+                sl_summary++;
+                <tr>
+                    <td align="center" style="padding:5px;">
+                        @sl_summary
+                    </td>
+                    <td align="center" style="padding:5px;">
+                        @Html.DisplayFor(modelItem => item.FirstOrDefault().Location.Name)
+                    </td>
+
+                    <td align="center" style="padding:5px;">
+                        @item.Where(m => m.Vehicle.OWN_MHT_DHT == "OWN").ToList().Count()
+                    </td>
+                    <td align="center" style="padding:5px;">
+                        @if (item.Where(m => m.Vehicle.OWN_MHT_DHT == "OWN").Any())
+                        {
+                            var own_stayTimeMinute = (Int64)item.Where(m => m.Vehicle.OWN_MHT_DHT == "OWN").Average(m => m.InStayTimeMinute);
+                            var own_hour = (Int64)(own_stayTimeMinute / 60);
+                            var own_min = (Int64)(own_stayTimeMinute % 60);
+                            @own_hour.ToString("00")<text>:</text>@own_min.ToString("00")
+                        }
+                    </td>
+
+                    <td align="center" style="padding:5px;">
+                        @item.Where(m => m.Vehicle.OWN_MHT_DHT == "MHT").ToList().Count()
+                    </td>
+                    <td align="center" style="padding:5px;">
+                        @if (item.Where(m => m.Vehicle.OWN_MHT_DHT == "MHT").Any())
+                        {
+                            var mht_stayTimeMinute = (Int64)item.Where(m => m.Vehicle.OWN_MHT_DHT == "MHT").Average(m => m.InStayTimeMinute);
+                            var mht_hour = (Int64)(mht_stayTimeMinute / 60);
+                            var mht_min = (Int64)(mht_stayTimeMinute % 60);
+                            @mht_hour.ToString("00")<text>:</text>@mht_min.ToString("00")
+                        }
+                    </td>
+
+                    <td align="center" style="padding:5px;">
+                        @item.Where(m => m.Vehicle.OWN_MHT_DHT == "DHT").ToList().Count()
+                    </td>
+                    <td align="center" style="padding:5px;">
+                        @if (item.Where(m => m.Vehicle.OWN_MHT_DHT == "DHT").Any())
+                        {
+                            var dht_stayTimeMinute = (Int64)item.Where(m => m.Vehicle.OWN_MHT_DHT == "DHT").Average(m => m.InStayTimeMinute);
+                            var dht_hour = (Int64)(dht_stayTimeMinute / 60);
+                            var dht_min = (Int64)(dht_stayTimeMinute % 60);
+                            @dht_hour.ToString("00")<text>:</text>@dht_min.ToString("00")
+                        }
+                    </td>
+
+                    <td align="center" style="padding:5px;">
+                        @item.ToList().Count()
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <br />
+    <br />
+    <h3>Detail Report</h3>
+    <table id="data_table" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th align="center" style="padding:5px;">
+                    SL.
+                </th>
+                <th align="center" style="padding:5px;">
+                    Vehicle
+                </th>
+                <th align="center" style="padding:5px;">
+                    O/M/D
+                </th>
+                <th align="center" style="padding:5px;">
+                    PRG Type
+                </th>
+                <th align="center" style="padding:5px;">
+                    Destination
+                </th>
+                <th align="center" style="padding:5px;">
+                    Location
+                </th>
+                <th align="center" style="padding:5px;">
+                    User/Depot
+                </th>
+                <th align="center" style="padding:5px;">
+                    In Gate
+                </th>
+                <th align="center" style="padding:5px;">
+                    In Time
+                </th>
+                <th align="center" style="padding:5px;">
+                    In Status
+                </th>
+                <th align="center" style="padding:5px;">
+                    Out Gate
+                </th>
+                <th align="center" style="padding:5px;">
+                    Out Time
+                </th>
+                <th align="center" style="padding:5px;">
+                    Out Status
+                </th>
+                <th align="center" style="padding:5px;">
+                    Stay Time (hh:mm)
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model.OrderBy(m => m.Location.Name).ThenByDescending(m => m.InStayTimeMinute))
+            {
+                sl_detail++;
+                <tr>
+                    <td align="center" style="padding:5px;">
+                        @sl_detail
+                    </td>
+                    <td align="center" style="padding:5px;">
+                        @Html.DisplayFor(modelItem => item.Vehicle.RegistrationNumber)
+                    </td>
+                    <td align="center" style="padding:5px;">
+                        @Html.DisplayFor(modelItem => item.Vehicle.OWN_MHT_DHT)
+                    </td>
+                    <td align="center" style="padding:5px;">
+                        @*@Html.DisplayFor(modelItem => item.Vehicle.Depo.PRG_Type)*@
+                        @*@(item.Vehicle.Depo.PRG_Type == "CS" ? "CS" : "")
+                            @(item.Vehicle.Depo.PRG_Type == "PRAN" ? "PRAN" : "")
+                            @(item.Vehicle.Depo.PRG_Type == "RFL" ? "RFL" : "")
+                            @(item.Vehicle.Depo.PK_Depo.ToString() == "00000000-0000-0000-0000-000000000000" ? item.LocationGate.PRG_Type : "")*@
+                        @(item.Vehicle.OWN_MHT_DHT != "DHT" ? item.Vehicle.Depo.PRG_Type : item.AppUser.PRG_Type)
+                    </td>
+                    <td align="center" style="padding:5px;">
+                        @Html.DisplayFor(modelItem => item.PRG_Type.Title)
+                    </td>
+                    <td align="center" style="padding:5px;">
+                        @Html.DisplayFor(modelItem => item.Location.Name)
+                    </td>
+                    <td align="center" style="padding:5px;">
+                        @Html.DisplayFor(modelItem => item.Vehicle.Depo.Name)
+                    </td>
+                    <td align="center" style="padding:5px;">
+                        @Html.DisplayFor(modelItem => item.AppUser.FullName)
+                    </td>
+                    <td align="center" style="padding:5px;">
+                        @ConvertToDateTimeString(item.In_IssueDateTime)
+                    </td>
+                    <td align="center" style="padding:5px;">
+                        @Html.DisplayFor(modelItem => item.In_LoadOrEmpty)
+                    </td>
+                    <td align="center" style="padding:5px;">
+                        @Html.DisplayFor(modelItem => item.AppUser1.FullName)
+                    </td>
+                    <td align="center" style="padding:5px;">
+                        @ConvertToDateTimeString(item.Out_IssueDateTime)
+                    </td>
+                    <td align="center" style="padding:5px;">
+                        @Html.DisplayFor(modelItem => item.Out_LoadOrEmpty)
+                    </td>
+                    <td align="center" style="padding:5px;">
+                        @{
+                            if (item.InStayTimeMinute != null)
+                            {
+                                var _hour = (Int64)(item.InStayTimeMinute / 60);
+                                var _min = (Int64)(item.InStayTimeMinute % 60);
+                                @_hour.ToString("00")<text>:</text>@_min.ToString("00")
+
+                                //var _StayTimeMinute = (Int64)item.InStayTimeMinute;
+
+                                //var _day = (Int64)(_StayTimeMinute / 1440);
+                                //_StayTimeMinute = (Int64)(_StayTimeMinute % 1440);
+
+                                //var _hour = (Int64)(_StayTimeMinute / 60);
+                                //_StayTimeMinute = (Int64)(_StayTimeMinute % 60);
+
+                                //var _min = _StayTimeMinute;
+                                @*@_day.ToString("00")<text>:</text>@_hour.ToString("00")<text>:</text>@_min.ToString("00")*@
+                            }
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <p>This mail is auto-generated, No Need To Reply</p>
+</body>
+</html>
+
+

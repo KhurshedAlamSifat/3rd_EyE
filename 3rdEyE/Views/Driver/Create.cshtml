@@ -1,0 +1,161 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+}
+
+@*Date picker*@
+<link href="~/Theme/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+
+<section class="content-header">
+    <h1>
+        Create New Driver
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        <a class="btn btn-block btn-info btn-sm" href="@System.Web.HttpContext.Current.Request.UrlReferrer">Back To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Driver Information</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form name="ThisForm" class="form-horizontal" method="post" action="/Driver/Create">
+
+                    @*Name*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Name*</label>
+                            <div class="col-md-10">
+                                <input name="Name" value="@ViewBag.model.Name" type="text" class="form-control" style="text-transform:uppercase">
+                                <b class="errorMessage" data-category="errorMessage" name="error_Name"></b>
+                            </div>
+                        </div>
+                        <script>
+                            validatorArray.push(
+                                function () {
+                                    var check = $('input[name=Name]').val();
+                                    if (check == "") {
+                                        formValidity = false;
+                                        $('b[name=error_Name]').html("Driver name is required.");
+                                    }
+                                });
+                        </script>
+                    </div>
+                    @*UniqueIDNumber*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Unique ID Number*</label>
+                            <div class="col-md-10">
+                                <input name="UniqueIDNumber" value="@ViewBag.model.UniqueIDNumber" type="text" class="form-control" style="text-transform:uppercase">
+                                <b class="errorMessage" data-category="errorMessage" name="error_UniqueIDNumber"></b>
+                            </div>
+                        </div>
+                        <script>
+                            validatorArray.push(
+                                function () {
+                                    var check = $('input[name=UniqueIDNumber]').val();
+                                    if (check == "") {
+                                        formValidity = false;
+                                        $('b[name=error_UniqueIDNumber]').html("Unique ID Number is required.");
+                                    }
+                                });
+                        </script>
+                    </div>
+                    @*FK_Depo*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">User Group*</label>
+                            <div class="col-md-10">
+                                @Html.DropDownList("FK_Depo", ViewBag.Depoes as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_Depo"></b>
+                            </div>
+                        </div>
+                        <script>
+                            validatorArray.push(
+                                function () {
+                                    var check = $('select[name=FK_Depo]').val();
+                                    if (check == "") {
+                                        formValidity = false;
+                                        $('b[name=error_FK_Depo]').html("Depo is required.");
+                                    }
+                                });
+                        </script>
+                    </div>
+                    @*PhoneNumber*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Phone Number</label>
+                            <div class="col-md-10">
+                                <input name="PhoneNumber" value="@ViewBag.model.PhoneNumber" type="text" class="form-control" style="text-transform:uppercase">
+                            </div>
+                        </div>
+                    </div>
+                    @*NID*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">NID</label>
+                            <div class="col-md-10">
+                                <input name="NID" value="@ViewBag.model.NID" type="text" class="form-control" style="text-transform:uppercase">
+                            </div>
+                        </div>
+                    </div>
+                    @*LisenceNumber*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Lisence Number</label>
+                            <div class="col-md-10">
+                                <input name="LisenceNumber" value="@ViewBag.model.LisenceNumber" type="text" class="form-control" style="text-transform:uppercase">
+                            </div>
+                        </div>
+                    </div>
+                    @*LisenceRenewalDate*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Lisence Renewal Date</label>
+                            <div class="col-md-10">
+                                <input name="LisenceRenewalDate" value="@(ViewBag.model.LisenceRenewalDate==null?"":ViewBag.model.LisenceRenewalDate.ToShortDateString())" type="date" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        @*<a class="btn btn-default" href="/Driver/Index">Back To List</a>*@
+                        <input type="button" class="btn btn-info pull-right" value="Create" onclick="TrySubmit()" />
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+@*Date Picker*@
+<script src="~/Theme/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $('select[name=FK_Depo]').select2();
+    });
+</script>
+
+@*<script>
+            $(function () {
+                $('input[type=date]').datepicker({
+                    autoclose: true,
+                    format: "dd/mm/yyyy",
+                    orientation: "top auto",
+                    startView: 2
+                });
+            });
+    </script>*@

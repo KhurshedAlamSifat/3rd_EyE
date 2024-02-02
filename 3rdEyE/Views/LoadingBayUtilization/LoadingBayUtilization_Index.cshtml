@@ -1,0 +1,349 @@
+﻿@model IEnumerable<_3rdEyE.Models.LoadingBayUtilization>
+
+@{
+    ViewBag.Title = "Vehicle list";
+}
+
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+<!-- DataTablesExportable -->
+<link href="~/Content/ExportableDatatable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/ExportableDatatable/buttons.dataTables.min.css" rel="stylesheet" />
+@{
+    string ConvertToDateTimeString(DateTime? dateTime)
+    {
+        return String.Format("{0:yyyy/MM/dd HH:mm}", dateTime);
+    }
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Bay Use Report
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        @*<a class="btn btn-block btn-info btn-sm" href="/TemporaryVehicle/Create">Create</a>*@
+    </div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-header">
+                    <h3 class="box-title"></h3>
+                </div>
+
+                <div class="row">
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Starting Date:</label>
+                            <div class="input-group col-md-8">
+                                <div class="col-md-12 input-append date form_datetime" data-link-field="dtp_input1">
+                                    <input id="StartingDate" name="StartingDate" class="form-control col-md-12" type="text" value="@ViewBag.StartingDate" readonly="readonly" style="background-color: white;">
+                                    <span class="add-on"><i class="icon-remove"></i></span>
+                                    <span class="add-on"><i class="icon-th"></i></span>
+                                </div>
+                                <input type="hidden" id="dtp_input1" value="" style="display:none;" /><br />
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Ending Date:</label>
+                            <div class="input-group col-md-8">
+                                <div class="col-md-12 input-append date form_datetime" data-link-field="dtp_input1">
+                                    <input id="EndingDate" name="EndingDate" class="form-control col-md-12" type="text" value="@ViewBag.EndingDate" readonly="readonly" style="background-color: white;">
+                                    <span class="add-on"><i class="icon-remove"></i></span>
+                                    <span class="add-on"><i class="icon-th"></i></span>
+                                </div>
+                                <input type="hidden" id="dtp_input2" value="" style="display:none;" /><br />
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Vehicle:</label>
+                            <div class="col-md-8">
+                                <input id="RegistrationNumber" name="RegistrationNumber" value="@ViewBag.RegistrationNumber" class="form-control" />
+                            </div>
+                        </div>
+
+                        @*<div class="form-group col-md-3">
+                                <label class="col-md-4 control-label">Own/MHT/DHT:</label>
+                                <div class="col-md-8">
+                                    @Html.DropDownList("OWN_MHT_DHT", ViewBag.OWN_MHT_DHT as SelectList, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="col-md-4 control-label">User Sub-Group:</label>
+                                <div class="col-md-8">
+                                    @Html.DropDownList("FK_LocationGroup", ViewBag.DepoGroups as SelectList, new { @class = "form-control" })
+                                </div>
+                            </div>*@
+                    </div>
+
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">OWN MHT DHT:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("OWN_MHT_DHT", ViewBag.OWN_MHT_DHT as SelectList, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">PRG Type:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("PRG_Type", ViewBag.PRG_Type as SelectList, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Location:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Location", ViewBag.Locations as SelectList, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="col-md-2">
+                            <button class="btn btn-facebook" onclick="FilterByInputToRedirectView()">Filter</button>
+                        </div>
+                        @*<div class="col-md-2">
+                                <button class="btn btn-facebook" onclick="FilterByInputToExportExcel()">Download Excel</button>
+                            </div>*@
+                    </div>
+                </div>
+
+                <!-- /.box-header -->
+                <div class="box-body" style="overflow-x:scroll;">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                @*<th>
+                                        PRG Type
+                                    </th>
+                                    <th>
+                                        Location
+                                    </th>
+                                    <th>
+                                        Building
+                                    </th>*@
+                                <th>
+                                    Bay
+                                </th>
+                                <th>
+                                    Vehicle
+                                </th>
+                                <th>
+                                    O/M/D
+                                </th>
+                                <th>
+                                    Shipping Asst.
+                                </th>
+                                <th>
+                                    Laoad/Unload
+                                </th>
+                                <th>
+                                    Start Time
+                                </th>
+                                <th>
+                                    End Time
+                                </th>
+                                <th>
+                                    Time Taken (Min)
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    @*<td>
+                                            @item.LoadingBay.LocationBuilding.PRG_Type
+                                        </td>
+                                        <td>
+                                            @item.LoadingBay.LocationBuilding.Location.Name
+                                        </td>
+                                        <td>
+                                            @item.LoadingBay.LocationBuilding.Name
+                                        </td>*@
+                                    <td>
+                                        @item.LoadingBay.Name
+                                    </td>
+                                    <td>
+                                        @item.Vehicle.RegistrationNumber
+                                    </td>
+                                    <td>
+                                        @item.Vehicle.OWN_MHT_DHT
+                                    </td>
+                                    <td>
+                                        @item.AppUser.UniqueIDNumber @item.AppUser.FullName
+                                    </td>
+                                    <td>
+                                        @item.UseType
+                                    </td>
+                                    <td>
+                                        @item.StartDateTime
+                                    </td>
+                                    <td>
+                                        @item.EndDateTime
+                                    </td>
+                                    <td>
+                                        @item.StayTimeMinute
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+<script>
+    $(function () {
+        $('select').select2();
+        $('.form_datetime').datetimepicker({
+            format: 'yyyy-mm-dd HH:ii P',
+            todayBtn: 1,
+            autoclose: 1,
+        });
+    });
+</script>
+<!-- DataTablesExportable -->
+<script src="~/Scripts/Custom/DataTableExportable/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.flash.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/jszip.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/pdfmake.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/vfs_fonts.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.html5.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.print.min.js"></script>
+<script>
+    $(function () {
+        $('#data_table').DataTable({
+            "ordering": true,
+            "paging": false,
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+    });
+</script>
+<script>
+    function FilterByInputToRedirectView() {
+        var url = "/LoadingBayUtilization/LoadingBayUtilization_Index?";
+
+        var OWN_MHT_DHT = $("select[name=OWN_MHT_DHT]").val();
+        if (OWN_MHT_DHT != '') {
+            url = url + "&OWN_MHT_DHT=" + OWN_MHT_DHT;
+        } else {
+            url = url + "&OWN_MHT_DHT=null";
+        }
+
+        var PRG_Type = $("select[name=PRG_Type]").val();
+        if (PRG_Type != '') {
+            url = url + "&PRG_Type=" + PRG_Type;
+        } else {
+            url = url + "&PRG_Type=null";
+        }
+
+        var FK_Location = $("select[name=FK_Location]").val();
+        if (FK_Location != '') {
+            url = url + "&FK_Location=" + FK_Location;
+        } else {
+            url = url + "&FK_Location=null";
+        }
+
+        var StartingDate = $("input[name=StartingDate]").val();
+        if (StartingDate != '') {
+            url = url + "&StartingDate=" + StartingDate;
+        } else {
+            url = url + "&StartingDate=";
+        }
+
+        var EndingDate = $("input[name=EndingDate]").val();
+        if (EndingDate != '') {
+            url = url + "&EndingDate=" + EndingDate;
+        } else {
+            url = url + "&EndingDate=";
+        }
+
+        var RegistrationNumber = $("input[name=RegistrationNumber]").val();
+        if (RegistrationNumber != '') {
+            url = url + "&RegistrationNumber=" + RegistrationNumber;
+        } else {
+            url = url + "&RegistrationNumber=";
+        }
+
+        if (StartingDate == '' && RegistrationNumber == '') {
+            alert("Please, Select starting date or give registration number");
+            return;
+        }
+
+        window.location = url;
+    }
+
+    function FilterByInputToExportExcel() {
+        var url = "/VehicleGateNew/VehicleInOutManual_ExcelDownload?";
+
+        var OWN_MHT_DHT = $("select[name=OWN_MHT_DHT]").val();
+        if (OWN_MHT_DHT != '') {
+            url = url + "&OWN_MHT_DHT=" + OWN_MHT_DHT;
+        } else {
+            url = url + "&OWN_MHT_DHT=null";
+        }
+
+        var PRG_Type = $("select[name=PRG_Type]").val();
+        if (PRG_Type != '') {
+            url = url + "&PRG_Type=" + PRG_Type;
+        } else {
+            url = url + "&PRG_Type=null";
+        }
+
+        var FK_Location = $("select[name=FK_Location]").val();
+        if (FK_Location != '') {
+            url = url + "&FK_Location=" + FK_Location;
+        } else {
+            url = url + "&FK_Location=null";
+        }
+
+        var StartingDate = $("input[name=StartingDate]").val();
+        if (StartingDate != '') {
+            url = url + "&StartingDate=" + StartingDate;
+        } else {
+            url = url + "&StartingDate=";
+        }
+
+        var EndingDate = $("input[name=EndingDate]").val();
+        if (EndingDate != '') {
+            url = url + "&EndingDate=" + EndingDate;
+        } else {
+            url = url + "&EndingDate=";
+        }
+
+        var RegistrationNumber = $("input[name=RegistrationNumber]").val();
+        if (RegistrationNumber != '') {
+            url = url + "&RegistrationNumber=" + RegistrationNumber;
+        } else {
+            url = url + "&RegistrationNumber=";
+        }
+
+        if (StartingDate == '' && RegistrationNumber == '') {
+            alert("Please, Select starting date or give registration number");
+            return;
+        }
+
+        window.location = url;
+    }
+</script>
+

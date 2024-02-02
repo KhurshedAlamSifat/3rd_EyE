@@ -1,0 +1,340 @@
+﻿
+@{
+    ViewBag.Title = "Consolidated Report";
+}
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Consolidated Report
+        <small></small>
+    </h1>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-body col-md-12">
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 control-label">Vehicles:</label>
+                        <div class="col-md-10">
+                            @Html.DropDownList("FK_Vehicles", ViewBag.Vehicles as SelectList, "Select", new { @class = "form-control", multiple = "multiple" })
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body col-md-12">
+                    <div class="form-group col-md-4">
+                        <label class="col-md-4 control-label">Starting Date:</label>
+                        <div class="col-md-8">
+                            <input name="StartingDate" type="date" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="col-md-4 control-label">Einding Date:</label>
+                        <div class="col-md-8">
+                            <input name="EndingDate" type="date" class="form-control">
+                            <b>Please, select yesterday or earlier</b>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body col-md-12">
+                    <button class="btn btn-facebook" onclick="getData_ReadyReport()">Get Data(Ready Made)</button>
+                    <button class="btn btn-facebook" onclick="downloadExcel()">Download (Current)</button>
+                </div>
+            </div>
+        </div>
+        <!-- /.col -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Halt Report</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Registraton No
+                                </th>
+                                <th>
+                                    Mobile No
+                                </th>
+                                <th>
+                                    Date
+                                </th>
+                                <th>
+                                    Last Update (Date/Time)
+                                </th>
+                                <th>
+                                    Last Location
+                                </th>
+                                <th>
+                                    Travel Time(Hrs)
+                                </th>
+                                <th>
+                                    Stop Time(Hrs)
+                                </th>
+                                <th>
+                                    Distance (Kms)
+                                </th>
+                                <th>
+                                    No. of Stops
+                                </th>
+                                <th>
+                                    Run Time %
+                                </th>
+                                <th>
+                                    Stop time %
+                                </th>
+                                <th>
+                                    Max Stop Length
+                                </th>
+                                <th>
+                                    Avg. Stop Length
+                                </th>
+                                <th>
+                                    Max Speed (km/hr)
+                                </th>
+                                <th>
+                                    Avg. Speed (km/hr)
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="data_tbody"></tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+@*MODAL Company START*@
+<div id="modalPreload" class="modal  modal-" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content" style="background-color:transparent; margin-top:200px;">
+            <img src="~/Content/Images/Preload.gif" />
+        </div>
+    </div>
+</div>
+@*MODAL Company END*@
+<!-- /.content -->
+<!-- DataTables -->
+<script src="~/Theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/Theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<!-- page script -->
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $('select[name=FK_Vehicles]').select2();
+    });
+</script>
+
+<script>
+    function getData_ReadyReport() {
+        var FK_Vehicles_strings = $('select[name=FK_Vehicles]').val();
+        var StartingDate = $('Input[name=StartingDate]').val();
+        var EndingDate = $('Input[name=EndingDate]').val();
+        if (FK_Vehicles_strings == '' || StartingDate == '' || EndingDate == '') {
+            alert("Please, Select vehicle, starting date and ending date.");
+            $('#data_tbody').html("");
+            return;
+        }
+        var FK_Vehicles = "";
+        for (var i = 0; i < FK_Vehicles_strings.length; i++) {
+            FK_Vehicles = FK_Vehicles + FK_Vehicles_strings[i] + ",";
+        }
+        $("#modalPreload").css("display", "block");
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/Report/GetConsolidatedReport_ReadyReport/",
+            data: JSON.stringify({ FK_Vehicles: FK_Vehicles, StartingDate: StartingDate, EndingDate: EndingDate }),
+            success: function (list) {
+                if (list.length == 0) {
+                    alert("No data is found for given condition.");
+                }
+                console.log(list);
+                $('#data_tbody').html("");
+                var res = "";
+
+                var totalRunTime_newVehicle = 0;
+                var totalHaltTime_newVehicle = 0;
+                var totalDistance_newVehicle = 0;
+                var totalHaltCount_newVehicle = 0;
+                var maxHaltTime_newDate = 0;
+                var maxHaltTime_newVehicle = 0;
+                var maxSpeed_newVehicle = 0;
+                var countDayOfData = 0;
+
+                for (var i = 0; i < list.length; i++) {
+
+                    if (list[i]._rowType == 'NewVehicle_start') {
+                        res = res + "<tr  style='background-color: #ffb3b3;'>";
+                        res = res + "<td  rowspan='" + list[i]._rowSpan + "'><b>" + list[i].NewVehicle + "</b></td>";
+                        if (list[i].NewVehicle_mobileNumber != null) {
+                            res = res + "<td  rowspan='" + list[i]._rowSpan + "'>" + list[i].NewVehicle_mobileNumber + "</td>";
+                        }
+                        else {
+                            res = res + "<td  rowspan='" + list[i]._rowSpan + "'>" + "</td>";
+                        }
+                        res = res + "</tr>";
+
+                        totalRunTime_newVehicle = 0;
+                        totalHaltTime_newVehicle = 0;
+                        totalDistance_newVehicle = 0;
+                        totalHaltCount_newVehicle = 0;
+                        maxHaltTime_newDate = 0;
+                        maxHaltTime_newVehicle = 0;
+                        maxSpeed_newVehicle = 0;
+                        countDayOfData = Number(list[i]._rowSpan) - 1;
+
+                    }
+                    else if (list[i]._rowType == 'data' || list[i]._rowType == 'data_initial_gap' || list[i]._rowType == 'data_finishing_gap') {
+                        if (Number(list[i].HaltTime) > maxHaltTime_newDate) {
+                            maxHaltTime_newDate = Number(list[i].HaltTime);
+                        }
+                        if (maxHaltTime_newDate > maxHaltTime_newVehicle) {
+                            maxHaltTime_newVehicle = maxHaltTime_newDate;
+                        }
+                    }
+                    else if (list[i]._rowType == 'data_consolidated') {
+                        var TotalHaltTime = list[i].HaltTime != '' ? Number(list[i].HaltTime) : 0;
+                        var _haltHour = Math.floor(TotalHaltTime / 60);
+                        var _haltMin = TotalHaltTime % 60;
+
+                        var TotalRunTime = TotalHaltTime != 0 ? (1440 - TotalHaltTime) : 0;
+                        var _runHour = Math.floor(TotalRunTime / 60);
+                        var _runMin = TotalRunTime % 60;
+
+                        var _maxHaltHour = Math.floor(maxHaltTime_newDate / 60);
+                        var _maxHaltMin = maxHaltTime_newDate % 60;
+                        var _averageHaltTime = 0;
+                        var _averageHaltTime_hour = 0;
+                        var _averageHaltTime_min = 0;
+                        if (TotalHaltTime != 0 && list[i].HaltCount != "0") {
+                            _averageHaltTime = Math.floor(TotalHaltTime / Number(list[i].HaltCount));
+                            var _averageHaltTime_hour = Math.floor(_averageHaltTime / 60);
+                            var _averageHaltTime_min = _averageHaltTime % 60;
+                        }
+                        var _averageSpeed = 0;
+                        if (list[i].TotalDistance != "0" && TotalRunTime != 0) {
+                            _averageSpeed = (Number(list[i].TotalDistance) * 60 / TotalRunTime).toFixed(2);
+                        }
+
+
+                        res = res + "<tr  style='background-color: #b3b3ff;'>";
+                        res = res + "<td>" + list[i].StartTime + "</td>";
+                        res = res + "<td>" + list[i].LastUpdate + "</td>";
+                        res = res + "<td>" + list[i].NearestMapLocationDistance + " KM far from " + list[i].NearestMapLocation + "</td>";
+                        res = res + "<td>" + (_runHour > 0 ? _runHour + " hour " : " ") + (_runMin > 0 ? _runMin + " min " : " ") + "</td>";
+                        res = res + "<td>" + (_haltHour > 0 ? _haltHour + " hour " : " ") + (_haltMin > 0 ? _haltMin + " min " : " ") + "</td>";
+                        res = res + "<td>" + list[i].TotalDistance + "</td>";
+                        res = res + "<td>" + list[i].HaltCount + "</td>";
+                        res = res + "<td>" + (TotalRunTime * 100 / 1440).toFixed(2) + " %</td>";
+                        res = res + "<td>" + (TotalHaltTime * 100 / 1440).toFixed(2) + " %</td>";
+                        res = res + "<td>" + (_maxHaltHour > 0 ? _maxHaltHour + " hour " : " ") + (_maxHaltMin > 0 ? _maxHaltMin + " min " : " ") + "</td>";
+                        res = res + "<td>" + (_averageHaltTime_hour > 0 ? _averageHaltTime_hour + " hour " : " ") + (_averageHaltTime_min > 0 ? _averageHaltTime_min + " min " : " ") + "</td>";
+                        res = res + "<td>" + list[i].MaximumSpeed + "</td>";
+                        res = res + "<td>" + _averageSpeed + "</td>";
+                        res = res + "</tr>";
+
+                        totalRunTime_newVehicle = totalRunTime_newVehicle + TotalRunTime;
+                        totalHaltTime_newVehicle = totalHaltTime_newVehicle + TotalHaltTime;
+                        totalDistance_newVehicle = totalDistance_newVehicle + Number(list[i].TotalDistance);
+                        totalHaltCount_newVehicle = totalHaltCount_newVehicle + Number(list[i].HaltCount);
+                        //if (Number(list[i].MaximumHaltTime) > maxHaltTime_newDate) {
+                        //    maxHaltTime_newDate = Number(list[i].MaximumHaltTime);
+                        //}
+                        if (Number(list[i].MaximumSpeed) > maxSpeed_newVehicle) {
+                            maxSpeed_newVehicle = Number(list[i].MaximumSpeed);
+                        }
+                        //totalAerageSpeed_newVehicle = totalAerageSpeed_newVehicle + Number(list[i].AverageSpeed);
+
+                    }
+                    else if (list[i]._rowType == 'NewVehicle_end') {
+                        var aggregated_totalRunTime_percent = 0;
+                        var aggregated_totalHaltTime_percent = 0;
+
+                        var aggregated_averageHaltTime = 0;
+                        var aggregated_averageHaltTime_hour = 0;
+                        var aggregated_averageHaltTime_min = 0;
+
+                        var aggregated_averageSpeed = 0;
+
+                        //var averageOfAverageSpeed_newVehicle = 0;
+                        if (countDayOfData > 0) {
+                            aggregated_totalRunTime_percent = (totalRunTime_newVehicle * 100 / (countDayOfData * 1440)).toFixed(2)
+                            aggregated_totalHaltTime_percent = (totalHaltTime_newVehicle * 100 / (countDayOfData * 1440)).toFixed(2)
+
+                            aggregated_averageHaltTime = Math.floor(totalHaltTime_newVehicle / totalHaltCount_newVehicle);
+                            aggregated_averageHaltTime_hour = Math.floor(aggregated_averageHaltTime / 60);
+                            aggregated_averageHaltTime_min = aggregated_averageHaltTime % 60;
+                            if (totalDistance_newVehicle == 0) {
+                                aggregated_averageSpeed = 0;
+                            } else {
+                                aggregated_averageSpeed = (totalDistance_newVehicle * 60 / totalRunTime_newVehicle).toFixed(2);
+                            }
+
+                        }
+
+                        var _runHour = Math.floor(totalRunTime_newVehicle / 60);
+                        var _runMin = totalRunTime_newVehicle % 60;
+
+                        var _haltHour = Math.floor(totalHaltTime_newVehicle / 60);
+                        var _haltMin = totalHaltTime_newVehicle % 60;
+
+                        var _maxHaltHour = Math.floor(maxHaltTime_newVehicle / 60);
+                        var _maxHaltMin = maxHaltTime_newVehicle % 60;
+
+                        //var averageSpeed_newVehicle = 0;
+                        //if (totalDistance_newVehicle > 0) {
+                        //    averageSpeed_newVehicle = (totalDistance_newVehicle * 60 / totalRunTime_newVehicle).toFixed(2)
+                        //}
+
+
+                        res = res + "<tr style='background-color: #ccff99;'>";
+                        res = res + "<td>Total</td>";
+                        res = res + "<td></td>";
+                        res = res + "<td></td>";
+                        res = res + "<td>" + (_runHour > 0 ? _runHour + " hour " : " ") + (_runMin > 0 ? _runMin + " min " : " ") + "</td>";
+                        res = res + "<td>" + (_haltHour > 0 ? _haltHour + " hour " : " ") + (_haltMin > 0 ? _haltMin + " min " : " ") + "</td>";
+                        res = res + "<td>" + totalDistance_newVehicle.toFixed(2) + "</td>";
+                        res = res + "<td>" + totalHaltCount_newVehicle + "</td>";
+                        res = res + "<td>" + aggregated_totalRunTime_percent + " %</td>";
+                        res = res + "<td>" + aggregated_totalHaltTime_percent + " %</td>";
+                        res = res + "<td>" + (_maxHaltHour > 0 ? _maxHaltHour + " hour " : " ") + (_maxHaltMin > 0 ? _maxHaltMin + " min " : " ") + "</td>";
+                        res = res + "<td>" + (aggregated_averageHaltTime_hour > 0 ? aggregated_averageHaltTime_hour + " hour " : " ") + (aggregated_averageHaltTime_min > 0 ? aggregated_averageHaltTime_min + " min " : " ") + "</td>";
+                        res = res + "<td>" + maxSpeed_newVehicle + "</td>";
+                        res = res + "<td>" + aggregated_averageSpeed + "</td>";
+                        res = res + "</tr>";
+
+                    }
+                }
+                $('#data_tbody').html(res);
+                $("#modalPreload").css("display", "none");
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: getData()");
+                $("#modalPreload").css("display", "none");
+            }
+        });
+    }
+    function downloadExcel() {
+        tableToExcel('data_table', 'Halt Report', 'Halt Report.xls')
+    }
+</script>

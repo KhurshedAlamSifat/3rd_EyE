@@ -1,0 +1,90 @@
+﻿@model IEnumerable<_3rdEyE.Models.TestRfidData>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Pull</title>
+    <style>
+        table {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+            table td, table th {
+                border: 1px solid #ddd;
+                padding: 8px;
+            }
+
+            table tr:nth-child(even) {
+                background-color: #f2f2f2;
+            }
+
+            table tr:hover {
+                background-color: #ddd;
+            }
+
+            table th {
+                padding-top: 12px;
+                padding-bottom: 12px;
+                text-align: left;
+                background-color: #04AA6D;
+                color: white;
+            }
+    </style>
+</head>
+<body>
+    <table class="table">
+        <tr>
+            <th>
+                ID
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DeviceId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RegistrationNumber)
+            </th>
+            <th>
+                In/Out
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DevelopersNote)
+            </th>
+        </tr>
+    
+    @foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.PK_TestRfidData)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DeviceId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RegistrationNumber)
+        </td>
+        <td>
+            @(item.InOrOut == true ? "In": "Out")
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreatedAt)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DevelopersNote)
+        </td>
+    </tr>
+    }
+    
+    </table>
+</body>
+</html>

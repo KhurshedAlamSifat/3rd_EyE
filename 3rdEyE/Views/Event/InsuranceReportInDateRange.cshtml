@@ -1,0 +1,97 @@
+﻿@model IEnumerable<_3rdEyE.Models.Event>
+@{
+    ViewBag.Title = "Helper list";
+}
+
+<!-- DataTablesExportable -->
+<link href="~/Content/ExportableDatatable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/ExportableDatatable/buttons.dataTables.min.css" rel="stylesheet" />
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Company Wise Vehicle Insurance Report
+        <small></small>
+    </h1>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-body col-md-12">
+                    <div class="form-group col-md-3">
+                        <label class="col-md-4 control-label">Starting Date:</label>
+                        <div class="col-md-8">
+                            <input name="StartingDate" type="date" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label class="col-md-4 control-label">Einding Date:</label>
+                        <div class="col-md-8">
+                            <input name="EndingDate" type="date" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <button class="btn btn-facebook" onclick="getData()">Get Data</button>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <button class="btn btn-facebook pull-right" onclick="printSummury()">Print Summury</button>
+                    </div>
+                    <div class="form-group col-md-2 pull-right">
+                        <button class="btn btn-facebook" onclick="printDetail()">Print Detail</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.col -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <iframe id="summuryReport" scrolling="no" frameborder="0" style="-webkit-transform:scale(0.75); height:500px; width:100%;" src="/Event/InsuranceReportInDateRange_SummuryView?StartingDate=@ViewBag.StartingDate&EndingDate=@ViewBag.EndingDate"></iframe>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-md-12">
+            <iframe id="detailReport" scrolling="yes" frameborder="0" style="-webkit-transform:scale(0.75); height:1000px; width:100%;" src="/Event/InsuranceReportInDateRange_DetailView?StartingDate=@ViewBag.StartingDate&EndingDate=@ViewBag.EndingDate"></iframe>
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+<script>
+    function printSummury() {
+        var mainwindow = window.open('', '', '', '');
+        mainwindow.document.write('<html><head><title></title>');
+        mainwindow.document.write("</head><body onload='window.print();window.close()'>");
+        var innerHtmlContent = $('#summuryReport').contents().find('body').html();
+        console.log(innerHtmlContent);
+        mainwindow.document.write(innerHtmlContent);
+        mainwindow.document.write('</body></html>');
+        mainwindow.document.close();
+        mainwindow.print();
+    }
+    function printDetail() {
+        var mainwindow = window.open('', '', '', '');
+        mainwindow.document.write('<html><head><title></title>');
+        mainwindow.document.write("</head><body onload='window.print();window.close()'>");
+        var innerHtmlContent = $('#detailReport').contents().find('body').html();
+        console.log(innerHtmlContent);
+        mainwindow.document.write(innerHtmlContent);
+        mainwindow.document.write('</body></html>');
+        mainwindow.document.close();
+        mainwindow.print();
+    }
+</script>
+<script>
+    function getData() {
+        var StartingDate = $('Input[name=StartingDate]').val();
+        var EndingDate = $('Input[name=EndingDate]').val();
+        if (StartingDate == '' || EndingDate == '') {
+            alert("Please, Select starting date and ending date.");
+            return;
+        }
+        window.location = '/Event/InsuranceReportInDateRange?StartingDate=' + StartingDate + '&EndingDate=' + EndingDate;
+    }
+</script>

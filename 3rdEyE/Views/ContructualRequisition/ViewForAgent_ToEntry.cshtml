@@ -1,0 +1,140 @@
+﻿@model _3rdEyE.Models.ContructualRequisitionDetail
+@{
+    ViewBag.Title = "Create";
+}
+<!--Date picker-->
+<link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+<script src="~/Theme/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="~/Theme/bower_components/jquery-ui/jquery-ui.min.js"></script>
+<!--/Date picker-->
+<section class="content-header">
+    <h1>
+        Create New Contructual Requisition
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        <a class="btn btn-block btn-info btn-sm" href="/Home/Index">Go Back To Home</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/ContructualRequisition/ViewForAgent_ToEntry" enctype="multipart/form-data">
+        <input name="FK_ContructualRequisitionDetail" value="@Model.PK_ContructualRequisitionDetail" class="form-control" style="display:none;" />
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="col-md-12">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Contructual Requisition Information</h3>
+                        </div>
+                        <!-- /.box-header -->
+                        <!-- form start -->
+                        <div class="box-body col-md-12">
+                            @*PricePerVehicle*@
+                            <div class="form-group col-md-6">
+                                <label class="col-md-4 control-label">Trip Charge</label>
+                                <div class="col-md-8">
+                                    @*@Html.EditorFor(viewModel => viewModel.Model.PricePerVehicle, new { htmlAttributes = new { @class = "form-control" } })*@
+                                    <input name="PricePerVehicle" value="@Model.PricePerVehicle" class="form-control" , readonly="readonly" />
+                                    <b class="errorMessage" data-category="errorMessage" name="error_PricePerVehicle"></b>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="box-body col-md-12">
+                            @*PricePerVehicle*@
+                            <div class="form-group col-md-6">
+                                <label class="col-md-4 control-label">How many vehicle?</label>
+                                <div class="col-md-8">
+                                    <input name="VehicleCount" type="number" class="form-control" />
+                                    <b class="errorMessage" data-category="errorMessage" name="error_VehicleCount"></b>
+                                    <script>
+                                        validatorArray.push(
+                                            function () {
+                                                var check = $('input[name=VehicleCount]').val();
+                                                if (check == "") {
+                                                    formValidity = false;
+                                                    $('b[name=error_VehicleCount]').html("Vehicle Count is required.");
+                                                }
+                                            });
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="box-body col-md-12">
+                            @*FinalContructedPrice*@
+                            <div class="form-group col-md-6">
+                                <label class="col-md-4 control-label">Final Trip Charge</label>
+                                <div class="col-md-8">
+                                    <input name="FinalContructedPrice" type="number" class="form-control" readonly="readonly" />
+                                    <b class="errorMessage" data-category="errorMessage" name="error_FinalContructedPrice"></b>
+                                    <script>
+                                        validatorArray.push(
+                                            function () {
+                                                var check = $('input[name=FinalContructedPrice]').val();
+                                                if (check == "") {
+                                                    formValidity = false;
+                                                    $('b[name=error_FinalContructedPrice]').html("Final Contracted Price is required.");
+                                                } else if (check == 0 || check < 0) {
+                                                    formValidity = false;
+                                                    $('b[name=error_FinalContructedPrice]').html("Invalid final contructed price.");
+                                                }
+                                            });
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box-body col-md-12">
+                            @*PricePerVehicle*@
+                            <div class="form-group col-md-6">
+                                <label class="col-md-4 control-label">Execution Date</label>
+                                <div class="col-md-8">
+                                    <input name="ExecutionDate" class="form-control" />
+                                    <b class="errorMessage" data-category="errorMessage" name="error_ExecutionDate"></b>
+                                    <script>
+                                        validatorArray.push(
+                                            function () {
+                                                var check = $('input[name=ExecutionDate]').val();
+                                                if (check == "") {
+                                                    formValidity = false;
+                                                    $('b[name=error_ExecutionDate]').html("Execution Date Count is required.");
+                                                }
+                                            });
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-footer">
+                        <input type="button" class="btn btn-facebook center-block" value="Save" onclick="TrySubmit()" />
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+
+</section>
+
+<script>
+    $('document').ready(function () {
+        $("input[name=ExecutionDate]").datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true, yearRange: '1990:2023' });
+
+        $("input[name=VehicleCount]").keyup(function () {
+            var VehicleCount = $("input[name=VehicleCount]").val();
+            if (VehicleCount == '') {
+                console.log("empty");
+                return;
+            }
+            var price = $("input[name=PricePerVehicle]").val();
+            var total = VehicleCount * price;
+            $("input[name=FinalContructedPrice]").val(total);
+        });
+    });
+</script>
+

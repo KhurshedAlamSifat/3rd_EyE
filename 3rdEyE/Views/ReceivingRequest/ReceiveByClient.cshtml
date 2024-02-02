@@ -1,0 +1,466 @@
+﻿@model _3rdEyE.Models.ReceivingRequest
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+@*<link href="~/Content/bootstrap-datepicker.min.css" rel="stylesheet" />*@
+<section class="content-header">
+    <h1>
+        Add New Receiving Request
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        <a class="btn btn-block btn-info btn-sm" href="/ReceivingRequest/Index_Client">Back To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title"></h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form name="ThisForm" class="form-horizontal" method="post" action="/ReceivingRequest/ReceiveByClient">
+                    <input id="PK_ReceivingRequest" name="PK_ReceivingRequest" value="@Model.PK_ReceivingRequest" style="display:none;" />
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-7">
+                            <label class="col-md-4 control-label">Department*</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(m => m.LocationDepartment.DepartmentName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-7">
+                            <label class="col-md-4 control-label">Receiving DateTime*</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(m => m.AssumedGateReceivingDateTime, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-7">
+                            <label class="col-md-4 control-label">Carrer Type*</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(m => m.CarrerType, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-7">
+                            <label class="col-md-4 control-label">Note</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(m => m.Note_Creation, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_DepartmentName"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12" style='@(Model.Item1_Status != "Received at gate"? "display:none;":"")'>
+                        <div class="form-group col-md-12">
+                            <label class="col-md-1 control-label">Item 1</label>
+                            <div class="col-md-2">
+                                @Html.EditorFor(m => m.Item1_Name, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                            <div class="col-md-2">
+                                @Html.EditorFor(m => m.Item1_Note_Creation, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                            <div class="col-md-2">
+                                @Html.EditorFor(m => m.Item1_Note_FinalReceival, new { htmlAttributes = new { @class = "form-control", @placeholder = "receiving note" } })
+                            </div>
+                            <div class="col-md-1">
+                                @Html.EditorFor(m => m.Item1_FinalReceival_StaffId, new { htmlAttributes = new { @class = "form-control", @placeholder = "staff id" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_Item1_FinalReceival_StaffId"></b>
+                            </div>
+                            <div class="col-md-2">
+                                @Html.EditorFor(m => m.Item1_FinalReceival_StaffName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                <script>
+                                    var Item1_FinalReceival_StaffId_element = document.getElementById("Item1_FinalReceival_StaffId");
+                                    Item1_FinalReceival_StaffId_element.addEventListener("focusout", function (event) {
+                                        var Item1_FinalReceival_StaffId = $("#Item1_FinalReceival_StaffId").val();
+                                        $("#Item1_FinalReceival_StaffName").val("Loading..");
+                                        $.ajax({
+                                            traditional: true,
+                                            type: "post",
+                                            dataType: "json",
+                                            contentType: "application/json",
+                                            url: "/Base/GetUserInfoFromHRIS_Json",
+                                            data: JSON.stringify({ staffID: Item1_FinalReceival_StaffId }),
+                                            success: function (data) {
+                                                if (data != null) {
+                                                    $("#Item1_FinalReceival_StaffName").val(data.NAME);
+                                                } else {
+                                                    $("#Item1_FinalReceival_StaffName").val('Not Found/HRIS unavailable');
+                                                }
+                                            },
+                                            error: function (xhr, textStatus, errorThrown) {
+                                                console.log("Err on call");
+                                            }
+                                        });
+                                    });
+                                </script>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="Item1_ClientConfirmation" id="Item1_ClientConfirmationAccept" value="Accept">
+                                        Accept
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="Item1_ClientConfirmation" id="Item1_ClientConfirmationReject" value="Reject">
+                                        Reject
+                                    </label>
+                                </div>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        check1 = $('input[name=Item1_ClientConfirmation]:checked').val();
+                                        check2 = $('input[name=Item1_FinalReceival_StaffId]').val();
+                                        if (check1 !=  undefined && check2 == '') {
+                                            formValidity = false;
+                                            $('b[name=error_Item1_FinalReceival_StaffId]').html("required");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12" style='@(Model.Item2_Status != "Received at gate"? "display:none;":"")'>
+                        <div class="form-group col-md-12">
+                            <label class="col-md-1 control-label">Item 2</label>
+                            <div class="col-md-2">
+                                @Html.EditorFor(m => m.Item2_Name, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                            <div class="col-md-2">
+                                @Html.EditorFor(m => m.Item2_Note_Creation, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                            <div class="col-md-2">
+                                @Html.EditorFor(m => m.Item2_Note_FinalReceival, new { htmlAttributes = new { @class = "form-control", @placeholder = "receiving note" } })
+                            </div>
+                            <div class="col-md-1">
+                                @Html.EditorFor(m => m.Item2_FinalReceival_StaffId, new { htmlAttributes = new { @class = "form-control", @placeholder = "staff id" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_Item2_FinalReceival_StaffId"></b>
+                            </div>
+                            <div class="col-md-2">
+                                @Html.EditorFor(m => m.Item2_FinalReceival_StaffName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                <script>
+                                    var Item2_FinalReceival_StaffId_element = document.getElementById("Item2_FinalReceival_StaffId");
+                                    Item2_FinalReceival_StaffId_element.addEventListener("focusout", function (event) {
+                                        var Item2_FinalReceival_StaffId = $("#Item2_FinalReceival_StaffId").val();
+                                        $("#Item2_FinalReceival_StaffName").val("Loading..");
+                                        $.ajax({
+                                            traditional: true,
+                                            type: "post",
+                                            dataType: "json",
+                                            contentType: "application/json",
+                                            url: "/Base/GetUserInfoFromHRIS_Json",
+                                            data: JSON.stringify({ staffID: Item2_FinalReceival_StaffId }),
+                                            success: function (data) {
+                                                if (data != null) {
+                                                    $("#Item2_FinalReceival_StaffName").val(data.NAME);
+                                                } else {
+                                                    $("#Item2_FinalReceival_StaffName").val('Not Found/HRIS unavailable');
+                                                }
+                                            },
+                                            error: function (xhr, textStatus, errorThrown) {
+                                                console.log("Err on call");
+                                            }
+                                        });
+                                    });
+                                </script>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="Item2_ClientConfirmation" id="Item2_ClientConfirmationAccept" value="Accept">
+                                        Accept
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="Item2_ClientConfirmation" id="Item2_ClientConfirmationReject" value="Reject">
+                                        Reject
+                                    </label>
+                                </div>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        check1 = $('input[name=Item2_ClientConfirmation]:checked').val();
+                                        check2 = $('input[name=Item2_FinalReceival_StaffId]').val();
+                                        if (check1 !=  undefined && check2 == '') {
+                                            formValidity = false;
+                                            $('b[name=error_Item2_FinalReceival_StaffId]').html("required");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12" style='@(Model.Item3_Status != "Received at gate"? "display:none;":"")'>
+                        <div class="form-group col-md-12">
+                            <label class="col-md-1 control-label">Item 3</label>
+                            <div class="col-md-2">
+                                @Html.EditorFor(m => m.Item3_Name, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                            <div class="col-md-2">
+                                @Html.EditorFor(m => m.Item3_Note_Creation, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                            <div class="col-md-2">
+                                @Html.EditorFor(m => m.Item3_Note_FinalReceival, new { htmlAttributes = new { @class = "form-control", @placeholder = "receiving note" } })
+                            </div>
+                            <div class="col-md-1">
+                                @Html.EditorFor(m => m.Item3_FinalReceival_StaffId, new { htmlAttributes = new { @class = "form-control", @placeholder = "staff id" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_Item3_FinalReceival_StaffId"></b>
+                            </div>
+                            <div class="col-md-2">
+                                @Html.EditorFor(m => m.Item3_FinalReceival_StaffName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                <script>
+                                    var Item3_FinalReceival_StaffId_element = document.getElementById("Item3_FinalReceival_StaffId");
+                                    Item3_FinalReceival_StaffId_element.addEventListener("focusout", function (event) {
+                                        var Item3_FinalReceival_StaffId = $("#Item3_FinalReceival_StaffId").val();
+                                        $("#Item3_FinalReceival_StaffName").val("Loading..");
+                                        $.ajax({
+                                            traditional: true,
+                                            type: "post",
+                                            dataType: "json",
+                                            contentType: "application/json",
+                                            url: "/Base/GetUserInfoFromHRIS_Json",
+                                            data: JSON.stringify({ staffID: Item3_FinalReceival_StaffId }),
+                                            success: function (data) {
+                                                if (data != null) {
+                                                    $("#Item3_FinalReceival_StaffName").val(data.NAME);
+                                                } else {
+                                                    $("#Item3_FinalReceival_StaffName").val('Not Found/HRIS unavailable');
+                                                }
+                                            },
+                                            error: function (xhr, textStatus, errorThrown) {
+                                                console.log("Err on call");
+                                            }
+                                        });
+                                    });
+                                </script>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="Item3_ClientConfirmation" id="Item3_ClientConfirmationAccept" value="Accept">
+                                        Accept
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="Item3_ClientConfirmation" id="Item3_ClientConfirmationReject" value="Reject">
+                                        Reject
+                                    </label>
+                                </div>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        check1 = $('input[name=Item3_ClientConfirmation]:checked').val();
+                                        check2 = $('input[name=Item3_FinalReceival_StaffId]').val();
+                                        if (check1 !=  undefined && check2 == '') {
+                                            formValidity = false;
+                                            $('b[name=error_Item3_FinalReceival_StaffId]').html("required");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12" style='@(Model.Item4_Status != "Received at gate"? "display:none;":"")'>
+                        <div class="form-group col-md-12">
+                            <label class="col-md-1 control-label">Item 4</label>
+                            <div class="col-md-2">
+                                @Html.EditorFor(m => m.Item4_Name, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                            <div class="col-md-2">
+                                @Html.EditorFor(m => m.Item4_Note_Creation, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                            <div class="col-md-2">
+                                @Html.EditorFor(m => m.Item4_Note_FinalReceival, new { htmlAttributes = new { @class = "form-control", @placeholder = "receiving note" } })
+                            </div>
+                            <div class="col-md-1">
+                                @Html.EditorFor(m => m.Item4_FinalReceival_StaffId, new { htmlAttributes = new { @class = "form-control", @placeholder = "staff id" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_Item4_FinalReceival_StaffId"></b>
+                            </div>
+                            <div class="col-md-2">
+                                @Html.EditorFor(m => m.Item4_FinalReceival_StaffName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                <script>
+                                    var Item4_FinalReceival_StaffId_element = document.getElementById("Item4_FinalReceival_StaffId");
+                                    Item4_FinalReceival_StaffId_element.addEventListener("focusout", function (event) {
+                                        var Item4_FinalReceival_StaffId = $("#Item4_FinalReceival_StaffId").val();
+                                        $("#Item4_FinalReceival_StaffName").val("Loading..");
+                                        $.ajax({
+                                            traditional: true,
+                                            type: "post",
+                                            dataType: "json",
+                                            contentType: "application/json",
+                                            url: "/Base/GetUserInfoFromHRIS_Json",
+                                            data: JSON.stringify({ staffID: Item4_FinalReceival_StaffId }),
+                                            success: function (data) {
+                                                if (data != null) {
+                                                    $("#Item4_FinalReceival_StaffName").val(data.NAME);
+                                                } else {
+                                                    $("#Item4_FinalReceival_StaffName").val('Not Found/HRIS unavailable');
+                                                }
+                                            },
+                                            error: function (xhr, textStatus, errorThrown) {
+                                                console.log("Err on call");
+                                            }
+                                        });
+                                    });
+                                </script>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="Item4_ClientConfirmation" id="Item4_ClientConfirmationAccept" value="Accept">
+                                        Accept
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="Item4_ClientConfirmation" id="Item4_ClientConfirmationReject" value="Reject">
+                                        Reject
+                                    </label>
+                                </div>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        check1 = $('input[name=Item4_ClientConfirmation]:checked').val();
+                                        check2 = $('input[name=Item4_FinalReceival_StaffId]').val();
+                                        if (check1 !=  undefined && check2 == '') {
+                                            formValidity = false;
+                                            $('b[name=error_Item4_FinalReceival_StaffId]').html("required");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12" style='@(Model.Item5_Status != "Received at gate"? "display:none;":"")'>
+                        <div class="form-group col-md-12">
+                            <label class="col-md-1 control-label">Item 5</label>
+                            <div class="col-md-2">
+                                @Html.EditorFor(m => m.Item5_Name, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                            <div class="col-md-2">
+                                @Html.EditorFor(m => m.Item5_Note_Creation, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                            <div class="col-md-2">
+                                @Html.EditorFor(m => m.Item5_Note_FinalReceival, new { htmlAttributes = new { @class = "form-control", @placeholder = "receiving note" } })
+                            </div>
+                            <div class="col-md-1">
+                                @Html.EditorFor(m => m.Item5_FinalReceival_StaffId, new { htmlAttributes = new { @class = "form-control", @placeholder = "staff id" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_Item5_FinalReceival_StaffId"></b>
+                            </div>
+                            <div class="col-md-2">
+                                @Html.EditorFor(m => m.Item5_FinalReceival_StaffName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                <script>
+                                    var Item5_FinalReceival_StaffId_element = document.getElementById("Item5_FinalReceival_StaffId");
+                                    Item5_FinalReceival_StaffId_element.addEventListener("focusout", function (event) {
+                                        var Item5_FinalReceival_StaffId = $("#Item5_FinalReceival_StaffId").val();
+                                        $("#Item5_FinalReceival_StaffName").val("Loading..");
+                                        $.ajax({
+                                            traditional: true,
+                                            type: "post",
+                                            dataType: "json",
+                                            contentType: "application/json",
+                                            url: "/Base/GetUserInfoFromHRIS_Json",
+                                            data: JSON.stringify({ staffID: Item5_FinalReceival_StaffId }),
+                                            success: function (data) {
+                                                if (data != null) {
+                                                    $("#Item5_FinalReceival_StaffName").val(data.NAME);
+                                                } else {
+                                                    $("#Item5_FinalReceival_StaffName").val('Not Found/HRIS unavailable');
+                                                }
+                                            },
+                                            error: function (xhr, textStatus, errorThrown) {
+                                                console.log("Err on call");
+                                            }
+                                        });
+                                    });
+                                </script>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="Item5_ClientConfirmation" id="Item5_ClientConfirmationAccept" value="Accept">
+                                        Accept
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="radio">
+                                    <label>
+                                        <input type="radio" name="Item5_ClientConfirmation" id="Item5_ClientConfirmationReject" value="Reject">
+                                        Reject
+                                    </label>
+                                </div>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        check1 = $('input[name=Item5_ClientConfirmation]:checked').val();
+                                        check2 = $('input[name=Item5_FinalReceival_StaffId]').val();
+                                        if (check1 !=  undefined && check2 == '') {
+                                            formValidity = false;
+                                            $('b[name=error_Item5_FinalReceival_StaffId]').html("required");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <input type="button" class="btn btn-info pull-right" value="Update" onclick="TrySubmit()" />
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+@*<script src="~/Scripts/bootstrap-datepicker.min.js"></script>*@
+<script>
+    $(function () {
+        $('select[name=FK_LocationDepartment]').select2();
+
+        var today = new Date();
+        var _startDate = (today.getMonth() + 1) + '/' + (today.getDate() + 0) + '/' + today.getFullYear() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();// 13:05'//today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        var _endDate = (today.getMonth() + 1) + '/' + (today.getDate() + 2) + '/' + today.getFullYear() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();// 13:05'//today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        $('#AssumedGateReceivingDateTime').datetimepicker({
+            format: 'yyyy-mm-dd HH:ii P',
+            //format: 'yyyy-mm-dd',
+            //setDate: new Date(),
+            //weekStart: 1,
+            todayBtn: 1,
+            autoclose: 1,
+            //todayHighlight: 1,
+            //startView: 2,
+            //forceParse: 0,
+            //showMeridian: 0
+            //startDate: '+0d',
+            startDate: new Date(_startDate),
+            endDate: new Date(_endDate),
+        });
+    });
+</script>

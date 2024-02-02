@@ -1,0 +1,493 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+}
+
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+<!--Date picker-->
+<link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+<script src="~/Theme/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="~/Theme/bower_components/jquery-ui/jquery-ui.min.js"></script>
+<!--/Date picker-->
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Create New Police Case
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        <a class="btn btn-block btn-info btn-sm" href="/Home/Index">Go Back To Home</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/PoliceCase/Create" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Police Case Information</h3>
+                            </div>
+                            <!-- /.box-header -->
+                            <!-- form start -->
+                            @*FK_Vehicle*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Vehicle*</label>
+                                    <div class="col-md-8">
+                                        @Html.DropDownList("FK_Vehicle", ViewBag.Vehicles as SelectList, "Select", new { @class = "form-control", onChange="changeAdvertisingCompany(this.value)" })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_FK_Vehicle"></b>
+                                    </div>
+                                </div>
+                                <script>
+                                    validatorArray.push(
+                                        function () {
+                                            var check = $('select[name=FK_Vehicle]').val();
+                                            if (check == "") {
+                                                formValidity = false;
+                                                $('b[name=error_FK_Vehicle]').html("Vehicle is required.");
+                                            }
+                                        });
+                                </script>
+                            </div>
+                            @*CaseID*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Case ID</label>
+                                    <div class="col-md-8">
+                                        <input name="CaseID" id="CaseID" class="form-control">
+                                        <b class="errorMessage" data-category="errorMessage" name="error_CaseID"></b>
+                                    </div>
+                                </div>
+                                <script>
+                                    validatorArray.push(
+                                        function () {
+                                            var check = $('input[name=CaseID]').val();
+                                            if (check == "") {
+                                                formValidity = false;
+                                                $('b[name=error_CaseID]').html("Case ID is required.");
+                                            }
+                                        });
+                                </script>
+                            </div>
+                            @*PoliceContactNumber*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Police Contact</label>
+                                    <div class="col-md-8">
+                                        <input name="PoliceContactNumber" id="PoliceContactNumber" class="form-control" type="tel">
+                                    </div>
+                                </div>
+                            </div>
+                            @*AccusedDriverStaffID*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Driver Staff ID</label>
+                                    <div class="col-md-2">
+                                        <input name="AccusedDriverStaffID" id="AccusedDriverStaffID" class="form-control">
+                                        <b class="errorMessage" data-category="errorMessage" name="error_AccusedDriverStaffID"></b>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input name="AccusedDriverName" id="AccusedDriverName" class="form-control" readonly="readonly" placeholder="Dirver Name">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input class="form-control" type="button" value="clear" onclick="clearDriverInfo()" />
+                                    </div>
+                                </div>
+                                <script>
+                                    var AccusedDriverStaffID_element = document.getElementById("AccusedDriverStaffID");
+                                    AccusedDriverStaffID_element.addEventListener("focusout", function (event) {
+                                        var AccusedDriverStaffID = $("#AccusedDriverStaffID").val();
+                                        $("#AccusedDriverName").val("Loading..");
+                                        $.ajax({
+                                            traditional: true,
+                                            type: "post",
+                                            dataType: "json",
+                                            contentType: "application/json",
+                                            url: "/Base/GetUserInfoFromHRIS_Json",
+                                            data: JSON.stringify({ staffID: AccusedDriverStaffID }),
+                                            success: function (data) {
+                                                if (data != null) {
+                                                    $("#AccusedDriverName").val(data.NAME);
+                                                } else {
+                                                    $("#AccusedDriverName").val('Not Found/HRIS unavailable');
+                                                }
+                                            },
+                                            error: function (xhr, textStatus, errorThrown) {
+                                                console.log("Err on call");
+                                            }
+                                        });
+                                    });
+                                    function clearDriverInfo() {
+                                        $("#AccusedDriverStaffID").val("");
+                                        $("#AccusedDriverName").val("");
+                                    }
+
+                                </script>
+                            </div>
+                            @*IssueDate*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Issue Date</label>
+                                    <div class="col-md-4">
+                                        <input name="IssueDate" id="IssueDate" value="@(ViewBag.model.IssueDate==null?"":ViewBag.model.IssueDate.ToShortDateString())" class="form-control" readonly="readonly">
+                                        <b class="errorMessage" data-category="errorMessage" name="error_IssueDate"></b>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <strong>YYYY-MM-DD</strong>
+                                    </div>
+                                </div>
+                                <script>
+                                    validatorArray.push(
+                                        function () {
+                                            var check = $('input[name=IssueDate]').val();
+                                            if (check == "") {
+                                                formValidity = false;
+                                                $('b[name=error_IssueDate]').html("Issue date is required.");
+                                            }
+                                        });
+                                </script>
+                            </div>
+                            @*PointOfLaws*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Law</label>
+                                    <div class="col-md-8">
+                                        @Html.DropDownList("PointOfLaws", ViewBag.PointOfLaws as SelectList, "Select", new { @class = "form-control", multiple = "multiple" })
+                                        <input id="PointOfLawsString" name="PointOfLawsString" type="hidden" />
+                                        <b class="errorMessage" data-category="errorMessage" name="error_PointOfLaws"></b>
+                                    </div>
+                                </div>
+                                <script>
+                                    validatorArray.push(
+                                        function () {
+                                            var check = $('select[name=PointOfLaws]').val();
+                                            if (check == '') {
+                                                formValidity = false;
+                                                $('b[name=error_PointOfLaws]').html("Point of law is required.");
+                                            }
+                                        });
+                                </script>
+                            </div>
+                            @*PointOfLaws*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Ad.Company</label>
+                                    <div class="col-md-8">
+                                        @Html.DropDownList("FK_AdvertisingCompany", ViewBag.AdvertisingCompanies as SelectList, "Select", new { @class = "form-control" })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_FK_AdvertisingCompany"></b>
+                                    </div>
+                                </div>
+                                <script>
+                                    validatorArray.push(
+                                        function () {
+                                            var PointOfLaws = $('select[name=PointOfLaws]').val();
+                                            for (var i = 0; i < PointOfLaws.length; i++) {
+                                                if (PointOfLaws[i] == '92(1)') {
+                                                    var check = $('select[name=FK_AdvertisingCompany]').val();
+                                                    if (check == '') {
+                                                        formValidity = false;
+                                                        $('b[name=error_FK_AdvertisingCompany]').html("Ad.Company is required.");
+                                                    }
+                                                }
+                                            }
+                                        });
+                                </script>
+                            </div>
+                            @*Districts*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Location</label>
+                                    <div class="col-md-4">
+                                        @Html.DropDownList("FK_District", ViewBag.Districts as SelectList, "District", new { @class = "form-control", onchange = "relodeFK_Upazila()" })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_FK_District"></b>
+                                        <script>
+                                            validatorArray.push(
+                                                function () {
+                                                    var check = $('select[name=FK_District]').val();
+                                                    if (check == "") {
+                                                        formValidity = false;
+                                                        $('b[name=error_FK_District]').html("District is required.");
+                                                    }
+                                                });
+                                        </script>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select name="FK_Upazila" id="FK_Upazila" class="form-control">
+                                            <option value="">Upazila/Thana</option>
+                                        </select>
+                                        <b class="errorMessage" data-category="errorMessage" name="error_FK_Upazila"></b>
+                                    </div>
+                                </div>
+                            </div>
+                            @*TypeOfFault*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Fault</label>
+                                    <div class="col-md-8">
+                                        <textarea name="TypeOfFault" Id="TypeOfFault" class="form-control">@ViewBag.model.TypeOfFault </textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            @*Note*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Note</label>
+                                    <div class="col-md-8">
+                                        <textarea name="Note" Id="Note" class="form-control">@ViewBag.model.Note </textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            @*IsAlertable*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Alertable</label>
+                                    <div class="col-md-8">
+                                        @Html.DropDownList("IsAlertable", ViewBag.YesNoDict as SelectList, new { @class = "form-control", onchange = "manageUI_IsAlertable_Element()" })
+                                    </div>
+                                </div>
+                            </div>
+                            @*AlertDate*@
+                            <div class="box-body" data-category="yes_IsAlertable_Element">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Alert Date</label>
+                                    <div class="col-md-4">
+                                        <input name="AlertDate" id="AlertDate" value="@(ViewBag.model.AlertDate==null?"":ViewBag.model.AlertDate.ToShortDateString())" class="form-control" readonly="readonly">
+                                        <b class="errorMessage" data-category="errorMessage" name="error_AlertDate"></b>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <strong>YYYY-MM-DD</strong>
+                                    </div>
+                                </div>
+                                <script>
+                                    validatorArray.push(
+                                        function () {
+                                            var check = $('select[name=IsAlertable]').val();
+                                            if (check == 'True') {
+                                                check = $('input[name=AlertDate]').val();
+                                                if (check == '') {
+                                                    formValidity = false;
+                                                    $('b[name=error_AlertDate]').html("If you select Alertable='Yes', then Alert date is required.");
+                                                }
+                                            }
+                                        });
+                                </script>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Document List</h3>
+                                <input type="text" name="rowCount" id="rowCount" value="0" style="display:none" />
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <input type="button" class="btn btn-info pull-right" value="Add row" onclick="addRow()" />
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table id="data_table" class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 5%">
+                                                        SL
+                                                    </th>
+                                                    <th style="width: 15%">
+                                                        Document Type
+                                                    </th>
+                                                    <th style="width: 15%">
+                                                        Name
+                                                    </th>
+                                                    <th style="width: 15%">
+                                                        Number
+                                                    </th>
+                                                    <th style="width: 25%">
+                                                        File
+                                                    </th>
+                                                    <th style="width: 25%">
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbody"></tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <input type="button" class="btn btn-info pull-right" value="remove row" onclick="removeRow()" />
+                                    </div>
+                                </div>
+
+                            </div>
+                            <script>
+                                function addRow() {
+                                    var rowCount = parseInt($("#rowCount").val());
+
+                                    var lastImage = $("#ImageFiles_" + (rowCount - 1)).val();
+                                    if (lastImage == '') {
+                                        return;
+                                    }
+                                    var sl = rowCount + 1;
+                                    var res = "<tr id='row_" + rowCount + "'>";
+                                    res = res + "<td style='width: 5%'>" + sl + "</td>";
+                                    res = res + "<td style='width: 15%'><input name='Title_" + rowCount + "' style='width: 100%' /></td>";
+                                    res = res + "<td style='width: 15%'><input name='IdentitficaitonKey_" + rowCount + "' style='width: 100%' /></td>";
+                                    res = res + "<td style='width: 15%'><input name='IdentitficaitonValue_" + rowCount + "' style='width: 100%' /></td>";
+                                    res = res + "<td style='width: 25%'><input id='ImageFiles_" + rowCount + "' name='ImageFiles' type='file' onchange='validateImage(" + rowCount + ")' style='width: 100%' /></td>";
+                                    res = res + "<td style='width: 25%'><b class='errorMessage' data-category='errorMessage' name='error_ImageFiles_" + rowCount + "'></b></td>";
+                                    res = res + "</tr>";
+                                    $("#tbody").append(res);
+                                    rowCount++;
+                                    $("#rowCount").val(rowCount);
+                                }
+                                function removeRow() {
+                                    var rowCount = parseInt($("#rowCount").val());
+
+                                    var lastRow = $("#row_" + (rowCount - 1));
+                                    if (lastRow == undefined) {
+                                        return;
+                                    }
+                                    lastRow.remove();
+                                    rowCount--;
+                                    $("#rowCount").val(rowCount);
+                                }
+                                function validateImage(rowNumber) {
+                                    var ext = $("#ImageFiles_" + (rowNumber)).val().split('.').pop().toLowerCase();
+                                    if ($.inArray(ext, ['gif', 'png', 'jpg', 'jpeg']) == -1) {
+                                        alert("Invalid File type.");
+                                        $("#ImageFiles_" + (rowNumber)).val('');
+                                        return;
+                                    }
+
+                                    if ($("#ImageFiles_" + (rowNumber))[0].files[0].size > 300000) {
+                                        alert("Image size is too big. Can not select it.");
+                                        $("#ImageFiles_" + (rowNumber)).val('');
+                                    }
+                                }
+                            </script>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var rowCount = $("#rowCount").val();
+
+                                        var localValidator = true;
+                                        for (var i = 0; i < rowCount; i++) {
+                                            var img = $("#ImageFiles_" + i).val();
+                                            if (img == '') {
+                                                localValidator = false;
+                                                $('b[name=error_ImageFiles_' + i + ']').html("Image required");
+                                            }
+                                        }
+                                        if (localValidator == false) {
+                                            formValidity = false;
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+
+                    <div class="box-footer">
+                        @*<a class="btn btn-default" href="/PoliceCase/Index">Back To List</a>*@
+                        <input type="button" class="btn btn-facebook center-block" value="Save" onclick="PrepareAndTrySubmit()" />
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+
+</section>
+<!-- /.content -->
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $('select').select2();
+    });
+</script>
+
+@*Date picker*@
+<script>
+    $(document).ready(function () {
+        $("#IssueDate").datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true, maxDate: 0 });
+        $("#AlertDate").datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true, minDate: 0 });
+    });
+</script>
+
+<script>
+    $('document').ready(function () {
+        manageUI_IsAlertable_Element();
+    });
+    function manageUI_IsAlertable_Element() {
+        $('div[data-category=yes_IsAlertable_Element]').hide();
+        var IsAlertable = $('select[name=IsAlertable]').val();
+        if (IsAlertable == "True") {
+            $('div[data-category=yes_IsAlertable_Element]').show();
+        }
+    }
+</script>
+<script>
+    function relodeFK_Upazila() {
+        var FK_District = $('select[name=FK_District]').val();
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/PoliceCase/GetUpazilasOfDistrict",
+            data: JSON.stringify({ FK_District: FK_District }),
+            success: function (data) {
+                $('select[name=FK_Upazila]').html("");
+                var result = "<option >Select</option>";
+                for (var i = 0; i < data.length; i++) {
+                    result = result + "<option value='" + data[i].PK_Upazila + "'>" + data[i].Name + "</option>";
+                }
+                $('select[name=FK_Upazila]').html(result);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: relodeFK_Upazila()");
+            }
+        });
+    }
+    function changeAdvertisingCompany(PK_Vehicle) {
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/Vehicle/GetDetail",
+            data: JSON.stringify({ id: PK_Vehicle }),
+            success: function (data) {
+                if (data != "NOT FOUND" && data.Internal_FK_AdvertisingCompany != null) {
+                    $('#FK_AdvertisingCompany').val(data.Internal_FK_AdvertisingCompany.toLowerCase());
+                    $('#FK_AdvertisingCompany').select2().trigger('change');
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: relodeFK_Upazila()");
+            }
+        });
+    }
+
+    function PrepareAndTrySubmit() {
+        var PointOfLaws = $('select[name=PointOfLaws]').val();
+        var PointOfLawsString = "";
+        for (var i = 0; i < PointOfLaws.length; i++) {
+            PointOfLawsString = PointOfLawsString + PointOfLaws[i] + ",";
+        }
+        $("#PointOfLawsString").val(PointOfLawsString);
+        TrySubmit();
+
+    }
+</script>

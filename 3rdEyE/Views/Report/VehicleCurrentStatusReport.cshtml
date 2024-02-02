@@ -1,0 +1,256 @@
+﻿@{
+    ViewBag.Title = "Vehicle Status";
+}
+
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Vehicle Current Status Report
+        <small></small>
+    </h1>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-body col-md-12">
+                    <div class="form-group col-md-4">
+                        <label class="col-md-4 control-label">User Company</label>
+                        <div class="col-md-8">
+                            @Html.DropDownList("FK_Company", ViewBag.Companies as SelectList, "All Company", new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label class="col-md-4 control-label">User Group</label>
+                        <div class="col-md-8">
+                            @Html.DropDownList("FK_Depo", ViewBag.Depoes as SelectList, "All User Group", new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                    </div>
+                </div>
+                <div class="box-body col-md-12">
+                    <button class="btn btn-facebook" onclick="getData()">Get Data</button>
+                    <button class="btn btn-facebook" onclick="downloadExcel()">Download (Current)</button>
+                </div>
+            </div>
+        </div>
+        <!-- /.col -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                @*<div class="box-header">
+                        <h3 class="box-title">Vehicle List</h3>
+                    </div>*@
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr style="background-color:#3B5998; color:white;">
+                                <th>
+                                    Registration No
+                                </th>
+                                <th>
+                                    User Company
+                                </th>
+                                <th>
+                                    User Group
+                                </th>
+                                <th>
+                                    Driver Number
+                                </th>
+                                <th>
+                                    GPS SIM Number
+                                </th>
+                                <th>
+                                    GPS MEI
+                                </th>
+                                <th>
+                                    Vehicle Type
+                                </th>
+                                <th>
+                                    Barnd-Model
+                                </th>
+                                <th>
+                                    Location Near By
+                                </th>
+                                <th>
+                                    Update Time
+                                </th>
+                                <th>
+                                    Updated ago
+                                </th>
+                                <th>
+                                    Connection Time
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                                <th>
+                                    Speed
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="data_tbody"></tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+@*MODAL Company START*@
+<div id="modalPreload" class="modal  modal-" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content" style="background-color:transparent; margin-top:200px;">
+            <img src="~/Content/Images/Preload.gif" />
+        </div>
+    </div>
+</div>
+@*MODAL Company END*@
+
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $('select[name=FK_Company]').select2();
+        $('select[name=FK_Depo]').select2();
+    });
+</script>
+<!-- DataTables -->
+<script src="~/Theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/Theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<!-- page script -->
+<script>
+    var data_table;
+    function getData() {
+        var FK_Company = $('select[name=FK_Company]').val();
+        var FK_Depo = $('select[name=FK_Depo]').val();
+        $("#modalPreload").css("display", "block");
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/Report/GetVehicleCurrentStatusReport/",
+            data: JSON.stringify({ FK_Company: FK_Company, FK_Depo: FK_Depo }),
+            success: function (list) {
+                if (list.length == 0) {
+                    alert("No data is found for given condition.");
+                }
+                $('#data_tbody').html("");
+                var res = "";
+                var _statusText = "";
+
+                var _updatedAgoDay = 0;
+                var _updatedAgoHour = 0;
+                var _updatedAgoMinute = 0;
+                for (var i = 0; i < list.length; i++) {
+
+                    _updatedAgoDay = _updatedAgoHour = _updatedAgoMinute = 0;
+                    _updatedAgoMinute = Number(list[i].UpdatedAgo_Minute);
+                    if (_updatedAgoMinute > 1440) {
+                        _updatedAgoDay = Math.floor(_updatedAgoMinute / 1440);
+                        _updatedAgoMinute = _updatedAgoMinute % 1440;
+                    }
+                    if (_updatedAgoMinute > 60) {
+                        _updatedAgoHour = Math.floor(_updatedAgoMinute / 60);
+                        _updatedAgoMinute = _updatedAgoMinute % 60;
+                    }
+                    if (list[i].Status == -3) {
+                        var _statusText = "Device Removed";
+                        //res = res + "<tr style='background-color: #811F1F; color:#FFFFFF;'>";
+                        res = res + "<tr>";
+                    }
+                    else if (list[i].Status == -2) {
+                        var _statusText = "Disconnected";
+                        //res = res + "<tr style='background-color: #811F1F; color:#FFFFFF;'>";
+                        res = res + "<tr>";
+                    }
+                    else if (list[i].Status == -1) {
+                        var _statusText = "Time Lapsed";
+                        //res = res + "<tr style='background-color: #811F1F; color:#FFFFFF;'>";
+                        res = res + "<tr>";
+                    }
+                    else if (list[i].Status == 0) {
+                        var _statusText = "Engniton off";
+                        //res = res + "<tr style='background-color: #F23C32; color:#FFFFFF;'>";
+                        res = res + "<tr>";
+                    }
+                    else if (list[i].Status == 1) {
+                        var _statusText = "Stand by";
+                        //res = res + "<tr style='background-color: #FF7F27; color:#000000;'>";
+                        res = res + "<tr>";
+                    } else if (list[i].Status == 2) {
+                        var _statusText = "Running";
+                        //res = res + "<tr style='background-color: #63D668; color:#000000;'>";
+                        res = res + "<tr>";
+                    }
+
+
+                    res = res + "<td>" + list[i].RegistrationNumber + "</td>";
+                    res = res + "<td>" + list[i].UserCompany_Name + "</td>";
+                    res = res + "<td>" + list[i].Depo_Name + "</td>";
+                    if (list[i].DriverNumber != undefined) {
+                        res = res + "<td>" + list[i].DriverNumber + "</td>";
+                    }
+                    else {
+                        res = res + "<td>" + "</td>";
+                    }
+                    res = res + "<td>" + list[i].GpsMobileNumber + "</td>";
+                    res = res + "<td>" + list[i].GpsIMEINumber + "</td>";
+                    res = res + "<td>" + list[i].VehicleType + "</td>";
+                    if (list[i].BarndModel != undefined) {
+                        res = res + "<td>" + list[i].BarndModel + "</td>";
+                    }
+                    else {
+                        res = res + "<td>" + "</td>";
+                    }
+                    res = res + "<td>" + list[i].NearestMapLocationDistance + "k.m. from " + list[i].NearestMapLocation + "</td>";
+                    res = res + "<td>" + list[i].UpdateTime + "</td>";
+                    res = res + "<td>" + (_updatedAgoDay > 0 ? _updatedAgoDay + " days " : " ") + (_updatedAgoHour > 0 ? _updatedAgoHour + " hours " : " ") + (_updatedAgoMinute > 0 ? _updatedAgoMinute + " minutes " : " ") + "</td>";
+                    res = res + "<td>" + list[i].ServerTime + "</td>";
+                    res = res + "<td>" + _statusText + "</td>";
+                    res = res + "<td>" + list[i].Speed + "</td>";
+                    res = res + "</tr>";
+                }
+                $('#data_tbody').html(res);
+
+                if (res != "") {
+                    if ($.fn.dataTable.isDataTable('#data_table') == false) {
+                        data_table = $('#data_table').DataTable({
+                            "paging": false,
+                            scrollY: '100vh',
+                            scrollCollapse: true,
+                            scrollX: '50vh',
+                        });
+                    }
+                }
+                $("#modalPreload").css("display", "none");
+
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                alert('Too much data to load table.');
+                console.log("Err on call: relodeFK_VehicleBrandModel()");
+                $("#modalPreload").css("display", "none");
+            }
+        });
+    }
+    function downloadExcel() {
+        tableToExcel('data_table', 'Tracking Current Status', 'Tracking All Vehicle.xls')
+    }
+</script>
+

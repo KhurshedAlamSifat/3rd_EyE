@@ -1,0 +1,200 @@
+﻿@model _3rdEyE.ViewModels.VM_IndividualRequisition
+
+@{
+    ViewBag.Title = "View";
+}
+
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Individual Requisition View
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        <a class="btn btn-block btn-info btn-sm" href="/Home/Index">Back to home</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Individual Requisition View</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form name="ThisForm" class="form-horizontal" method="post" action="" enctype="multipart/form-data">
+                    @*@Html.EditorFor(viewModel => viewModel.Model.PK_IndividualRequisition, new { htmlAttributes = new { @readonly = "readonly", @class = "form-control" } })*@
+                    <input name="PK_IndividualRequisition" value="@Model.Model.PK_IndividualRequisition" style="display:none;" />
+                    <div class="box-body col-md-12">
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <label>Required: </label>&nbsp; @Html.DisplayFor(m => m.Model.WantedCount)
+                                    </td>
+                                    <td>
+                                        <label>Trip Time: </label>&nbsp;@Html.DisplayFor(m => m.PossibleJourneyStartDateTime_Text)
+                                    </td>
+                                    <td>
+                                        <label>From: </label>&nbsp;@Html.DisplayFor(m => m.Model.Depo.Name) @Html.DisplayFor(m => m.Model.StartingLocation)
+                                    </td>
+                                    <td>
+                                        <label>To: </label>&nbsp;@Html.DisplayFor(m => m.Model.Depo1.Name) @Html.DisplayFor(m => m.Model.FinishingLocation)
+                                    </td>
+                                    <td>
+                                        <label>Vehicle Type: </label>&nbsp; @Model.Model.VehicleTypeLayer1_english : @Model.Model.VehicleTypeLayer2_english : @Model.Model.VehicleTypeLayer3_english
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <table id="data_table" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        SL
+                                    </th>
+                                    <th>
+                                        Depo Name
+                                    </th>
+                                    <th>
+                                        Agent ID
+                                    </th>
+                                    <th>
+                                        Agent Name
+                                    </th>
+                                    <th>
+                                        Contact No.
+                                    </th>
+                                    <th>
+                                        Managable Qty
+                                    </th>
+                                    <th>
+                                        Price/Qty
+                                    </th>
+                                    <th>
+                                        Booking Qty
+                                    </th>
+                                    <th>
+                                        Rank
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="data_tbody">
+                                @foreach (var item in Model.Model.IndividualRequisitionBiddings.Where(m => m.Status >= 3))
+                                {
+                                    <tr>
+                                        <td>1</td>
+                                        <td>@item.AppUser.Depo.Name</td>
+                                        <td>@item.AppUser.UniqueIDNumber</td>
+                                        <td>@item.AppUser.FullName</td>
+                                        <td>@item.AppUser.ContactNumber</td>
+                                        <td>@item.ManagableQuantity</td>
+                                        <td>@item.PricePerQuantity</td>
+                                        <td>@item.ApprovedQuantity</td>
+                                        <td>
+                                            @if (item.Status == 3)
+                                            {
+                                                <button class="btn btn-block btn-twitter btn-xs" onclick="showmodalRanking('@item.PK_IndividualRequisitionBidding'); return false;">Rank</button>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="box-footer">
+                        @*<button class="btn btn-facebook center-block" onclick="TrySubmit()">Bid</button>*@
+                        @*<input type="button" class="btn btn-facebook center-block" onclick="TrySubmit()" value="Confirm" />*@
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+@*MODAL DELETE START*@
+<div id="modalRanking" class="modal fade modal-" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Ranking</h4>
+            </div>
+            <div id="modalRanking_body" class="modal-body">
+                <form name="ThisForm" class="form-horizontal" method="post" action="/IndividualRequisition/MakeBidderRating">
+                    <input id="modalRanking_hiddenKey" name="PK_IndividualRequisitionBidding" style="display:none;" />
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2">Note: </label>
+                            <div class="col-md-10">
+                                <label>
+                                    <input type="radio" name="BidderRating" class="minimal" value="-3">-3
+                                </label>
+                                <label>
+                                    <input type="radio" name="BidderRating" class="minimal" value="-2">-2
+                                </label>
+                                <label>
+                                    <input type="radio" name="BidderRating" class="minimal" value="-1">-1
+                                </label>
+                                <label>
+                                    <input type="radio" name="BidderRating" class="minimal" value="1">1
+                                </label>
+                                <label>
+                                    <input type="radio" name="BidderRating" class="minimal" value="2">2
+                                </label>
+                                <label>
+                                    <input type="radio" name="BidderRating" class="minimal" value="3">3
+                                </label>
+                                <b class="errorMessage" data-category="errorMessage" name="error_BidderRating"></b>
+                            </div>
+
+                        </div>
+                        <script>
+                            validatorArray.push(
+                                function () {
+                                    var check = $('input[name=BidderRating]:checked').val();
+                                    if (check == undefined) {
+                                        formValidity = false;
+                                        $('b[name=error_BidderRating]').html("*required");
+                                    }
+                                });
+                        </script>
+                    </div>
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Note: </label>
+                            <div class="col-md-10">
+                                <textarea name="BidderRatingNote" type="text" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="TrySubmit()">Rank It</button>
+                <button type="button" class="btn btn-default" onclick="$('#modalRanking').modal('hide');">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*MODAL DELETE END*@
+<script>
+    function showmodalRanking(model_id) {
+        $('#modalRanking_hiddenKey').val(model_id);
+        $("#modalRanking").modal('show');
+    }
+    function tryDelete() {
+        var id = $("#modalRanking_hiddenKey").html();
+        window.location.href = "/IndividualRequisitionBidding/Cancel?id=" + id;
+    }
+</script>

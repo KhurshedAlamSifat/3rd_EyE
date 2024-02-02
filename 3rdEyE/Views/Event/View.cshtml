@@ -1,0 +1,292 @@
+﻿@model _3rdEyE.ViewModels.VM_Event
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<section class="content-header">
+    <h1>
+        View Event
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        <a class="btn btn-block btn-info btn-sm" href="@Request.UrlReferrer.ToString()">Back</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/Event/Create" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Event Information</h3>
+                            </div>
+                            <!-- /.box-header -->
+                            <!-- form start -->
+                            @*FK_Vehicle*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Vehicle*</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(viewModel => viewModel.Model.Vehicle.RegistrationNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+
+                            </div>
+                            @*Type*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Type*</label>
+                                    <div class="col-md-4">
+                                        @Html.EditorFor(viewModel => viewModel.Model.EventType.Title, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                    <div class="col-md-4">
+                                        @Html.EditorFor(viewModel => viewModel.Model.OtherEventTypeDetail, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                            </div>
+                            @*OtherEventTypeDetail*@
+                            <div class="box-body" data-category="yes_Others">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Other*</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(viewModel => viewModel.Model.OtherEventTypeDetail, new { htmlAttributes = new { @class = "form-control" } })
+
+                                        <b class="errorMessage" data-category="errorMessage" name="error_OtherEventTypeDetail"></b>
+                                    </div>
+                                </div>
+                            </div>
+                            @*IssueDate*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Issue Date</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(viewModel => viewModel.IssueDate_Text, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                            </div>
+                            @*AlertDate*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Alert Date</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(viewModel => viewModel.AlertDate_Text, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                            </div>
+                            @*ExpirationDate*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Expiration Date</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(viewModel => viewModel.ExpirationDate_Text, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                            </div>
+                            @*PolicyNumber*@
+                            <div class="box-body" data-category="yes_Insurance">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Policy Number</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(viewModel => viewModel.Model.PolicyNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                            </div>
+                            @*PrimaryAmount*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Fees</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(viewModel => viewModel.Model.PrimaryAmount, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                            </div>
+                            @*PrimaryAmount*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Fees</label>
+                                    <div class="col-md-8">
+                                        <input name="PrimaryAmount" id="PrimaryAmount" value="@ViewBag.model.PrimaryAmount" class="form-control all_input" type="number" data-category="amountCalculation" onkeyup="calculatePrimaryAmount()">
+                                    </div>
+                                </div>
+                            </div>
+                            @*PremiumAmount*@
+                            <div class="box-body yes_Insurance">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Premium Amount</label>
+                                    <div class="col-md-8">
+                                        <input name="PremiumAmount" Id="PremiumAmount" value="@ViewBag.model.PremiumAmount" class="form-control all_input" type="number" readonly="readonly">
+                                    </div>
+                                </div>
+                            </div>
+                            @*AdvancedIncomeTax*@
+                            <div class="box-body yes_FitnessPaper yes_TaxToken">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Advanced Income Tax</label>
+                                    <div class="col-md-8">
+                                        <input name="AdvancedIncomeTax" Id="AdvancedIncomeTax" value="@ViewBag.model.AdvancedIncomeTax" class="form-control all_input" type="number" data-category="amountCalculation">
+                                    </div>
+                                </div>
+                            </div>
+                            @*DigitalRegistrationFee*@
+                            <div class="box-body yes_Others_Registration">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Digital Registration Fee</label>
+                                    <div class="col-md-8">
+                                        <input name="DigitalRegistrationFee" Id="DigitalRegistrationFee" value="@ViewBag.model.DigitalRegistrationFee" class="form-control all_input" type="number" data-category="amountCalculation">
+                                    </div>
+                                </div>
+                            </div>
+                            @*HirePurchase*@
+                            <div class="box-body yes_Others_Registration">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Hire purchase</label>
+                                    <div class="col-md-8">
+                                        <input name="HirePurchase" Id="HirePurchase" value="@ViewBag.model.HirePurchase" class="form-control all_input" type="number" data-category="amountCalculation">
+                                    </div>
+                                </div>
+                            </div>
+                            @*FineAmount*@
+                            <div class="box-body non_Others_OwnershipTransfer">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Fine Amount</label>
+                                    <div class="col-md-8">
+                                        <input name="FineAmount" Id="FineAmount" value="@ViewBag.model.FineAmount" class="form-control all_input" type="number" data-category="amountCalculation">
+                                    </div>
+                                </div>
+                            </div>
+                            @*SupplementaryDutyAmount*@
+                            <div class="box-body yes_FitnessPaper yes_TaxToken yes_Others_Registration">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Supplementary Duty Amount</label>
+                                    <div class="col-md-8">
+                                        <input name="SupplementaryDutyAmount" Id="SupplementaryDutyAmount" value="@ViewBag.model.SupplementaryDutyAmount" class="form-control all_input" type="number" data-category="amountCalculation">
+                                    </div>
+                                </div>
+                            </div>
+                            @*FinancialAssistanceFund*@
+                            <div class="box-body yes_FitnessPaper yes_TaxToken yes_Others_Registration">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Financial Assistance Fund</label>
+                                    <div class="col-md-8">
+                                        <input name="FinancialAssistanceFund" Id="FinancialAssistanceFund" value="@ViewBag.model.FinancialAssistanceFund" class="form-control all_input" type="number" data-category="amountCalculation">
+                                    </div>
+                                </div>
+                            </div>
+                            @*OtherAmount*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Other Amount</label>
+                                    <div class="col-md-8">
+                                        <input name="OtherAmount" Id="OtherAmount" value="@ViewBag.model.OtherAmount" class="form-control all_input" type="number" data-category="amountCalculation">
+                                    </div>
+                                </div>
+                            </div>
+                            @*OtherNote*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Other Note</label>
+                                    <div class="col-md-8">
+                                        <textarea name="OtherNote" Id="OtherNote" class="form-control all_input">@ViewBag.model.OtherNote</textarea>
+                                        <b class="errorMessage" data-category="errorMessage" name="error_OtherNote"></b>
+                                    </div>
+                                </div>
+                            </div>
+                            @*TotalAmount*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Total Amount</label>
+                                    <div class="col-md-8">
+                                        <input name="TotalAmount" Id="TotalAmount" value="@ViewBag.model.TotalAmount" class="form-control all_input" type="number" readonly="readonly">
+                                    </div>
+                                </div>
+                            </div>
+                            @*IsAlertable*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Alertable</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(viewModel => viewModel.IsAlertable_Text, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Document List</h3>
+                                <input type="text" name="rowCount" id="rowCount" value="0" style="display:none" />
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table id="data_table" class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 5%">
+                                                        SL
+                                                    </th>
+                                                    <th style="width: 30%">
+                                                        Document Type
+                                                    </th>
+                                                    <th style="width: 20%">
+                                                        Name
+                                                    </th>
+                                                    <th style="width: 20%">
+                                                        Number
+                                                    </th>
+                                                    <th style="width: 25%">
+                                                        Download
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbody">
+                                                @{
+                                                    int i = 0;
+                                                }
+                                                @foreach (var item in Model.EventDocuments)
+                                                {
+                                                    i = i + 1;
+                                                    <tr>
+                                                        <td>@i</td>
+                                                        <td>@item.Title</td>
+                                                        <td>@item.IdentitficaitonKey</td>
+                                                        <td>@item.IdentitficaitonValue</td>
+                                                        <td><a href="/EventDocument/Download?id=@item.PK_EventDocument" class="btn btn-block btn-success btn-xs">Download</a></td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-footer">
+                        @*<a class="btn btn-default" href="/Event/Index">Back To List</a>*@
+                        @*<input type="button" class="btn btn-facebook center-block" value="Create" onclick="TrySubmit()" />*@
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+
+</section>
+
+
+<script>
+    $('document').ready(function () {
+        $('input').attr("disabled", "disabled");
+        $('textarea').attr("disabled", "disabled");
+        $('select').attr("disabled", "disabled");
+    });
+</script>

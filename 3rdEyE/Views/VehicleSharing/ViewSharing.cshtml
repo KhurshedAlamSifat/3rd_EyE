@@ -1,0 +1,184 @@
+﻿@model _3rdEyE.Models.VehicleSharing
+@{
+    ViewBag.Title = "";
+}
+
+<section class="content-header">
+    <h1>
+        View Vehicle Requsition Manager # @Model.TrackingID
+        <small>Status: <b> @(Model.Status == 0 ? "Open" : Model.Status == 1 ? "Locked" : "N/A") </b></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="col-md-12">
+                        <div class="box-header with-border">
+                            <h2 class="box-title">Demand Information</h2>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="col-md-12">
+                            <div class="box-body col-md-12">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        @foreach (var demand in Model.VehicleSharingDemands.OrderBy(m => m.IsHeadDemand).ThenBy(m => m.CreatedAt))
+                                        {
+                                            <tr>
+                                                <td colspan="4">
+                                                    <label>Traking Number: </label>&nbsp; @demand.TrackingID &nbsp;&nbsp; @(demand.IsHeadDemand == true ? "HEAD" : "")
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label>Status: </label>&nbsp; @(demand.Status == 0 ? "Created" : demand.Status == 1 ? "Approved" : demand.Status == 2 ? "Assigned" : "")
+                                                </td>
+                                                <td>
+                                                    <label>From: </label>&nbsp; @demand.Depo.Name &nbsp; @demand.StartingLocation
+                                                </td>
+                                                <td>
+                                                    <label>To: </label>&nbsp; @demand.Depo1.Name &nbsp; @demand.FinishingLocation
+                                                </td>
+                                                <td>
+                                                    <label>Vehicle Type: </label>&nbsp; @demand.VehicleType
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label>When: </label>&nbsp; @demand.PossibleJourneyStartDateTime
+                                                </td>
+                                                <td>
+                                                    <label>How many: </label>&nbsp; @demand.WantedCount
+                                                </td>
+                                                <td>
+                                                    <label>Creator Note: </label>&nbsp; @demand.ClientNote
+                                                </td>
+                                                <td>
+                                                    <label>Created By: </label>&nbsp; @demand.AppUser.FullName
+                                                </td>
+                                            </tr>
+
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="box-header with-border">
+                            <h2 class="box-title">Internal Trips</h2>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="col-md-12">
+                            <div class="box-body col-md-12">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        @foreach (var trip in Model.VehicleSharingInternalTrips)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <label>Vehicle: </label>&nbsp; @trip.Vehicle.RegistrationNumber
+                                                </td>
+                                                <td>
+                                                    <label>Contact Number: </label>&nbsp; @trip.Vehicle.Internal_VehicleContactNumber
+                                                </td>
+                                                <td>
+                                                    <label>Driver: </label>&nbsp; @trip.AppUser3.FullName &nbsp; @trip.AppUser3.ContactNumber
+                                                </td>
+                                                <td>
+                                                    <label>Is notified: </label>&nbsp; @(trip.IsNotifiedToDriver == true ? "Yes" : "No")
+                                                </td>
+                                                <td>
+                                                    <label>Status: </label>&nbsp; @trip.StatusText
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="box-header with-border">
+                            <h2 class="box-title">External Bidding & trips</h2>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="col-md-12">
+                            <div class="box-body col-md-12">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        @foreach (var bidding in Model.VehicleSharingBiddings)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <label>Transport Agent: </label>&nbsp; @bidding.AppUser.FullName &nbsp; @bidding.AppUser.ContactNumber
+                                                </td>
+                                                <td>
+                                                    <label>Status: </label>&nbsp; @bidding.StatusText
+                                                </td>
+                                                <td>
+                                                    <label>Manageabl/Approved: </label>&nbsp; @bidding.ManagableQuantity / @bidding.ApprovedQuantity
+                                                </td>
+                                                <td>
+                                                    <label>Price/Qty: </label>&nbsp; @bidding.PricePerQuantity
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label>Bidder Note: </label>&nbsp; @bidding.BidderNote
+                                                </td>
+
+                                                <td>
+                                                    <label>Approver Note: </label>&nbsp; @bidding.ApprovalNote
+                                                </td>
+                                                <td colspan="2">
+                                                    <label>Approval Message: </label>&nbsp; @bidding.ApprovalMessage
+                                                </td>
+                                            </tr>
+                                            foreach (var externalTrip in bidding.VehicleSharingExternalTrips)
+                                            {
+                                            <tr>
+                                                <td>
+                                                    <label>Vehicle: </label>&nbsp; @externalTrip.Vehicle.RegistrationNumber &nbsp; @externalTrip.Vehicle.MHT_DHT_DriverContactNumber
+                                                </td>
+                                                <td>
+                                                    <label>Driver: </label>&nbsp; @externalTrip.MHT_DHT_DriverName &nbsp; @externalTrip.MHT_DHT_DriverContactNumber
+                                                </td>
+                                                <td>
+                                                    <label>Status: </label>&nbsp; @externalTrip.StatusText
+                                                </td>
+                                                <td>
+                                                    <label>Assigned At: </label>&nbsp; @externalTrip.AssingedAt
+                                                </td>
+                                                <td>
+                                                    <label>Paid At: </label>&nbsp; @externalTrip.BillPaidAt
+                                                </td>
+                                            </tr>
+                                            }
+                                            <tr>
+                                                <td colspan="4"></td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        @*    <input type="button" class="btn btn-facebook center-block" value="Save" onclick="TrySubmit()" />*@
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+
+</section>

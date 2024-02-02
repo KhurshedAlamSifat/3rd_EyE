@@ -1,0 +1,167 @@
+﻿@model _3rdEyE.Models.AppUser
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Edit User
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        <a class="btn btn-block btn-info btn-sm" href="@System.Web.HttpContext.Current.Request.UrlReferrer">Back To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <section class="col-md-12 connectedSortable ui-sortable">
+            <!-- Custom tabs (Charts with tabs)-->
+            <div class="nav-tabs-custom" style="cursor: move;">
+                <!-- Tabs within a box -->
+                <ul class="nav nav-tabs pull-right ui-sortable-handle">
+                    <li class="pull-left active" onclick="window.location='/AppUser/Edit_BasicInformation?id=@Model.PK_User'"><a href="#CurrentlyActiveTab" data-toggle="tab">Basic Information</a></li>
+                    <li class="pull-left" onclick="window.location='/AppUser/Edit_ManageWebPermission?FK_User=@Model.PK_User'"><a href="#TargetTab" data-toggle="tab">Extra Menu Permission</a></li>
+                    <li class="pull-left" onclick="window.location='/AppUser/Edit_ManageUserAccessibleDepo?FK_User=@Model.PK_User'"><a href="#TargetTab" data-toggle="tab">Depo Permission</a></li>
+                </ul>
+                <div class="tab-content no-padding">
+                    <!-- Morris chart - Sales -->
+                    <div id="CurrentlyActiveTab" class="chart tab-pane active" style="position: relative; height: auto; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
+                        <form name="ThisForm" class="form-horizontal" method="post" action="/AppUser/Edit_BasicInformation">
+                            <input name="PK_User" value="@Model.PK_User" type="text" class="form-control" style="display:none;">
+                            <div class="box">
+                                <div class="box-body col-md-12">
+                                    <div class="form-group col-md-6">
+                                        <label class="col-md-4 control-label">Staff ID Number*</label>
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.UniqueIDNumber, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                            <b class="errorMessage" data-category="errorMessage" name="error_UniqueIDNumber"></b>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-md-4 control-label">Full Name*</label>
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.FullName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                            <b class="errorMessage" data-category="errorMessage" name="error_FullName"></b>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="box-body col-md-12">
+                                    <div class="form-group col-md-6">
+                                        <label class="col-md-4 control-label">PRG Type*</label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("PRG_Type", ViewBag.PRG_TypesDict as SelectList, "Select", new { @class = "form-control", @disabled = "disabled" })
+                                            <b class="errorMessage" data-category="errorMessage" name="error_PRG_Type"></b>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-md-4 control-label">User Group*</label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("FK_Depo", ViewBag.Depoes as SelectList, "Select", new { @class = "form-control" })
+                                            <b class="errorMessage" data-category="errorMessage" name="error_FK_Depo"></b>
+                                        </div>
+                                        <script>
+                                            validatorArray.push(
+                                                function () {
+                                                    var check = $('select[name=FK_Depo]').val();
+                                                    if (check == "") {
+                                                        formValidity = false;
+                                                        $('b[name=error_FK_Depo]').html("User Group is required.");
+                                                    }
+                                                });
+                                        </script>
+                                    </div>
+                                </div>
+                                <div class="box-body col-md-12">
+                                    <div class="form-group col-md-6">
+                                        <label class="col-md-4 control-label">Location</label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("FK_Location", ViewBag.Locations as SelectList, "Select", new { @class = "form-control" })
+                                            <b class="errorMessage" data-category="errorMessage" name="error_FK_Location"></b>
+                                        </div>
+                                        @*<script>
+                                                validatorArray.push(
+                                                    function () {
+                                                        var check = $('select[name=FK_Location]').val();
+                                                        if (check == "") {
+                                                            formValidity = false;
+                                                            $('b[name=error_FK_Location]').html("Location is required.");
+                                                        }
+                                                    });
+                                            </script>*@
+                                    </div>
+                                </div>
+                                <div class="box-body col-md-12">
+                                    <div class="form-group col-md-6">
+                                        <label class="col-md-4 control-label">User Roles</label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("FK_AppRole", ViewBag.AppRoles as SelectList, "Select", new { @class = "form-control" })
+                                            <b class="errorMessage" data-category="errorMessage" name="error_FK_AppRole"></b>
+                                        </div>
+                                        @*<script>
+                                                validatorArray.push(
+                                                    function () {
+                                                        var check = $('select[name=FK_AppRole]').val();
+                                                        if (check == "") {
+                                                            formValidity = false;
+                                                            $('b[name=error_FK_AppRole]').html("Role is required.");
+                                                        }
+                                                    });
+                                            </script>*@
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-md-4 control-label">Mobile-App Roles</label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("FK_MobileRole", ViewBag.MobileRoles as SelectList, "Select", new { @class = "form-control" })
+                                            <b class="errorMessage" data-category="errorMessage" name="error_FK_AppRole"></b>
+                                        </div>
+                                        @*<script>
+                                                validatorArray.push(
+                                                    function () {
+                                                        var check = $('select[name=FK_MobileRole]').val();
+                                                        if (check == "") {
+                                                            formValidity = false;
+                                                            $('b[name=FK_MobileRole]').html("Role is required.");
+                                                        }
+                                                    });
+                                            </script>*@
+                                    </div>
+                                </div>
+                                <div class="box-body col-md-12">
+                                    <div class="form-group col-md-6">
+                                        <label class="col-md-4 control-label">Contact Address</label>
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.ContactAddress, new { htmlAttributes = new { @class = "form-control" } })
+                                            <b class="errorMessage" data-category="errorMessage" name="error_ContactAddress"></b>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="col-md-4 control-label">User Sub Type</label>
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.AppUserSubType, new { htmlAttributes = new { @class = "form-control" } })
+                                            <b class="errorMessage" data-category="errorMessage" name="error_AppUserSubType"></b>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="box-footer">
+                                    @*<a class="btn btn-default" href="/User/Index">Back To List</a>*@
+                                    <input type="button" class="btn btn-facebook center-block" value="Update Inoformation" onclick="TrySubmit()" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </div>
+
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $('select').select2();
+    });
+</script>

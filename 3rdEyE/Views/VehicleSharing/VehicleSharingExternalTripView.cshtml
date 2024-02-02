@@ -1,0 +1,101 @@
+﻿@model _3rdEyE.Models.VehicleSharingExternalTrip
+
+<section class="content-header">
+    <h1>
+        View Internal Trip
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        <a class="btn btn-block btn-info btn-sm" href="/VehicleSharing/VehicleSharingExternalTripIndex">Go To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/InstantRequisition/PayAdjustmnet" enctype="multipart/form-data">
+        <input name="PK_VehicleSharingInternalTrip" value="@Model.PK_VehicleSharingExternalTrip" style="display:none;" />
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="col-md-12">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">@Model.VehicleSharingBidding.VehicleSharing.TrackingID @Model.Vehicle.RegistrationNumber</h3>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="col-md-12">
+                            <div class="box-body col-md-12">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <label>Status: </label>&nbsp; @Html.DisplayFor(m => m.StatusText) / @Html.DisplayFor(m => m.PaymentStatusText)
+                                            </td>
+                                            <td>
+                                                <label>Assigned: </label>&nbsp; @Html.DisplayFor(m => m.AppUser.FullName) &nbsp; @Html.DisplayFor(m => m.AssingedAt)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>Current Driver: </label>&nbsp; @Html.DisplayFor(m => m.MHT_DHT_DriverName) &nbsp;@Html.DisplayFor(m => m.MHT_DHT_DriverContactNumber) &nbsp;@Html.DisplayFor(m => m.MHT_DHT_DriverContactNumber)
+                                            </td>
+                                            <td>
+                                                <label>Vehicle: </label>&nbsp; @Html.DisplayFor(m => m.Vehicle.RegistrationNumber)
+                                            </td>
+                                            <td>
+                                                <label>From: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingBidding.VehicleSharing.Depo.Name) &nbsp; @Html.DisplayFor(m => m.VehicleSharingBidding.VehicleSharing.StartingLocation)
+                                            </td>
+                                            <td>
+                                                <label>To: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingBidding.VehicleSharing.Depo1.Name) &nbsp; @Html.DisplayFor(m => m.VehicleSharingBidding.VehicleSharing.FinishingLocation)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>Entered Startinng Loc: </label>&nbsp; @Html.DisplayFor(m => m.EnteredStartingLocationDateTime)
+                                            </td>
+                                            <td>
+                                            </td>
+                                            <td>
+                                            </td>
+                                            <td>
+                                                <label>Left Startinng Loc: </label>&nbsp; @Html.DisplayFor(m => m.LeftStartingLoactionDateTime)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>Entered Finishing Loc: </label>&nbsp; @Html.DisplayFor(m => m.EnteredFinishingLocationDateTime)
+                                            </td>
+                                            <td>
+                                            </td>
+                                            <td>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                            </td>
+                                            <td>
+                                                <label>Billing Note: </label>&nbsp; @Html.DisplayFor(m => m.BillingNote)
+                                            </td>
+                                            <td>
+                                                <label>Bill Approved: </label>&nbsp; @Html.DisplayFor(m => m.AppUser1.FullName) &nbsp; @Html.DisplayFor(m => m.BillApprovedAt)
+                                            </td>
+                                            <td>
+                                                <label>Bill Paid: </label>&nbsp; @Html.DisplayFor(m => m.AppUser2.FullName) &nbsp; @Html.DisplayFor(m => m.BillPaidAt)
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+
+</section>

@@ -1,0 +1,372 @@
+﻿@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Halt & Run Report
+        <small>[Get Data >> Last One Month]</small>
+    </h1>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-body col-md-12">
+                    <div class="form-group col-md-4">
+                        <label class="col-md-4 control-label">User Group:</label>
+                        <div class="col-md-8">
+                            @Html.DropDownList("FK_Depo", ViewBag.Depoes as SelectList, "Select", new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="col-md-4 control-label">Starting Date*:</label>
+                        <div class="input-group col-md-8">
+                            <div class="col-md-12 input-append date form_datetime" @*data-date="1979-09-16T05:25:07Z" *@ data-date-format="dd MM yyyy - HH:ii p" data-link-field="dtp_input1">
+                                <input id="StartingDate" name="StartingDate" class="form-control col-md-12" type="text" value="" readonly="readonly" style="background-color: white;">
+                                <span class="add-on"><i class="icon-remove"></i></span>
+                                <span class="add-on"><i class="icon-th"></i></span>
+                            </div>
+                            <input type="hidden" id="dtp_input1" value="" style="display:none;" /><br />
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="col-md-4 control-label">Einding Date*:</label>
+                        <div class="input-group col-md-8">
+                            <div class="col-md-12 input-append date form_datetime" @*data-date="1979-09-16T05:25:07Z"*@ data-date-format="dd MM yyyy - HH:ii p" data-link-field="dtp_input1">
+                                <input id="EndingDate" name="EndingDate" class="form-control col-md-12" type="text" value="" readonly="readonly" style="background-color: white;">
+                                <span class="add-on"><i class="icon-remove"></i></span>
+                                <span class="add-on"><i class="icon-th"></i></span>
+                            </div>
+                            <input type="hidden" id="dtp_input2" value="" style="display:none;" /><br />
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body col-md-12">
+                    <div class="form-group col-md-4">
+                        <label class="col-md-4 control-label">Vehicle:</label>
+                        <div class="col-md-8">
+                            <input id="RegistrationNumber" name="RegistrationNumber" value="@ViewBag.RegistrationNumber" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="col-md-4 control-label">Status:</label>
+                        <div class="col-md-8">
+                            <select name="Status" id="Status" class="form-control">
+                                <option value="Halt">Halt</option>
+                                <option value="Run">Run</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body col-md-12">
+                    @*<button class="btn btn-facebook" onclick="getData_ReadyReport()">Get Data(Ready Made)</button>*@
+                    <button class="btn btn-facebook" onclick="getData()">Get Data</button>
+                    <button class="btn btn-facebook" onclick="downloadExcel()">Download (Current)</button>
+                </div>
+            </div>
+        </div>
+        <!-- /.col -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Halt & Run Report</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr style="background-color:#3B5998; color:white;">
+                                <td>Registration Number</td>
+                                <td>Date & Time</td>
+                                <td>Duration (Min)</td>
+                                <td>Location</td>
+                                <td>View map</td>
+                            </tr>
+                        </thead>
+                        <tbody id="data_tbody"></tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+@*MODAL Company START*@
+<div id="modalPreload" class="modal  modal-" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content" style="background-color:transparent; margin-top:200px;">
+            <img src="~/Content/Images/Preload.gif" />
+        </div>
+    </div>
+</div>
+@*MODAL Company END*@
+<!-- /.content -->
+<!-- DataTables -->
+<script src="~/Theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/Theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<!-- page script -->
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+<script>
+    $(function () {
+        $('select[name=FK_Depo]').select2();
+        //$('#data_table').DataTable({ "scrollX": true });
+        $('.form_datetime').datetimepicker({
+            //format: 'yyyy-mm-dd HH:ii P',
+            format: 'yyyy-mm-dd HH:ii P',
+            //setDate: new Date(),
+            //weekStart: 1,
+            todayBtn: 1,
+            autoclose: 1,
+            //todayHighlight: 1,
+            //startView: 2,
+            //forceParse: 0,
+            //showMeridian: 0
+            //startDate: '+0d'
+        });
+    });
+</script>
+
+<script>
+    function getData() {
+        var FK_Depo = $('select[name=FK_Depo]').val();
+        var StartingDate = $('Input[name=StartingDate]').val();
+        var EndingDate = $('Input[name=EndingDate]').val();
+        var MinimumMinute = $('select[name=MinimumMinute]').val();
+        var RegistrationNumber = $('Input[name=RegistrationNumber]').val();
+        if (RegistrationNumber == '') {
+            RegistrationNumber = null;
+        }
+        var Status = $('select[name=Status]').val();
+        if (StartingDate == '' || EndingDate == '') {
+            alert("Please, Select User group, Starting date and Ending date.");
+            $('#data_tbody').html("");
+            return;
+        }
+        $("#modalPreload").css("display", "block");
+
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/Report/GetVehicleHaltAndRunReportData/",
+            data: JSON.stringify({ FK_Depo: FK_Depo, StartingDate: StartingDate, EndingDate: EndingDate, RegistrationNumber: RegistrationNumber }),
+            success: function (list) {
+                if (list.length == 0) {
+                    alert("No data is found for given condition.");
+                }
+                console.log(list);
+                $('#data_tbody').html("");
+                var res = "";
+                var haltTime_newDate = 0;
+                var haltCount_newDate = 0;
+
+                var haltCount_newVehicle = 0;
+                var haltTime_newVehicle = 0;
+
+                var _useRowSpan = false;
+                var _rowSpan = 0;
+                for (var i = 0; i < list.length; i++) {
+                    if (list[i]._rowType == 'NewVehicle_start') {
+                        res = res + "<tr>";
+                        res = res + "<td  rowspan='" + list[i]._rowSpan + "'><b>" + list[i].NewVehicle + "</b></td>";
+                        res = res + "</tr>";
+
+                        haltTime_newDate = 0;
+                        haltTime_newVehicle = 0;
+
+                        haltCount_newDate = 0;
+                        haltCount_newVehicle = 0;
+                    }
+                    //if (list[i]._rowType == 'data' || list[i]._rowType == 'data_initial_gap' || list[i]._rowType == 'data_finishing_gap') {
+                    if (list[i]._rowType.includes(Status) && list[i].LapTime != '0') {
+
+                        var _gapHour = Math.floor(Number(list[i].LapTime) / 60);
+                        var _gapMin = Number(list[i].LapTime) % 60;
+                        res = res + "<tr>";
+                        res = res + "<td>" + list[i].StartTime + "  -  " + list[i].EndTime + "</td>";
+                        res = res + "<td>" + (_gapHour > 0 ? _gapHour + " hour " : " ") + (_gapMin > 0 ? _gapMin + " min " : " ") + "</td>";
+                        if (list[i]._rowType == 'data_initial_gap') {
+                            res = res + "<td></td>";
+                            res = res + "<td></td>";
+                        } else {
+                            res = res + "<td>" + list[i].NearestMapLocationDistance + " KM far from " + list[i].NearestMapLocation + "</td>";
+                            res = res + "<td><a target='_blank' href='/Report/ShowMapWithMarker?latitude=" + list[i].Latitude + "&longitude=" + list[i].Longitude + "'>" + "Map link" + "</a></td>";
+                        }
+
+                        res = res + "</tr>";
+
+                        haltTime_newDate = haltTime_newDate + Number(list[i].LapTime);
+                        haltCount_newDate = haltCount_newDate + 1;
+                    }
+                    else if (list[i]._rowType == 'NewDate_end') {
+                        var _gapHour = Math.floor(haltTime_newDate / 60);
+                        var _gapMin = haltTime_newDate % 60;
+
+                        res = res + "<tr style='background-color: #a0a1ef;'>";
+                        res = res + "<td>" + list[i].DateString + "</td>";
+                        res = res + "<td>" + (_gapHour > 0 ? _gapHour + " hour " : " ") + (_gapMin > 0 ? _gapMin + " min " : " ") + "</td>";
+                        res = res + "<td>" + "Nuber of " + Status + ": " + haltCount_newDate + "</td>";
+                        res = res + "<td>" + "</td>";
+                        res = res + "</tr>";
+
+                        haltTime_newVehicle = haltTime_newVehicle + haltTime_newDate;
+                        haltTime_newDate = 0;
+                        haltCount_newVehicle = haltCount_newVehicle + haltCount_newDate;
+                        haltCount_newDate = 0;
+                    }
+                    else if (list[i]._rowType == 'NewVehicle_end') {
+                        var _gapHour = Math.floor(haltTime_newVehicle / 60);
+                        var _gapMin = haltTime_newVehicle % 60;
+
+                        res = res + "<tr style='background-color: #202177; color: white;'>";
+                        res = res + "<td colspan='2'>" + list[i].StartingDate + " to " + list[i].EndingDate + "</td>";
+                        res = res + "<td>" + (_gapHour > 0 ? _gapHour + " hour " : " ") + (_gapMin > 0 ? _gapMin + " min " : " ") + "</td>";
+                        res = res + "<td>" + "Nuber of " + Status + ": " + haltCount_newVehicle + "</td>";
+                        res = res + "</tr>";
+
+                        haltTime_newDate = 0;
+                        haltTime_newVehicle = 0;
+                        haltCount_newDate = 0;
+                        haltCount_newVehicle = 0;
+                    }
+                }
+                $('#data_tbody').html(res);
+                $("#modalPreload").css("display", "none");
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: getData()");
+                $("#modalPreload").css("display", "none");
+            }
+        });
+    }
+    function getData_ReadyReport() {
+        var FK_Depo = $('select[name=FK_Depo ]').val();
+        var StartingDate = $('Input[name=StartingDate]').val();
+        var EndingDate = $('Input[name=EndingDate]').val();
+        var MinimumMinute = $('select[name=MinimumMinute]').val();
+        var RegistrationNumber = $('Input[name=RegistrationNumber]').val();
+        if (RegistrationNumber == '') {
+            RegistrationNumber = null;
+        }
+
+        if (StartingDate == '' || EndingDate == '') {
+            alert("Please, Select User group, Starting date and Ending date.");
+            $('#data_tbody').html("");
+            return;
+        }
+        $("#modalPreload").css("display", "block");
+
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/Report/GetVehicleHaltTime_ReadyReport/",
+            data: JSON.stringify({ FK_Depo: FK_Depo, StartingDate: StartingDate, EndingDate: EndingDate, RegistrationNumber: RegistrationNumber, MinimumMinute: MinimumMinute }),
+            success: function (list) {
+                if (list.length == 0) {
+                    alert("No data is found for given condition.");
+                }
+                console.log(list);
+                $('#data_tbody').html("");
+                var res = "";
+                var haltTime_newDate = 0;
+                var haltCount_newDate = 0;
+
+                var haltCount_newVehicle = 0;
+                var haltTime_newVehicle = 0;
+
+                var _useRowSpan = false;
+                var _rowSpan = 0;
+                for (var i = 0; i < list.length; i++) {
+                    if (list[i]._rowType == 'NewVehicle_start') {
+                        res = res + "<tr>";
+                        res = res + "<td  rowspan='" + list[i]._rowSpan + "'><b>" + list[i].NewVehicle + "</b></td>";
+                        res = res + "</tr>";
+
+                        haltTime_newDate = 0;
+                        haltTime_newVehicle = 0;
+
+                        haltCount_newDate = 0;
+                        haltCount_newVehicle = 0;
+                    }
+                    if (list[i]._rowType == 'data' || list[i]._rowType == 'data_initial_gap' || list[i]._rowType == 'data_finishing_gap') {
+
+                        var _gapHour = Math.floor(Number(list[i].HaltTime) / 60);
+                        var _gapMin = Number(list[i].HaltTime) % 60;
+                        res = res + "<tr>";
+                        res = res + "<td>" + list[i].StartTime + "  -  " + list[i].EndTime + "</td>";
+                        res = res + "<td>" + (_gapHour > 0 ? _gapHour + " hour " : " ") + (_gapMin > 0 ? _gapMin + " min " : " ") + "</td>";
+                        if (list[i]._rowType == 'data_initial_gap') {
+                            res = res + "<td></td>";
+                            res = res + "<td></td>";
+                        } else {
+                            res = res + "<td>" + list[i].NearestMapLocationDistance + " KM far from " + list[i].NearestMapLocation + "</td>";
+                            res = res + "<td><a target='_blank' href='/Report/ShowMapWithMarker?latitude=" + list[i].Latitude + "&longitude=" + list[i].Longitude + "'>" + "Map link" + "</a></td>";
+                        }
+
+                        res = res + "</tr>";
+
+                        haltTime_newDate = haltTime_newDate + Number(list[i].HaltTime);
+                        haltCount_newDate = haltCount_newDate + 1;
+                    }
+                    else if (list[i]._rowType == 'NewDate_end') {
+                        var _gapHour = Math.floor(haltTime_newDate / 60);
+                        var _gapMin = haltTime_newDate % 60;
+
+                        res = res + "<tr style='background-color: #a0a1ef;'>";
+                        res = res + "<td>" + list[i].DateString + "</td>";
+                        res = res + "<td>" + (_gapHour > 0 ? _gapHour + " hour " : " ") + (_gapMin > 0 ? _gapMin + " min " : " ") + "</td>";
+                        res = res + "<td>" + "Nuber of halt: " + haltCount_newDate + "</td>";
+                        res = res + "<td>" + "</td>";
+                        res = res + "</tr>";
+
+                        haltTime_newVehicle = haltTime_newVehicle + haltTime_newDate;
+                        haltTime_newDate = 0;
+                        haltCount_newVehicle = haltCount_newVehicle + haltCount_newDate;
+                        haltCount_newDate = 0;
+                    }
+                    else if (list[i]._rowType == 'NewVehicle_end') {
+                        var _gapHour = Math.floor(haltTime_newVehicle / 60);
+                        var _gapMin = haltTime_newVehicle % 60;
+
+                        res = res + "<tr style='background-color: #202177; color: white;'>";
+                        res = res + "<td colspan='2'>" + list[i].StartingDate + " to " + list[i].EndingDate + "</td>";
+                        res = res + "<td>" + (_gapHour > 0 ? _gapHour + " hour " : " ") + (_gapMin > 0 ? _gapMin + " min " : " ") + "</td>";
+                        res = res + "<td>" + "Nuber of halt: " + haltCount_newVehicle + "</td>";
+                        res = res + "<td>" + "</td>";
+                        res = res + "</tr>";
+
+                        haltTime_newDate = 0;
+                        haltTime_newVehicle = 0;
+                        haltCount_newDate = 0;
+                        haltCount_newVehicle = 0;
+                    }
+                }
+                $('#data_tbody').html(res);
+                $("#modalPreload").css("display", "none");
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: getData()");
+                $("#modalPreload").css("display", "none");
+            }
+        });
+    }
+    function downloadExcel() {
+        tableToExcel('data_table', 'Halt Report', 'Halt Report.xls')
+    }
+</script>

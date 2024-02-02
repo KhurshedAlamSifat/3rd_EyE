@@ -1,0 +1,87 @@
+﻿@model _3rdEyE.Models.AppRole
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+
+<section class="content-header">
+    <h1>
+        Add Role
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        <a class="btn btn-block btn-info btn-sm" href="/AppRoles/Index">Back To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Role Information</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form name="ThisForm" class="form-horizontal" method="post" action="/AppRoles/Create">
+                    <input name="PK_AppRole" value="@Model.PK_AppRole" type="text" class="form-control" style="display:none;">
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">FullName*</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.FullName, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_FullName"></b>
+                                <script>
+                                    validatorArray.push(
+                                        function () {
+                                            var check = $('inpit[name=FullName]').val();
+                                            if (check == "") {
+                                                formValidity = false;
+                                                $('b[name=error_FullName]').html("FullName is required.");
+                                            }
+                                        });
+                                </script>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Note*</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Note, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_Note"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">IsActive</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.IsActive, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_ContactNumber"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">IsDeleted</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.IsDeleted, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_ContactNumber"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <input type="button" class="btn btn-facebook center-block" value="Save" onclick="TrySubmit()" />
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $('select').select2();
+    });
+</script>
+

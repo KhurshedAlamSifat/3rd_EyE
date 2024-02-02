@@ -1,0 +1,308 @@
+﻿@model _3rdEyE.Models.VehicleTrip
+@{
+    ViewBag.Title = "Create";
+}
+
+@*Date picker*@
+<link href="~/Theme/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Edit Existing Trip
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        <a class="btn btn-block btn-info btn-sm" href="@System.Web.HttpContext.Current.Request.UrlReferrer">Back To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Trip Information</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form name="ThisForm" class="form-horizontal" method="post" action="/VehicleTrip/Edit" enctype="multipart/form-data">
+                    @Html.EditorFor(model => model.PK_VehicleTrip, new { htmlAttributes = new { style = "display:none;" } })
+
+                    <div class="box-body col-md-12">
+                        @*Internal_FK_FinancingCompany*@
+                        <div class="form-group  col-md-4">
+                            <label class="col-md-4 control-label">Vehicle*</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Vehicle", ViewBag.Vehicles as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_Vehicle"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('select[name=FK_Vehicle]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_FK_Vehicle]').html("Vehicle is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                        @*FK_Depo_From*@
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">From*</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Depo_From", ViewBag.Depoes as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_Depo_From"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('select[name=FK_Depo_From]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_FK_Depo_From]').html("From location is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                        @*FK_Depo_To*@
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">To*</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Depo_To", ViewBag.Depoes as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_Depo_To"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('select[name=FK_Depo_To]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_FK_Depo_To]').html("To location is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        @*PartyQuantity*@
+                        <div class="form-group  col-md-4">
+                            <label class="col-md-4 control-label">Party Quantity</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.PartyQuantity, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_"></b>
+                            </div>
+                        </div>
+                        @*FreshChallan*@
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Fresh Challan</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.FreshChallan, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_"></b>
+                            </div>
+                        </div>
+                        @*Toll*@
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Toll</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Toll, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        @*Bridge*@
+                        <div class="form-group  col-md-4">
+                            <label class="col-md-4 control-label">Bridge</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Bridge, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_"></b>
+                            </div>
+                        </div>
+                        @*Ferry*@
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Ferry</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Ferry, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_"></b>
+                            </div>
+                        </div>
+                        @*Eant_A*@
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Eant_A</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Eant_A, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        @*OpenTruck*@
+                        <div class="form-group  col-md-4">
+                            <label class="col-md-4 control-label">Open Truck</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.OpenTruck, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_"></b>
+                            </div>
+                        </div>
+                        @*AllowanceDriver*@
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Allowance Driver</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.AllowanceDriver, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_"></b>
+                            </div>
+                        </div>
+                        @*AllowanceHelper*@
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Allowance Helper</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.AllowanceHelper, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        @*MobileBill*@
+                        <div class="form-group  col-md-4">
+                            <label class="col-md-4 control-label">Mobile Bill</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.MobileBill, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_"></b>
+                            </div>
+                        </div>
+                        @*LoadUnloadPoint*@
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Load Unload Point</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.LoadUnloadPoint, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_"></b>
+                            </div>
+                        </div>
+                        @*NightBill*@
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Night Bill</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.NightBill, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        @*Conveyance*@
+                        <div class="form-group  col-md-4">
+                            <label class="col-md-4 control-label">Conveyance</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Conveyance, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_"></b>
+                            </div>
+                        </div>
+                        @*CarriageOutword*@
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Carriage Outword</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.CarriageOutword, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_"></b>
+                            </div>
+                        </div>
+                        @*FactoryDiesel*@
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Factory Diesel</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.FactoryDiesel, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        @*FactoryGas*@
+                        <div class="form-group  col-md-4">
+                            <label class="col-md-4 control-label">Factory Gas</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.FactoryGas, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_"></b>
+                            </div>
+                        </div>
+                        @*FactoryOcten*@
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Factory Octen</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.FactoryOcten, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_"></b>
+                            </div>
+                        </div>
+                        @*FactoryMobil*@
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Factory Mobil</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.FactoryMobil, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        @*Others*@
+                        <div class="form-group  col-md-6">
+                            <label class="col-md-4 control-label">Others</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Others, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_"></b>
+                            </div>
+                        </div>
+                        @*CityCoorporation_LaborTrustChanda*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">City Coorporation/ Labor Trust Chanda</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.CityCoorporation_LaborTrustChanda, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        @*Van_Rickshaw_Boat_TrollerRent*@
+                        <div class="form-group  col-md-6">
+                            <label class="col-md-4 control-label">Van/ Rickshaw/ Boat/ Troller Rent</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Van_Rickshaw_Boat_TrollerRent, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_"></b>
+                            </div>
+                        </div>
+                        @*LandPort_Export_LCStation_AnotherPartyPoint_Workshop*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Land Port/ Export/ LC Station/ Another Party Point/ Workshop</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.LandPort_Export_LCStation_AnotherPartyPoint_Workshop, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        @*<a class="btn btn-default" href="/Vehicle/Index">Back To List</a>*@
+                        @*<input type="button" class="btn btn-facebook pull-right" value="Create" onclick="TrySubmit()" />*@
+                        <input type="button" class="btn btn-facebook center-block" value="Save" onclick="TrySubmit()" />
+                    </div>
+
+                    <!-- /.box-footer -->
+                </form>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+@*Date Picker*@
+<script src="~/Theme/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $('select').select2();
+    });
+</script>
+

@@ -1,0 +1,201 @@
+﻿@model IEnumerable<_3rdEyE.Models.RequisitionTrip>
+
+@{
+    ViewBag.Title = "Vehicle list";
+}
+
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+<!-- DataTablesExportable -->
+<!--<link href="~/Content/ExportableDatatable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/ExportableDatatable/buttons.dataTables.min.css" rel="stylesheet" />-->
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+@{
+    string ConvertToDateTimeString(DateTime? dateTime)
+    {
+        return String.Format("{0:yyyy/MM/dd HH:mm}", dateTime);
+    }
+    var now = DateTime.Now;
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Today's Hired Vehicles
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        @*<a class="btn btn-block btn-info btn-sm" href="/TemporaryVehicle/Create">Create</a>*@
+    </div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-header">
+                    <h3 class="box-title"></h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body" style="overflow-x:scroll;height: auto; overflow-y: scroll;">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Tr Id</th>
+                                <th>Vehicle</th>
+                                <th>PRG_Type</th>
+                                <th>Department</th>
+                                <th>Final Coming Time</th>
+                                <th>Entry Confirm</th>
+                            </tr>
+                        </thead>
+                        <tbody id="detail_tbody">
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.TrackingID</td>
+                                    <td>@item.Vehicle.RegistrationNumber</td>
+                                    <td>@item.Requisition.PRG_Type</td>
+                                    <td>@(item.Requisition.LocationDepartment?.DepartmentCode)</td>
+                                    <td>@item.FinalWantedAtDateTime</td>
+                                    <td>
+                                        @if (item.ManualParkingEntryTime == null)
+                                        {
+                                            <a href="/ParkingInOut/ConfirmManualParkingEntry?id=@item.PK_RequisitionTrip">Confirm</a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+
+            </div>
+
+        </div>
+        <!-- /.box -->
+    </div>
+    <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+@*MODAL DELETE START*@
+<div id="modalReceivingRequest" class="modal fade modal-" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Gate In</h4>
+            </div>
+            <div id="modalReceivingRequest_body" class="modal-body">
+                <form name="ThisForm" class="form-horizontal" method="post" action="/ReceivingRequest/ReceiveByGate">
+                    <input id="modalReceivingRequest_hiddenKey" name="PK_ReceivingRequest" style="display:none;" />
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2">Carrer Type*: </label>
+                            <div class="col-md-10">
+                                <input id="CarrerType" name="CarrerType" size="16" type="text" value="" class="form-control">
+                                <b class="errorMessage" data-category="errorMessage" name="error_CarrerType"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('input[name=CarrerType]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_CarrerType]').html("required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Note: </label>
+                            <div class="col-md-10">
+                                <textarea name="Note_GateReceival" type="text" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="TrySubmit()">Gate In</button>
+                <button type="button" class="btn btn-default" onclick="$('#modalReceivingRequest').modal('hide');">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*MODAL DELETE END*@
+<script>
+    function showmodalReceive(model_id) {
+        $('#modalReceivingRequest_hiddenKey').val(model_id);
+        $("#modalReceivingRequest").modal('show');
+    }
+    function tryDelete() {
+        var id = $("#modalReceivingRequest_hiddenKey").html();
+        window.location.href = "/IndividualRequisitionBidding/Cancel?id=" + id;
+    }
+</script>
+
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+<script>
+    $(function () {
+        //$('select').select2();
+        //$('.form_datetime').datetimepicker({
+        //    format: 'yyyy-mm-dd HH:ii P',
+        //    todayBtn: 1,
+        //    autoclose: 1,
+        //});
+    });
+</script>
+<!-- DataTablesExportable -->
+<!--<script src="~/Scripts/Custom/DataTableExportable/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.flash.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/jszip.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/pdfmake.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/vfs_fonts.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.html5.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.print.min.js"></script>-->
+<!-- DataTables -->
+<script src="~/Theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/Theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script>
+    @*function scroll(speed) {
+        $('html, body').animate({ scrollTop: $(document).height() - $(window).height() }, speed, function () {
+            $(this).animate({ scrollTop: 0 }, speed);
+        });
+    }
+    speed = 10000 * @Model.Count();
+    scroll(speed);
+    setInterval(function () { scroll(speed) }, speed * 2);*@
+</script>
+<script>
+    //window.setTimeout(function () {
+    //    location.reload();
+    //}, 1000 * 60);
+    //$(function () {
+    //    $('#data_table').DataTable({
+    //        //"ordering": true,
+    //        "paging": false,
+    //        dom: 'Bfrtip',
+    //        buttons: [
+    //            'copy', 'csv', 'excel', 'pdf', 'print'
+    //        ]
+    //    });
+    //});
+    $('#data_table').DataTable({ "ordering": false, "paging": false });
+</script>
+
+

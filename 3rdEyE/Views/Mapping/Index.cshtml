@@ -1,0 +1,144 @@
+﻿@model IEnumerable<_3rdEyE.Models.Mapping>
+
+@{
+    var RolePermissionList = (List<_3rdEyE.ManagingTools.Permission>)Session["RolePermissionList"];
+}
+<!-- DataTablesExportable -->
+<link href="~/Content/ExportableDatatable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/ExportableDatatable/buttons.dataTables.min.css" rel="stylesheet" />
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Mapping List
+        <small></small>
+    </h1>
+    @if (RolePermissionList.Where(m => m.FullName == "Mapping-create").Any())
+    {
+        <div class="breadcrumb">
+            <a class="btn btn-block btn-facebook btn-sm" href="/Mapping/Create">Create New</a>
+        </div>
+    }
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Mapping List</h3>
+                </div>
+
+                <div class="box-body">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Mappnig Type
+                                </th>
+                                <th>
+                                    Base Value
+                                </th>
+                                <th>
+                                    Mapping Value
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.MappingKey)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.IndependentKeyName) : @Html.DisplayFor(modelItem => item.IndependentKeyValue)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DependentKeyName) : @Html.DisplayFor(modelItem => item.DependentKeyValue)
+                                    </td>
+                                    <td>
+                                        @if (RolePermissionList.Where(m => m.FullName == "Mapping-edit").Any())
+                                        {
+                                            <a href="/Mapping/Edit?id=@item.PK_Mapping" class="btn btn-success btn-xs">Edit</a>
+                                        }
+                                        <a href="/Mapping/Delete?id=@item.PK_Mapping" class="btn btn-danger btn-xs">Delete</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+@*MODAL DELETE START*@
+<div id="modalDelete" class="modal fade modal-" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div id="modalDelete_hiddenKey" style="display:none;"></div>
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+            </div>
+            <div id="modalDelete_body" class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="tryDelete()">Yes</button>
+                <button type="button" class="btn btn-primary" onclick="$('#modalDelete').modal('hide');">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*MODAL DELETE END*@
+<!-- /.content -->
+<!-- DataTablesExportable -->
+<script src="~/Scripts/Custom/DataTableExportable/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.flash.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/jszip.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/pdfmake.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/vfs_fonts.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.html5.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.print.min.js"></script>
+<!-- page script -->
+<script>
+    $(function () {
+        $('#data_table').DataTable({
+            "ordering": true,
+            "paging": false,
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+    });
+    function FilterByInputToRedirectView() {
+        var url = "/Location/Index?";
+
+        var Location_Category = $("select[name=Location_Category]").val();
+        if (Location_Category != '') {
+            url = url + "Location_Category=" + Location_Category;
+        } else {
+            url = url + "Location_Category=null";
+        }
+        window.location = url;
+    }
+    function showModalDelete(model_id, model_name) {
+        $('#modalDelete_hiddenKey').html(model_id);
+        $('#modalDelete_body').html("Do you want to delete compnay (" + model_name + ")?");
+        $("#modalDelete").modal('show');
+    }
+    function tryDelete() {
+        var id = $("#modalDelete_hiddenKey").html();
+        window.location.href = "/Location/Delete?id=" + id;
+    }
+</script>
+

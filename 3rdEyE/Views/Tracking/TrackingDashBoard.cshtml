@@ -1,0 +1,283 @@
+﻿<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="row">
+                <div class="col-md-12" id="PranChartDiv"></div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-success">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">PRAN-Vehicles-Detail</h3>
+                        </div>
+                        <div class="box-body">
+                            <table class="table table-dark">
+                                <tbody id="Pran_tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="row">
+                <div class="col-md-12" id="RFLChartDiv"></div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-success">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">RFL Vehicles-Detail</h3>
+                        </div>
+                        <div class="box-body">
+                            <table class="table table-dark">
+                                <tbody id="RFL_tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    @*<div class="row">
+            <div class="col-md-4">
+                <div class="box box-success">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Vahicle Information</h3>
+                    </div>
+                    <div class="box-body">
+                        <table class="table table-dark">
+                            <thead>
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col">PRAN</th>
+                                    <th scope="col">RFL</th>
+                                </tr>
+                            </thead>
+                            <tbody id="vahicleInformation_tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+<script src="~/Scripts/fusioncharts/fusioncharts.js"></script>
+<script src="~/Scripts/fusioncharts/fusioncharts.powercharts.js"></script>
+<script src="~/Scripts/fusioncharts/fusioncharts.theme.fint.js"></script>
+<script>
+    $(function () {
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/Tracking/GetTrackingDashBoardData/",
+            //data: JSON.stringify({ FK_Vehicles: FK_Vehicles, StartingDate: StartingDate, EndingDate: EndingDate, MinimumMinute: MinimumMinute }),
+            success: function (data) {
+                console.log(data);
+
+                //# Pran
+                $("#Pran_tbody").append("<tr>" + "<td colspan = '2'>" + "<b>Total Vehicle: </b>" + data.PranVehicleCount + "</td>" + "</tr>");
+                $("#Pran_tbody").append("<tr>" + "<td colspan = '2'>" + "<b>With IMEI: </b>" + data.PranVehicleWithIMEICount + "</td>" + "<td colspan = '2'>" + "<b>Without IMEI: </b>" + (data.PranVehicleCount - data.PranVehicleWithIMEICount) + "</td>" + "</tr>");
+                $("#Pran_tbody").append("<tr>" + "<td colspan = '2'>" + "<b>Tracking: </b>" + data.PranVehicleTrackingCount + "</td>" + "<td colspan = '2'>" + "<b>Non-Teacking: </b>" + (data.PranVehicleCount - data.PranVehicleTrackingCount) + "</td>" + "</tr>");
+                $("#Pran_tbody").append("<tr>" + "<td colspan = '2'>" + "<b>Connected: </b>" + data.PranVehicleTrackingConnectedCount + "</td>" + "<td colspan = '2'>" + "<b>Disconnected: </b>" + (data.PranVehicleTrackingCount - data.PranVehicleTrackingConnectedCount) + "</td>" + "</tr>");
+                $("#Pran_tbody").append("<tr>" + "<td colspan = '4'><center><b> Company Wise Detail </b></center></td>" + "</tr>");
+                $("#Pran_tbody").append("<tr>" + "<td><b> Company </b></td>" + "<td><b> With IMEI </b></td>" + "<td><b> Tracking </b></td>" + "<td><b> Connected </b></td>" + "</tr>");
+                for (var i = 0; i < data.PranCompanyWiseDetails.length; i++) {
+                    $("#Pran_tbody").append("<tr>"
+                        + "<td>" + data.PranCompanyWiseDetails[i].CompanyName + "</td>"
+                        + "<td>" + data.PranCompanyWiseDetails[i].VehicleWithIMEICount + "</td>"
+                        + "<td>" + data.PranCompanyWiseDetails[i].VehicleTrackingCount + "</td>"
+                        + "<td>" + data.PranCompanyWiseDetails[i].VehicleTrackingConnectedCount + "</td>"
+                        + "</tr>");
+                }
+
+                FusionCharts.ready(function () {
+                    var PranChart = new FusionCharts({
+                        type: 'multilevelpie',
+                        renderAt: 'PranChartDiv',
+                        id: "pranChart",
+                        width: $("#Pran_tbody").width(),
+                        height: '500',
+                        dataFormat: 'json',
+                        dataSource: {
+                            "chart": {
+                                "caption": "PRAN-Vehicles",
+                                //"captionFontSize": "18",
+                                //"subcaption": "Last Quarter",
+                                //"subcaptionFontBold": "1",
+                                "showPlotBorder": "0",
+                                "piebordercolor": "#000000",
+                                "piefillalpha": "60",
+                                "pieborderthickness": "2",
+                                "hoverfillcolor": "#FF0000",
+                                "numberprefix": "",
+                                "plottooltext": "$label, $value, $percentValue",
+                                //"theme": "fusion"
+
+                                "baseFontColor": "#000000",
+                                //"baseFont": "Helvetica Neue,Arial",
+                                "basefontsize": "18",
+                                "bgColor": "#FFFFFF",
+                                //"canvasBgColor": "#FF0000",
+                                //"showBorder": "10",
+                                //"showShadow": "1",
+                            },
+                            "category": [
+                                {
+                                    "label": "All" + "<br>" + data.PranVehicleCount,
+                                    "color": "#ff0000",
+                                    "value": data.PranVehicleCount,
+                                    "category": [
+                                        {
+                                            "label": "Tracking",
+                                            "color": "#33ccff",
+                                            "value": data.PranVehicleTrackingCount,
+                                            "tooltext": "$label, $value, $percentValue",
+                                            "category": [
+                                                {
+                                                    "label": "Connected",
+                                                    "color": "#ccff66",
+                                                    "value": data.PranVehicleTrackingConnectedCount
+                                                },
+                                                {
+                                                    "label": "Disconnected",
+                                                    "color": "#f47c7c",
+                                                    "value": data.PranVehicleTrackingDisconnectedCount
+                                                }
+                                            ]
+                                        },
+                                        {
+
+                                            "label": "Non Tracking",
+                                            "color": "#f8bd19",
+                                            "value": (data.PranVehicleCount - data.PranVehicleTrackingCount),
+                                            //"tooltext": "$label, $value, $percentValue",
+                                            "category": [
+                                                {
+                                                    //"label": "Non Tracking",
+                                                    "color": "#f8bd19",
+                                                    "value": (data.PranVehicleCount - data.PranVehicleTrackingCount),
+                                                    "tooltext": "Non Tracking, $value, $percentValue",
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    });
+                    PranChart.render();
+
+                });
+
+                //# RFL
+                $("#RFL_tbody").append("<tr>" + "<td colspan = '2'>" + "<b>Total Vehicle: </b>" + data.RFLVehicleCount + "</td>" + "</tr>");
+                $("#RFL_tbody").append("<tr>" + "<td colspan = '2'>" + "<b>With IMEI: </b>" + data.RFLVehicleWithIMEICount + "</td>" + "<td colspan = '2'>" + "<b>Without IMEI: </b>" + (data.RFLVehicleCount - data.RFLVehicleWithIMEICount) + "</td>" + "</tr>");
+                $("#RFL_tbody").append("<tr>" + "<td colspan = '2'>" + "<b>Tracking: </b>" + data.RFLVehicleTrackingCount + "</td>" + "<td colspan = '2'>" + "<b>Non-Teacking: </b>" + (data.RFLVehicleCount - data.RFLVehicleTrackingCount) + "</td>" + "</tr>");
+                $("#RFL_tbody").append("<tr>" + "<td colspan = '2'>" + "<b>Connected: </b>" + data.RFLVehicleTrackingConnectedCount + "</td>" + "<td colspan = '2'>" + "<b>Disconnected: </b>" + (data.RFLVehicleTrackingCount - data.RFLVehicleTrackingConnectedCount) + "</td>" + "</tr>");
+                $("#RFL_tbody").append("<tr>" + "<td colspan = '4'><center><b> Company Wise Detail </b></center></td>" + "</tr>");
+                $("#RFL_tbody").append("<tr>" + "<td><b> Company </b></td>" + "<td><b> With IMEI </b></td>" + "<td><b> Tracking </b></td>" + "<td><b> Connected </b></td>" + "</tr>");
+                for (var i = 0; i < data.RFLCompanyWiseDetails.length; i++) {
+                    $("#RFL_tbody").append("<tr>"
+                        + "<td>" + data.RFLCompanyWiseDetails[i].CompanyName + "</td>"
+                        + "<td>" + data.RFLCompanyWiseDetails[i].VehicleWithIMEICount + "</td>"
+                        + "<td>" + data.RFLCompanyWiseDetails[i].VehicleTrackingCount + "</td>"
+                        + "<td>" + data.RFLCompanyWiseDetails[i].VehicleTrackingConnectedCount + "</td>"
+                        + "</tr>");
+                }
+
+                FusionCharts.ready(function () {
+                    var RFLChart = new FusionCharts({
+                        type: 'multilevelpie',
+                        renderAt: 'RFLChartDiv',
+                        id: "rflChart",
+                        width: $("#RFL_tbody").width(),
+                        height: '500',
+                        dataFormat: 'json',
+                        dataSource: {
+                            "chart": {
+                                "caption": "RFL Vehicles",
+                                //"captionFontSize": "18",
+                                //"subcaption": "Last Quarter",
+                                //"subcaptionFontBold": "1",
+                                "showPlotBorder": "0",
+                                "piebordercolor": "#000000",
+                                "piefillalpha": "60",
+                                "pieborderthickness": "2",
+                                "hoverfillcolor": "#FF0000",
+                                "numberprefix": "",
+                                "plottooltext": "$label, $value, $percentValue",
+                                //"theme": "fusion"
+
+                                "baseFontColor": "#000000",
+                                //"baseFont": "Helvetica Neue,Arial",
+                                "basefontsize": "18",
+                                "bgColor": "#FFFFFF",
+                                //"canvasBgColor": "#FF0000",
+                                //"showBorder": "10",
+                                //"showShadow": "1",
+                            },
+                            "category": [
+                                {
+                                    "label": "All" + "<br>" + data.RFLVehicleCount,
+                                    "color": "#ff0000",
+                                    "value": data.RFLVehicleCount,
+                                    "category": [
+                                        {
+                                            "label": "Tracking",
+                                            "color": "#33ccff",
+                                            "value": data.RFLVehicleTrackingCount,
+                                            "tooltext": "$label, $value, $percentValue",
+                                            "category": [
+                                                {
+                                                    "label": "Connected",
+                                                    "color": "#ccff66",
+                                                    "value": data.RFLVehicleTrackingConnectedCount
+                                                },
+                                                {
+                                                    "label": "Disconnected",
+                                                    "color": "#f47c7c",
+                                                    "value": data.RFLVehicleTrackingDisconnectedCount
+                                                }
+                                            ]
+                                        },
+                                        {
+
+                                            "label": "Non Tracking",
+                                            "color": "#f8bd19",
+                                            "value": (data.RFLVehicleCount - data.RFLVehicleTrackingCount),
+                                            //"tooltext": "$label, $value, $percentValue",
+                                            "category": [
+                                                {
+                                                    //"label": "Non Tracking",
+                                                    "color": "#f8bd19",
+                                                    "value": (data.RFLVehicleCount - data.RFLVehicleTrackingCount),
+                                                    "tooltext": "Non Tracking, $value, $percentValue",
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    });
+                    RFLChart.render();
+
+                });
+
+
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: getData()");
+                $("#modalPreload").css("display", "none");
+            }
+        });
+    })
+</script>

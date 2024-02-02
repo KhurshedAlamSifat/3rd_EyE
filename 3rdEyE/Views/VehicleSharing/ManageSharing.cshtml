@@ -1,0 +1,808 @@
+﻿@model _3rdEyE.Models.VehicleSharing
+@{
+    ViewBag.Title = "";
+}
+
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Manage Vehicle Requisition Manager # @Model.TrackingID
+        <small></small>
+    </h1>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/VehicleSharing/ManageSharing" enctype="multipart/form-data">
+        <input name="PK_VehicleSharing" value="@Model.PK_VehicleSharing" style="display:none" />
+        <input id="newDemandInfo" name="newDemandInfo" style="display:none" />
+        <input id="newInternalTripInfo" name="newInternalTripInfo" style="display:none" />
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Demand Information</h3>
+                            </div>
+                            <div class="box-body col-md-6 col-md-offset-6">
+                                <div class="form-group col-md-12">
+                                    <label class="col-md-4 control-label">Approved Demand Tracking ID</label>
+                                    <div class="col-md-3">
+                                        <input name="ApprovedDemandTrackingID" id="ApprovedDemandTrackingID" class="form-control">
+                                        <input name="demandPKs" id="demandPKs" style="display:none;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table id="data_demands" class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        Tracking ID
+                                                    </th>
+                                                    <th>
+                                                        From
+                                                    </th>
+                                                    <th>
+                                                        To
+                                                    </th>
+                                                    <th>
+                                                        Vehicle Type
+                                                    </th>
+                                                    <th>
+                                                        Wanted
+                                                    </th>
+                                                    <th>
+                                                        Start Time
+                                                    </th>
+                                                    <th>
+                                                        Is Head
+                                                    </th>
+                                                    @*<th>
+                                                            Is Tail
+                                                        </th>*@
+                                                    <th>
+                                                        Cancel
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbody_demands">
+                                                @foreach (var item in Model.VehicleSharingDemands.OrderByDescending(m => m.IsHeadDemand))
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            @item.TrackingID
+                                                        </td>
+                                                        <td>
+                                                            @item.Depo.Name &nbsp; @item.StartingLocation
+                                                        </td>
+                                                        <td>
+                                                            @item.Depo1.Name &nbsp; @item.FinishingLocation
+                                                        </td>
+                                                        <td>
+                                                            @item.RequisitionVehicleType.Title_English
+                                                        </td>
+                                                        <td>
+                                                            @item.WantedCount
+                                                        </td>
+                                                        <td>
+                                                            @item.PossibleJourneyStartDateTime
+                                                        </td>
+                                                        <td>
+                                                            @if (item.IsHeadDemand == true)
+                                                            {
+                                                                <text>Yes</text> }
+                                                            else
+                                                            {
+                                                                <text>No</text>
+                                                            }
+                                                            @*<input name='@item.PK_VehicleSharingDemand+"_IsHead"' type="checkbox" @(item.IsHeadDemand == true ? "checked" : "") />*@
+                                                        </td>
+                                                        @*<td>
+                                                                <input name='@item.PK_VehicleSharingDemand+"_IsTail"' type="checkbox" @(item.IsHeadDemand == true ? "checked" : "") />
+                                                            </td>*@
+                                                        <td>
+                                                            N/A
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Internal Vehicle Sharing</h3>
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <!-- Custom Tabs -->
+                                        <div class="nav-tabs-custom">
+                                            <ul class="nav nav-tabs">
+                                                <li class="active"><a href="#tab_1" data-toggle="tab"><b>Already Selected Vehicles</b></a></li>
+                                                <li><a href="#tab_2" data-toggle="tab"><b>Temporary Select</b></a></li>
+                                                <li><a href="#tab_3" data-toggle="tab"><b>Final Select</b></a></li>
+                                            </ul>
+                                            <div class="tab-content">
+                                                <div class="tab-pane active" id="tab_1">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <table id="table_internal_old_vehicles" class="table table-bordered">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>
+                                                                            Vehicle
+                                                                        </th>
+                                                                        <th>
+                                                                            Driver
+                                                                        </th>
+                                                                        <th>
+                                                                            Status
+                                                                        </th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="tbody_internal_old_vehicles">
+                                                                    @foreach (var item in Model.VehicleSharingInternalTrips.OrderBy(m => m.AssingedAt))
+                                                                    {
+                                                                        <tr>
+                                                                            <td>@item.Vehicle.RegistrationNumber &nbsp; : &nbsp; @item.Vehicle.Internal_VehicleContactNumber @item.Vehicle.MHT_DHT_DriverContactNumber  </td>
+                                                                            <td>@item.AppUser4.FullName @item.AppUser4.ContactNumber</td>
+                                                                            <td>
+                                                                                @item.StatusText
+                                                                                @(item.IsNotifiedToDriver == true ? " (Notified)" : " (Not notified)")
+                                                                            </td>
+                                                                        </tr>
+                                                                    }
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane" id="tab_2">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <table id="table_internal_available_vehicles" class="table table-bordered">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style='display:none;'>
+                                                                            PK_Vehicle
+                                                                        </th>
+                                                                        <th>
+                                                                            Vehicle
+                                                                        </th>
+                                                                        <th>
+                                                                            Available From
+                                                                        </th>
+                                                                        <th>
+                                                                        </th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="tbody_internal_available_vehicles"></tbody>
+                                                            </table>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group col-md-12">
+                                                                <label class="col-md-3 control-label">All Internal Vehicle</label>
+                                                                <div class="col-md-3">
+                                                                    <input name="InternalVehicleRegNum" id="InternalVehicleRegNum" class="form-control" onkeyup="searchInternalVehicle()">
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <select name="SelectInternalVehicles" id="SelectInternalVehicles" class="form-control" onchange="addSelectedFromSelect()"></select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- /.tab-pane -->
+                                                <div class="tab-pane" id="tab_3">
+                                                    <div class="row">
+                                                        <div class="col-md-9 col-md-offset-1">
+                                                            <table id="data_table" class="table table-bordered">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style='display:none'>
+                                                                            PK_Vehicle
+                                                                        </th>
+                                                                        <th>
+                                                                            Vehicle
+                                                                        </th>
+                                                                        <th style='display:none'>
+                                                                            Driver Key
+                                                                        </th>
+                                                                        <th>
+                                                                            Driver ID
+                                                                        </th>
+                                                                        <th>
+                                                                            Driver Name
+                                                                        </th>
+                                                                        <th>
+                                                                            Remove
+                                                                        </th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="selected_tbody">
+                                                                    <tr id="tr_2_1">
+                                                                        <td style='display:none'></td>
+                                                                        <td></td>
+                                                                        <td style='display:none'></td>
+                                                                        <td><input onkeypress='addDriver(this, event)' /></td>
+                                                                        <td></td>
+                                                                        <td><input type='button' value="Remove" onclick='removeSelected(this)' /></td>
+                                                                    </tr>
+                                                                    <tr id="tr_2_2">
+                                                                        <td style='display:none'></td>
+                                                                        <td></td>
+                                                                        <td style='display:none'></td>
+                                                                        <td><input onkeypress='addDriver(this, event)' /></td>
+                                                                        <td></td>
+                                                                        <td><input type='button' value="Remove" onclick='removeSelected(this)' /></td>
+                                                                    </tr>
+                                                                    <tr id="tr_2_3">
+                                                                        <td style='display:none'></td>
+                                                                        <td></td>
+                                                                        <td style='display:none'></td>
+                                                                        <td><input onkeypress='addDriver(this, event)' /></td>
+                                                                        <td></td>
+                                                                        <td><input type='button' value="Remove" onclick='removeSelected(this)' /></td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- /.tab-pane -->
+                                            </div>
+                                            <!-- /.tab-content -->
+                                        </div>
+                                        <!-- nav-tabs-custom -->
+                                    </div>
+                                    <!-- /.col -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @if (Model.IsExternalAdvertised != true)
+                    {
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">External Vehicle Sharing</h3>
+                                </div>
+                                <!-- /.box-header -->
+                                <div class="box-body col-md-12">
+                                    <input type="checkbox" name="IsExternalAdvertised" id="IsExternalAdvertised" /> &nbsp; <b>Give External Vehicle Sharing Adverticement for <input name="ExternalWantedCount" value="@Model.VehicleSharingDemands.Where(m=>m.IsHeadDemand == true).FirstOrDefault().WantedCount" style="width:20px;" /> vehicle(s).</b>
+                                </div>
+                                <div class="box-body col-md-12">
+                                    <div class="form-group col-md-2">
+                                        <label class="control-label">Last Bidding Time</label>
+                                    </div>
+                                    <div class="form-group input-group col-md-4">
+                                        <div class="col-md-12 input-append date form_datetime" @*data-date="1979-09-16T05:25:07Z"*@ data-date-format="dd MM yyyy - HH:ii p" data-link-field="dtp_input1">
+                                            <input id="KeepBidOpenUntil" name="KeepBidOpenUntil" class="form-control col-md-12" type="text" value="" readonly="readonly" style="background-color: white;">
+                                            <span class="add-on"><i class="icon-remove"></i></span>
+                                            <span class="add-on"><i class="icon-th"></i></span>
+                                        </div>
+                                        <input type="hidden" id="dtp_input1" value="" style="display:none;" /><br />
+                                    </div>
+                                    <b class="errorMessage col-md-2" data-category="errorMessage" name="error_KeepBidOpenUntil"></b>
+                                    <script>
+                                        validatorArray.push(
+                                            function () {
+                                                var IsExternalAdvertised = $('#IsExternalAdvertised').is(':checked');
+                                                var KeepBidOpenUntil = $('input[name=KeepBidOpenUntil]').val();
+                                                if (IsExternalAdvertised == true && KeepBidOpenUntil == '') {
+                                                    formValidity = false;
+                                                    $('b[name=error_KeepBidOpenUntil]').html("*required");
+                                                }
+                                            });
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">External Vehicle Sharing</h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <b>Update externally wanted vehicle(s) to <input name="ExternalWantedCountNew" value="@Model.ExternalWantedCount" type="number" min="@Model.ExternalWantedCount" style="width:50px;" /> </b>
+                                            <br />
+                                            @{
+                                                var stillRequiredFromExternal = (int)ViewBag.stillRequiredFromExternal;
+                                            }
+                                            @if (ViewBag.stillRequiredFromExternal > 0)
+                                            {
+                                                <h4>Still required : @stillRequiredFromExternal</h4>
+                                            }
+                                        </div>
+                                        <div class="col-md-12">
+                                            <h5>Open Up to: @Model.KeepBidOpenUntil.ToString()</h5>
+                                            <table id="data_biddings" class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>
+                                                            Transport Agency
+                                                        </th>
+                                                        <th>
+                                                            Managable Quantity
+                                                        </th>
+                                                        <th>
+                                                            Rent Per Quantity
+                                                        </th>
+                                                        <th>
+                                                            Status
+                                                        </th>
+                                                        <th>
+                                                            Approve Quantity
+                                                        </th>
+                                                        <th>
+                                                            Sys.Message
+                                                        </th>
+                                                        <th>
+                                                            Note
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tbody_biddings">
+                                                    @{
+                                                        var biddingSerial = 0;
+                                                    }
+                                                    @foreach (var item in Model.VehicleSharingBiddings.Where(m => m.StatusText == "Approved").OrderBy(m => m.PricePerQuantity).ThenBy(m => m.BiddedAt))
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                @item.AppUser.FullName @item.AppUser.ContactNumber
+                                                            </td>
+                                                            <td>
+                                                                @item.ManagableQuantity
+                                                            </td>
+                                                            <td>
+                                                                @item.PricePerQuantity
+                                                            </td>
+                                                            <td>
+                                                                @item.StatusText
+                                                            </td>
+                                                            <td>
+                                                                @item.ApprovedQuantity
+                                                            </td>
+                                                            <td>
+                                                                @item.ApprovalMessage
+                                                            </td>
+                                                            <td>
+                                                                @item.ApprovalNote
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                    <tr id="span_id" style="display:none;"></tr>
+                                                    @foreach (var item in Model.VehicleSharingBiddings.Where(m => m.StatusText == "Bidded").OrderBy(m => m.PricePerQuantity).ThenBy(m => m.BiddedAt))
+                                                    {
+                                                        var approvingQuantity = (stillRequiredFromExternal > 0 ? (stillRequiredFromExternal > item.ManagableQuantity ? item.ManagableQuantity.ToString() : stillRequiredFromExternal.ToString()) : "");
+                                                        <tr style="@(approvingQuantity != "" ? "background-color:#cdedd8" : "background-color:#fdd6d6")">
+                                                            <td>
+                                                                @item.AppUser.FullName @item.AppUser.ContactNumber
+                                                            </td>
+                                                            <td>
+                                                                @item.ManagableQuantity
+                                                            </td>
+                                                            <td>
+                                                                @item.PricePerQuantity
+                                                            </td>
+                                                            <td>
+                                                                @item.StatusText
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" name="vehicleSharingBidding_ApprovedQuantity_@item.PK_VehicleSharingBidding"
+                                                                       value="@(approvingQuantity != ""? approvingQuantity : "0")"
+                                                                       min="0" max="@item.ManagableQuantity" />
+                                                            </td>
+                                                            <td></td>
+                                                            <td>
+                                                                <input type="text" name="vehicleSharingBidding_ApprovalNote_@item.PK_VehicleSharingBidding" />
+                                                                <b class="errorMessage" data-category="errorMessage" name="error_vehicleSharingBidding_ApprovalNote_@item.PK_VehicleSharingBidding"></b>
+                                                            </td>
+                                                        </tr>
+                                                        stillRequiredFromExternal = stillRequiredFromExternal - item.ManagableQuantity;
+                                                    }
+                                                    @foreach (var item in Model.VehicleSharingBiddings.Where(m => m.StatusText != "Approved" & m.StatusText != "Bidded").OrderBy(m => m.PricePerQuantity).ThenBy(m => m.BiddedAt))
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                @item.AppUser.FullName @item.AppUser.ContactNumber
+                                                            </td>
+                                                            <td>
+                                                                @item.ManagableQuantity
+                                                            </td>
+                                                            <td>
+                                                                @item.PricePerQuantity
+                                                            </td>
+                                                            <td>
+                                                                @item.StatusText
+                                                            </td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="box-footer">
+                        @if (Model.Status == 0)
+                        {
+                            <input type="checkbox" name="IsLockedSharing" id="IsLockedSharing" /> <b>Lock this sharing.</b>
+                        }
+                        else
+                        {
+                            <b>This Sharing is locked</b>
+                        }
+                        <input type="button" class="btn btn-facebook center-block" onclick="validateAndTrySubmit()" value="Save" />
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+
+</section>
+<!-- DataTables -->
+<script src="~/Theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/Theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+<script>
+    var demandList = [];
+    $(document).ready(function () {
+        //InterCompanyRequisition_demand
+    });
+    document.getElementById("ApprovedDemandTrackingID").addEventListener("keyup", function (event) {
+        event.preventDefault();
+        if (event.keyCode === 13) {
+            var ApprovedDemandTrackingID = $("#ApprovedDemandTrackingID").val();
+            $("#ApprovedDemandTrackingID").attr("readonly", true);
+            $.ajax({
+                traditional: true,
+                type: "post",
+                dataType: "json",
+                contentType: "application/json",
+                url: "/VehicleSharing/ApprovedDemandTrackingID",
+                data: JSON.stringify({ ApprovedDemandTrackingID: ApprovedDemandTrackingID }),
+                success: function (data) {
+                    if (data.demand != null) {
+                        var selected = data.demand;
+                        demandList.push(selected);
+                        var PossibleJourneyStartDateTime = new Date(parseInt(selected.PossibleJourneyStartDateTime.replace("/Date(", "").replace(")/", "")));
+                        var res = "<tr id='tr_" + selected.PK_VehicleSharingDemand + "'>"
+                            + "<td>" + selected.TrackingID + "</td>"
+                            + "<td>" + selected.From + "</td>"
+                            + "<td>" + selected.To + "</td>"
+                            + "<td>" + selected.VehicleType + "</td>"
+                            + "<td>" + selected.WantedCount + "</td>"
+                            + "<td>" + PossibleJourneyStartDateTime.getFullYear() + "-" + (PossibleJourneyStartDateTime.getMonth() + 1) + "-" + PossibleJourneyStartDateTime.getDate() + " " + PossibleJourneyStartDateTime.getHours() + ":" + PossibleJourneyStartDateTime.getMinutes() + "</td>"
+                            + "<td>" + "No" + "</td>"
+                            + "<td>" + "<button type='button' value='" + selected.PK_VehicleSharingDemand + "' onclick='removeFromDemandList(this.value)'> remove </button>" + "</td>"
+                            + "</tr>";
+                        $('#tbody_demands').append(res);
+
+                    } else if (data.Status != 1) {
+                        alert('No approed demand found with this tracking number');
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log("Err on call:ApprovedDemandTrackingID");
+                }
+            });
+            $("#ApprovedDemandTrackingID").removeAttr("readonly");
+        }
+    });
+
+    function removeFromDemandList(value) {
+        $("#tr_" + value).remove();
+        var selected = demandList.find(function (element) {
+            return element.PK_VehicleSharingDemand == value;
+        });
+        demandList.pop(selected);
+    }
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.date').datetimepicker({
+            //format: 'yyyy-mm-dd HH:ii P',
+            format: 'yyyy-mm-dd HH:ii P',
+            //setDate: new Date(),
+            //weekStart: 1,
+            todayBtn: 1,
+            autoclose: 1,
+            //todayHighlight: 1,
+            //startView: 2,
+            //forceParse: 0,
+            //showMeridian: 0
+            startDate: '+0d',
+        });
+        Getdemands_Inside_Toward();
+        makeBiddingTable();
+    });
+    function Getdemands_Inside_Toward() {
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/VehicleSharing/GetInternalVehicles_Inside_Toward",
+            data: JSON.stringify({ FK_Depo_From: '@Model.VehicleSharingDemands.Where(m=>m.IsHeadDemand == true).FirstOrDefault().FK_Depo_From' }),
+            success: function (data) {
+
+                var res = "";
+                $("#tbody_internal_available_vehicles").html(res);
+                for (var i = 0; i < data.list_inside.length; i++) {
+                    res = res + "<tr>"
+                        + "<td  style='display:none;'>" + data.list_inside[i].PK_Vehicle + "</td>"
+                        + "<td>" + data.list_inside[i].RegistrationNumber + " : " + data.list_inside[i].ContactNumber + "</td>"
+                        + "<td>" + "Now" + "</td>"
+                        + "<td><button id='btn1_003' type='button' onclick='addSelectedFromList(this)'>add</button></td>"
+                        + "</tr>";
+                }
+                for (var i = 0; i < data.list_toward.length; i++) {
+                    var PossibleJourneyFinishDateTime = new Date(parseInt(data.list_toward[i].PossibleJourneyFinishDateTime.replace("/Date(", "").replace(")/", "")));
+                    res = res + "<tr>"
+                        + "<td  style='display:none;'>" + data.list_toward[i].PK_Vehicle + "</td>"
+                        + "<td>" + data.list_toward[i].RegistrationNumber + " : " + data.list_toward[i].ContactNumber + "</td>"
+                        + "<td>" + PossibleJourneyFinishDateTime.getFullYear() + "-" + (PossibleJourneyFinishDateTime.getMonth() + 1) + "-" + PossibleJourneyFinishDateTime.getDate() + " " + PossibleJourneyFinishDateTime.getHours() + ":" + PossibleJourneyFinishDateTime.getMinutes() + "</td>"
+                        + "<td><button id='btn1_003' type='button' onclick='addSelectedFromList(this)'>add</button></td>"
+                        + "</tr>";
+                }
+                $("#tbody_internal_available_vehicles").html(res);
+                var table_internal_available_vehicles = $('#table_internal_available_vehicles').DataTable({
+                    paging: false,
+                    dom: 'Bfrtip',
+                    "scrollY": "200px",
+                    "scrollCollapse": true,
+                    "paging": false
+                });
+
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call");
+            }
+        });
+    }
+    function searchInternalVehicle() {
+        if (event.keyCode == 13) {
+            var InternalVehicleRegNum = $("#InternalVehicleRegNum").val();
+            $("#InternalVehicleRegNum").attr("readonly", true);
+            $.ajax({
+                traditional: true,
+                type: "post",
+                dataType: "json",
+                contentType: "application/json",
+                url: "/VehicleSharing/GetInternalVehicles_Outside",
+                data: JSON.stringify({ InternalVehicleRegNum: InternalVehicleRegNum }),
+                success: function (data) {
+                    var res = "";
+                    $("#SelectInternalVehicles").html(res);
+                    if (data.length == 0) {
+                        res = "<option value=''>Not Found</option>";
+                    } else {
+                        res = "<option value=''>Select</option>";
+                        for (var i = 0; i < data.length; i++) {
+                            res = res + "<option value='" + data[i].PK_Vehicle + "' data-contact_number='" + data[i].ContactNumber + "'>" + data[i].RegistrationNumber + "</option>";
+                        }
+                    }
+                    $("#SelectInternalVehicles").html(res);
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log("Err on call");
+                }
+            });
+            $("#InternalVehicleRegNum").removeAttr("readonly");
+        }
+    }
+    var selectedVehicleList = [];
+    var maxSelection = 3;
+    function addSelectedFromList(btn) {
+        var currentRow = $(btn).closest("tr");
+        var PK_Vehicle = currentRow.find("td:eq(0)").text();
+        var VehicleRegistrationNumber = currentRow.find("td:eq(1)").text();
+        if (selectedVehicleList.includes(PK_Vehicle)) {
+            alert('Already exists'); return;
+        }
+        if (selectedVehicleList.length == maxSelection) {
+            alert('Can not assign more vehicle. Remove to from selected to add more.'); return;
+        }
+        for (var i = 1; i <= maxSelection; i++) {
+            var _td = $('#tr_2_' + i).find("td:eq(0)").text();
+            if (_td == '') {
+                $('#tr_2_' + i).find("td:eq(0)").text(PK_Vehicle);
+                $('#tr_2_' + i).find("td:eq(1)").text(VehicleRegistrationNumber);
+                selectedVehicleList.push(PK_Vehicle)
+                break;
+            }
+        }
+    }
+    function addSelectedFromSelect() {
+        var VehicleRegistrationNumber = $('#SelectInternalVehicles :selected').text();
+        var PK_Vehicle = $('#SelectInternalVehicles :selected').val();
+        if (selectedVehicleList.includes(PK_Vehicle)) {
+            alert('Already exists'); return;
+        }
+        if (selectedVehicleList.length == maxSelection) {
+            alert('Can not assign more vehicle. Remove to from selected to add more.'); return;
+        }
+        for (var i = 1; i <= maxSelection; i++) {
+            var _td = $('#tr_2_' + i).find("td:eq(0)").text();
+            if (_td == '') {
+                $('#tr_2_' + i).find("td:eq(0)").text(PK_Vehicle);
+                $('#tr_2_' + i).find("td:eq(1)").text(VehicleRegistrationNumber);
+                selectedVehicleList.push(PK_Vehicle)
+                break;
+            }
+        }
+    }
+    function removeSelected(btn) {
+        var currentRow = $(btn).closest("tr");
+        var PK_Vehicle = currentRow.find("td:eq(0)").text();
+        selectedVehicleList.pop(PK_Vehicle);
+        currentRow.find("td:eq(0)").text('');
+        currentRow.find("td:eq(1)").text('');
+        currentRow.find("td:eq(2)").text('');
+        currentRow.find("td:eq(3)").find("input")[0].value = '';
+        currentRow.find("td:eq(4)").text('');
+    }
+    function addDriver(input, event) {
+        if (event.keyCode == 13) {
+            var UniqueIDNumber = input.value;
+            $.ajax({
+                traditional: true,
+                type: "post",
+                dataType: "json",
+                contentType: "application/json",
+                url: "/VehicleSharing/GetFreeDriverDetail",
+                data: JSON.stringify({ UniqueIDNumber: UniqueIDNumber }),
+                success: function (data) {
+                    if (data.FK_VehicleSharingInternalTrip_Pending != null) {
+                        alert("This driver has a pending trip. Can not assign this driver.");
+                        return;
+                    }
+                    var currentRow = $(input).closest("tr");
+                    if (data != 'NotFound') {
+                        currentRow.find("td:eq(2)").text(data.PK_User);
+                        currentRow.find("td:eq(4)").text(data.FullName);
+                    }
+                    else {
+                        currentRow.find("td:eq(2)").text('');
+                        currentRow.find("td:eq(4)").text('');
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log("Err on call");
+                }
+            });
+        }
+    }
+
+    var biddingList = [];
+    function makeBiddingTable() {
+        var PK_VehicleSharing = @Model.PK_VehicleSharing;
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/VehicleSharing/GetBiddedBid/",
+            data: JSON.stringify({ FK_VehicleSharing: PK_VehicleSharing }),
+            success: function (data) {
+                biddingList = data;
+                var stillRequiredFromExternal = @ViewBag.stillRequiredFromExternal ;
+                //var res = '';
+                for (var i = 0; i < biddingList.length; i++) {
+                    var approvingQuantity = (stillRequiredFromExternal > 0 ? (stillRequiredFromExternal > biddingList[i].ManagableQuantity ? biddingList[i].ManagableQuantity : stillRequiredFromExternal) : 0);
+                    //console.log(stillRequiredFromExternal + '  ' + biddingList[i].ManagableQuantity + ' ' + approvingQuantity)
+                    if (approvingQuantity > 0) {
+                        //res = res + "<tr style='background-color:#cdedd8'>";
+                        biddingList[i].approvingQuantity = approvingQuantity;
+                    }
+                    else {
+                        //res = res + "<tr style='background-color:#fdd6d6'>";
+                        biddingList[i].approvingQuantity = 0;
+                    }
+                    //res = res + '<td>' + biddingList[i].bidder + '</td>';
+                    //res = res + '<td>' + biddingList[i].ManagableQuantity + '</td>';
+                    //res = res + '<td>' + biddingList[i].PricePerQuantity + '</td>';
+                    //res = res + '<td>' + 'Bidded' + '</td>';
+                    //res = res + '<td>' + "<input type='number' name='vehicleSharingBidding_ApprovedQuantity_" + biddingList[i].PK_VehicleSharingBidding + "' value='" + approvingQuantity + "' min='0' max='" + biddingList[i].ManagableQuantity + "' />"+ '</td>';
+                    //res = res + '<td>' + "<input type='text' name='vehicleSharingBidding_ApprovalNote_" + biddingList[i].PK_VehicleSharingBidding + "'/>" + '</td>';
+
+                    //res = res + '</tr>';
+
+                    stillRequiredFromExternal = stillRequiredFromExternal - biddingList[i].ManagableQuantity;
+                }
+                //$("#span_id").after(res);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: makeBiddingTable()");
+            }
+        });
+    }
+</script>
+<script>
+    validatorArray.push(
+        function () {
+            var totalSelectedFromBidding = 0;
+            for (var i = 0; i < biddingList.length; i++) {
+                var check = $("input[name=vehicleSharingBidding_ApprovedQuantity_" + biddingList[i].PK_VehicleSharingBidding + "]").val();
+                if (check == "") {
+                    continue;
+                }
+                if (check > biddingList[i].ManagableQuantity) {
+                    alert("Managable quantity is " + biddingList[i].ManagableQuantity + " but you wanted " + check + " vehicle(s).\n");
+                    formValidity = false;
+                    return;
+                } else {
+                    totalSelectedFromBidding = totalSelectedFromBidding + parseInt(check);
+                }
+            }
+            //var stillRequiredFromExternal = @ViewBag.stillRequiredFromExternal;
+            var ExternalWantedCountNew = $("input[name=ExternalWantedCountNew]").val();
+            if (ExternalWantedCountNew < totalSelectedFromBidding) {
+                alert("You are trying to book more than wanted vehicle.");
+                formValidity = false;
+            }
+        });
+    validatorArray.push(
+        function () {
+            for (var i = 0; i < biddingList.length; i++) {
+                var approvedQuantity = $("input[name=vehicleSharingBidding_ApprovedQuantity_" + biddingList[i].PK_VehicleSharingBidding + "]").val();
+                var approvalNote = $("input[name=vehicleSharingBidding_ApprovalNote_" + biddingList[i].PK_VehicleSharingBidding + "]").val();
+
+                if (biddingList[i].approvingQuantity < approvedQuantity && approvalNote == '') {
+                    formValidity = false;
+                    $("b[name=error_vehicleSharingBidding_ApprovalNote_" + biddingList[i].PK_VehicleSharingBidding + "]").html("*Required.");
+                }
+            }
+        });
+
+</script>
+
+<script>
+    function validateAndTrySubmit() {
+        var newDemandInfo = "";
+        for (var i = 0; i < demandList.length; i++) {
+            newDemandInfo = newDemandInfo + demandList[i].PK_VehicleSharingDemand + "*" + demandList[i].TrackingID + "#";
+        }
+        $("#newDemandInfo").val(newDemandInfo);
+
+        var newInternalTripInfo = "";
+        for (var i = 1; i <= maxSelection; i++) {
+            newInternalTripInfo = newInternalTripInfo + $('#tr_2_' + i).find("td:eq(0)").text() + "*" + $('#tr_2_' + i).find("td:eq(2)").text() + "#";
+        }
+        newInternalTripInfo = newInternalTripInfo.substring(0, newInternalTripInfo.length - 1);
+        $("#newInternalTripInfo").val(newInternalTripInfo);
+
+        TrySubmit();
+    }
+</script>

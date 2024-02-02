@@ -1,0 +1,99 @@
+﻿@model _3rdEyE.Models.VehicleSharingInternalTrip
+@{
+    ViewBag.Title = "";
+}
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+
+<section class="content-header">
+    <h1>
+        Change Trip Status
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        @*<a class="btn btn-block btn-default btn-sm" href="/Driver/Index">Back To List</a>*@
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-6">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Change Trip Status</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form name="ThisForm" class="form-horizontal" method="post" action="/VehicleSharing/VehicleSharingInternalTripChangeStatus">
+
+                    @*Internal Trip*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Internal Trip</label>
+                            <div class="col-md-10">
+                                @Model.VehicleSharing.TrackingID &nbsp; @Model.Vehicle.RegistrationNumber
+                            </div>
+                        </div>
+                    </div>
+                    @*CurrentSurrentStatus*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Current Status</label>
+                            <div class="col-md-10">
+                                @Model.StatusText
+                            </div>
+                        </div>
+                    </div>
+                    @*StatusText*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Status</label>
+                            <div class="col-md-10">
+                                @Html.DropDownList("StatusText", ViewBag.Statuses as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_Status"></b>
+                            </div>
+                        </div>
+                        <script>
+                            validatorArray.push(
+                                function () {
+                                    var check = $('select[name=StatusText]').val();
+                                    if (check == "") {
+                                        formValidity = false;
+                                        $('b[name=error_Status]').html("StatusText is required.");
+                                    }
+                                });
+                        </script>
+                    </div>
+
+                    <div class="box-footer">
+                        @*<a class="btn btn-default" href="/Driver/Index">Back To List</a>*@
+                        <input type="button" class="btn btn-info pull-right" value="Create" onclick="TrySubmit()" />
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+@*Date Picker*@
+<script src="~/Theme/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+<script>
+    $(function () {
+        $('select[name=Status]').select2();
+        $('.form_datetime').datetimepicker({
+            format: 'yyyy-mm-dd HH:ii P',
+            todayBtn: 1,
+            autoclose: 1,
+        });
+    });
+</script>

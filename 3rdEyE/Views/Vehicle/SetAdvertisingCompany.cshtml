@@ -1,0 +1,55 @@
+﻿@model _3rdEyE.Models.Vehicle
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+<section class="content-header">
+    <h1>
+        Update Advertising Company
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        <a class="btn btn-block btn-info btn-sm" href="@System.Web.HttpContext.Current.Request.UrlReferrer">Back To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-6">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Update Advertising Company for @Model.RegistrationNumber</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form name="ThisForm" class="form-horizontal" method="post" action="/Vehicle/SetAdvertisingCompany">
+                    <input name="PK_Vehicle" value="@Model.PK_Vehicle" type="text" class="form-control" style="display:none;">
+                    <div class="box-body col-md-12">
+                        @*KPL_Loaded*@
+                        <div class="form-group col-md-12">
+                            <label class="col-md-4 control-label">Advertising Company</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("Internal_FK_AdvertisingCompany", ViewBag.AdvertisingCompanies as SelectList, "Select", new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        @*<a class="btn btn-default" href="/Vehicle/Index">Back To List</a>*@
+                        <input type="button" class="btn btn-info center-block" value="Update" onclick="TrySubmit()" />
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $('#Internal_FK_AdvertisingCompany').select2();
+    });
+</script>
+

@@ -1,0 +1,161 @@
+﻿@model IEnumerable<_3rdEyE.Models.LoadingBayUtilization>
+
+@{
+    ViewBag.Title = "Vehicle list";
+}
+
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+<!-- DataTablesExportable -->
+<link href="~/Content/ExportableDatatable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/ExportableDatatable/buttons.dataTables.min.css" rel="stylesheet" />
+@{
+    string ConvertToDateTimeString(DateTime? dateTime)
+    {
+        return String.Format("{0:yyyy/MM/dd HH:mm}", dateTime);
+    }
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Current User's Bay Use
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        @*<a class="btn btn-block btn-info btn-sm" href="/TemporaryVehicle/Create">Create</a>*@
+    </div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-header">
+                    <h3 class="box-title"></h3>
+                </div>
+
+
+                <!-- /.box-header -->
+                <div class="box-body" style="overflow-x:scroll;">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                @*<th>
+                                        PRG Type
+                                    </th>
+                                    <th>
+                                        Location
+                                    </th>
+                                    <th>
+                                        Building
+                                    </th>*@
+                                <th>
+                                    Bay
+                                </th>
+                                <th>
+                                    Vehicle
+                                </th>
+                                <th>
+                                    O/M/D
+                                </th>
+                                <th>
+                                    Shipping Asst.
+                                </th>
+                                <th>
+                                    Laoad/Unload
+                                </th>
+                                <th>
+                                    Start Time
+                                </th>
+                                <th>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    @*<td>
+                                            @item.LoadingBay.LocationBuilding.PRG_Type
+                                        </td>
+                                        <td>
+                                            @item.LoadingBay.LocationBuilding.Location.Name
+                                        </td>
+                                        <td>
+                                            @item.LoadingBay.LocationBuilding.Name
+                                        </td>*@
+                                    <td>
+                                        @item.LoadingBay.Name
+                                    </td>
+                                    <td>
+                                        @item.Vehicle.RegistrationNumber
+                                    </td>
+                                    <td>
+                                        @item.Vehicle.OWN_MHT_DHT
+                                    </td>
+                                    <td>
+                                        @item.AppUser.UniqueIDNumber @item.AppUser.FullName
+                                    </td>
+                                    <td>
+                                        @item.UseType
+                                    </td>
+                                    <td>
+                                        @item.StartDateTime
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-danger" href="/LoadingBayUtilization/EndLoadingUnloading?PK_LoadingBayUtilization=@item.PK_LoadingBayUtilization">End</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+<script>
+    $(function () {
+        $('select').select2();
+        $('.form_datetime').datetimepicker({
+            format: 'yyyy-mm-dd HH:ii P',
+            todayBtn: 1,
+            autoclose: 1,
+        });
+    });
+</script>
+<!-- DataTablesExportable -->
+<script src="~/Scripts/Custom/DataTableExportable/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.flash.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/jszip.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/pdfmake.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/vfs_fonts.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.html5.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.print.min.js"></script>
+<script>
+    $(function () {
+        $('#data_table').DataTable({
+            "ordering": true,
+            "paging": false,
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+    });
+</script>
+

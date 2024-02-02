@@ -1,0 +1,254 @@
+﻿@model _3rdEyE.Models.InstantRequisition
+@{
+    ViewBag.Title = "Settle";
+}
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+<!-- Content Wrapper. Contains page content -->
+<section class="content-header">
+    <h1>
+        Settle Third Party Trip
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/InstantRequisition/Settle" enctype="multipart/form-data">
+        @Html.EditorFor(model => model.PK_InstantRequisition, new { htmlAttributes = new { @class = "form-control", style = "display:none;" } })
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="col-md-12">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Instant Requisition Information</h3>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="box-body col-md-12">
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Vehicle*</label>
+                                        <div class="col-md-8">
+                                            @Html.DisplayFor(m => m.Vehicle.RegistrationNumber)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                @*TripFare1*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">Trip Fare*</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.TripFare1, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", min = '0', @type = "Number", onkeyup = "CalculateTotalPaernt1()", onchange = "CalculateTotalPaernt1()", onwheel = "CalculateTotalPaernt1()" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_TripFare1"></b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                @*BrokerCommission*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">Broker Commision</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.BrokerCommission, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", min = '0', @type = "Number", onkeyup = "CalculateTotalPaernt1()", onchange = "CalculateTotalPaernt1()", onwheel = "CalculateTotalPaernt1()" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_BrokerCommission"></b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                @*EvAmount*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">Ev Amount*</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.EvAmount, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", min = '0', @type = "Number", onkeyup = "CalculateTotalPaernt1()", onchange = "CalculateTotalPaernt1()", onwheel = "CalculateTotalPaernt1()" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_EvAmount"></b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                @*StayCharge1*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">Stay Charge</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.StayCharge1, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalPaernt1()", onchange = "CalculateTotalPaernt1()", onwheel = "CalculateTotalPaernt1()" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_StayCharge1"></b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                @*DemerageChargeGiven2*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">Demerage</label>
+                                    <div class="col-md-4">
+                                        @Html.EditorFor(model => model.DemerageChargeGiven2, new { htmlAttributes = new { @class = "form-control", placeholder = "Given", min = '0', @type = "Number", onkeyup = "CalculateTotalPaernt1()", onchange = "CalculateTotalPaernt1()", onwheel = "CalculateTotalPaernt1()" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_DemerageChargeGiven2"></b>
+                                    </div>
+                                    <div class="col-md-4">
+                                        @Html.EditorFor(model => model.DemerageChargeTaken3, new { htmlAttributes = new { @class = "form-control", placeholder = "Taken", min = '0', @type = "Number", onkeyup = "CalculateTotalPaernt1()", onchange = "CalculateTotalPaernt1()", onwheel = "CalculateTotalPaernt1()" } })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                @*DemerageNote*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">Demerage Note</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.DemerageNote, new { htmlAttributes = new { @class = "form-control" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_DemerageNote"></b>
+                                    </div>
+                                    <script>
+                                        validatorArray.push(
+                                            function () {
+                                                var DemerageChargeGiven2 = $('input[name=DemerageChargeGiven2]').val();
+                                                var DemerageChargeTaken3 = $('input[name=DemerageChargeTaken3]').val();
+                                                console.log(DemerageChargeGiven2);
+                                                console.log(DemerageChargeTaken3);
+                                                var DemerageNote = $('input[name=DemerageNote]').val();
+                                                if ((DemerageChargeGiven2 != "" || DemerageChargeTaken3 != "") && DemerageNote == "") {
+                                                    formValidity = false;
+                                                    $('b[name=error_DemerageNote]').html("required.");
+                                                }
+                                            });
+                                    </script>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                @*AdjustedEvAmount*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">Adj. Ev No</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.AdjustedEvNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_AdjustedEvNumber"></b>
+                                    </div>
+                                    <script>
+                                        validatorArray.push(
+                                            function () {
+                                                var AdjustedEvAmount = $('input[name=AdjustedEvAmount]').val();
+                                                var AdjustedEvNumber = $('input[name=AdjustedEvNumber]').val();
+                                                if (AdjustedEvAmount != "" && AdjustedEvNumber == "") {
+                                                    formValidity = false;
+                                                    $('b[name=error_AdjustedEvNumber]').html("required.");
+                                                }
+                                            });
+                                    </script>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                @*AdjustedEvAmount*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">Adj. Ev Amnt</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.AdjustedEvAmount, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalPaernt1()", onchange = "CalculateTotalPaernt1()", onwheel = "CalculateTotalPaernt1()" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_AdjustedEvAmount"></b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                @*AdjustedEvNote*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">Adj. Ev Note</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.AdjustedEvNote, new { htmlAttributes = new { @class = "form-control" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_AdjustedEvNote"></b>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="box-body col-md-12">
+                                @*TotalParent1*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Total Expense</label>
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.TotalParent1, new { htmlAttributes = new { @class = "form-control", @readonly = "True", @Value = 0 } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                @*DepositeAmount*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Deposite Amount</label>
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.DepositeAmount, new { htmlAttributes = new { @class = "form-control", @readonly = "True", @Value = 0 } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                @*MRNumber*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">MR no</label>
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.MRNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                            <b class="errorMessage" data-category="errorMessage" name="error_MRNumber"></b>
+                                        </div>
+                                        <script>
+                                            validatorArray.push(
+                                                function () {
+                                                    var check = $('input[name=MRNumber]').val();
+                                                    if (check == "") {
+                                                        formValidity = false;
+                                                        $('b[name=error_MRNumber]').html("required.");
+                                                    }
+                                                });
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        @*<a class="btn btn-default" href="/Instant Requisition/Index">Back To List</a>*@
+                        <input type="button" class="btn btn-facebook center-block" value="Save" onclick="TrySubmit()" />
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+
+</section>
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $("select").select2();
+        CalculateTotalPaernt1();
+    });
+</script>
+<script>
+    function CalculateTotalPaernt1() {
+
+
+
+        var TotalParent1 = 0.0;
+        var DepositeAmount = 0.0;
+
+        var TripFare1 = $("#TripFare1").val() != '' ? Number($("#TripFare1").val()) : 0;
+        var BrokerCommission = $("#BrokerCommission").val() != '' ? Number($("#BrokerCommission").val()) : 0;
+        var EvAmount = $("#EvAmount").val() != '' ? Number($("#EvAmount").val()) : 0;
+        var StayCharge1 = $("#StayCharge1").val() != '' ? Number($("#StayCharge1").val()) : 0;
+        var DemerageChargeGiven2 = $("#DemerageChargeGiven2").val() != '' ? Number($("#DemerageChargeGiven2").val()) : 0;
+        var DemerageChargeTaken3 = $("#DemerageChargeTaken3").val() != '' ? Number($("#DemerageChargeTaken3").val()) : 0;
+        var AdjustedEvAmount = $("#AdjustedEvAmount").val() != '' ? Number($("#AdjustedEvAmount").val()) : 0;
+
+        //Total Expense = damage given + Others cost
+        TotalParent1 = EvAmount + AdjustedEvAmount;
+        TotalParent1 = Number(TotalParent1.toFixed(2));
+        $("#TotalParent1").val(TotalParent1);
+
+        // OLD LOGIC:     DepositeAmount = (TripFare1 + StayCharge1 + DemerageChargeTaken3) - (DemerageChargeGiven2 + DemerageChargeGiven2);
+        DepositeAmount = (TripFare1 + StayCharge1 + DemerageChargeTaken3) - (DemerageChargeGiven2 + BrokerCommission);
+        DepositeAmount = Number(DepositeAmount.toFixed(2));
+        $("#DepositeAmount").val(DepositeAmount);
+    }
+</script>
+
+

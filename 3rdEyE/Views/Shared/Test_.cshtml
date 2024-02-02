@@ -1,0 +1,239 @@
+﻿<script>
+    function SetMarkerall(id, base_url) {
+        var total = $('input[name="sts[]"]:checked').length;
+        var ur = base_url + "index.php/Trac/getinfoall/" + id;
+
+        $.aja{
+
+            type: "GET",
+
+                url: base_url + "index.php/Trac/getinfoall/" + id,
+
+                    cache: false,
+
+                        dataType: "xml",
+
+                            success: function(xml) {
+
+                                $(xml).find('marker').each(function () {
+
+                                    var name = $(this).attr("name");
+
+                                    // alert(name);
+
+                                    var time = $(this).attr("time");
+
+                                    var speed = $(this).attr("speed");
+
+                                    var course = $(this).attr("course");
+
+                                    var status = $(this).attr("status");
+
+                                    var place = $(this).attr("place");
+
+                                    var distn = $(this).attr("distance");
+
+                                    var body = $(this).attr("body");
+
+                                    var driver = $(this).attr("driver");
+
+                                    var state;
+
+                                    var state_mean;
+
+                                    var idd = $.trim($(this).attr("id"));
+
+
+
+                                    var bg = '#sts' + idd;
+
+
+
+                                    if (status == 1 && speed == 0) {
+
+                                        // alert(status)
+
+                                        state = 'W';
+
+                                        state_mean = 'Ignation On stopped';
+
+                                        $(bg).css('background-color', '#ffff80');
+
+
+
+
+
+
+
+                                    } else if (status == 1 && speed != 0) {
+
+                                        //alert(status);
+
+
+
+                                        state = 'S';
+
+                                        state_mean = 'Ignation On Moving';
+
+                                        $(bg).css('background-color', '#6DC16D');
+
+
+
+                                    } else {
+
+
+
+                                        state = 'WN';
+
+                                        state_mean = ' Ignation Off';
+
+                                        $(bg).css('background-color', '#EB4343');
+
+
+
+                                    }
+
+
+
+                                    // var icon = customIcons[state] || {};
+
+                                    var point = new google.maps.LatLng(
+
+                                        parseFloat($(this).attr("lat")),
+
+                                        parseFloat($(this).attr("lng"))
+
+
+
+                                    );
+
+                                    // alert(point);
+
+
+
+
+
+                                    var icon = customIcons[state] || {};
+
+                                    var html = "<b>" + name + "</b></br><b>Driver:</b> " + driver + " </br> <b>Address:</b> " + distn + " Km from " + place + "</br><b>Time</b> : " + time + "</br><b>Speed:</b>" + speed + "</br><b>Status : </b> " + state_mean;
+
+
+
+
+
+                                    if (total >= 1) {
+
+                                        // alert('here');
+
+                                        var a = '#chk' + id;
+
+                                        if ($(a).is(':checked')) {
+
+                                            // alert('adfdas');
+
+                                            marker = new google.maps.Marker({
+
+                                                position: point,
+
+                                                map: map,
+
+                                                icon: icon.icon,
+
+                                                shadow: icon.shadow
+
+
+
+                                            });
+
+                                            markers.push(marker);
+
+                                        }
+
+
+
+                                    } else {
+
+
+
+
+
+                                        marker = new google.maps.Marker({
+
+                                            position: point,
+
+                                            map: map,
+
+                                            icon: icon.icon,
+
+                                            shadow: icon.shadow
+
+
+
+                                        });
+
+                                        markers.push(marker);
+
+
+
+                                    }
+
+
+
+
+
+                                    var infowindow = new google.maps.InfoWindow()
+
+                                    google.maps.event.addListener(marker, 'click', (function (marker, html, infowindow) {
+
+                                        return function () {
+
+                                            infowindow.setContent(html);
+
+                                            infowindow.open(map, marker);
+
+                                        };
+
+                                    })(marker, html, infowindow));
+
+
+
+
+
+                                    /* var infoWindow = new google.maps.InfoWindow();
+                         
+                                           infoWindow.setContent(name);
+                         
+                                           infoWindow.open(map, marker);
+                         
+                                     bindInfoWindow(marker, map, infoWindow, html);
+                         
+                                   */
+
+
+
+
+
+
+
+
+
+                                });
+
+                            },
+
+            error: function (xhr, ajaxOptions, thrownError) {
+
+                // alert(xhr.status);
+
+                //alert(thrownError);
+
+            }
+
+
+
+        });
+
+
+
+    };
+</script>

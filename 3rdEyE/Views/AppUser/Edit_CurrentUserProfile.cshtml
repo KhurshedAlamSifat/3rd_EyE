@@ -1,0 +1,183 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+}
+
+@*Date picker*@
+<link href="~/Theme/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+
+<section class="content-header">
+    <h1>
+        Edit My Profile
+        <small></small>
+    </h1>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">My Information</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form name="ThisForm" class="form-horizontal" method="post" action="/AppUser/Edit_CurrentUserProfile">
+                    <input name="PK_User" value="@ViewBag.model.PK_User" type="text" class="form-control" style="display:none;">
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Staff ID Number*</label>
+                            <div class="col-md-8">
+                                <input name="UniqueIDNumber" value="@ViewBag.model.UniqueIDNumber" type="text" class="form-control" style="text-transform:uppercase" readonly="readonly">
+                                <b class="errorMessage" data-category="errorMessage" name="error_UniqueIDNumber"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Full Name*</label>
+                            <div class="col-md-8">
+                                <input name="FullName" value="@ViewBag.model.FullName" type="text" class="form-control" style="text-transform:uppercase">
+                                <b class="errorMessage" data-category="errorMessage" name="error_FullName"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('input[name=FullName]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_FullName]').html("Full Name is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Password*</label>
+                            <div class="col-md-8">
+                                <div class="col-md-6">
+                                    <input name="Password" placeholder="Password" value="@ViewBag.model.Password" type="password" class="form-control">
+                                </div>
+                                <div class="col-md-6">
+                                    <input name="CofirmPassword" placeholder="Confirm Password" value="@ViewBag.model.Password" type="password" class="form-control">
+                                </div>
+                                <b class="errorMessage" data-category="errorMessage" name="error_Password"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var Password = $('input[name=Password]').val();
+                                        var CofirmPassword = $('input[name=CofirmPassword]').val();
+
+                                        if (Password == "") {
+                                            formValidity = false;
+                                            $('b[name=error_Password]').html("Password is required.");
+                                        } else if (Password != CofirmPassword) {
+                                            formValidity = false;
+                                            $('b[name=error_Password]').html("Password does not match with confirmed password.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">User Group*</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Depo", ViewBag.Depoes as SelectList, "Select", new { @class = "form-control", @disabled = "disabled" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_Depo"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">PRG Type</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("PRG_Type", ViewBag.PRG_TypesDict as SelectList, "Select", new { @class = "form-control", @disabled = "disabled" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_PRG_Type"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Requisition agent</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("AppUserType", ViewBag.AppUserTypeDict as SelectList, new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_AppUserType"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Location</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Location", ViewBag.Locations as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_Location"></b>
+                            </div>
+                            @*<script>
+                                    validatorArray.push(
+                                        function () {
+                                            var check = $('select[name=FK_Location]').val();
+                                            if (check == "") {
+                                                formValidity = false;
+                                                $('b[name=error_FK_Location]').html("Location is required.");
+                                            }
+                                        });
+                                </script>*@
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Contact Number*</label>
+                            <div class="col-md-8">
+                                <input name="ContactNumber" value="@ViewBag.model.ContactNumber" type="number" class="form-control" placeholder="11 digit mobile number">
+                                <b class="errorMessage" data-category="errorMessage" name="error_ContactNumber"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('input[name=ContactNumber]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_ContactNumber]').html("Contact number is required.");
+                                        } else if (check.length != 11) {
+                                            formValidity = false;
+                                            $('b[name=error_ContactNumber]').html("Only 11 digit number is accepatbale.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Email Address</label>
+                            <div class="col-md-8">
+                                <input name="Email" value="@ViewBag.model.Email" type="text" class="form-control">
+                                <b class="errorMessage" data-category="errorMessage" name="error_Email"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Contact Address</label>
+                            <div class="col-md-8">
+                                <textarea name="ContactAddress" class="form-control">@ViewBag.model.ContactAddress</textarea>
+                                <b class="errorMessage" data-category="errorMessage" name="error_ContactAddress"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        @*<a class="btn btn-default" href="/User/Index">Back To List</a>*@
+                        <input type="button" class="btn btn-info center-block" value="Edit" onclick="TrySubmit()" />
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+@*Date Picker*@
+<script src="~/Theme/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $('select').select2();
+    });
+</script>

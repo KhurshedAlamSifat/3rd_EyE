@@ -1,0 +1,205 @@
+﻿<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-success">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Yesterday's Vehicle Demand & supply</h3>
+                        </div>
+                        <div class="box-body">
+                            <table class="table table-dark">
+                                <thead>
+                                    <tr>
+                                        <th>Depot/Factory</th>
+                                        <th>Wanted</th>
+                                        <th>Accepted Count</th>
+                                        <th>Assigned Internal</th>
+                                        <th>Assigned External</th>
+                                        <th>Pending</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="YesterDay_data_tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="row">
+                <div class="col-md-12" id="YesterDayChartDiv"></div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="row">
+                <div class="col-md-12" id="LastMonthChartDiv"></div>
+            </div>
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+<script src="~/Scripts/fusioncharts/fusioncharts.js"></script>
+<script src="~/Scripts/fusioncharts/fusioncharts.powercharts.js"></script>
+<script src="~/Scripts/fusioncharts/fusioncharts.theme.fint.js"></script>
+<script>
+    $(function () {
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/InterCompanyRequisition/GetInterCompanyRequisitionDashBoardData/",
+            //data: JSON.stringify({ FK_Vehicles: FK_Vehicles, StartingDate: StartingDate, EndingDate: EndingDate, MinimumMinute: MinimumMinute }),
+            success: function (data) {
+                console.log(data);
+
+                //# YesterDay_data_tbody
+                for (var i = 0; i < data.YesterDayDetailData.length; i++) {
+                    $("#YesterDay_data_tbody").append("<tr>"
+                        + "<td>" + data.YesterDayDetailData[i].DepoName + "</td>"
+                        + "<td>" + data.YesterDayDetailData[i].WantedCount + "</td>"
+                        + "<td>" + data.YesterDayDetailData[i].AcceptedCount + "</td>"
+                        + "<td>" + data.YesterDayDetailData[i].AssignedInternal + "</td>"
+                        + "<td>" + data.YesterDayDetailData[i].AssignedExternal + "</td>"
+                        + "<td>" + (data.YesterDayDetailData[i].AcceptedCount - (data.YesterDayDetailData[i].AssignedInternal + data.YesterDayDetailData[i].AssignedExternal)) + "</td>"
+                        + "</tr>");
+                }
+
+                //# YesterDayChartDiv
+                FusionCharts.ready(function () {
+                    var YesterDayChart = new FusionCharts({
+                        type: 'multilevelpie',
+                        renderAt: 'YesterDayChartDiv',
+                        id: "YesterDayChart",
+                        width: $("#RFL_tbody").width(),
+                        height: '500',
+                        dataFormat: 'json',
+                        dataSource: {
+                            "chart": {
+                                "caption": "Yesterday's Summury",
+                                //"captionFontSize": "18",
+                                //"subcaption": "Last Quarter",
+                                //"subcaptionFontBold": "1",
+                                "showPlotBorder": "0",
+                                "piebordercolor": "#000000",
+                                "piefillalpha": "60",
+                                "pieborderthickness": "2",
+                                "hoverfillcolor": "#FF0000",
+                                "numberprefix": "",
+                                "plottooltext": "$label, $value, $percentValue",
+                                //"theme": "fusion"
+
+                                "baseFontColor": "#000000",
+                                //"baseFont": "Helvetica Neue,Arial",
+                                "basefontsize": "14",
+                                "bgColor": "#FFFFFF",
+                                //"canvasBgColor": "#FF0000",
+                                //"showBorder": "10",
+                                //"showShadow": "1",
+                            },
+                            "category": [
+                                {
+                                    "label": "Accepted" + "<br>" + data.YesterDaySummuryData.AcceptedCount,
+                                    "color": "#ff0000",
+                                    "value": data.YesterDaySummuryData.AcceptedCount,
+                                    "category": [
+                                        {
+                                            "label": "Internal Hiring" + "<br>" + data.YesterDaySummuryData.AssignedInternal,
+                                            "color": "#ccff66",
+                                            "value": data.YesterDaySummuryData.AssignedInternal
+                                        },
+                                        {
+                                            "label": "External Hiring" + "<br>" + data.YesterDaySummuryData.AssignedExternal,
+                                            "color": "#00ffcc",
+                                            "value": data.YesterDaySummuryData.AssignedExternal
+                                        },
+                                        {
+                                            "label": "Pending" + "<br>" + (data.YesterDaySummuryData.AcceptedCount - (data.YesterDaySummuryData.AssignedInternal + data.YesterDaySummuryData.AssignedExternal)),
+                                            "color": "#a47c7c",
+                                            "value": (data.YesterDaySummuryData.AcceptedCount - (data.YesterDaySummuryData.AssignedInternal + data.YesterDaySummuryData.AssignedExternal))
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    });
+                    YesterDayChart.render();
+                });
+
+                //# LastMonthChartDiv
+                FusionCharts.ready(function () {
+                    var LastMonthChart = new FusionCharts({
+                        type: 'multilevelpie',
+                        renderAt: 'LastMonthChartDiv',
+                        id: "LastMonthChart",
+                        width: $("#RFL_tbody").width(),
+                        height: '500',
+                        dataFormat: 'json',
+                        dataSource: {
+                            "chart": {
+                                "caption": "Entire Summury",
+                                //"captionFontSize": "18",
+                                //"subcaption": "Last Quarter",
+                                //"subcaptionFontBold": "1",
+                                "showPlotBorder": "0",
+                                "piebordercolor": "#000000",
+                                "piefillalpha": "60",
+                                "pieborderthickness": "2",
+                                "hoverfillcolor": "#FF0000",
+                                "numberprefix": "",
+                                "plottooltext": "$label, $value, $percentValue",
+                                //"theme": "fusion"
+
+                                "baseFontColor": "#000000",
+                                //"baseFont": "Helvetica Neue,Arial",
+                                "basefontsize": "14",
+                                "bgColor": "#FFFFFF",
+                                //"canvasBgColor": "#FF0000",
+                                //"showBorder": "10",
+                                //"showShadow": "1",
+                            },
+                            "category": [
+                                {
+                                    "label": "Accepted" + "<br>" + data.LastMonthSummuryData.AcceptedCount,
+                                    "color": "#ff0000",
+                                    "value": data.LastMonthSummuryData.AcceptedCount,
+                                    "category": [
+                                        {
+                                            "label": "Internal Hiring" + "<br>" + data.LastMonthSummuryData.AssignedInternal,
+                                            "color": "#ccff66",
+                                            "value": data.LastMonthSummuryData.AssignedInternal
+                                        },
+                                        {
+                                            "label": "External Hiring" + "<br>" + data.LastMonthSummuryData.AssignedExternal,
+                                            "color": "#00ffcc",
+                                            "value": data.LastMonthSummuryData.AssignedExternal
+                                        },
+                                        {
+                                            "label": "Pending" + "<br>" + (data.LastMonthSummuryData.AcceptedCount - (data.LastMonthSummuryData.AssignedInternal + data.LastMonthSummuryData.AssignedExternal)),
+                                            "color": "#a47c7c",
+                                            "value": (data.LastMonthSummuryData.AcceptedCount - (data.LastMonthSummuryData.AssignedInternal + data.LastMonthSummuryData.AssignedExternal))
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    });
+                    LastMonthChart.render();
+                });
+
+
+
+
+
+
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: getData()");
+                $("#modalPreload").css("display", "none");
+            }
+        });
+    })
+</script>

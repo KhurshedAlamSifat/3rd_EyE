@@ -1,0 +1,237 @@
+﻿@model _3rdEyE.Models.AppUser
+
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        User Agent-Ship Setting
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        <a class="btn btn-block btn-info btn-sm" href="@System.Web.HttpContext.Current.Request.UrlReferrer">Back To List</a>
+    </div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" method="post" action="/AppUser/ManageInternalAgent_ProposableDepoAndManagableContructualCompany" enctype="multipart/form-data">
+        <input name="PermittedDepoes" id="PermittedDepoes" type="text" style="display:none;" />
+        <input name="PermittedComapanies" id="PermittedComapanies" type="text" style="display:none;" />
+        <input name="FK_User" id="FK_User" type="text" value="@Model.PK_User" style="display:none;" />
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Agentship and Proposable Depoes</h3>
+                    </div>
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <div class="row">
+                                    <label class="col-md-4 control-label">Staff ID:</label>
+                                    <div class="col-md-8">
+                                        @Html.DisplayFor(m => m.UniqueIDNumber)
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label class="col-md-4 control-label">Full Name:</label>
+                                    <div class="col-md-8">
+                                        @Html.DisplayFor(m => m.FullName)
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label class="col-md-4 control-label">Requisition agen:</label>
+                                    <div class="col-md-8">
+                                        @Html.DropDownList("AppUserType", ViewBag.AppUserTypeDict as SelectList, new { @class = "form-control", onChange = "manageUI()" })
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <input type="button" class="btn btn-facebook pull-right" value="Update Permission" onclick="TryUpdateUserPermission()" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4" data-category="yes_agent">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <input type="checkbox" id="checkbox_pran" onclick="check_pran()" />&nbsp;<label id="label_egnitionOff">Pran</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="checkbox" id="checkbox_rfl" onclick="check_rfl()" />&nbsp;<label id="label_egnitionOff">RFL</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <table id="data_table" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                </th>
+                                                <th>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="data_tbody"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4" data-category="yes_agent">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <h4>Supervised Company</h4>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <table id="data_table_2" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                </th>
+                                                <th>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="data_tbody_2"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-footer">
+                        @*<input type="button" class="btn btn-facebook" value="Update Permission" onclick="TryUpdateUserPermission()" />*@
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+            </div>
+        </div>
+
+
+    </form>
+
+</section>
+<!-- DataTables -->
+<script src="~/Theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/Theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script>
+    $(function () {
+        manageUI();
+        GetPropossableDepoList();
+    });
+</script>
+
+<script>
+    function manageUI() {
+        var AppUserType = $('select[name=AppUserType]').val();
+        if (AppUserType == 'Internal Transport Agent') {
+            $('div[data-category=yes_agent]').show();
+        } else {
+            $('div[data-category=yes_agent]').hide();
+        }
+    }
+    var data_table, data_table_2;
+    var depoList = [];
+    function GetPropossableDepoList() {
+        var FK_User = '@Model.PK_User';
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/AppUser/GetProposableDepoListAndManagableCOntructualCompanyByInternalAgent/",
+            data: JSON.stringify({ FK_User: FK_User }),
+            success: function (data) {
+                console.log(data);
+                depoList = data.depoList;
+                $('#data_tbody').html("");
+                $('#data_tbody_2').html("");
+                var result = "";
+                for (var i = 0; i < depoList.length; i++) {
+                    result = result + "<tr>";
+                    if (depoList[i].IsProposable == true) {
+                        result = result + "<td>" + "<input type='checkbox' name='depoParmssionCehckBoxes' value='" + depoList[i].FK_Depo + "' checked />" + "</td>";
+                    } else {
+                        result = result + "<td>" + "<input type='checkbox' name='depoParmssionCehckBoxes' value='" + depoList[i].FK_Depo + "' />" + "</td>";
+                    }
+                    result = result + "<td>" + depoList[i].DepoName + "</td>";
+                    result = result + "</tr>";
+                }
+                $('#data_tbody').html(result);
+                data_table = $('#data_table').DataTable({
+                    "lengthChange": false, "bPaginate": false,
+                });
+
+                var result_2 = "";
+                for (var i = 0; i < data.contructualCompanyList.length; i++) {
+                    result_2 = result_2 + "<tr>";
+                    if (data.contructualCompanyList[i].WillSupervise == true) {
+                        result_2 = result_2 + "<td>" + "<input type='checkbox' name='companyParmssionCehckBoxes' value='" + data.contructualCompanyList[i].FK_ContructualRequisitionCompany + "' checked />" + "</td>";
+                    } else {
+                        result_2 = result_2 + "<td>" + "<input type='checkbox' name='companyParmssionCehckBoxes' value='" + data.contructualCompanyList[i].FK_ContructualRequisitionCompany + "' />" + "</td>";
+                    }
+                    result_2 = result_2 + "<td>" + data.contructualCompanyList[i].Name + "</td>";
+                    result_2 = result_2 + "</tr>";
+                }
+                $('#data_tbody_2').html(result_2);
+                data_table_2 = $('#data_table_2').DataTable({
+                    "lengthChange": false, "bPaginate": false,
+                });
+
+
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: GetPropossableDepoList()");
+            }
+        });
+    }
+
+    function check_pran() {
+        var check = $('input[id=checkbox_pran]:checked').val();
+        for (var i = 0; i < depoList.length; i++) {
+            if (depoList[i].PRG_Type == 'PRAN') {
+                if (check == 'on') {
+                    $('input[value=' + depoList[i].FK_Depo + ']').attr('checked', true);
+                } else {
+                    $('input[value=' + depoList[i].FK_Depo + ']').attr('checked', false);
+                }
+            }
+        }
+    }
+
+    function check_rfl() {
+        var check = $('input[id=checkbox_rfl]:checked').val();
+        for (var i = 0; i < depoList.length; i++) {
+            if (depoList[i].PRG_Type == 'RFL') {
+                if (check == 'on') {
+                    $('input[value=' + depoList[i].FK_Depo + ']').attr('checked', true);
+                } else {
+                    $('input[value=' + depoList[i].FK_Depo + ']').attr('checked', false);
+                }
+            }
+        }
+    }
+
+    function TryUpdateUserPermission() {
+        if (data_table != undefined || data_table != null) {
+            data_table.destroy();
+        }
+        var depoParmssionCehckBoxes = $('input[name=depoParmssionCehckBoxes]:checked').map(function () {
+            return this.value;
+        }).get();
+        $("#PermittedDepoes").val(depoParmssionCehckBoxes);
+
+        if (data_table_2 != undefined || data_table_2 != null) {
+            data_table_2.destroy();
+        }
+        var companyParmssionCehckBoxes = $('input[name=companyParmssionCehckBoxes]:checked').map(function () {
+            return this.value;
+        }).get();
+        $("#PermittedComapanies").val(companyParmssionCehckBoxes);
+
+        $('form[name=ThisForm]').submit();
+    }
+</script>
+
+

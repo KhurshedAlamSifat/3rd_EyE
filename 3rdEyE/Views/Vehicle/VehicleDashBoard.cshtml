@@ -1,0 +1,184 @@
+﻿<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BAR CHART -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Vehicle Dashboard</h3>
+                </div>
+                <div class="box-body" style="width:auto;">
+                    <div class="chart">
+                        <canvas id="rflBarChart" style="display:none;"></canvas>
+                    </div>
+                </div>
+                <div class="box-body" style="width:auto;">
+                    <div class="chart">
+                        <canvas id="pranBarChart" style="display:none;"></canvas>
+                    </div>
+                </div>
+
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col (RIGHT) -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+<!-- ChartJS -->
+<script src="~/Theme/bower_components/chart.js/2.4.0/Chart.min.js"></script>
+<script>
+    $(function () {
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/Vehicle/GetVehicleDashBoardData/",
+            //data: JSON.stringify({ FK_Vehicles: FK_Vehicles, StartingDate: StartingDate, EndingDate: EndingDate, MinimumMinute: MinimumMinute }),
+            success: function (data) {
+                if (data.pran != undefined) {
+                    $("#pranBarChart").show();
+                    var _height_px = data.pran.length * 25;
+                    $("#pranBarChart").css("height", _height_px + "px");
+                    var data_labels = data.pran.map(a => a.Name.replace("PRAN - ", ""));
+                    var dataset_data = data.pran.map(a => a.vehicleCount);
+                    var total_vehicles = 0;
+                    for (var i = 0; i < data.pran.length; i++) {
+                        total_vehicles += data.pran[i].vehicleCount;
+                    }
+                    var ctx = document.getElementById('pranBarChart').getContext('2d');
+                    var chart = new Chart(ctx, {
+                        // The type of chart we want to create
+                        type: 'horizontalBar',
+
+                        // The data for our dataset
+                        data: {
+                            labels: data_labels,
+                            datasets: [{
+                                label: "Pran : " + total_vehicles + " vehicles",
+                                backgroundColor: 'rgb(34, 173, 24)',
+                                borderColor: 'rgb(34, 173, 24)',
+                                data: dataset_data,
+                            }]
+                        },
+
+                        // Configuration options go here
+                        options: {
+                            animation: {
+                                duration: 1,
+                                onComplete: function () {
+                                    var chartInstance = this.chart,
+                                        ctx = chartInstance.ctx;
+
+                                    //ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                                    ctx.font = Chart.helpers.fontString(12, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                                    ctx.textAlign = 'center';
+                                    ctx.textBaseline = 'bottom';
+                                    ctx.fillStyle = "#000";
+
+                                    this.data.datasets.forEach(function (dataset, i) {
+                                        var meta = chartInstance.controller.getDatasetMeta(i);
+                                        meta.data.forEach(function (bar, index) {
+                                            var data = dataset.data[index];
+                                            ctx.fillText(data, bar._model.x + 12, bar._model.y + 7);
+                                        });
+                                    });
+                                }
+                            },
+                            hover: {
+                                animationDuration: 0
+                            },
+                            tooltips: {
+                                enabled: false,
+                            },
+                            scales: {
+                                xAxes: [{
+                                    beginAtZero: true,
+                                    ticks: {
+                                        autoSkip: false,
+                                        fontSize: 10
+                                    }
+                                }]
+                            }
+                        }
+                    });
+                }
+
+                if (data.rfl != undefined) {
+                    $("#rflBarChart").show();
+                    var _height_px = data.rfl.length * 50;
+                    $("#rflBarChart").css("height", _height_px + "px");
+                    var data_labels = data.rfl.map(a => a.Name.replace("RFL - ", ""));
+                    var dataset_data = data.rfl.map(a => a.vehicleCount);
+                    var total_vehicles = 0;
+                    for (var i = 0; i < data.rfl.length; i++) {
+                        total_vehicles += data.rfl[i].vehicleCount;
+                    }
+                    var ctx = document.getElementById('rflBarChart').getContext('2d');
+                    var chart = new Chart(ctx, {
+                        // The type of chart we want to create
+                        type: 'horizontalBar',
+
+                        // The data for our dataset
+                        data: {
+                            labels: data_labels,
+                            datasets: [{
+                                label: "RFL : " + total_vehicles + " vehicles",
+                                backgroundColor: 'rgb(66, 134, 244)',
+                                borderColor: 'rgb(66, 134, 244)',
+                                data: dataset_data,
+                            }]
+                        },
+
+                        // Configuration options go here
+                        options: {
+                            animation: {
+                                duration: 1,
+                                onComplete: function () {
+                                    var chartInstance = this.chart,
+                                        ctx = chartInstance.ctx;
+
+                                    //ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                                    ctx.font = Chart.helpers.fontString(12, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                                    ctx.textAlign = 'center';
+                                    ctx.textBaseline = 'bottom';
+
+                                    this.data.datasets.forEach(function (dataset, i) {
+                                        var meta = chartInstance.controller.getDatasetMeta(i);
+                                        meta.data.forEach(function (bar, index) {
+                                            var data = dataset.data[index];
+                                            ctx.fillText(data, bar._model.x + 12, bar._model.y + 7);
+                                        });
+                                    });
+                                }
+                            },
+                            hover: {
+                                animationDuration: 0
+                            },
+                            tooltips: {
+                                enabled: false,
+                            },
+                            scales: {
+                                xAxes: [{
+                                    beginAtZero: true,
+                                    ticks: {
+                                        autoSkip: false,
+                                        fontSize: 10
+                                    }
+                                }]
+                            }
+                        }
+                    });
+                }
+
+
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: getData()");
+                $("#modalPreload").css("display", "none");
+            }
+        });
+    })
+</script>

@@ -1,0 +1,551 @@
+﻿@model _3rdEyE.Models.InterCompanyRequisition
+@{
+    ViewBag.Title = "Create";
+}
+
+@*UberStyle-start*@
+<style>
+    .uber {
+        width: 20px;
+        height: 50px;
+        position: absolute;
+        z-index: 100;
+        margin-top: 0.25em;
+    }
+
+    .u-green {
+        height: 5px;
+        width: 5px;
+        top: -24px;
+        left: 7px;
+        border-radius: 5px;
+        background-color: green;
+        position: absolute;
+        z-index: 100;
+    }
+
+    .u-red {
+        background-color: red;
+        border-radius: 5px;
+        height: 5px;
+        left: 7px;
+        position: absolute;
+        top: 35px;
+        width: 5px;
+        z-index: 100;
+    }
+
+    .u-line {
+        background-color: #e3e3e3;
+        height: 54px;
+        left: 9px;
+        position: absolute;
+        top: -18px;
+        width: 1px;
+        z-index: 100;
+    }
+</style>
+@*UserStyle-end*@
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+
+<!--Date picker-->
+<link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+<script src="~/Theme/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="~/Theme/bower_components/jquery-ui/jquery-ui.min.js"></script>
+<!--/Date picker-->
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Assign Inter Company Requisition
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        <a class="btn btn-block btn-info btn-sm" href="/InterCompanyRequisition/IndexBy_Client">Go To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/InterCompanyRequisition/AssignVehicle" enctype="multipart/form-data">
+        <input name="PK_InterCompanyRequisition" value="@Model.PK_InterCompanyRequisition" style="display:none" />
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Inter Comapany Requisition Entry</h3>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5">
+                                    @*FK_InterCompanyRequisitionLocation_From*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <label class="col-md-3 control-label">From</label>
+                                            <div class="col-md-4">
+                                                @Html.EditorFor(model => model.InterCompanyRequisitionLocation.Name, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                            </div>
+                                            <div class="col-md-5">
+                                                @Html.EditorFor(model => model.StartingLocation, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*FK_InterCompanyRequisitionLocation_To*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <label class="col-md-3 control-label">To</label>
+                                            <div class="col-md-4">
+                                                @Html.EditorFor(model => model.InterCompanyRequisitionLocation1.Name, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                            </div>
+                                            <div class="col-md-5">
+                                                @Html.EditorFor(model => model.FinishingLocation, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <b class="errorMessage col-md-12" data-category="errorMessage" name="distance_message"></b>
+                                    @*VehicleType*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <label class="col-md-3 control-label">Vehicle Type</label>
+                                            <div class="col-md-7">
+                                                <input type="text" class="form-control" value="@Model.RequisitionVehicleType.Title_English" readonly="readonly" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*WantedCount*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <label class="col-md-3 control-label">Wanted Quantity</label>
+                                            <div class="col-md-7">
+                                                @Html.EditorFor(model => model.WantedCount, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*AcceptedCount*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <label class="col-md-3 control-label">Accepted Quantity</label>
+                                            <div class="col-md-7">
+                                                @Html.EditorFor(model => model.AcceptedCount, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*PossibleJourneyStartDateTime*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <label class="col-md-3 control-label">Start Time</label>
+                                            <div class="col-md-7 input-append date form_datetime" @*data-date="1979-09-16T05:25:07Z" *@ data-date-format="dd MM yyyy - HH:ii p" data-link-field="dtp_input1">
+                                                <input id="PossibleJourneyStartDateTime" name="PossibleJourneyStartDateTime" class="form-control col-md-12" type="text" value="@Model.PossibleJourneyStartDateTime" readonly="readonly" disabled="disabled" style="background-color: white;">
+                                                <span class="add-on"><i class="icon-remove"></i></span>
+                                                <span class="add-on"><i class="icon-th"></i></span>
+                                            </div>
+                                            <input type="hidden" id="dtp_input1" value="" style="display:none;" /><br />
+                                        </div>
+                                    </div>
+                                    @*ClientNote*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <label class="col-md-3 control-label">Client Note</label>
+                                            <div class="col-md-7">
+                                                @Html.EditorFor(model => model.ClientNote, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                            </div>
+                                        </div>
+                                        <b class="errorMessage col-md-2" data-category="errorMessage" name="error_Note"></b>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    @*InterCompanyRequisition_InternalVehicle*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <label class="col-md-3 control-label">Internally Hired Vehicle</label>
+                                            <div class="col-md-3">
+                                                <input name="InternalVehicleRegNum" id="InternalVehicleRegNum" class="form-control">
+                                                <input name="InternalVehiclePKs" id="InternalVehiclePKs" style="display:none;">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <select name="SelectInternalVehicles" id="SelectInternalVehicles" class="form-control" onchange="addInternalVehicle()"></select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*InterCompanyRequisition_InternalVehicle*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <label class="col-md-3 control-label"></label>
+                                            <div class="col-md-9">
+                                                <table class="table table-bordered">
+                                                    <tbody id="internally_hired_tbody"></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*InterCompanyRequisition_ExternalVehicle*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <label class="col-md-3 control-label">Externally Hired Vehicle</label>
+                                            <div class="col-md-3">
+                                                <input name="ExternalVehicleRegNum" id="ExternalVehicleRegNum" class="form-control">
+                                                <input name="ExternalVehiclePKs" id="ExternalVehiclePKs" style="display:none;">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <select name="SelectExternalVehicles" id="SelectExternalVehicles" class="form-control" onchange="addExternalVehicle()"></select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*InterCompanyRequisition_ExternalVehicle*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <label class="col-md-3 control-label"></label>
+                                            <div class="col-md-9">
+                                                <table class="table table-bordered">
+                                                    <tbody id="externally_hired_tbody"></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*InterCompanyRequisition_ExternalTroller*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <label class="col-md-3 control-label">Externally Hired Troller</label>
+                                            <input type="text" name="externalTrollerCount" id="externalTrollerCount" value="@Model.InterCompanyRequisition_ExternalTroller.Count()" style="display:none" />
+                                            <div class="col-md-3">
+                                                <input type="button" class="btn btn-info center-block" value="Add row" onclick="addRow()" />
+                                            </div>
+                                            <div class="col-md-offset-3 col-md-3">
+                                                <input type="button" class="btn btn-info center-block" value="remove row" onclick="removeRow()" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*InterCompanyRequisition_ExternalTroller*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <label class="col-md-3 control-label"></label>
+                                            <div class="col-md-9">
+                                                <table id="data_table" class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="width: 5%">
+                                                                SL
+                                                            </th>
+                                                            <th style="width: 40%">
+                                                                Troller Number
+                                                            </th>
+                                                            <th style="width: 40%">
+                                                                Contact Number
+                                                            </th>
+                                                            <th style="width: 15%">
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="externally_hiredTroller_tbody"></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <script>
+                                        function addRow() {
+                                            var externalTrollerCount = parseInt($("#externalTrollerCount").val());
+                                            if (externalTrollerCount > 0) {
+                                                var lastTroller = $("#TorllerNumber_" + (externalTrollerCount - 1)).val();
+                                                if (lastTroller == '') {
+                                                    return;
+                                                }
+                                            }
+                                            var sl = externalTrollerCount + 1;
+                                            var res = "<tr id='row_" + externalTrollerCount + "'>";
+                                            res = res + "<td style='width: 5%'>" + sl + "</td>";
+                                            res = res + "<td style='width: 40%'><input id='TorllerNumber_" + externalTrollerCount + "' name='TorllerNumber_" + externalTrollerCount + "' style='width: 100%' /></td>";
+                                            res = res + "<td style='width: 40%'><input name='externalTrollerNote_" + externalTrollerCount + "' style='width: 100%' /></td>";
+                                            res = res + "<td style='width: 15%'><b class='errorMessage' data-category='errorMessage' name='error_Troller_" + externalTrollerCount + "'></b></td>";
+                                            res = res + "</tr>";
+                                            $("#externally_hiredTroller_tbody").append(res);
+                                            externalTrollerCount++;
+                                            $("#externalTrollerCount").val(externalTrollerCount);
+                                        }
+                                        function removeRow() {
+                                            var externalTrollerCount = parseInt($("#externalTrollerCount").val());
+                                            if (externalTrollerCount == 0) {
+                                                return;
+                                            }
+                                            $('#externally_hiredTroller_tbody tr:last').remove();
+                                            externalTrollerCount--;
+                                            $("#externalTrollerCount").val(externalTrollerCount);
+                                        }
+                                    </script>
+                                    <script>
+                                        validatorArray.push(
+                                            function () {
+                                                var externalTrollerCount = $("#externalTrollerCount").val();
+                                                var localValidator = true;
+                                                for (var i = 0; i < externalTrollerCount; i++) {
+                                                    var img = $("#TorllerNumber_" + i).val();
+                                                    console.log(i + ' ' + img)
+                                                    if (img == '') {
+                                                        console.log(i + ' empty')
+                                                        localValidator = false;
+                                                        $('b[name=error_Troller_' + i + ']').html("*required");
+                                                    }
+                                                }
+                                                if (localValidator == false) {
+                                                    formValidity = false;
+                                                }
+                                            });
+                                    </script>
+
+
+                                    @*HiredVehicleCount*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <b class="errorMessage col-md-10 col-md-offset-2" data-category="errorMessage" name="error_HiredVehicleCount_External"></b>
+                                        </div>
+                                        <script>
+                                            validatorArray.push(
+                                                function () {
+                                                    for (var i = 0; i < externalVehicleList.length; i++) {
+                                                        if ($("input[name=externalVehicleHiredAmount_" + externalVehicleList[i].value.replace(/-/g, '') + "]").val() == '') {
+                                                            formValidity = false;
+                                                            $('b[name=error_HiredVehicleCount_External]').html("Insert carriage return for all hired vehicles");
+                                                            return;
+                                                        }
+                                                    }
+
+                                                    var AcceptedCount = Number($('input[name=AcceptedCount]').val());
+                                                    var HiredVehicleCount_InternalVehicle = internalVehicleList.length;
+                                                    var HiredVehicleCount_ExternalVehicle = externalVehicleList.length;
+                                                    var HiredVehicleCount_ExternalTroller = parseInt($("#externalTrollerCount").val());
+                                                    var AssginedVehicleCount = HiredVehicleCount_InternalVehicle + HiredVehicleCount_ExternalVehicle + HiredVehicleCount_ExternalTroller;
+                                                    if (AssginedVehicleCount > AcceptedCount) {
+                                                        var con = confirm("Assigned vehicle is " + AssginedVehicleCount + " but assigned vehicle is " + AcceptedCount + ". Do you want to confirm?");
+                                                        if (con != true) {
+                                                            formValidity = false;
+                                                            $('b[name=error_HiredVehicleCount_External]').html("Total vehicle/troller you want to hire is more than acctepted. Please, decrease vehicle.");
+                                                        }
+                                                    }
+                                                });
+                                        </script>
+                                    </div>
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <button type="button" class="btn btn-facebook center-block" onclick="validateAndTrySubmit()"> Save </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- /.box-footer -->
+                </div>
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+
+</section>
+<!-- /.content -->
+<script>
+    $(document).ready(function () {
+    //InterCompanyRequisition_InternalVehicle
+    @foreach (var item in Model.InterCompanyRequisition_InternalVehicle.OrderBy(m => m.CreatedAt))
+    {
+    <text>
+    internalVehicleList.push({
+        text: '@item.Vehicle.RegistrationNumber',
+        note: '@item.Note',
+        value: '@item.Vehicle.PK_Vehicle',
+        });
+    </text>
+    }
+
+    for (var i = 0; i < internalVehicleList.length; i++) {
+        var selected = internalVehicleList[i];
+        var res = "<tr id='tr_" + selected.value.replace(/-/g, '') + "'>"
+            + "<td width='40%'>" + selected.text + "&nbsp;&nbsp;</td>"
+            + "<td width='50%'>" + "<input style='width:100%' name='internalVehicleNote_" + selected.value.replace(/-/g, '') + "' type='text' value='" + selected.note + "'>" + "</td>"
+            + "<td width='10%'>" + "<button type='button' value='" + selected.value + "' onclick='removeInternalVehicle(this.value)'> remove </button>" + "</td>"
+            + "</tr>";
+        $('#internally_hired_tbody').append(res);
+    }
+    document.getElementById("InternalVehicleRegNum").addEventListener("keyup", function (event) {
+        event.preventDefault();
+        if (event.keyCode === 13) {
+            var InternalVehicleRegNum = $("#InternalVehicleRegNum").val();
+            $("#InternalVehicleRegNum").attr("readonly", true);
+            $.ajax({
+                traditional: true,
+                type: "post",
+                dataType: "json",
+                contentType: "application/json",
+                url: "/InterCompanyRequisition/GetInternalVehicles",
+                data: JSON.stringify({ InternalVehicleRegNum: InternalVehicleRegNum }),
+                success: function (data) {
+                    var res = "";
+                    $("#SelectInternalVehicles").html(res);
+                    if (data.length == 0) {
+                        res = "<option value=''>Not Found</option>";
+                    } else {
+                        res = "<option value=''>Select</option>";
+                        for (var i = 0; i < data.length; i++) {
+                            res = res + "<option value='" + data[i].PK_Vehicle + "' data-contact_number='" + data[i].ContactNumber + "'>" + data[i].RegistrationNumber + "</option>";
+                        }
+                    }
+                    $("#SelectInternalVehicles").html(res);
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log("Err on call");
+                }
+            });
+            $("#InternalVehicleRegNum").removeAttr("readonly");
+        }
+    });
+
+    //InterCompanyRequisition_ExternalVehicle
+    @foreach (var item in Model.InterCompanyRequisition_ExternalVehicle.OrderBy(m => m.CreatedAt))
+    {
+    <text>
+    externalVehicleList.push({
+        text: '@item.Vehicle.RegistrationNumber',
+        note: '@item.Note',
+        hiredAmount: '@item.HiredAmount',
+        value: '@item.Vehicle.PK_Vehicle',
+        });
+    </text>
+    }
+
+    for (var i = 0; i < externalVehicleList.length; i++) {
+        var selected = externalVehicleList[i];
+        var res = "<tr id='tr_" + selected.value.replace(/-/g, '') + "'>"
+            + "<td width='40%'>" + selected.text + "&nbsp;&nbsp;</td>"
+            + "<td width='25%'>" + "<input style='width:100%' name='externalVehicleNote_" + selected.value.replace(/-/g, '') + "' type='text' value='" + selected.note + "'>" + "</td>"
+            + "<td width='25%'>" + "<input style='width:100%' name='externalVehicleHiredAmount_" + selected.value.replace(/-/g, '') + "' type='text' value='" + selected.hiredAmount + "' placeholder='Carriage Outword' readonly='readonly'>" + "</td>"
+            + "<td width='10%'>" + "<button type='button' value='" + selected.value + "' onclick='removeExternalVehicle(this.value)'> remove </button>" + "</td>"
+            + "</tr>";
+        $('#externally_hired_tbody').append(res);
+    }
+    document.getElementById("ExternalVehicleRegNum").addEventListener("keyup", function (event) {
+        event.preventDefault();
+        if (event.keyCode === 13) {
+            var ExternalVehicleRegNum = $("#ExternalVehicleRegNum").val();
+            $("#ExternalVehicleRegNum").attr("readonly", true);
+            $.ajax({
+                traditional: true,
+                type: "post",
+                dataType: "json",
+                contentType: "application/json",
+                url: "/InterCompanyRequisition/GetExternalVehicles",
+                data: JSON.stringify({ ExternalVehicleRegNum: ExternalVehicleRegNum }),
+                success: function (data) {
+                    console.log(data);
+                    var res = "";
+                    $("#SelectExternalVehicles").html(res);
+                    if (data.length == 0) {
+                        res = "<option value=''>Not Found</option>";
+                    } else {
+                        res = "<option value=''>Select</option>";
+                        for (var i = 0; i < data.length; i++) {
+                            res = res + "<option value='" + data[i].PK_Vehicle + "' data-contact_number='" + data[i].ContactNumber + "'>" + data[i].RegistrationNumber + "</option>";
+                        }
+                    }
+                    $("#SelectExternalVehicles").html(res);
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log("Err on call");
+                }
+            });
+            $("#ExternalVehicleRegNum").removeAttr("readonly");
+        }
+    });
+
+
+    //InterCompanyRequisition_ExternalTroller
+    var externalTrollerList= [];
+    @foreach (var item in Model.InterCompanyRequisition_ExternalTroller.OrderBy(m => m.CreatedAt))
+    {
+    <text>
+    externalTrollerList.push({
+        text: '@item.TrollerNumber.Trim()',
+        note: '@item.Note',
+        });
+    </text>
+    }
+
+    for (var i = 0; i < externalTrollerList.length; i++) {
+        var selected = externalTrollerList[i];
+        var res = "<tr id='tr_" + i + "'>"
+            + "<td width='5%'>" + (i + 1) + "&nbsp;&nbsp;</td>"
+            + "<td style='width: 40%'><input id='TorllerNumber_" + i + "' name='TorllerNumber_" + i + "' style='width: 100%'  value='" + selected.text + "'/></td>"
+            + "<td style='width: 40%'><input name='externalTrollerNote_" + i + "' style='width: 100%' value='" + selected.note + "'/></td>"
+            + "<td style='width: 15%'><b class='errorMessage' data-category='errorMessage' name='error_Troller_" + i + "'></b></td>"
+            + "</tr>";
+        $('#externally_hiredTroller_tbody').append(res);
+    }
+
+
+});
+var internalVehicleList = [];
+function addInternalVehicle() {
+    var selected = {
+        text: $('#SelectInternalVehicles :selected').text(),
+        value: $('#SelectInternalVehicles :selected').val(),
+        contactNumber: $('#SelectInternalVehicles :selected').attr("data-contact_number"),
+    };
+    console.log(selected);
+    if (selected.value != '' && internalVehicleList.filter(e => e.value == selected.value).length == 0) {
+        internalVehicleList.push(selected);
+        var res = "<tr id='tr_" + selected.value.replace(/-/g, '') + "'>"
+            + "<td width='40%'>" + selected.text + "&nbsp;&nbsp;</td>"
+            + "<td width='50%'>" + "<input style='width:100%' name='internalVehicleNote_" + selected.value.replace(/-/g, '') + "' type='text' value='" + selected.contactNumber + "'>" + "</td>"
+            + "<td width='10%'>" + "<button type='button' value='" + selected.value + "' onclick='removeInternalVehicle(this.value)'> remove </button>" + "</td>" + "</tr>";
+        $('#internally_hired_tbody').append(res);
+    }
+}
+function removeInternalVehicle(value) {
+    $("#tr_" + value.replace(/-/g, '')).remove();
+    var selected = internalVehicleList.find(function (element) {
+        return element.value == value;
+    });
+    internalVehicleList.pop(selected);
+}
+
+var externalVehicleList = [];
+function addExternalVehicle() {
+    var selected = {
+        text: $('#SelectExternalVehicles :selected').text(),
+        value: $('#SelectExternalVehicles :selected').val(),
+        contactNumber: $('#SelectExternalVehicles :selected').attr("data-contact_number"),
+    };
+    console.log(selected);
+    if (selected.value != '' && externalVehicleList.filter(e => e.value == selected.value).length == 0) {
+        externalVehicleList.push(selected);
+        var res = "<tr id='tr_" + selected.value.replace(/-/g, '') + "'>"
+            + "<td width='40%'>" + selected.text + "&nbsp;&nbsp;</td>"
+            + "<td width='25%'>" + "<input style='width:100%' name='externalVehicleNote_" + selected.value.replace(/-/g, '') + "' type='text' value='" + selected.contactNumber + "'>" + "</td>"
+            + "<td width='25%'>" + "<input style='width:100%' name='externalVehicleHiredAmount_" + selected.value.replace(/-/g, '') + "' type='text' placeholder='Carriage Outword'>" + "</td>"
+            + "<td width='10%'>" + "<button type='button' value='" + selected.value + "' onclick='removeExternalVehicle(this.value)'> remove </button>" + "</td>" + "</tr>";
+        $('#externally_hired_tbody').append(res);
+    }
+}
+function removeExternalVehicle(value) {
+    $("#tr_" + value.replace(/-/g, '')).remove();
+    var selected = externalVehicleList.find(function (element) {
+        return element.value == value;
+    });
+    externalVehicleList.pop(selected);
+}
+function validateAndTrySubmit() {
+    var res = "";
+    for (var i = 0; i < internalVehicleList.length; i++) {
+        res = res + internalVehicleList[i].value + ",";
+    }
+    $("#InternalVehiclePKs").val(res);
+    res = "";
+    for (var i = 0; i < externalVehicleList.length; i++) {
+        res = res + externalVehicleList[i].value + ",";
+    }
+    $("#ExternalVehiclePKs").val(res);
+    TrySubmit();
+}
+</script>

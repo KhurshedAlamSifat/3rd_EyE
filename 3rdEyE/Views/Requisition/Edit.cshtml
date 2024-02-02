@@ -1,0 +1,285 @@
+﻿@model _3rdEyE.Models.Requisition
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Edit Demand
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        <a class="btn btn-block btn-info btn-sm" href="/Requisition/RequisitionIndex_Client">Go To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Requisition Entry</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form id="ThisForm" name="ThisForm" class="form-horizontal" method="post" action="/Requisition/Edit_Pran">
+                    <input name="PK_Requisition" value="@Model.PK_Requisition" style="display:none;" />
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">From Location*</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Location_From", ViewBag.Locations1 as SelectList, "Select", new { @class = "form-control", onchange = "relodeOrganizationCode(this.id)" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_Name"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">From Department</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_LocationDepartment_From", ViewBag.LocationDepartments_From as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_Name"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">From Detail</label>
+                            <div class="col-md-8">
+                                <input id="StartingLocation" name="StartingLocation" class="form-control" onfocus="this.value = this.value;" />
+                                <b class="errorMessage" data-category="errorMessage" name="error_Name"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Organization*</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("OrganizationCode", ViewBag.Organizations as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_OrganizationCode"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">To Location*</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Location_To", ViewBag.Locations2 as SelectList, "Select", new { @class = "form-control", onchange = "relodeFK_LocationDepartment_To(this.id)" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_Name"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">To Department</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_LocationDepartment_To", ViewBag.LocationDepartments_From as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_Name"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">To Detail</label>
+                            <div class="col-md-8">
+                                <input id="FinishingLocation" name="FinishingLocation" class="form-control" onfocus="this.value = this.value;" />
+                                <b class="errorMessage" data-category="errorMessage" name="error_Name"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Vehicle Type*</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_RequisitionVehicleType", ViewBag.RequisitionVehicleTypes as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_Name"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">How Many*</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("WantedCount", ViewBag.WantedQuantityDict as SelectList, new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_Name"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">When*</label>
+                            <div class="col-md-8">
+                                <input id="PossibleJourneyStartDateTime" name="PossibleJourneyStartDateTime" size="16" type="text" value="@Model.PossibleJourneyStartDateTime" readonly class="form-control">
+                                <b class="errorMessage" data-category="errorMessage" name="error_Name"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">LC Number</label>
+                            <div class="col-md-8">
+                                <input id="LCNumber" name="LCNumber" class="form-control" onfocus="this.value = this.value;" />
+                                <b class="errorMessage" data-category="errorMessage" name="error_Name"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Note</label>
+                            <div class="col-md-8">
+                                <input id="ClientNote" name="ClientNote" class="form-control" />
+                                <b class="errorMessage" data-category="errorMessage" name="error_Name"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <script>
+                            validatorArray.push(
+                                function () {
+                                    var FK_Location_From = $('#FK_Location_From').val();
+                                    var Location_From = $('#FK_Location_From option:selected').text();
+
+                                    var OrganizationCode = $('#OrganizationCode').val();
+                                    var Organization = $('#OrganizationCode option:selected').text();
+
+                                    var FK_LocationDepartment_From = $('#FK_LocationDepartment_From').val();
+                                    var LocationDepartment = $('#FK_LocationDepartment_From option:selected').text();
+
+                                    var StartingLocation = $('#StartingLocation').val();
+
+                                    var FK_Location_To = $('#FK_Location_To').val();
+                                    var Location_To = $('#FK_Location_To option:selected').text();
+
+                                    var FinishingLocation = $('#FinishingLocation').val();
+
+                                    var FK_RequisitionVehicleType = $('#FK_RequisitionVehicleType').val();
+                                    var RequisitionVehicleType = $('#FK_RequisitionVehicleType option:selected').text();
+
+                                    var WantedCount = $('#WantedCount').val();
+
+                                    var ClientNote = $('#ClientNote').val();
+
+                                    var PossibleJourneyStartDateTime = $('#PossibleJourneyStartDateTime').val();
+                                    var LCNumber = $('#LCNumber').val();
+
+                                    if (FK_Location_From == '' || OrganizationCode == '' || FK_Location_To == '' || FK_RequisitionVehicleType == '' || WantedCount == '' || PossibleJourneyStartDateTime == '') {
+                                        alert('Fill all required field. Then, try again.');
+                                        formValidity = false;
+                                    }
+                                });
+                        </script>
+                        <input type="button" class="btn btn-facebook pull-right" value="Save" onclick="TrySubmit()" />
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        //$("#PossibleJourneyStartDateTime").datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true, yearRange: '1990:2023' });
+        $("select").select2();
+    });
+</script>
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var today = new Date();
+        var _startDate = (today.getMonth() + 1) + '/' + (today.getDate() + 0) + '/' + today.getFullYear() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();// 13:05'//today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        var _endDate = (today.getMonth() + 1) + '/' + (today.getDate() + 2) + '/' + today.getFullYear() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();// 13:05'//today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        $('#PossibleJourneyStartDateTime').datetimepicker({
+            //format: 'yyyy-mm-dd HH:ii P',
+            format: 'yyyy-mm-dd HH:ii P',
+            //setDate: new Date(),
+            //weekStart: 1,
+            todayBtn: 1,
+            autoclose: 1,
+            //todayHighlight: 1,
+            //startView: 2,
+            //forceParse: 0,
+            //showMeridian: 0
+            //startDate: '+0d',
+            startDate: new Date(_startDate),
+            endDate: new Date(_endDate),
+        });
+    });
+</script>
+<script>
+    function relodeOrganizationCode(FK_Location_From_element_id) {
+        var FK_Location = $('#' + FK_Location_From_element_id).val();
+        var _url = "";
+        if ('@ViewBag.CurrentUser.PRG_Type'=='PRAN') {
+            _url = "/PranOrganization/GetPranOrganizationBy_FK_Location";
+        } else {
+            _url = "/RFLOrganization/GetRFLOrganizationBy_FK_Location";
+        }
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: _url,
+            data: JSON.stringify({ FK_Location: FK_Location }),
+            success: function (data) {
+                var element_id = FK_Location_From_element_id.replace("FK_Location_From", "OrganizationCode");
+                $('#' + element_id).html("");
+                var result = "<option value=''>Select</option>";
+                for (var i = 0; i < data.length; i++) {
+                    result = result + "<option value='" + data[i].OrganizationCode + "'>" + data[i].OrganizationCode + " / " + data[i].OrganizationName + "</option>";
+                }
+                $('#' + element_id).html(result);
+                relodeFK_LocationDepartment_From(FK_Location_From_element_id);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: relodeOrganizationCode()");
+            }
+        });
+    }
+    function relodeFK_LocationDepartment_From(FK_Location_From_element_id) {
+        var FK_Location = $('#' + FK_Location_From_element_id).val();
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/LocationDepartment/GetLocationDepartment_FK_Location/",
+            data: JSON.stringify({ FK_Location: FK_Location }),
+            success: function (data) {
+                var element_id = FK_Location_From_element_id.replace("FK_Location_From", "FK_LocationDepartment_From");
+                $('#' + element_id).html("");
+                var result = "<option value=''>Select</option>";
+                for (var i = 0; i < data.length; i++) {
+                    result = result + "<option value='" + data[i].PK_LocationDepartment + "'>" + data[i].DepartmentCode + "</option>";
+                }
+                $('#' + element_id).html(result);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: relodeFK_LocationDepartment_From()");
+            }
+        });
+    }
+    function relodeFK_LocationDepartment_To(FK_Location_To_element_id) {
+        var FK_Location = $('#' + FK_Location_To_element_id).val();
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/LocationDepartment/GetLocationDepartment_FK_Location/",
+            data: JSON.stringify({ FK_Location: FK_Location }),
+            success: function (data) {
+                var element_id = FK_Location_To_element_id.replace("FK_Location_To", "FK_LocationDepartment_To");
+                $('#' + element_id).html("");
+                var result = "<option value=''>Select</option>";
+                for (var i = 0; i < data.length; i++) {
+                    result = result + "<option value='" + data[i].PK_LocationDepartment + "'>" + data[i].DepartmentCode + "</option>";
+                }
+                $('#' + element_id).html(result);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: relodeFK_LocationDepartment_To()");
+            }
+        });
+    }
+</script>
+
+
+
+

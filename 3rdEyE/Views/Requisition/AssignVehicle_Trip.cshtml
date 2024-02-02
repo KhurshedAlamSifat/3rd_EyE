@@ -1,0 +1,559 @@
+﻿@model _3rdEyE.Models.Vehicle
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Assign Vehicle-Requisition #@Model.RegistrationNumber
+        <small></small>
+    </h1>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/Requisition/AssignVehicle_Trip" enctype="multipart/form-data">
+        <input id="PK_RequisitionTrip_SL" name="PK_RequisitionTrip_SL" value="-1" style='display:none;' />
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Vehicle Information</h3>
+                            </div>
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table id="table_req_trip_conf" class="table table-bordered" style="border-collapse: collapse;">
+                                            <tbody id="selected_tbody">
+                                                <tr>
+                                                    <td width="20%">
+                                                        <input id="FK_Vehicle" name="FK_Vehicle" value="@Model.PK_Vehicle" readonly="readonly" style='display:none; width:0%;' />
+                                                        <label>Vehicle</label>
+                                                        <br />
+                                                        <span style="width:20%;" id="RegistrationNumber" name="RegistrationNumber">@Model.OWN_MHT_DHT : @Model.RegistrationNumber : @Model.Internal_VehicleContactNumber @Model.MHT_DHT_DriverContactNumber</span>
+                                                    </td>
+                                                    <td width="20%">
+                                                        <label>On Hand At</label>
+                                                        <input id="FinalWantedAtDateTime" name="FinalWantedAtDateTime" class="form_datetime form-control" style="width:100%;" type="text" value="" readonly>
+                                                    </td>
+                                                    <td width="20%">
+                                                        <label>Driver ID</label>
+                                                        <input id="Driver_Staff_ID" name="Driver_Staff_ID" style="width:100%;" onfocusout='addDriver()' @(Model.OWN_MHT_DHT == "DHT" || Model.OWN_MHT_DHT == "MHT" ? "readonly" : "") />
+                                                    </td>
+                                                    <td width="20%">
+                                                        <label>Driver Info</label>
+                                                        <input id="Driver_Name" name="Driver_Name" style="width:100%;" placeholder="Driver Name" @(Model.OWN_MHT_DHT == "DHT" ? "" : "readonly") />
+                                                        <input id="Driver_ContactNumber" name="Driver_ContactNumber" style="width:100%;" placeholder="Driver Mobile Number" @(Model.OWN_MHT_DHT == "DHT" ? "" : "readonly") />
+                                                    </td>
+                                                    <td width="20%">
+                                                        <label>Assigning Note</label>
+                                                        <br />
+                                                        <input id="AssigningNote" name="AssigningNote" type="text" style="width:100%;" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label>Transport Agency</label>
+                                                        @if (Model.OWN_MHT_DHT == "OWN" || Model.OWN_MHT_DHT == "MHT")
+                                                        {
+                                                            @Html.DropDownList("FK_TransportAgency", ViewBag.TransportAgency as SelectList, "Select", new { @class = "form-control", @disabled = "disabled" })
+                                                        }
+                                                        else
+                                                        {
+                                                            @Html.DropDownList("FK_TransportAgency", ViewBag.TransportAgency as SelectList, "Select", new { @class = "form-control" })
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        <label>Total Amount</label>
+                                                        <input data-category="HiredTrip" id="TotalAmount" name="TotalAmount" type="number" style="width:100%;" min="0" @(Model.OWN_MHT_DHT == "DHT" ? "" : "readonly") />
+                                                    </td>
+                                                    <td>
+                                                        <label>Commission</label>
+                                                        <input data-category="HiredTrip" id="CommissionAmount" name="CommissionAmount" type="number" style="width:100%;" min="0" @(Model.OWN_MHT_DHT == "DHT" ? "" : "readonly") />
+                                                    </td>
+                                                    <td>
+                                                        <label>Advance</label>
+                                                        <input data-category="HiredTrip" id="AdvanceAmount" name="AdvanceAmount" type="number" style="width:100%;" min="0" @(Model.OWN_MHT_DHT == "DHT" ? "" : "readonly") />
+                                                    </td>
+                                                    <td>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('#FinalWantedAtDateTime').val();
+                                        if (check == '') {
+                                            formValidity = false;
+                                            alert("You must give informaitn of Wanted At");
+                                        }
+                                    });
+                                validatorArray.push(
+                                    function () {
+                                        var RegistrationNumber = '@Model.OWN_MHT_DHT';//$('#RegistrationNumber').html();
+                                        if (RegistrationNumber.includes('OWN')) {
+                                            var check = $('#Driver_Staff_ID').val();
+                                            if (check == '') {
+                                                formValidity = false;
+                                                alert("You must give informaitn of Driver ID");
+                                            }
+                                        }
+                                    });
+                                validatorArray.push(
+                                    function () {
+                                        var RegistrationNumber = '@Model.OWN_MHT_DHT';//$('#RegistrationNumber').html();
+                                        if (RegistrationNumber.includes('MHT') || RegistrationNumber.includes('DHT')) {
+                                            var check = $('#Driver_Name').val();
+                                            if (check == '') {
+                                                formValidity = false;
+                                                alert("You must give informaitn of Driver Name");
+                                                return;
+                                            }
+                                            check = $('#Driver_ContactNumber').val();
+                                            if (check == '') {
+                                                formValidity = false;
+                                                alert("You must give informaitn of Driver Mobile Number");
+                                            }
+                                        }
+                                    });
+                                validatorArray.push(
+                                    function () {
+                                        var RegistrationNumber = $('#RegistrationNumber').html();
+                                        if (RegistrationNumber.includes('DHT')) {
+                                            var check = $('#FK_TransportAgency').val();
+                                            if (check == '') {
+                                                formValidity = false;
+                                                alert("You must select Transport Agency");
+                                            }
+                                        }
+                                    });
+                                  validatorArray.push(
+                                    function () {
+                                        var RegistrationNumber = $('#RegistrationNumber').html();
+                                        if (RegistrationNumber.includes('DHT')) {
+                                            var TotalAmount = $('#TotalAmount').val();
+                                            if (TotalAmount == '') {
+                                                formValidity = false;
+                                                alert("You must give informaitn of Total Amount");
+                                            }
+                                            else {
+                                                var CommissionAmount = $('#CommissionAmount').val() != '' ? Number($('#CommissionAmount').val()) : 0;
+                                                var AdvanceAmount = $('#AdvanceAmount').val() != '' ? Number($('#AdvanceAmount').val()) : 0;
+                                                if (Number(TotalAmount) < (CommissionAmount + AdvanceAmount)) {
+                                                    formValidity = false;
+                                                    alert("Commission + Advance must be less than Total Amount.");
+                                                }
+                                            }
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Requistion Information</h3>
+                            </div>
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table id="table_req_trip_base" class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th style='display:none;'>
+                                                        PK_RequisitionTrip
+                                                    </th>
+                                                    <th>
+                                                        Tracking ID
+                                                    </th>
+                                                    <th>
+                                                        PRG Type
+                                                    </th>
+                                                    <th>
+                                                        Raiser
+                                                    </th>
+                                                    <th>
+                                                        From
+                                                    </th>
+                                                    <th>
+                                                        To
+                                                    </th>
+                                                    <th>
+                                                        Vehicle Type
+                                                    </th>
+                                                    <th>
+                                                        Using Space
+                                                    </th>
+                                                    <th>
+                                                        Required Time
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbody_req_trip_base"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row trip_link_trigger">
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-4">
+                                            <input type="button" id="" class="btn btn-facebook" onclick="show_trip_link_block()" value="Link Other Requisition" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row trip_link_block" style="display:none;">
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-4">
+                                            <label class="col-md-3 control-label">Starting Date:</label>
+                                            <div class="input-group col-md-8">
+                                                <div class="col-md-12 input-append date form_datetime" data-link-field="dtp_input1">
+                                                    <input id="StartingDate" name="StartingDate" class="form-control col-md-12" type="text" value="@ViewBag.StartingDate" readonly="readonly" style="background-color: white;">
+                                                    <span class="add-on"><i class="icon-remove"></i></span>
+                                                    <span class="add-on"><i class="icon-th"></i></span>
+                                                </div>
+                                                <input type="hidden" id="dtp_input1" value="" style="display:none;" /><br />
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label class="col-md-3 control-label">Ending Date:</label>
+                                            <div class="input-group col-md-8">
+                                                <div class="col-md-12 input-append date form_datetime" data-link-field="dtp_input1">
+                                                    <input id="EndingDate" name="EndingDate" class="form-control col-md-12" type="text" value="@ViewBag.EndingDate" readonly="readonly" style="background-color: white;">
+                                                    <span class="add-on"><i class="icon-remove"></i></span>
+                                                    <span class="add-on"><i class="icon-th"></i></span>
+                                                </div>
+                                                <input type="hidden" id="dtp_input2" value="" style="display:none;" /><br />
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label class="col-md-3 control-label">Raiser:</label>
+                                            <div class="col-md-8">
+                                                @Html.DropDownList("FK_AppUser_Client", ViewBag.Clients as SelectList, "Select", new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-4">
+                                            <label class="col-md-3 control-label">From:</label>
+                                            <div class="col-md-8">
+                                                @Html.DropDownList("FK_Location_From", ViewBag.FromLocations as SelectList, "Select", new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label class="col-md-3 control-label">To:</label>
+                                            <div class="col-md-8">
+                                                @Html.DropDownList("FK_Location_To", ViewBag.ToLocations as SelectList, "Select", new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label class="col-md-3 control-label">Tracking Id:</label>
+                                            <div class="col-md-8">
+                                                <input id="TrackingId" name="TrackingId" value="@ViewBag.TrackingId" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row trip_link_block" style="display:none;">
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-4" style="float:right;">
+                                            <input type="button" class="btn btn-facebook" onclick="getData()" value="Get Data" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row trip_link_block" style="display:none;">
+                                    <div class="col-md-12">
+                                        <table id="table_req_trip_temp" class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th style='display:none;'>
+                                                        PK_RequisitionTrip
+                                                    </th>
+                                                    <th>
+                                                        Tracking ID
+                                                    </th>
+                                                    <th>
+                                                        PRG Type
+                                                    </th>
+                                                    <th>
+                                                        Raiser
+                                                    </th>
+                                                    <th>
+                                                        From
+                                                    </th>
+                                                    <th>
+                                                        To
+                                                    </th>
+                                                    <th>
+                                                        Vehicle Type
+                                                    </th>
+                                                    <th>
+                                                        Using Space
+                                                    </th>
+                                                    <th>
+                                                        Required Time
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbody_req_trip_temp"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <input type="button" class="btn btn-facebook center-block" onclick="TrySubmit()" value="Save" />
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+
+</section>
+@*MODAL Company START*@
+<div id="modalPreload" class="modal  modal-" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content" style="background-color:transparent; margin-top:200px;">
+            <img src="~/Content/Images/Preload.gif" />
+        </div>
+    </div>
+</div>
+<!-- DataTables -->
+<script src="~/Theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/Theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    var tracking_id_list = [];
+    var PK_RequisitionTrip_SL = -1;
+    $(document).ready(function () {
+        var today = new Date();
+        var _startDate = (today.getMonth() + 1) + '/' + (today.getDate() + 0) + '/' + today.getFullYear() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();// 13:05'//today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        var _endDate = (today.getMonth() + 1) + '/' + (today.getDate() + 1) + '/' + today.getFullYear() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();// 13:05'//today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        $('#FinalWantedAtDateTime').datetimepicker({
+            //format: 'yyyy-mm-dd HH:ii P',
+            format: 'yyyy-mm-dd HH:ii P',
+            //setDate: new Date(),
+            //weekStart: 1,
+            todayBtn: 1,
+            autoclose: 1,
+            //todayHighlight: 1,
+            //startView: 2,
+            //forceParse: 0,
+            //showMeridian: 0
+            //startDate: '+0d',
+            startDate: new Date(_startDate),
+            endDate: new Date(_endDate),
+        });
+        $('select').select2();
+    });
+</script>
+<script>
+    function show_trip_link_block() {
+        $('.trip_link_block').show();
+        $('.trip_link_trigger').hide();
+        $('select').select2();
+    }
+    function getData() {
+        var StartingDate = $('Input[name=StartingDate]').val();
+        var EndingDate = $('Input[name=EndingDate]').val();
+        if (StartingDate == '' || EndingDate == '') {
+            alert("Please, Select starting date and ending date.");
+            return;
+        }
+        var TrackingId = $('Input[name=TrackingId]').val();
+        var FK_AppUser_Client = $('#FK_AppUser_Client').find(":selected").val();
+        var FK_Location_From = $('#FK_Location_From').find(":selected").val();
+        var FK_Location_To = $('#FK_Location_To').find(":selected").val();
+        var url = '/Requisition/GetRequisitionTrips?StartingDate=' + StartingDate + '&EndingDate=' + EndingDate
+            + '&FK_AppUser_Client=' + FK_AppUser_Client + '&FK_Location_From=' + FK_Location_From
+            + '&FK_Location_To=' + FK_Location_To + '&TrackingId=' + TrackingId;
+
+        $("#modalPreload").css("display", "block");
+        $.ajax({
+            traditional: true,
+            type: "get",
+            dataType: "json",
+            contentType: "application/json",
+            url: url,
+            //data: JSON.stringify({ FK_Location: '' }),
+            success: function (data) {
+                console.log(data);
+                $("#modalPreload").css("display", "none");
+                var res = "";
+                $("#tbody_req_trip_temp").html(res);
+                if (data != 'NotFound') {
+                    for (var i = 0; i < data.length; i++) {
+                        var PossibleJourneyStartDateTime = new Date(parseInt(data[i].PossibleJourneyStartDateTime.replace("/Date(", "").replace(")/", "")));
+                        res = res + "<tr>"
+                            + "<td style='display:none;'>" + data[i].PK_RequisitionTrip + "</td>"
+                            + "<td>" + data[i].TrackingID + (data[i].IsForwarded == true ? "<<" : "") + "</td>"
+                            + "<td>" + data[i].PRG_Type + "</td>"
+                            + "<td>" + data[i].Raiser + "</td>"
+                            + "<td>" + data[i].From + "</td>"
+                            + "<td>" + data[i].To + "</td>"
+                            + "<td>" + data[i].RequisitionVehicleType + "</td>"
+                            + "<td>" + data[i].WantedCount + "</td>"
+                            + "<td>" + PossibleJourneyStartDateTime.getFullYear() + "-" + (PossibleJourneyStartDateTime.getMonth() + 1) + "-" + PossibleJourneyStartDateTime.getDate() + " " + PossibleJourneyStartDateTime.getHours() + ":" + PossibleJourneyStartDateTime.getMinutes() + "</td>"
+                            + "<td><button type='button' onclick='addSelectedRequisitionTrip(this)'>add</button></td>"
+                            + "</tr>";
+                    }
+                }
+                $("#tbody_req_trip_temp").html(res);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call");
+            }
+        });
+    }
+
+    function addSelectedRequisitionTrip(btn) {
+        var currentRow = $(btn).closest("tr");
+        var PK_RequisitionTrip = currentRow.find("td:eq(0)").text();
+        var TrackingID = currentRow.find("td:eq(1)").text();
+        var PRG_Type = currentRow.find("td:eq(2)").text();
+        var Raiser = currentRow.find("td:eq(3)").text();
+        var From = currentRow.find("td:eq(4)").text();
+        var To = currentRow.find("td:eq(5)").text();
+        var RequisitionVehicleType = currentRow.find("td:eq(6)").text();
+        var WantedCount = currentRow.find("td:eq(7)").text();
+        var PossibleJourneyStartDateTime = currentRow.find("td:eq(8)").text();
+
+        if (tracking_id_list.indexOf(TrackingID) > -1) {
+            alert(TrackingID + " is already added.");
+            return;
+        }
+        tracking_id_list.push(TrackingID);
+        PK_RequisitionTrip_SL = PK_RequisitionTrip_SL + 1;
+        $("#PK_RequisitionTrip_SL").val(PK_RequisitionTrip_SL);
+
+        var res = "";
+        res = "<tr>";
+        res = res + "<td style='display:none;'>" + "<input name='PK_RequisitionTrip_" + PK_RequisitionTrip_SL + "' value='" + PK_RequisitionTrip + "' />" + "</td>";
+        res = res + "<td>" + currentRow.find("td:eq(1)").text() + "</td>";
+        res = res + "<td>" + currentRow.find("td:eq(2)").text() + "</td>";
+        res = res + "<td>" + currentRow.find("td:eq(3)").text() + "</td>";
+        res = res + "<td>" + currentRow.find("td:eq(4)").text() + "</td>";
+        res = res + "<td>" + currentRow.find("td:eq(5)").text() + "</td>";
+        res = res + "<td>" + currentRow.find("td:eq(6)").text() + "</td>";
+        res = res + "<td>" + currentRow.find("td:eq(7)").text() + "</td>";
+        res = res + "<td>" + currentRow.find("td:eq(8)").text() + "</td>";
+        res = res + "</tr>";
+        $("#tbody_req_trip_base").append(res);
+    }
+    function getRequisitionTripDetail(index, TrackingID) {
+        if (TrackingID == '') {
+            return;
+        }
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/Requisition/GetRequisitionTripDetail",
+            data: JSON.stringify({ TrackingID: TrackingID }),
+            success: function (data) {
+                if (data != 'NotFound') {
+                    if (data.StatusText != null) {
+                        alert('Trip is already assgined');
+                    }
+                    $('#TrackingID_' + index).attr('readonly', 'readonly');
+                    $('#TrackingID_' + index).val(data.TrackingID);
+                    $('#linkedTripInfo_' + index + '_From').html(data.From);
+                    $('#linkedTripInfo_' + index + '_To').html(data.To);
+                    $('#linkedTripInfo_' + index + '_RequisitionVehicleType').html(data.RequisitionVehicleType);
+                    $('#linkedTripInfo_' + index + '_WantedCount').html(data.WantedCount);
+                    $('#linkedTripInfo_' + index + '_StatusText').html(data.StatusText);
+                } else {
+                    alert('Trip not found');
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: getRequisitionTripDetail");
+            }
+        });
+    }
+    function clearlinkedTripInfo(index) {
+        $('#TrackingID_' + index).removeAttr('readonly');
+        $('#TrackingID_' + index).val('');
+        $('#linkedTripInfo_' + index + '_From').html('');
+        $('#linkedTripInfo_' + index + '_To').html('');
+        $('#linkedTripInfo_' + index + '_RequisitionVehicleType').html('');
+        $('#linkedTripInfo_' + index + '_WantedCount').html('');
+        $('#linkedTripInfo_' + index + '_StatusText').html('');
+        if ($('#TotalAmount_' + index) != undefined) {
+            $('#TotalAmount_' + index).val('');
+        }
+    }
+    function addDriver() {
+        var DriverStaffID = $("#Driver_Staff_ID").val();
+        if (DriverStaffID != "") {
+            $("#Driver_Name").val("Loading..");
+            $("#Driver_ContactNumber").val("Loading..");
+            $.ajax({
+                traditional: true,
+                type: "post",
+                dataType: "json",
+                contentType: "application/json",
+                url: "/Base/GetUserInfoFromHRIS_Json",
+                data: JSON.stringify({ staffID: DriverStaffID }),
+                success: function (data) {
+                    if (data != null) {
+                        $("#Driver_Staff_ID").attr('readonly', true)
+                        $("#Driver_Name").attr('readonly', true)
+                        $("#Driver_ContactNumber").attr('readonly', true)
+                        $("#Driver_Name").val(data.NAME);
+                        $("#Driver_ContactNumber").val(data.CONTACTNO);
+                    } else {
+                        $("#Driver_Name").val('Not Found/HRIS unavailable');
+                        $("#Driver_ContactNumber").val('Not Found/HRIS unavailable');
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log("Err on call");
+                }
+            });
+        }
+    }
+    validatorArray.push(
+        function () {
+            var check = $('#TrackingID_0').val();
+            if (check == '') {
+                formValidity = false;
+                alert("You must select the master trip.");
+            }
+        });
+
+</script>
+
+<script>
+                                        //function validateAndTrySubmit() {
+                                        //    var newDemandInfo = "";
+                                        //    for (var i = 0; i < demandList.length; i++) {
+                                        //        newDemandInfo = newDemandInfo + demandList[i].PK_VehicleDemand + "*" + demandList[i].TrackingID + "#";
+                                        //    }
+                                        //    $("#newDemandInfo").val(newDemandInfo);
+
+                                        //    var newInternalTripInfo = "";
+                                        //    for (var i = 1; i <= maxSelection; i++) {
+                                        //        newInternalTripInfo = newInternalTripInfo + $('#tr_2_' + i).find("td:eq(0)").text() + "*" + $('#tr_2_' + i).find("td:eq(2)").text() + "#";
+                                        //    }
+                                        //    newInternalTripInfo = newInternalTripInfo.substring(0, newInternalTripInfo.length - 1);
+                                        //    $("#newInternalTripInfo").val(newInternalTripInfo);
+
+                                        //    TrySubmit();
+                                        //}
+</script>

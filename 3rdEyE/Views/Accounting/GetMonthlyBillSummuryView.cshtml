@@ -1,0 +1,204 @@
+﻿@{
+    Layout = null;
+}
+@{
+    var Model = (List<_3rdEyE.Models.MonthlyBillEntry>)ViewBag.BillEntryList;
+}
+<!DOCTYPE html>
+<html>
+<body style="background-color:aqua">
+    <!--Heading: 1-->
+    <table cellspacing='0' cellpadding='0'>
+        <tr>
+            <td colspan="4">
+                <h2>Sylvan Technologies Ltd</h2>
+            </td>
+            <td colspan="4"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+            <td colspan="3">
+                <h2>INVOICE</h2>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                PRAN-RFL Center
+            </td>
+            <td colspan="5"></td>
+            <td colspan="3">
+                <b>Customer ID:</b> @ViewBag.PRG_Type
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                Ga-105/1, Middle Badda
+            </td>
+            <td colspan="5"></td>
+            <td colspan="3">
+                <b>Billing Period:</b> @ViewBag.BillingPeriod
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                Dhaka-1212
+            </td>
+            <td colspan="5"></td>
+            <td colspan="3">
+                <b>Billing Date: </b> @ViewBag.BillingDate
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3"></td>
+            <td colspan="5"></td>
+            <td colspan="3">
+                <b>Due Date:</b> @ViewBag.DueDate
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3"></td>
+            <td colspan="5"></td>
+            <td colspan="3"></td>
+        </tr>
+    </table>
+    <br />
+    <!--Heading: 2-->
+    <table>
+        <tr>
+            <td colspan="11">
+                <b>To:</b> &nbsp;Head of accounts, @ViewBag.PRG_Type
+            </td>
+        </tr>
+    </table>
+    <br />
+    <!--Body-->
+    @if (@Model != null && Model.Count() > 0)
+    {
+        var _sl = 0;
+        var __sl = 0;
+        var _unitPrice = 200;
+        var _totalAmount = _unitPrice * Model.Count();
+        <table cellspacing='0' cellpadding='5' border="1">
+            <tr>
+
+                <td align="center">
+                    <small><b>SL</b></small>
+                </td>
+                <td align="center">
+                    <small><b>User Group</b></small>
+                </td>
+                <td align="center">
+                    <small><b>Unit Price</b></small>
+                </td>
+                <td align="center">
+                    <small><b>Unit</b></small>
+                </td>
+                <td align="center">
+                    <small><b>Amount</b></small>
+                </td>
+            </tr>
+            @foreach (var depoName in Model.Select(m => m.DepoName).Distinct())
+            {
+                _sl = _sl + 1;
+                var _unit = Model.Where(m => m.DepoName == @depoName).Count();
+                var _amount = _unit * _unitPrice;
+                <tr>
+                    <td align="center">
+                        <small>    @_sl</small>
+                    </td>
+                    <td align="left">
+                        <small>@depoName</small>
+                    </td>
+                    <td align="center">
+                        <small>@_unitPrice.00</small>
+                    </td>
+                    <td align="center">
+                        <small>@_unit</small>
+                    </td>
+                    <td align="right">
+                        <small>@_amount.00 &nbsp;</small>
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td colspan="3" align="right">
+                    <small><b>Grand Total : &nbsp;</b></small>
+                </td>
+                <td align="center">
+                    <small><b>@Model.Count() </b></small>
+                </td>
+                <td align="right">
+                    <small><b>@_totalAmount.00 &nbsp;</b></small>
+                </td>
+            </tr>
+        </table>
+        <small><b>In Word TK:</b> @ViewBag.totalAmountInWord Only</small>
+    }
+    <br />
+    <br />
+    <!--Tail:1-->
+    <table cellspacing='0' cellpadding='0'>
+        <tr>
+            <td colspan="5">
+                <b>
+                    OTHER COMMENTS
+                </b>
+            </td>
+            <td colspan="6"></td>
+        </tr>
+        <tr>
+            <td colspan="5">
+                <small>1. Total payment due in 5 days</small>
+            </td>
+            <td colspan="6"></td>
+        </tr>
+        <tr>
+            <td colspan="11">
+                <small>2. Please prepare Accounts Payee Cheque Infavour of <b>'Sylvan Technologies Limited'</b></small>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="5">
+                <small>3. For Direct Deposit Consider:</small>
+            </td>
+            <td colspan="6"></td>
+        </tr>
+        <tr>
+            <td colspan="11">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <small>Dutch Bangla Bank Ltd, Progoti Shoroni Branch.</small>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="11">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <small>A/C Name: Sylvan Technologies Limited</small>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="11">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <small>A/C No: 193-110-14963</small>
+            </td>
+        </tr>
+    </table>
+    <!--Tail:2-->
+    <table cellspacing='0' cellpadding='0'>
+        <tr>
+            <td align="center">
+                <small>If you have any query about this invoice, please contact with your business partner.</small>
+            </td>
+        </tr>
+        <tr>
+            <td align="center">
+                <small><b>Thank You!</b></small>
+            </td>
+        </tr>
+    </table>
+    <br />
+    <!--Tail:3-->
+    <table cellspacing='0' cellpadding='0'>
+        <tr>
+            <td align="center">
+                <small>
+                    This is system generated , no signature required.
+                </small>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

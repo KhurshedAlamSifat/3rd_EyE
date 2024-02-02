@@ -1,0 +1,398 @@
+﻿@model Tuple<List<_3rdEyE.Controllers.ParkingInOutController.LocationBuildingUtilizaiton>, List<_3rdEyE.Models.vw_ParkingInOut_Detail>>
+@{
+    var RolePermissionList = (List<_3rdEyE.ManagingTools.Permission>)Session["RolePermissionList"];
+}
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+<!-- DataTablesExportable -->
+<link href="~/Content/ExportableDatatable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/ExportableDatatable/buttons.dataTables.min.css" rel="stylesheet" />
+@{
+    string ConvertToDateTimeString(DateTime? dateTime)
+    {
+        return String.Format("{0:yyyy/MM/dd HH:mm}", dateTime);
+    }
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Parking Entry Report
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        @*<a class="btn btn-block btn-info btn-sm" href="/TemporaryVehicle/Create">Create</a>*@
+    </div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            @foreach (var item in Model.Item1.Where(m => m.PRG_Type == @ViewBag.CurrentUser.PRG_Type).OrderBy(m => m.LocationBuildingName))
+            {
+                <div class="col-md-3 @(item.TakeMoreVehicle == true ? "bg-green" : "bg-red")" style="border: .5px solid #ECF0F5;">
+                    <div class="inner">
+                        <span style="font-size:14px; font-weight:bold;">@item.LocationBuildingName.Replace("PRAN-", "")</span><br />
+                        <span style="font-size:12px;">Total.Bay:&nbsp;<b> @item.TotalBayCount </b> @*&nbsp;&nbsp; Busy.Bay:&nbsp;<b> @item.BusyBayCount </b>*@ &nbsp;&nbsp;Veh.Grace:&nbsp;<b> @item.GraceVehicleCount </b></span><br />
+                        <span style="font-size:12px;">Veh.InFact:&nbsp;<b> @item.StillInsideVehicleCount </b>&nbsp;&nbsp; Veh.GoingFact:&nbsp; <b>@item.VehicleOnGoingCount </b></span>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-header">
+                    <h3 class="box-title"></h3>
+                </div>
+                <div class="row">
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-3">
+                            <label class="col-md-4 control-label">PRG Type:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("PRG_Type", ViewBag.PRG_Type as SelectList, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="col-md-4 control-label">Location:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Location", ViewBag.Locations as SelectList, new { @class = "form-control", onchange = "relodeFK_LocationDepartment()", onclick = "relodeFK_LocationDepartment()" })
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="col-md-4 control-label">Department</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_LocationDepartment", ViewBag.LocationDepartments as SelectList, "Select", new { @class = "form-control" })
+                                @*<select id="FK_LocationDepartment" name="FK_LocationDepartment" class="form-control"></select>*@
+                                <b class="errorMessage" data-category="errorMessage" name="error_Name"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="col-md-4 control-label">User Group:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Depo", ViewBag.Depoes as SelectList, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-3">
+                            <label class="col-md-4 control-label">Vehicle:</label>
+                            <div class="col-md-8">
+                                <input id="RegistrationNumber" name="RegistrationNumber" value="@ViewBag.RegistrationNumber" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="col-md-4 control-label">Building</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_LocationBuilding", ViewBag.LocationBuildings as SelectList, "Select", new { @class = "form-control" })
+                                @*<select id="FK_LocationBuilding" name="FK_LocationBuilding" class="form-control"></select>*@
+                                <b class="errorMessage" data-category="errorMessage" name="error_Name"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <div class="col-md-8">
+                                <button class="btn btn-facebook" onclick="FilterByInputToRedirectView()">Filter</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body" style="overflow-x:scroll;">
+                <table id="data_table" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                Tr Id
+                            </th>
+                            <th>
+                                PRG_Type
+                            </th>
+                            <th>
+                                Location
+                            </th>
+                            <th>
+                                O/M/D
+                            </th>
+                            <th>
+                                User Group
+                            </th>
+                            <th>
+                                Vehicle
+                            </th>
+                            <th>
+                                Load/Empty
+                            </th>
+                            <th>
+                                Contact Number
+                            </th>
+                            <th>
+                                To Department
+                            </th>
+                            <th>
+                                Demand Info
+                            </th>
+                            <th>
+                                Parking In Gate
+                            </th>
+                            <th>
+                                Building|Departemnt|Bay|Time
+                            </th>
+                            <th>
+                                Bay Assigner
+                            </th>
+                            <th>
+                                Parking Out Gate
+                            </th>
+                            <th>
+                                Parking Out Time
+                            </th>
+                            <th>
+                                Factory In Gate
+                            </th>
+                            <th>
+                                Factory In Time
+                            </th>
+                            <th>
+                                Factory Out Gate
+                            </th>
+                            <th>
+                                Factory Out Time
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Item2)
+                        {
+                            <tr>
+                                <td>
+                                    P @Html.DisplayFor(modelItem => item.PK_ParkingInOut)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PRG_Type)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ParkingLocation_Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.OWN_MHT_DHT)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.DepoName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RegistrationNumber)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.In_LoadOrEmpty)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ContactNumber)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Requisition_From_DepartmentCode)-
+                                    @Html.DisplayFor(modelItem => item.Requisition_To_DepartmentCode)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RequisitionTrackingID)
+                                    <br />
+                                    @Html.DisplayFor(modelItem => item.Requisition_DepartmentCode)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ParkingGateIn)
+                                    <br />
+                                    @Html.DisplayFor(modelItem => item.In_IssueDateTime)
+                                </td>
+                                <td>
+                                    @if (item.BayAssign_IssueDateTime == null)
+                                    {
+                                        <a href="/ParkingInOut/SetBayAssignTime?PK_ParkingInOut=@item.PK_ParkingInOut">--Assign--</a>
+                                    }
+                                    else
+                                    {
+                                        @item.BayAssign_LocationBuilding <br />
+                                        @item.BayAssign_DepartmentCode <br />
+                                        @item.BayAssign_LoadingBay <br />
+                                        @item.BayAssign_IssueDateTime
+                                    }
+                                    @if (item.BayAssign_IssueDateTime != null && item.FactoryIn_IssueDateTime == null && RolePermissionList.Where(m => m.FullName == "ParkingInOut-reassign_bay").Any())
+                                    {
+                                        <a href="/ParkingInOut/ChangeBayAssignTime?PK_ParkingInOut=@item.PK_ParkingInOut">--Reassign--</a>
+                                    }
+                                </td>
+                                <td>
+                                    @item.BayAssign_Assigner
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ParkingGateOut)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Out_IssueDateTime)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FactoryGateIn)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FactoryIn_IssueDateTime)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FactoryGateOut)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FactoryOut_IssueDateTime)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+<script>
+    $(function () {
+        $('select').select2();
+        $('.form_datetime').datetimepicker({
+            format: 'yyyy-mm-dd HH:ii P',
+            todayBtn: 1,
+            autoclose: 1,
+        });
+    });
+</script>
+<!-- DataTablesExportable -->
+<script src="~/Scripts/Custom/DataTableExportable/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.flash.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/jszip.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/pdfmake.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/vfs_fonts.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.html5.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.print.min.js"></script>
+<script>
+    $(function () {
+        $('#data_table').DataTable({
+            "ordering": true,
+            "paging": false,
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+    });
+</script>
+<script>
+    function relodeFK_LocationDepartment() {
+        var FK_Location = $('#FK_Location').val();
+        if (FK_Location == '') {
+            return;
+        }
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/LocationDepartment/GetLocationDepartment_FK_Location/",
+            data: JSON.stringify({ FK_Location: FK_Location }),
+            success: function (data) {
+                console.log(data);
+                var result = "<option value=''>Select</option>";
+                for (var i = 0; i < data.length; i++) {
+                    result = result + "<option value='" + data[i].PK_LocationDepartment + "'>" + data[i].DepartmentCode + "</option>";
+                }
+                $('#FK_LocationDepartment').html(result);
+                relodeFK_LocationBuilding();
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: relodeFK_LocationDepartment_To()");
+            }
+        });
+    }
+    function relodeFK_LocationBuilding() {
+        var FK_Location = $('#FK_Location').val();
+        if (FK_Location == '') {
+            return;
+        }
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/LocationBuilding/GetLocationBuilding_FK_Location/",
+            data: JSON.stringify({ FK_Location: FK_Location }),
+            success: function (data) {
+                console.log(data);
+                var result = "<option value=''>Select</option>";
+                for (var i = 0; i < data.length; i++) {
+                    result = result + "<option value='" + data[i].PK_LocationBuilding + "'>" + data[i].Name + "</option>";
+                }
+                $('#FK_LocationBuilding').html(result);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: relodeFK_LocationBuilding_To()");
+            }
+        });
+    }
+    function FilterByInputToRedirectView() {
+        var url = "/ParkingInOut/ParkingEntryReport?";
+
+        var PRG_Type = $("select[name=PRG_Type]").val();
+        if (PRG_Type != '') {
+            url = url + "&PRG_Type=" + PRG_Type;
+        } else {
+            url = url + "&PRG_Type=null";
+        }
+
+        var FK_Location = $("select[name=FK_Location]").val();
+        if (FK_Location != "null") {
+            url = url + "&FK_Location=" + FK_Location;
+        } else {
+            alert("You must select a Location"); return;
+            url = url + "&FK_Location=null";
+        }
+
+        var FK_LocationDepartment = $("select[name=FK_LocationDepartment]").val();
+        if (FK_LocationDepartment != '') {
+            url = url + "&FK_LocationDepartment=" + FK_LocationDepartment;
+        } else {
+            url = url + "&FK_LocationDepartment=null";
+        }
+
+        var FK_LocationBuilding = $("select[name=FK_LocationBuilding]").val();
+        if (FK_LocationBuilding != '') {
+            url = url + "&FK_LocationBuilding=" + FK_LocationBuilding;
+        } else {
+            url = url + "&FK_LocationBuilding=null";
+        }
+
+        var FK_Depo = $("select[name=FK_Depo]").val();
+        if (FK_Depo != '') {
+            url = url + "&FK_Depo=" + FK_Depo;
+        } else {
+            url = url + "&FK_Depo=null";
+        }
+
+        var RegistrationNumber = $("input[name=RegistrationNumber]").val();
+        if (RegistrationNumber != '') {
+            url = url + "&RegistrationNumber=" + RegistrationNumber;
+        } else {
+            url = url + "&RegistrationNumber=";
+        }
+
+        console.log(url);
+        window.location = url;
+    }
+
+</script>
+

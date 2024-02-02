@@ -1,0 +1,102 @@
+﻿@model _3rdEyE.Models.Mapping
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+<section class="content-header">
+    <h1>
+        Add New Mapping
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        <a class="btn btn-block btn-info btn-sm" href="@System.Web.HttpContext.Current.Request.UrlReferrer">Back To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Mapping Information</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form name="ThisForm" class="form-horizontal" method="post" action="/Mapping/Create">
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Mapping Type*</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("MappingKey", ViewBag.MappingKeys as SelectList, "Select", new { @class = "form-control", onchange= "MappingKey_OnChange()" })
+                                <b class="errorMessage" data-MappingKey="errorMessage" name="error_MappingKey"></b>
+                                <script>
+                                    validatorArray.push(
+                                        function () {
+                                            var check = $('select[name=MappingKey]').val();
+                                            if (check == "") {
+                                                formValidity = false;
+                                                $('b[name=error_MappingKey]').html("MappingKey is required.");
+                                            }
+                                        });
+                                </script>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Base Value*</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(m => m.IndependentKeyValue, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_IndependentKeyValue"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('input[name=IndependentKeyValue]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_IndependentKeyValue]').html("IndependentKeyValue is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Mapping Value*</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(m => m.DependentKeyValue, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_DependentKeyValue"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('input[name=DependentKeyValue]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_DependentKeyValue]').html("DependentKeyValue is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <input type="button" class="btn btn-info center-block" value="Save" onclick="TrySubmit()" />
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $('select[name=MappingKey]').select2();
+    });
+    function MappingKey_OnChange(){
+        var MappingKey = $("#MappingKey option:selected").text();
+        $('#IndependentKeyValue').attr("placeholder", MappingKey.split('[')[0].split(':')[0]);
+        $('#DependentKeyValue').attr("placeholder", MappingKey.split('[')[0].split(':')[1]);
+    }
+
+</script>

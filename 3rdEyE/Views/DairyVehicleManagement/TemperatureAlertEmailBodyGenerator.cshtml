@@ -1,0 +1,74 @@
+﻿@{
+    Layout = null;
+}
+@model IEnumerable<_3rdEyE.Models.VehicleTracking>
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        /*th, td {
+            padding: 15px;
+        }*/
+    </style>
+</head>
+<body style="width:50%;">
+    <h3>Dear Sir</h3>
+    <p>Here is the temperature exceed report.</p>
+    <p>Report Time: @DateTime.Now.ToString()</p>
+    <table id="data_table_summury" class="table table-bordered table-striped">
+        <thead>
+            <tr style="background-color:#3B5998; color:white;">
+                <th>
+                    Registration Number
+                </th>
+                <th>
+                    User Group
+                </th>
+                <th>
+                    Record Time
+                </th>
+                <th>
+                    Temperature
+                </th>
+                <th>
+                    Running Speed(KM)
+                </th>
+                <th>
+                    Map Location
+                </th>
+                <th>
+                    Vehicle Contact Number
+                </th>
+                <th>
+                    DIC Contact Number
+                </th>
+            </tr>
+        </thead>
+        <tbody id="data_tbody">
+
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td style="padding:1px;">@item.VehicleTrackingInformation.Vehicle.RegistrationNumber</td>
+                <td style="padding:1px;">@item.VehicleTrackingInformation.Vehicle.Depo.Name</td>
+                <td style="padding:1px;">@item.UpdateTime</td>
+                <td style="padding:1px;">@item.Temperature</td>
+                <td style="padding:1px;">@item.Speed</td>
+                <td><a href="http://3rdeye.prangroup.com:7698/Report/ShowMapWithMarker?latitude=@item.Latitude&longitude=@item.Longitude" target="_blank">map</a></td>
+                <td style="padding:1px;">@item.VehicleTrackingInformation.Vehicle.Internal_VehicleContactNumber</td>
+                <td style="padding:1px;">@item.VehicleTrackingInformation.Vehicle.Depo.DIC_PRAN_Contact</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+    <br />
+    <p>This mail is auto-generated, No Need To Reply</p>
+</body>
+</html>
+
+

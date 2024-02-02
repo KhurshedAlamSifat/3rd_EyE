@@ -1,0 +1,135 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+}
+
+<section class="content-header">
+    <h1>
+        Add New Event Document
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        <a class="btn btn-block btn-default btn-sm" href="/Event/View?PK_Event=@ViewBag.model.FK_Event">Back</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Document Information</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form name="ThisForm" class="form-horizontal" method="post" action="/EventDocument/Create" enctype="multipart/form-data">
+                    <input name="FK_Event" value="@ViewBag.model.FK_Event" type="text" class="form-control" style="display:none;">
+                    @*Title*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Title*</label>
+                            <div class="col-md-10">
+                                <input name="Title" value="@ViewBag.model.Title" type="text" class="form-control">
+                                <b class="errorMessage" data-category="errorMessage" name="error_Title"></b>
+                            </div>
+                        </div>
+                        <script>
+                            validatorArray.push(
+                                function () {
+                                    var check = $('input[name=Title]').val();
+                                    if (check == "") {
+                                        formValidity = false;
+                                        $('b[name=error_Title]').html("Title is required.");
+                                    }
+                                });
+                        </script>
+                    </div>
+                    @*IdentitficaitonKey*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Identitficaiton Key*</label>
+                            <div class="col-md-10">
+                                <input name="IdentitficaitonKey" value="@ViewBag.model.IdentitficaitonKey" type="text" class="form-control">
+                                <b class="errorMessage" data-category="errorMessage" name="error_IdentitficaitonKey"></b>
+                            </div>
+                        </div>
+                        <script>
+                            validatorArray.push(
+                                function () {
+                                    var check = $('input[name=IdentitficaitonKey]').val();
+                                    if (check == "") {
+                                        formValidity = false;
+                                        $('b[name=error_IdentitficaitonKey]').html("Identitficaiton key is required.");
+                                    }
+                                });
+                        </script>
+                    </div>
+                    @*IdentitficaitonValue*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Identitficaiton Value*</label>
+                            <div class="col-md-10">
+                                <input name="IdentitficaitonValue" value="@ViewBag.model.IdentitficaitonValue" type="text" class="form-control">
+                                <b class="errorMessage" data-category="errorMessage" name="error_IdentitficaitonValue"></b>
+                            </div>
+                        </div>
+                        <script>
+                            validatorArray.push(
+                                function () {
+                                    var check = $('input[name=IdentitficaitonValue]').val();
+                                    if (check == "") {
+                                        formValidity = false;
+                                        $('b[name=error_IdentitficaitonValue]').html("Identitficaiton value is required.");
+                                    }
+                                });
+                        </script>
+                    </div>
+                    @*ImageLocation*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Select Image*</label>
+                            <div class="col-md-10">
+                                <input name="ImageInput" @*style="visibility:hidden;"*@ type="file" class="form-control">
+                                <b class="errorMessage" data-category="errorMessage" name="error_ImageInput"></b>
+                            </div>
+                        </div>
+                        <script>
+                            validatorArray.push(
+                                function () {
+                                    var check = $('input[name=ImageInput]').val();
+                                    console.log(check);
+                                    if (check == "") {
+                                        formValidity = false;
+                                        $('b[name=error_ImageInput]').html("Image is required.");
+                                    }
+                                });
+                        </script>
+                    </div>
+                    <div class="box-footer">
+                        @*<a class="btn btn-default" href="/EventDocument/Index">Back To List</a>*@
+                        <input type="button" class="btn btn-info pull-right" value="Create" onclick="TrySubmit()" />
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+
+
+<script>
+    $('document').ready(function () {
+        manageUI_IsAlertable_Element();
+    });
+    function manageUI_IsAlertable_Element() {
+        $('div[data-category=yes_IsAlertable_Element]').hide();
+        var IsAlertable = $('select[name=IsAlertable]').val();
+        if (IsAlertable == "True") {
+            $('div[data-category=yes_IsAlertable_Element]').show();
+        }
+    }
+</script>

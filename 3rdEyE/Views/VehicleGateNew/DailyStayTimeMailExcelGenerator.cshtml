@@ -1,0 +1,147 @@
+﻿@{
+    Layout = null;
+}
+@{
+    var Model = (List<_3rdEyE.Models.VehicleInOutManual>)ViewBag.List;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        /*th, td {
+            padding: 15px;
+        }*/
+    </style>
+</head>
+<body style="width:100%;">
+    @{
+        int sl_detail = 0;
+        int sl_summary = 0;
+        var Now = Convert.ToDateTime(ViewBag.Now);
+        string ConvertToDateTimeString(DateTime? dateTime)
+        {
+            return String.Format("{0:yyyy/MM/dd HH:mm}", dateTime);
+        }
+    }
+    <table id="data_table" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>
+                    SL.
+                </th>
+                <th>
+                    Vehicle
+                </th>
+                <th>
+                    O/M/D
+                </th>
+                <th>
+                    PRG Type
+                </th>
+                <th>
+                    Destination
+                </th>
+                <th>
+                    Location
+                </th>
+                <th>
+                    User/Depot
+                </th>
+                <th>
+                    In Gate
+                </th>
+                <th>
+                    In Time
+                </th>
+                <th>
+                    In Status
+                </th>
+                <th>
+                    Out Gate
+                </th>
+                <th>
+                    Out Time
+                </th>
+                <th>
+                    Out Status
+                </th>
+                <th>
+                    Stay Time (hh:mm)
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model.OrderBy(m => m.Location.Name).ThenByDescending(m => m.InStayTimeMinute))
+            {
+                sl_detail++;
+                <tr>
+                    <td>
+                        @sl_detail
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Vehicle.RegistrationNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Vehicle.OWN_MHT_DHT)
+                    </td>
+                    <td>
+                        @*@Html.DisplayFor(modelItem => item.Vehicle.Depo.PRG_Type)*@
+                        @*@(item.Vehicle.Depo.PRG_Type == "CS" ? "CS" : "")
+                            @(item.Vehicle.Depo.PRG_Type == "PRAN" ? "PRAN" : "")
+                            @(item.Vehicle.Depo.PRG_Type == "RFL" ? "RFL" : "")
+                            @(item.Vehicle.Depo.PK_Depo.ToString() == "00000000-0000-0000-0000-000000000000" ? item.LocationGate.PRG_Type : "")*@
+                        @(item.Vehicle.OWN_MHT_DHT != "DHT" ? item.Vehicle.Depo.PRG_Type : item.AppUser.PRG_Type)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PRG_Type.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Location.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Vehicle.Depo.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AppUser.FullName)
+                    </td>
+                    <td>
+                        @ConvertToDateTimeString(item.In_IssueDateTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.In_LoadOrEmpty)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AppUser1.FullName)
+                    </td>
+                    <td>
+                        @ConvertToDateTimeString(item.Out_IssueDateTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Out_LoadOrEmpty)
+                    </td>
+                    <td>
+                        @{
+                            if (item.InStayTimeMinute != null)
+                            {
+                                var _hour = (Int64)(item.InStayTimeMinute / 60);
+                                var _min = (Int64)(item.InStayTimeMinute % 60);
+                                @_hour.ToString("00")<text> Hour </text> @_min.ToString("00") <text> Min </text>
+                            }
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <br />
+    <p>This mail is auto-generated, No Need To Reply</p>
+</body>
+</html>
+
+

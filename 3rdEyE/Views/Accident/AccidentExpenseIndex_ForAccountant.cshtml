@@ -1,0 +1,238 @@
+﻿@model IEnumerable<_3rdEyE.Models.AccidentExpense>
+@{
+    var RolePermissionList = (List<_3rdEyE.ManagingTools.Permission>)Session["RolePermissionList"];
+}
+<!--Date picker-->
+<link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+<!-- DataTablesExportable -->
+<link href="~/Content/ExportableDatatable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/ExportableDatatable/buttons.dataTables.min.css" rel="stylesheet" />
+<style>
+    tfoot input {
+        width: 100%;
+        padding: 3px;
+        box-sizing: border-box;
+    }
+</style>
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Accident Expense List
+        <small></small>
+    </h1>
+        <div class="breadcrumb">
+            @*<a class="btn btn-block btn-facebook btn-sm" href="/VehicleTrip/Create_DHT">Create New</a>*@
+        </div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-body col-md-12">
+                    <div class="form-group col-md-4">
+                        <label class="col-md-4 control-label">Accident Expense ID:</label>
+                        <div class="input-group col-md-8">
+                            <input class="form-control" name="TrackingID" id="TrackingID" value="@ViewBag.TrackingID" />
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="col-md-4 control-label">Accident Date From:</label>
+                        <div class="input-group col-md-8">
+                            <input class="form-control form_datetime" name="StartingDate" id="StartingDate" value="@ViewBag.StartingDate" />
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="col-md-4 control-label">Accident Date To:</label>
+                        <div class="input-group col-md-8">
+                            <input class="form-control form_datetime" name="EndingDate" id="EndingDate" value="@ViewBag.EndingDate" />
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body col-md-12">
+                    <button class="btn btn-facebook" onclick="getData()">Get Data</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-header">
+                    <h3 class="box-title">Accident Expense List</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Accident Expense ID
+                                </th>
+                                <th>
+                                    Accident Date
+                                </th>
+                                <th>
+                                    Vehicle
+                                </th>
+                                <th>
+                                    Purpose
+                                </th>
+                                <th>
+                                    Internal Receiver
+                                </th>
+                                <th>
+                                    External Receiver Det.
+                                </th>
+                                <th>
+                                    Unpaid Amount
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                                <th>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.TrackingID)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.OccuranceDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Accident.Vehicle.RegistrationNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Purpose)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.InternalTakerStaffID): @Html.DisplayFor(modelItem => item.InternalTakerStaffName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ExternalTakerName) : @Html.DisplayFor(modelItem => item.ExternalTakerContactNumber) : @Html.DisplayFor(modelItem => item.ExternalTakerContactAddress)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PaidAmount)
+                                    </td>
+                                    <td>
+                                        @if (item.Status == 0)
+                                        {
+                                            <text>Unpaid</text>
+                                        }
+                                        @if (item.Status == 1)
+                                        {
+                                            <text>Paid</text>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.Status == 0)
+                                        {
+                                            if (RolePermissionList.Where(m => m.FullName == "AccidentExpense-pay").Any())
+                                            {
+                                                <a href="/Accident/ExpenceApprove?id=@item.PK_AccidentExpense">Pay</a>
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+@*MODAL DELETE START*@
+<div id="modalDelete" class="modal fade modal-" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div id="modalDelete_hiddenKey" style="display:none;"></div>
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+            </div>
+            <div id="modalDelete_body" class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="tryDelete()">Yes</button>
+                <button type="button" class="btn btn-primary" onclick="$('#modalDelete').modal('hide');">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*MODAL DELETE END*@
+<!-- /.content -->
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<!-- DataTablesExportable -->
+<script src="~/Scripts/Custom/DataTableExportable/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.flash.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/jszip.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/pdfmake.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/vfs_fonts.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.html5.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.print.min.js"></script>
+<!--Date picker-->
+<script src="~/Theme/bower_components/jquery-ui/jquery-ui.min.js"></script>
+<script>
+    $(function () {
+        $('.form_datetime').datepicker({
+            dateFormat: 'yy-mm-dd',
+            changeMonth: true,
+            changeYear: true
+        });
+    });
+</script>
+<script>
+    $(function () {
+        var table = $('#data_table').DataTable({
+            //"lengthMenu": [[50, 100, -1], [50, 100, "All"]],
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'copy',
+                    footer: true,
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                    }
+                },
+                {
+                    extend: 'excel',
+                    footer: true,
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                    }
+                },
+                {
+                    extend: 'print',
+                    footer: true,
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                    }
+                }
+            ]
+        });
+    });
+</script>
+<script>
+    function getData() {
+        var StartingDate = $('Input[name=StartingDate]').val();
+        var EndingDate = $('Input[name=EndingDate]').val();
+        var TrackingID = $('Input[name=TrackingID]').val();
+        if (StartingDate != '' || EndingDate != '' || TrackingID != '') {
+            window.location = '/Accident/AccidentExpenseIndex_ForAccountant?TrackingID=' + TrackingID + '&StartingDate=' + StartingDate + '&EndingDate=' + EndingDate;
+        } else {
+            alert("Please, Select Accident Date From and ending date.");
+        }
+    }
+</script>
+

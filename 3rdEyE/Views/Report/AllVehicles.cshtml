@@ -1,0 +1,276 @@
+﻿@model IEnumerable<_3rdEyE.ViewModels.VM_Vehicle>
+
+@{
+    ViewBag.Title = "Vehicle list";
+}
+
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Vehicle List
+        <small></small>
+    </h1>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-header">
+                    <h3 class="box-title">Vehicle List</h3>
+                </div>
+
+                <div class="row">
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-3">
+                            <label class="col-md-4 control-label">User Group:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Depo", ViewBag.Depoes as SelectList, "Select", new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="col-md-4 control-label">User Compnay:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Company", ViewBag.UserCompanies as SelectList, "Select", new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="col-md-4 control-label">Own/MHT/DHT:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("OWN_MHT_DHT", ViewBag.OWN_MHT_DHT as SelectList, "Select", new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="col-md-4 control-label">Sub User Group:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_DepoGroup", ViewBag.DepoGroups as SelectList, "Select", new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-3">
+                            <label class="col-md-4 control-label">Reg. Number:</label>
+                            <div class="col-md-8">
+                                <input id="RegistrationNumber" name="RegistrationNumber" value="@ViewBag.RegistrationNumber" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="col-md-2">
+                            <button class="btn btn-facebook" onclick="FilterByInputToRedirectView()">Filter</button>
+
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-facebook" onclick="FilterByInputToExportExcel()">Download Excel</button>
+                        </div>
+                    </div>
+
+
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body" style="overflow-x:scroll;">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr style="background-color:#3B5998; color:white;">
+                                <th>
+                                    Registration No
+                                </th>
+                                <th>
+                                    Registration Date
+                                </th>
+                                <th>
+                                    OWN/MHT/DHT
+                                </th>
+                                <th>
+                                    P.Id
+                                </th>
+                                <th>
+                                    R.Id
+                                </th>
+                                <th>
+                                    User Group
+                                </th>
+                                <th>
+                                    User Company
+                                </th>
+                                <th>
+                                    Capacity(Ton)
+                                </th>
+                                <th>
+                                    Engine No
+                                </th>
+                                <th>
+                                    Chessis No
+                                </th>
+                                <th>
+                                    GPS Sim
+                                </th>
+                                <th>
+                                    IMEI
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Model.RegistrationNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.RegisrationDate_Text)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Model.OWN_MHT_DHT)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Model.ERP_Id)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Model.RowSerial)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Model.Depo.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Model.Company.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Model.CapacityTon)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Model.EngineNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Model.ChassisNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Model.GpsMobileNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Model.GpsIMEINumber)
+                                    </td>
+                                    @*<td>
+                                            @if (ViewBag.CurrentUser.PermissionView == true)
+                                            {
+                                                <text>&nbsp;</text><a title="View" href="/Vehicle/View_@item.Model.OWN_MHT_DHT?id=@item.Model.PK_Vehicle"><span class="glyphicon glyphicon-file" aria-hidden="true"></span></a><text>&nbsp;</text>
+                                            }
+                                            @if (ViewBag.CurrentUser.PermissionEdit == true)
+                                            {
+                                                <text>&nbsp;</text><a title="Edit" href="/Vehicle/Edit_@item.Model.OWN_MHT_DHT?id=@item.Model.PK_Vehicle"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a><text>&nbsp;</text>
+                                            }
+                                        </td>*@
+                                </tr>
+
+                            }
+                        </tbody>
+                        @*<tfoot>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>*@
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<!-- DataTables -->
+<script src="~/Theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/Theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script>
+    $(function () {
+        $('select').select2();
+        $('#data_table').DataTable({ "scrollX": true });
+    });
+</script>
+
+<script>
+    function FilterByInputToRedirectView() {
+        var url = "/Report/AllVehicles?";
+        var FK_Depo = $("select[name=FK_Depo]").val();
+        if (FK_Depo != '') {
+            url = url + "FK_Depo=" + FK_Depo;
+        }
+
+        var FK_Company = $("select[name=FK_Company]").val();
+        if (FK_Company != '') {
+            url = url + "&FK_Company=" + FK_Company;
+        }
+
+        var OWN_MHT_DHT = $("select[name=OWN_MHT_DHT]").val();
+        if (OWN_MHT_DHT != '') {
+            url = url + "&OWN_MHT_DHT=" + OWN_MHT_DHT;
+        }
+
+        var FK_DepoGroup = $("select[name=FK_DepoGroup]").val();
+        if (FK_DepoGroup != '') {
+            url = url + "&FK_DepoGroup=" + FK_DepoGroup;
+        }
+
+        var RegistrationNumber = $("input[name=RegistrationNumber]").val();
+        if (RegistrationNumber != '') {
+            url = url + "&RegistrationNumber=" + RegistrationNumber;
+        }
+
+        if (FK_Depo != null || FK_Company != null || OWN_MHT_DHT != null || FK_DepoGroup != null || RegistrationNumber != null) {
+            window.location = url;
+        } else {
+            alert("You must select any filter values");
+        }
+    }
+
+    function FilterByInputToExportExcel() {
+        var url = "/Report/ExportVehicleList?";
+        var FK_Depo = $("select[name=FK_Depo]").val();
+        if (FK_Depo != '') {
+            url = url + "FK_Depo=" + FK_Depo;
+        }
+
+        var FK_Company = $("select[name=FK_Company]").val();
+        if (FK_Company != '') {
+            url = url + "&FK_Company=" + FK_Company;
+        }
+
+        var OWN_MHT_DHT = $("select[name=OWN_MHT_DHT]").val();
+        if (OWN_MHT_DHT != '') {
+            url = url + "&OWN_MHT_DHT=" + OWN_MHT_DHT;
+        }
+
+        var FK_DepoGroup = $("select[name=FK_DepoGroup]").val();
+        if (FK_DepoGroup != '') {
+            url = url + "&FK_DepoGroup=" + FK_DepoGroup;
+        }
+
+        var RegistrationNumber = $("input[name=RegistrationNumber]").val();
+        if (RegistrationNumber != '') {
+            url = url + "&RegistrationNumber=" + RegistrationNumber;
+        }
+
+        if (FK_Depo != null || FK_Company != null || OWN_MHT_DHT != null || FK_DepoGroup != null || RegistrationNumber != null) {
+            window.location = url;
+        } else {
+            alert("You must select any filter values");
+        }
+    }
+</script>
+

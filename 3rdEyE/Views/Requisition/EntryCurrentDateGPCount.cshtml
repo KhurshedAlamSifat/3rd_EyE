@@ -1,0 +1,166 @@
+﻿@model IEnumerable<_3rdEyE.Models.Location>
+
+@{
+    ViewBag.Title = "View";
+}
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Update GP count
+        <small></small>
+    </h1>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    @*<input type="button" class="btn btn-warning pull-left" onclick="clearDataAll()" value="Clear All" />*@
+                    <input type="button" class="btn btn-facebook pull-right" onclick="TryUpdateUserPermission()" value="Update" />
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form name="ThisForm" class="form-horizontal" method="post" action="/Requisition/EntryCurrentDateGPCount" enctype="multipart/form-data">
+                    <input name="item_total" value="@Model.Count()" style="display:none;" />
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">PRG Type*</label>
+                            <div class="col-md-8">
+                                <input name="PRG_Type" value="@ViewBag.PRG_Type" type="text" class="form-control" style="text-transform:uppercase" readonly="readonly">
+                                <b class="errorMessage" data-category="errorMessage" name="error_UniqueIDNumber"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Issue Date:</label>
+                            <div class="col-md-8">
+                                <input name="IssueDate" type="date" value="@ViewBag.IssueDate" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-4">
+                        <table id="data_table_1" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Location Name
+                                    </th>
+                                    <th>
+                                        GP Count
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="data_tbody">
+                                @{
+                                    var model_list = Model.ToList();
+                                }
+                                @for (int i = 0; i < (Model.Count() / 2); i++)
+                                {
+                                    var item = model_list[i];
+                                    <tr>
+                                        <td>
+                                            @item.Name
+                                            <input name="FK_Location_@i" type="text" value="@item.PK_Location" style="display:none;" />
+                                        </td>
+                                        <td>
+                                            <input name="GPCount_@i" type="number" min="0" style="width:100px;" />
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="box-body col-md-1"></div>
+                    <div class="box-body col-md-4">
+                        <table id="data_table_2" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Location Name
+                                    </th>
+                                    <th>
+                                        GP Count
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="data_tbody">
+                                @for (int i = (Model.Count() / 2); i < Model.Count(); i++)
+                                {
+                                    var item = model_list[i];
+                                    <tr>
+                                        <td>
+                                            @item.Name
+                                            <input name="FK_Location_@i" type="text" value="@item.PK_Location" style="display:none;" />
+                                        </td>
+                                        <td>
+                                            <input name="GPCount_@i" type="number" min="0" style="width:100px;" />
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="box-footer">
+                        @*<button class="btn btn-facebook center-block" onclick="TrySubmit()">Bid</button>*@
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+<!-- DataTables -->
+<script src="~/Theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/Theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+<script>
+    $(function () {
+        $('select').select2();
+        $('.form_datetime').datetimepicker({
+            format: 'yyyy-mm-dd HH:ii P',
+            todayBtn: 1,
+            autoclose: 1,
+        });
+    });
+</script>
+<script>
+    var dataTable;
+    $(function () {
+        dataTable = $('#data_table_1').DataTable({
+            "paging": false
+        });
+        dataTable = $('#data_table_2').DataTable({
+            "paging": false
+        });
+        $('.form_datetime').datetimepicker({
+            format: 'yyyy-mm-dd HH:ii P',
+            startDate: '+0d',
+            endDate: '+2d',
+            autoclose: 1,
+            setDate: new Date()
+            //minDate: moment().add('d', 1).toDate()
+        });
+    });
+    function clearDataAll() {
+        $("input[name^='FK_Location_']").val('');
+        $("input[name^='GPCount_']").val('');
+    }
+    function TryUpdateUserPermission() {
+        var IssueDate = $("input[name=IssueDate]").val();
+        if (IssueDate == '' ) {
+            alert("Please, select Issue Date.");
+            return;
+        }
+        dataTable.destroy();
+        $('form[name=ThisForm]').submit();
+    }
+</script>

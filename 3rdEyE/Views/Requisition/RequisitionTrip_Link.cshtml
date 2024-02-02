@@ -1,0 +1,382 @@
+﻿@model Tuple<_3rdEyE.Models.RequisitionTrip, List<_3rdEyE.Models.RequisitionTrip>>
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Link With Assigend Requisition
+        <small></small>
+    </h1>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/Requisition/RequisitionTrip_Link" enctype="multipart/form-data">
+        <input id="PK_RequisitionTrip_SL" name="PK_RequisitionTrip_SL" value="0" style='display:none;' />
+
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">#@Model.Item1.TrackingID</h3>
+                            </div>
+                            @*<div class="box-body col-md-6 col-md-offset-6">
+                                    <div class="form-group col-md-12">
+                                        <label class="col-md-4 control-label">Approved Demand Tracking ID</label>
+                                        <div class="col-md-3">
+                                            <input name="ApprovedDemandTrackingID" id="ApprovedDemandTrackingID" class="form-control">
+                                            <input name="demandPKs" id="demandPKs" style="display:none;">
+                                        </div>
+                                    </div>
+                                </div>*@
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table id="table_req_trip_base" class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th style='display:none'>
+                                                        PK_RequisitionTrip
+                                                    </th>
+                                                    <th>
+                                                        Tracking ID
+                                                    </th>
+                                                    <th>
+                                                        PRG Type
+                                                    </th>
+                                                    <th>
+                                                        Raiser
+                                                    </th>
+                                                    <th>
+                                                        From
+                                                    </th>
+                                                    <th>
+                                                        To
+                                                    </th>
+                                                    <th>
+                                                        Vehicle Type
+                                                    </th>
+                                                    <th>
+                                                        Using Space
+                                                    </th>
+                                                    <th>
+                                                        Required Time
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbody_req_trip_base">
+                                                <tr>
+                                                    <td style='display:none'>
+                                                        <input name="PK_RequisitionTrip_0" value="@Model.Item1.PK_RequisitionTrip" />
+                                                    </td>
+                                                    <td>
+                                                        @Model.Item1.TrackingID
+                                                    </td>
+                                                    <td>
+                                                        @Model.Item1.Requisition.PRG_Type
+                                                    </td>
+                                                    <td>
+                                                        @Model.Item1.Requisition.AppUser.FullName
+                                                    </td>
+                                                    <td>
+                                                        @Model.Item1.Requisition.Location.Name &nbsp; @Model.Item1.Requisition.StartingLocation
+                                                    </td>
+                                                    <td>
+                                                        @Model.Item1.Requisition.Location1.Name &nbsp; @Model.Item1.Requisition.FinishingLocation
+                                                    </td>
+                                                    <td>
+                                                        @Model.Item1.Requisition.RequisitionVehicleType.Title_English
+                                                    </td>
+                                                    <td>
+                                                        @Model.Item1.WantedCount
+                                                    </td>
+                                                    <td>
+                                                        @Model.Item1.Requisition.PossibleJourneyStartDateTime.ToString("yyyy-MM-dd H:mm")
+                                                    </td>
+                                                </tr>
+                                                @foreach (var item in Model.Item2.OrderBy(m => m.AssingedAt))
+                                                {
+                                                    <tr>
+                                                        <td style='display:none'>
+                                                            <input value="@item.PK_RequisitionTrip" />
+                                                        </td>
+                                                        <td>
+                                                            @item.TrackingID
+                                                        </td>
+                                                        <td>
+                                                            @item.Requisition.PRG_Type
+                                                        </td>
+                                                        <td>
+                                                            @item.Requisition.AppUser.FullName
+                                                        </td>
+                                                        <td>
+                                                            @item.Requisition.Location.Name &nbsp; @item.Requisition.StartingLocation
+                                                        </td>
+                                                        <td>
+                                                            @item.Requisition.Location1.Name &nbsp; @item.Requisition.FinishingLocation
+                                                        </td>
+                                                        <td>
+                                                            @item.Requisition.RequisitionVehicleType.Title_English
+                                                        </td>
+                                                        <td>
+                                                            @item.WantedCount
+                                                        </td>
+                                                        <td>
+                                                            @Model.Item1.Requisition.PossibleJourneyStartDateTime.ToString("yyyy-MM-dd H:mm")
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-4">
+                                            <label class="col-md-3 control-label">Starting Date:</label>
+                                            <div class="input-group col-md-8">
+                                                <div class="col-md-12 input-append date form_datetime" data-link-field="dtp_input1">
+                                                    <input id="StartingDate" name="StartingDate" class="form-control col-md-12" type="text" value="@ViewBag.StartingDate" readonly="readonly" style="background-color: white;">
+                                                    <span class="add-on"><i class="icon-remove"></i></span>
+                                                    <span class="add-on"><i class="icon-th"></i></span>
+                                                </div>
+                                                <input type="hidden" id="dtp_input1" value="" style="display:none;" /><br />
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label class="col-md-3 control-label">Ending Date:</label>
+                                            <div class="input-group col-md-8">
+                                                <div class="col-md-12 input-append date form_datetime" data-link-field="dtp_input1">
+                                                    <input id="EndingDate" name="EndingDate" class="form-control col-md-12" type="text" value="@ViewBag.EndingDate" readonly="readonly" style="background-color: white;">
+                                                    <span class="add-on"><i class="icon-remove"></i></span>
+                                                    <span class="add-on"><i class="icon-th"></i></span>
+                                                </div>
+                                                <input type="hidden" id="dtp_input2" value="" style="display:none;" /><br />
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label class="col-md-3 control-label">Raiser:</label>
+                                            <div class="col-md-8">
+                                                @Html.DropDownList("FK_AppUser_Client", ViewBag.Clients as SelectList, "Select", new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-4">
+                                            <label class="col-md-3 control-label">From:</label>
+                                            <div class="col-md-8">
+                                                @Html.DropDownList("FK_Location_From", ViewBag.FromLocations as SelectList, "Select", new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label class="col-md-3 control-label">To:</label>
+                                            <div class="col-md-8">
+                                                @Html.DropDownList("FK_Location_To", ViewBag.ToLocations as SelectList, "Select", new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label class="col-md-3 control-label">Tracking Id:</label>
+                                            <div class="col-md-8">
+                                                <input id="TrackingId" name="TrackingId" value="@ViewBag.TrackingId" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-4" style="float:right;">
+                                            <input type="button" class="btn btn-facebook" onclick="getData()" value="Get Data" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table id="table_req_trip_temp" class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th style='display:none'>
+                                                        PK_RequisitionTrip
+                                                    </th>
+                                                    <th>
+                                                        Tracking ID
+                                                    </th>
+                                                    <th>
+                                                        PRG Type
+                                                    </th>
+                                                    <th>
+                                                        Raiser
+                                                    </th>
+                                                    <th>
+                                                        From
+                                                    </th>
+                                                    <th>
+                                                        To
+                                                    </th>
+                                                    <th>
+                                                        Vehicle Type
+                                                    </th>
+                                                    <th>
+                                                        Using Space
+                                                    </th>
+                                                    <th>
+                                                        Required Time
+                                                    </th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbody_req_trip_temp"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-footer">
+                        <input type="button" class="btn btn-facebook center-block" onclick="validateAndTrySubmit()" value="Save" />
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+</section>
+@*MODAL Company START*@
+<div id="modalPreload" class="modal  modal-" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content" style="background-color:transparent; margin-top:200px;">
+            <img src="~/Content/Images/Preload.gif" />
+        </div>
+    </div>
+</div>
+<!-- DataTables -->
+<script src="~/Theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/Theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    var tracking_id_list = ['@Model.Item1.TrackingID'];
+    var PK_RequisitionTrip_SL = 0;
+    $(document).ready(function () {
+        $('.form_datetime').datetimepicker({
+            format: 'yyyy-mm-dd HH:ii P',
+            todayBtn: 1,
+            autoclose: 1,
+            pickerPosition: "top-left"
+        });
+        $('select').select2();
+    });
+</script>
+
+<script>
+
+    function getData() {
+        var StartingDate = $('Input[name=StartingDate]').val();
+        var EndingDate = $('Input[name=EndingDate]').val();
+        if (StartingDate == '' || EndingDate == '') {
+            alert("Please, Select starting date and ending date.");
+        return;
+        }
+        var TrackingId = $('Input[name=TrackingId]').val();
+        var FK_AppUser_Client = $('#FK_AppUser_Client').find(":selected").val();
+        var FK_Location_From = $('#FK_Location_From').find(":selected").val();
+        var FK_Location_To = $('#FK_Location_To').find(":selected").val();
+        var url = '/Requisition/GetRequisitionTrips?StartingDate=' + StartingDate + '&EndingDate=' + EndingDate
+            + '&FK_AppUser_Client=' + FK_AppUser_Client + '&FK_Location_From=' + FK_Location_From
+            + '&FK_Location_To=' + FK_Location_To + '&TrackingId=' + TrackingId
+            + '&PK_RequisitionTrip=' + @Model.Item1.PK_RequisitionTrip;
+
+        $("#modalPreload").css("display", "block");
+        $.ajax({
+            traditional: true,
+            type: "get",
+            dataType: "json",
+            contentType: "application/json",
+            url: url,
+            //data: JSON.stringify({ FK_Location: '' }),
+            success: function (data) {
+                console.log(data);
+                $("#modalPreload").css("display", "none");
+                var res = "";
+                $("#tbody_req_trip_temp").html(res);
+                if (data != 'NotFound') {
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i].PK_RequisitionTrip == @Model.Item1.PK_RequisitionTrip) {
+                            continue;
+                        }
+                        var PossibleJourneyStartDateTime = new Date(parseInt(data[i].PossibleJourneyStartDateTime.replace("/Date(", "").replace(")/", "")));
+                        res = res + "<tr>"
+                            + "<td style='display:none'>" + data[i].PK_RequisitionTrip + "</td>"
+                            + "<td>" + data[i].TrackingID + (data[i].IsForwarded == true ? "<<":"") + "</td>"
+                            + "<td>" + data[i].PRG_Type + "</td>"
+                            + "<td>" + data[i].Raiser + "</td>"
+                            + "<td>" + data[i].From + "</td>"
+                            + "<td>" + data[i].To + "</td>"
+                            + "<td>" + data[i].RequisitionVehicleType + "</td>"
+                            + "<td>" + data[i].WantedCount + "</td>"
+                            + "<td>" + formatDateString_t1(data[i].PossibleJourneyStartDateTime) + "</td>"
+                            + "<td><button type='button' onclick='addSelectedRequisitionTrip(this)'>add</button></td>"
+                            + "</tr>";
+                    }
+                }
+                $("#tbody_req_trip_temp").html(res);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call");
+            }
+        });
+    }
+    function addSelectedRequisitionTrip(btn) {
+        var currentRow = $(btn).closest("tr");
+        var PK_RequisitionTrip = currentRow.find("td:eq(0)").text();
+        var TrackingID = currentRow.find("td:eq(1)").text();
+        var PRG_Type = currentRow.find("td:eq(2)").text();
+        var Raiser = currentRow.find("td:eq(3)").text();
+        var From = currentRow.find("td:eq(4)").text();
+        var To = currentRow.find("td:eq(5)").text();
+        var RequisitionVehicleType = currentRow.find("td:eq(6)").text();
+        var WantedCount = currentRow.find("td:eq(7)").text();
+        var PossibleJourneyStartDateTime = currentRow.find("td:eq(8)").text();
+
+        if (tracking_id_list.indexOf(TrackingID) > -1) {
+            alert(TrackingID + " is already added.");
+            return;
+        }
+        tracking_id_list.push(TrackingID);
+        PK_RequisitionTrip_SL = PK_RequisitionTrip_SL + 1;
+        $("#PK_RequisitionTrip_SL").val(PK_RequisitionTrip_SL);
+
+        var res = "";
+        res = "<tr>";
+        res = res + "<td style='display:none'>" + "<input name='PK_RequisitionTrip_" + PK_RequisitionTrip_SL + "' value='" + PK_RequisitionTrip + "' style='display:none'/>" + "</td>";
+        res = res + "<td>" + currentRow.find("td:eq(1)").text() + "</td>";
+        res = res + "<td>" + currentRow.find("td:eq(2)").text() + "</td>";
+        res = res + "<td>" + currentRow.find("td:eq(3)").text() + "</td>";
+        res = res + "<td>" + currentRow.find("td:eq(4)").text() + "</td>";
+        res = res + "<td>" + currentRow.find("td:eq(5)").text() + "</td>";
+        res = res + "<td>" + currentRow.find("td:eq(6)").text() + "</td>";
+        res = res + "<td>" + currentRow.find("td:eq(7)").text() + "</td>";
+        res = res + "<td>" + currentRow.find("td:eq(8)").text() + "</td>";
+        res = res + "</tr>";
+        $("#tbody_req_trip_base").append(res);
+    }
+    function validateAndTrySubmit() {
+        //var newInternalTripInfo = "";
+        //for (var i = 1; i <= maxSelection; i++) {
+        //    //newInternalTripInfo = newInternalTripInfo + $('#tr_2_' + i).find("td:eq(0)").text() + "*" + $('#tr_2_1_' + i).val() + "*" + $('#tr_2_' + i).find("td:eq(4)").text() + "#";
+        //    newInternalTripInfo = newInternalTripInfo + $('#tr_2_' + i).find("td:eq(0)").text() + "*" + $('#tr_2_' + i).find("td:eq(3) input").val() + "*" + $('#tr_2_' + i).find("td:eq(4)").text() + "#";
+        //}
+        //newInternalTripInfo = newInternalTripInfo.substring(0, newInternalTripInfo.length - 1);
+        //$("#newInternalTripInfo").val(newInternalTripInfo);
+        TrySubmit();
+    }
+</script>

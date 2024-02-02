@@ -1,0 +1,293 @@
+﻿@model IEnumerable<_3rdEyE.Models.Event>
+@{
+    ViewBag.Title = "Helper list";
+}
+
+<!-- DataTablesExportable -->
+<link href="~/Content/ExportableDatatable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/ExportableDatatable/buttons.dataTables.min.css" rel="stylesheet" />
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Company Wise Vehicle Insurance Report
+        <small></small>
+    </h1>
+    @if (ViewBag.CurrentUser.PermissionAdd == true)
+    {
+        <div class="breadcrumb">
+            <a class="btn btn-block btn-default btn-sm" href="/Helper/Create">Create New</a>
+        </div>
+    }
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-body col-md-12">
+                    <div class="form-group col-md-4">
+                        <label class="col-md-4 control-label">Starting Date:</label>
+                        <div class="col-md-8">
+                            <input name="StartingDate" type="date" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="col-md-4 control-label">Einding Date:</label>
+                        <div class="col-md-8">
+                            <input name="EndingDate" type="date" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <button class="btn btn-facebook" onclick="getData()">Get Data</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.col -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        Company Wise Vehicle Insurance Summury Report
+                    </h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="summury_table" class="table" style="font-size:15px;">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>
+                                    Company
+                                </th>
+                                <th></th>
+                                <th>
+                                    Total Amount
+                                </th>
+                                <th></th>
+
+                            </tr>
+                        </thead>
+                        <tbody id="summury_tbody">
+                            @foreach (var item in Model.GroupBy(m => m.Vehicle.FK_Company))
+                            {
+
+                                <tr>
+                                    <td></td>
+                                    <td>@item.FirstOrDefault().Vehicle.Company.Name</td>
+                                    <td></td>
+                                    <td>@item.Select(n => n.PrimaryAmount).Sum()</td>
+                                    <td></td>
+                                </tr>
+                            }
+                            <tr>
+                                <td></td>
+                                <td><b>Total</b></td>
+                                <td></td>
+                                <td><b>@Model.Select(n => n.PrimaryAmount).Sum()</b></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>--------</td>
+                                <td></td>
+                                <td>--------</td>
+                                <td></td>
+                                <td>--------</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        Company Wise Vehicle Insurance Detail Report
+                    </h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="detail_table" class="table table-bordered table-striped" style="font-size:15px;">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Vehicle
+                                </th>
+                                <th>
+                                    Capacity
+                                </th>
+                                <th>
+                                    Policy
+                                </th>
+                                <th>
+                                    Renewal Date
+                                </th>
+
+                                <th>
+                                    Premium
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody id="detail_tbody">
+                            @foreach (var group in Model.GroupBy(m => m.Vehicle.FK_Company))
+                            {
+                                <tr>
+                                    <td><b>@group.FirstOrDefault().Vehicle.Company.Name</b></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                foreach (var item in group)
+                                {
+                                    <tr>
+                                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @item.Vehicle.RegistrationNumber</td>
+                                        <td>@item.Vehicle.CapacityTon tons</td>
+                                        <td>@item.Insurance_PolicyNumber</td>
+                                        <td>@item.RenewedOn</td>
+                                        <td>@item.Insurance_PremiumAmount</td>
+                                    </tr>
+                                }
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><b>Total</b></td>
+                                    <td><b>@group.Select(n => n.PrimaryAmount).Sum()</b></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+@*MODAL Company START*@
+<div id="modalPreload" class="modal  modal-" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content" style="background-color:transparent; margin-top:200px;">
+            <img src="~/Content/Images/Preload.gif" />
+        </div>
+    </div>
+</div>
+@*MODAL Company END*@
+<!-- /.content -->
+<!-- DataTablesExportable -->
+<script src="~/Scripts/Custom/DataTableExportable/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.flash.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/jszip.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/pdfmake.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/vfs_fonts.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.html5.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.print.min.js"></script>
+<script>
+    $(function () {
+        @if (Model.Count() > 0)
+        {
+        <text>
+        makeDataTable();
+        </text>
+        }
+    });
+</script>
+<script>
+    function makeDataTable() {
+        var summury_table = $('#summury_table').DataTable({
+            dom: 'Bfrtip',
+            ordering: false,
+            paging: false,
+            buttons: [
+                {
+                    extend: 'pdfHtml5',
+                    
+                },
+                {
+                    extend: 'print',
+                    title: 'Insurance Report [@ViewBag.StartingDate - @ViewBag.EndingDate]',
+                    customize: function (win) {
+                        $(win.document.body)
+                            .css('font-size', '10pt');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', '15px');
+                            }
+                        }
+            ],
+        });
+
+        var detail_table = $('#detail_table').DataTable({
+            dom: 'Bfrtip',
+            ordering: false,
+            paging: false,
+            buttons: [
+                {
+                    extend: 'pdfHtml5',
+                    
+                },
+                {
+                    extend: 'print',
+                    title: 'Insurance Report [@ViewBag.StartingDate - @ViewBag.EndingDate]',
+                    customize: function (win) {
+                        $(win.document.body)
+                            .css('font-size', '10pt');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', '15px');
+                            }
+                        }
+            ],
+        });
+
+    }
+</script>
+<script>
+    function getData() {
+        var StartingDate = $('Input[name=StartingDate]').val();
+        var EndingDate = $('Input[name=EndingDate]').val();
+        if (StartingDate == '' || EndingDate == '') {
+            alert("Please, Select starting date and ending date.");
+            return;
+        }
+        window.location = '/Event/InsuranceReportInDateRange?StartingDate=' + StartingDate + '&EndingDate=' + EndingDate;
+    }
+</script>

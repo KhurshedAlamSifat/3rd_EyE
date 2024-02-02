@@ -1,0 +1,231 @@
+﻿@model _3rdEyE.Models.VehicleSharingDemand
+@{
+    ViewBag.Title = "";
+}
+
+<section class="content-header">
+    <h1>
+        View Vehicle Requisition # @Model.TrackingID
+        <small>Status: <b> @(Model.Status == 0 ? "Created" : Model.Status == 1 ? "Approved" : Model.Status == 2 ? "Assigned" : "N/A") </b></small>
+    </h1>
+    @if (Model.VehicleSharing != null)
+    {
+        <h1>
+            Vehicle Requisition Manager # @Model.VehicleSharing.TrackingID
+            <small>Status: <b> @(Model.VehicleSharing.Status == 0 ? "Open" : Model.VehicleSharing.Status == 1 ? "Locked" : "N/A") </b></small>
+        </h1>
+    }
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="col-md-12">
+                        <div class="box-header with-border">
+                            <h2 class="box-title">Demand Information</h2>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="col-md-12">
+                            <div class="box-body col-md-12">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="4">
+                                                <label>Traking Number: </label>&nbsp; @Model.TrackingID &nbsp;&nbsp; @(Model.IsHeadDemand == true ? "HEAD" : "")
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>Status: </label>&nbsp; @(Model.Status == 0 ? "Created" : Model.Status == 1 ? "Approved" : Model.Status == 2 ? "Assigned" : "")
+                                            </td>
+                                            <td>
+                                                <label>From: </label>&nbsp; @Model.Depo.Name &nbsp; @Model.StartingLocation
+                                            </td>
+                                            <td>
+                                                <label>To: </label>&nbsp; @Model.Depo1.Name &nbsp; @Model.FinishingLocation
+                                            </td>
+                                            <td>
+                                                <label>Vehicle Type: </label>&nbsp; @Model.VehicleType
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>When: </label>&nbsp; @Model.PossibleJourneyStartDateTime
+                                            </td>
+                                            <td>
+                                                <label>How many: </label>&nbsp; @Model.WantedCount
+                                            </td>
+                                            <td>
+                                                <label>Creator Note: </label>&nbsp; @Model.ClientNote
+                                            </td>
+                                            <td>
+                                                <label>Created By: </label>&nbsp; @Model.AppUser.FullName
+                                            </td>
+                                        </tr>
+
+                                        @if (Model.VehicleSharing != null)
+                                        {
+                                            foreach (var demand in Model.VehicleSharing.VehicleSharingDemands.Where(m => m.PK_VehicleSharingDemand != Model.PK_VehicleSharingDemand).OrderBy(m => m.IsHeadDemand).ThenBy(m => m.CreatedAt))
+                                            {
+                                                <tr>
+                                                    <td colspan="4">
+                                                        <label>Traking Number: </label>&nbsp; @demand.TrackingID &nbsp;&nbsp; @(demand.IsHeadDemand == true ? "HEAD" : "")
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label>Status: </label>&nbsp; @(demand.Status == 0 ? "Created" : demand.Status == 1 ? "Approved" : demand.Status == 2 ? "Assigned" : "")
+                                                    </td>
+                                                    <td>
+                                                        <label>From: </label>&nbsp; @demand.Depo.Name &nbsp; @demand.StartingLocation
+                                                    </td>
+                                                    <td>
+                                                        <label>To: </label>&nbsp; @demand.Depo1.Name &nbsp; @demand.FinishingLocation
+                                                    </td>
+                                                    <td>
+                                                        <label>Vehicle Type: </label>&nbsp; @demand.VehicleType
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label>When: </label>&nbsp; @demand.PossibleJourneyStartDateTime
+                                                    </td>
+                                                    <td>
+                                                        <label>How many: </label>&nbsp; @demand.WantedCount
+                                                    </td>
+                                                    <td>
+                                                        <label>Creator Note: </label>&nbsp; @demand.ClientNote
+                                                    </td>
+                                                    <td>
+                                                        <label>Created By: </label>&nbsp; @demand.AppUser.FullName
+                                                    </td>
+                                                </tr>
+
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    @if (Model.VehicleSharing != null)
+                    {
+                        <div class="col-md-12">
+                            <div class="box-header with-border">
+                                <h2 class="box-title">Internal Trips</h2>
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="col-md-12">
+                                <div class="box-body col-md-12">
+                                    <table class="table table-bordered">
+                                        <tbody>
+                                            @foreach (var trip in Model.VehicleSharing.VehicleSharingInternalTrips)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <label>Vehicle: </label>&nbsp; @trip.Vehicle.RegistrationNumber
+                                                    </td>
+                                                    <td>
+                                                        <label>Contact Number: </label>&nbsp; @trip.Vehicle.Internal_VehicleContactNumber
+                                                    </td>
+                                                    <td>
+                                                        <label>Driver: </label>&nbsp; @trip.AppUser.FullName &nbsp; @trip.AppUser.ContactNumber
+                                                    </td>
+                                                    <td>
+                                                        <label>Is notified: </label>&nbsp; @(trip.IsNotifiedToDriver == true ? "Yes" : "No")
+                                                    </td>
+                                                    <td>
+                                                        <label>Status: </label>&nbsp; @trip.StatusText
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="box-header with-border">
+                                <h2 class="box-title">External Bidding & trips</h2>
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="col-md-12">
+                                <div class="box-body col-md-12">
+                                    <table class="table table-bordered">
+                                        <tbody>
+                                            @foreach (var bidding in Model.VehicleSharing.VehicleSharingBiddings.Where(m => m.StatusText == "Approved"))
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <label>Transport Agent: </label>&nbsp; @bidding.AppUser.FullName &nbsp; @bidding.AppUser.ContactNumber
+                                                    </td>
+                                                    <td>
+                                                        <label>Status: </label>&nbsp; @bidding.StatusText
+                                                    </td>
+                                                    <td>
+                                                        <label>Manageabl/Approved: </label>&nbsp; @bidding.ManagableQuantity / @bidding.ApprovedQuantity
+                                                    </td>
+                                                    <td>
+                                                        <label>Price/Qty: </label>&nbsp; @bidding.PricePerQuantity
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label>Bidder Note: </label>&nbsp; @bidding.BidderNote
+                                                    </td>
+
+                                                    <td>
+                                                        <label>Approver Note: </label>&nbsp; @bidding.ApprovalNote
+                                                    </td>
+                                                    <td colspan="2">
+                                                        <label>Approval Message: </label>&nbsp; @bidding.ApprovalMessage
+                                                    </td>
+                                                </tr>
+                                                foreach (var externalTrip in bidding.VehicleSharingExternalTrips)
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            <label>Vehicle: </label>&nbsp; @externalTrip.Vehicle.RegistrationNumber &nbsp; @externalTrip.Vehicle.MHT_DHT_DriverContactNumber
+                                                        </td>
+                                                        <td>
+                                                            <label>Driver: </label>&nbsp; @externalTrip.MHT_DHT_DriverName &nbsp; @externalTrip.MHT_DHT_DriverContactNumber
+                                                        </td>
+                                                        <td>
+                                                            <label>Status: </label>&nbsp; @externalTrip.StatusText
+                                                        </td>
+                                                        <td>
+                                                            <label>Assigned At: </label>&nbsp; @externalTrip.AssingedAt
+                                                        </td>
+                                                        <td>
+                                                            <label>Paid At: </label>&nbsp; @externalTrip.BillPaidAt
+                                                        </td>
+                                                    </tr>
+                                                }
+                                                <tr>
+                                                    <td colspan="4"></td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="box-footer">
+                        @*    <input type="button" class="btn btn-facebook center-block" value="Save" onclick="TrySubmit()" />*@
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+
+</section>

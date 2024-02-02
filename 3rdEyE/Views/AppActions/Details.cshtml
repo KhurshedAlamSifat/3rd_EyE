@@ -1,0 +1,66 @@
+﻿@model _3rdEyE.Models.AppAction
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Details</title>
+</head>
+<body>
+    <div>
+        <h4>AppAction</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.ModelName)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.ModelName)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.ControllerName)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.ControllerName)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.ActionName)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.ActionName)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.VisibleName)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.VisibleName)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.IsDeleted)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.IsDeleted)
+            </dd>
+    
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.PK_AppAction }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+</body>
+</html>

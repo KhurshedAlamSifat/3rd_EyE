@@ -1,0 +1,332 @@
+﻿@model IEnumerable<_3rdEyE.Models.vw_VehicleInOutManual>
+
+@{
+    ViewBag.Title = "Vehicle list";
+}
+
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+<!-- DataTablesExportable -->
+<link href="~/Content/ExportableDatatable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/ExportableDatatable/buttons.dataTables.min.css" rel="stylesheet" />
+@{
+    string ConvertToDateTimeString(DateTime? dateTime)
+    {
+        return String.Format("{0:yyyy/MM/dd HH:mm}", dateTime);
+    }
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Stay Report (Daily)
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        @*<a class="btn btn-block btn-info btn-sm" href="/TemporaryVehicle/Create">Create</a>*@
+    </div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-header">
+                    <h3 class="box-title"></h3>
+                </div>
+
+                <div class="row">
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Starting Date:</label>
+                            <div class="col-md-8">
+                                <input name="StartingDate" type="date" value="@ViewBag.StartingDate" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Einding Date:</label>
+                            <div class="col-md-8">
+                                <input name="EndingDate" type="date" value="@ViewBag.EndingDate" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Vehicle:</label>
+                            <div class="col-md-8">
+                                <input id="RegistrationNumber" name="RegistrationNumber" value="@ViewBag.RegistrationNumber" class="form-control" />
+                            </div>
+                        </div>
+
+                        @*<div class="form-group col-md-3">
+                                <label class="col-md-4 control-label">Own/MHT/DHT:</label>
+                                <div class="col-md-8">
+                                    @Html.DropDownList("OWN_MHT_DHT", ViewBag.OWN_MHT_DHT as SelectList, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="col-md-4 control-label">User Sub-Group:</label>
+                                <div class="col-md-8">
+                                    @Html.DropDownList("FK_LocationGroup", ViewBag.DepoGroups as SelectList, new { @class = "form-control" })
+                                </div>
+                            </div>*@
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="col-md-2">
+                            <button class="btn btn-facebook" onclick="FilterByInputToRedirectView()">Filter</button>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-facebook" onclick="FilterByInputToExportExcel()">Download Excel</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- /.box-header -->
+                <div class="box-body" style="overflow-x:scroll;">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Tr ID
+                                </th>
+                                <th>
+                                    Vehicle
+                                </th>
+                                <th>
+                                    O/M/D
+                                </th>
+                                <th>
+                                    PRG Type
+                                </th>
+                                <th>
+                                    Location
+                                </th>
+                                <th>
+                                    User/Depot
+                                </th>
+                                <th>
+                                    Destination
+                                </th>
+                                <th>
+                                    In Gate
+                                </th>
+                                <th>
+                                    In Time
+                                </th>
+                                <th>
+                                    In Status
+                                </th>
+                                <th>
+                                    In Reasson
+                                </th>
+                                <th>
+                                    Out Gate
+                                </th>
+                                <th>
+                                    Out Time
+                                </th>
+                                <th>
+                                    Out Status
+                                </th>
+                                <th>
+                                    Stay Time (mm)
+                                </th>
+                                <th>
+                                    In Stay Time (hh:mm)
+                                </th>
+                                <th>
+                                    Out Stay Time (hh:mm)
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.OrderBy(m => m.In_IssueDateTime))
+                            {
+                                <tr>
+                                    <td>
+                                        G @Html.DisplayFor(modelItem => item.PK_VehicleInOutManual)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.RegistrationNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Vehicle_OWN_MHT_DHT)
+                                    </td>
+                                    <td>
+                                        @*@Html.DisplayFor(modelItem => item.Vehicle.Depo.PRG_Type)*@
+                                        @*@(item.Vehicle.Depo.PRG_Type == "CS" ? "CS" : "")
+                                            @(item.Vehicle.Depo.PRG_Type == "PRAN" ? "PRAN" : "")
+                                            @(item.Vehicle.Depo.PRG_Type == "RFL" ? "RFL" : "")
+                                            @(item.Vehicle.Depo.PK_Depo.ToString() == "00000000-0000-0000-0000-000000000000" ? item.AppUser.PRG_Type : "")*@
+                                        @(item.Vehicle_OWN_MHT_DHT != "DHT" ? item.Depo_PRG_Type : item.InGate_PRG_Type)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Location_Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Depo_Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Destination)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.InGate_FullName)
+                                    </td>
+                                    <td>
+                                        @ConvertToDateTimeString(item.In_IssueDateTime)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.In_LoadOrEmpty)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.InReason_TitleBangla)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.OutGate_FullName)
+                                    </td>
+                                    <td>
+                                        @ConvertToDateTimeString(item.Out_IssueDateTime)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Out_LoadOrEmpty)
+                                    </td>
+                                    <td>
+                                        @item.InStayTimeMinute
+                                    </td>
+                                    <td>
+                                        @{
+                                            if (item.InStayTimeMinute
+                                                != null)
+                                            {
+                                                var _hour = (Int64)(item.InStayTimeMinute / 60);
+                                                var _min = (Int64)(item.InStayTimeMinute % 60);
+                                                @_hour.ToString("00")<text>:</text>@_min.ToString("00")
+                                            }
+                                        }
+                                    </td>
+                                    <td>
+                                        @{
+                                            if (item.OutStayTimeMinute != null)
+                                            {
+                                                var _hour = (Int64)(item.OutStayTimeMinute / 60);
+                                                var _min = (Int64)(item.OutStayTimeMinute % 60);
+                                                @_hour.ToString("00")<text>:</text>@_min.ToString("00")
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+<script>
+    $(function () {
+        $('select').select2();
+        $('.form_datetime').datetimepicker({
+            format: 'yyyy-mm-dd HH:ii P',
+            todayBtn: 1,
+            autoclose: 1,
+        });
+    });
+</script>
+<!-- DataTablesExportable -->
+<script src="~/Scripts/Custom/DataTableExportable/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.flash.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/jszip.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/pdfmake.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/vfs_fonts.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.html5.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.print.min.js"></script>
+<script>
+    $(function () {
+        $('#data_table').DataTable({
+            "ordering": true,
+            "paging": false,
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+    });
+</script>
+<script>
+    function FilterByInputToRedirectView() {
+        var url = "/VehicleGateNew/VehicleInOutManual_Index3?";
+
+        var StartingDate = $("input[name=StartingDate]").val();
+        if (StartingDate != '') {
+            url = url + "&StartingDate=" + StartingDate;
+        } else {
+            url = url + "&StartingDate=";
+        }
+
+        var EndingDate = $("input[name=EndingDate]").val();
+        if (EndingDate != '') {
+            url = url + "&EndingDate=" + EndingDate;
+        } else {
+            url = url + "&EndingDate=";
+        }
+
+        var RegistrationNumber = $("input[name=RegistrationNumber]").val();
+        if (RegistrationNumber != '') {
+            url = url + "&RegistrationNumber=" + RegistrationNumber;
+        } else {
+            url = url + "&RegistrationNumber=";
+        }
+
+        if (StartingDate == '' || EndingDate == '') {
+            alert("Please, Select vehicle, starting date and ending date.");
+            return;
+        }
+
+        window.location = url;
+    }
+
+    function FilterByInputToExportExcel() {
+        var url = "/VehicleGateNew/VehicleInOutManual_ExcelDownload3?";
+
+        var StartingDate = $("input[name=StartingDate]").val();
+        if (StartingDate != '') {
+            url = url + "&StartingDate=" + StartingDate;
+        } else {
+            url = url + "&StartingDate=";
+        }
+
+        var EndingDate = $("input[name=EndingDate]").val();
+        if (EndingDate != '') {
+            url = url + "&EndingDate=" + EndingDate;
+        } else {
+            url = url + "&EndingDate=";
+        }
+
+        var RegistrationNumber = $("input[name=RegistrationNumber]").val();
+        if (RegistrationNumber != '') {
+            url = url + "&RegistrationNumber=" + RegistrationNumber;
+        } else {
+            url = url + "&RegistrationNumber=";
+        }
+
+        if (StartingDate == '' || EndingDate == '') {
+            alert("Please, Select vehicle, starting date and ending date.");
+            return;
+        }
+
+        window.location = url;
+    }
+</script>
+

@@ -1,0 +1,241 @@
+﻿@{
+    ViewBag.Title = "Vehicle Status";
+}
+
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        User Login Report
+        <small></small>
+    </h1>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-body col-md-12">
+                    <div class="form-group col-md-3">
+                        <label class="col-md-4 control-label">Starting Date</label>
+                        <div class="col-md-8">
+                            <input name="StartingDate" type="date" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label class="col-md-4 control-label">Eding Date</label>
+                        <div class="col-md-8">
+                            <input name="EndingDate" type="date" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label class="col-md-4 control-label">User Group:</label>
+                        <div class="col-md-8">
+                            @Html.DropDownList("FK_Depo", ViewBag.Depoes as SelectList, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label class="col-md-4 control-label">User:</label>
+                        <div class="col-md-8">
+                            @Html.DropDownList("FK_User", ViewBag.AppUsers as SelectList, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                    </div>
+                </div>
+                <div class="box-body col-md-12">
+                    <button class="btn btn-facebook" onclick="getData()">Get Data</button>
+                    <button class="btn btn-facebook" onclick="downloadExcel()">Download (Current)</button>
+                </div>
+            </div>
+        </div>
+        <!-- /.col -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                @*<div class="box-header">
+                        <h3 class="box-title">Vehicle List</h3>
+                    </div>*@
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr style="background-color:#3B5998; color:white;">
+                                <th>
+                                    Staff Id
+                                </th>
+                                <th>
+                                    Full Name
+                                </th>
+                                <th>
+                                    User Group
+                                </th>
+                                <th>
+                                    In Time
+                                </th>
+                                <th>
+                                    Out Time
+                                </th>
+                                <th>
+                                    In Period
+                                </th>
+                                <th>
+                                    Out Reason
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="data_tbody"></tbody>
+                        <tfoot id="data_tfoot"></tfoot>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+@*MODAL Company START*@
+<div id="modalPreload" class="modal  modal-" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content" style="background-color:transparent; margin-top:200px;">
+            <img src="~/Content/Images/Preload.gif" />
+        </div>
+    </div>
+</div>
+@*MODAL Company END*@
+
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $('select[name=FK_Depo]').select2();
+        $('select[name=FK_User]').select2();
+    });
+</script>
+<!-- DataTables -->
+<script src="~/Theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/Theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<!-- page script -->
+<script>
+    var data_table;
+    function getData() {
+        var StartingDate = $('Input[name=StartingDate]').val();
+        var EndingDate = $('Input[name=EndingDate]').val();
+        var FK_Depo = $('select[name=FK_Depo]').val();
+        var FK_User = $('select[name=FK_User]').val();
+        if (StartingDate == '' || EndingDate == '') {
+            alert("Please, Select starting date and ending date.");
+            $('#data_tbody').html("");
+            return;
+        }
+        $("#modalPreload").css("display", "block");
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/AppUser/GetppUserLoginHistory/",
+            data: JSON.stringify({ StartingDate: StartingDate, EndingDate: EndingDate, FK_Depo: FK_Depo, FK_User: FK_User }),
+            success: function (list) {
+                console.log(list);
+                if (list.length == 0) {
+                    alert("No data is found for given condition.");
+                }
+                $('#data_tbody').html("");
+                var res = "";
+                var _statusText = "";
+
+                var _totalMinute = 0;
+                var _hour = 0;
+                var _minute = 0;
+                for (var i = 0; i < list.length; i++) {
+                    res = res + "<tr>";
+                    res = res + "<td>" + list[i].UniqueIDNumber + "</td>";
+                    res = res + "<td>" + list[i].FullName + "</td>";
+                    if (list[i].DepoName != null) {
+                        res = res + "<td>" + list[i].DepoName + "</td>";
+                    } else {
+                        res = res + "<td></td>";
+                    }
+                    var LoginTime = new Date(parseInt(list[i].LoginTime.replace("/Date(", "").replace(")/", "")));
+                    res = res + "<td>" + LoginTime.getFullYear() + "-" + (LoginTime.getMonth()+1) + "-" + LoginTime.getDate() + " " + LoginTime.getHours() + ":" + LoginTime.getMinutes() + "</td>";
+
+                    if (list[i].ExpirationTime != null) {
+                        var ExpirationTime = new Date(parseInt(list[i].ExpirationTime.replace("/Date(", "").replace(")/", "")));
+                        res = res + "<td>" + ExpirationTime.getFullYear() + "-" + (ExpirationTime.getMonth()+1) + "-" + ExpirationTime.getDate() + " " + ExpirationTime.getHours() + ":" + ExpirationTime.getMinutes() + "</td>";
+                    } else {
+                        res = res + "<td></td>";
+                    }
+
+                    if (list[i].ExistingMinute != null) {
+                        _totalMinute = _totalMinute + list[i].ExistingMinute;
+                        _hour = Math.floor(list[i].ExistingMinute / 60);
+                        _minute = list[i].ExistingMinute % 60;
+                        res = res + "<td>" + (_hour > 0 ? _hour + " hours " : " ") + (_minute > 0 ? _minute + " minutes " : " ") + "</td>";
+                    } else {
+                        res = res + "<td></td>";
+                    }
+                    
+
+                    
+
+                    if (list[i].Reason != null) {
+                        res = res + "<td>" + list[i].Reason + "</td>";
+                    } else {
+                        res = res + "<td>Browser/Window Close</td>";
+                    }
+                    res = res + "</tr>";
+                }
+                $('#data_tbody').html(res);
+
+                res = "";
+                _hour = Math.floor(_totalMinute / 60);
+                _minute = _totalMinute % 60;
+                res = res + "<tr>" + "<td></td><td></td><td></td><td></td><td>Total Time</td><td>" + (_hour > 0 ? _hour + " hours " : " ") + (_minute > 0 ? _minute + " minutes " : " ") + "</td><td></td>" + "</tr>";
+                $('#data_tfoot').html(res);
+
+                //if (res != "") {
+                //    //if ($.fn.dataTable.isDataTable('#data_table') == false) {
+                //    if ($.fn.dataTable.isDataTable('#data_table') == false) {
+                //        data_table = $('#data_table').DataTable({
+                //            "paging": false,
+                //            "bInfo": false,
+                //            //"ordering": false
+                //            //scrollCollapse: true,
+                //            //scrollX: '50vh',
+                //        });
+                //    } else {
+                //        data_table.destroy();
+                //        data_table = $('#data_table').DataTable({
+                //            "paging": false,
+                //            "bInfo": false,
+                //            //"ordering": false
+                //            //scrollCollapse: true,
+                //            //scrollX: '50vh',
+                //        });
+                //    }
+                //}
+                $("#modalPreload").css("display", "none");
+
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                alert('Too much data to load table.');
+                console.log("Err on call: relodeFK_VehicleBrandModel()");
+                $("#modalPreload").css("display", "none");
+            }
+        });
+    }
+    function downloadExcel() {
+        tableToExcel('data_table', 'Login History', 'Login History.xls')
+    }
+</script>
+

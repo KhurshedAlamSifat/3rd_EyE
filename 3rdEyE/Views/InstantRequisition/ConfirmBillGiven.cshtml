@@ -1,0 +1,412 @@
+﻿@model _3rdEyE.Models.InstantRequisition
+@{
+    ViewBag.Title = "Create";
+}
+
+<section class="content-header">
+    <h1>
+        Trip Print View
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        <button type="button" class="btn btn-block btn-info btn-sm" onclick="printDiv()">Print</button>
+        @*<a class="btn btn-block btn-info btn-sm" href="/InstantRequisition/IndexBy_Agent">Go To List</a>*@
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/InstantRequisition/PayAdjustmnet" enctype="multipart/form-data">
+        <input name="PK_InstantRequisition" value="@Model.PK_InstantRequisition" style="display:none;" />
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info" id="DivIdToPrint">
+                    <div class="col-md-5">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Driver Trip Bill</h3>
+                            <h4 class="box-title">Accountant copy</h4>
+                        </div>
+                        <div class="box-body col-md-12">
+                            @*NetProfit4*@
+                            <div class="form-group col-md-12">
+                                <label class="control-label">NetProfit4:</label> &nbsp;
+                                <label class="control-label">@Html.DisplayFor(model => model.NetProfit4)</label>
+                            </div>
+                        </div>
+                        <div class="box-body col-md-12">
+                            @**@
+                            <div class="form-group col-md-6">
+                                <label class="control-label">বিলের নং:</label>
+                                <label class="control-label"> EV @Model.PK_InstantRequisition.ToString("000000")</label>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="control-label">বিলের টাইপ:</label>
+                                <label class="control-label">Expense Voucher</label>
+                            </div>
+                        </div>
+                        <div class="box-body col-md-12">
+                            @**@
+                            <div class="form-group col-md-6">
+                                <label class="control-label">বিলের তারিখ:</label>
+                                <label class="control-label">@Model.CreatedAt</label>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="control-label">গাড়ি নং:</label>
+                                <label class="control-label">@Model.Vehicle.RegistrationNumber</label>
+                            </div>
+                        </div>
+                        <div class="box-body col-md-12">
+                            @**@
+                            <div class="form-group col-md-12">
+                                <label class="control-label">ড্রাইভারের নাম:</label>
+                                <label class="control-label">@Model.DriverName</label>
+                            </div>
+                        </div>
+                        <div class="box-body col-md-12">
+                            @**@
+                            <div class="form-group col-md-12">
+                                <label class="control-label">মোট দূরত্ব:</label>
+                                @{ var allKilo = Model.Distance_Empty1 + Model.Distance_Loaded1 + Model.Distance_Loaded_8_To_12_Tons_Out1 + Model.Distance_Loaded_12_To_25_Tons_Out1; }
+                                <label class="control-label">@allKilo</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="box-body col-md-12">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>নং</th>
+                                            <th>খরচের খাত</th>
+                                            <th>প্রক্রিত চাহিদা</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                ১
+                                            </td>
+                                            <td>
+                                                Driver Allowance
+                                            </td>
+                                            <td>
+                                                @{
+                                                    var TripBillDriver1 = Model.TripBillDriver1 != null ? Model.TripBillDriver1 : 0;
+                                                }
+                                                @TripBillDriver1
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                ২
+                                            </td>
+                                            <td>
+                                                Helper Allowance
+                                            </td>
+                                            <td>
+                                                @{
+                                                    var TripBillHelper1 = Model.TripBillHelper1 != null ? Model.TripBillHelper1 : 0;
+                                                }
+                                                @TripBillHelper1
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                ৩
+                                            </td>
+                                            <td>
+                                                Bridge/Toll/Ferry
+                                            </td>
+                                            <td>
+                                                @{
+                                                    var BridgeTollFerryCharge1 = Model.BridgeTollFerryCharge1 != null ? Model.BridgeTollFerryCharge1 : 0;
+                                                }
+                                                @BridgeTollFerryCharge1
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                ৪
+                                            </td>
+                                            <td>
+                                                Others
+                                            </td>
+                                            <td>
+                                                @{ var other_all = (Model.StayCharge1 != null ? Model.StayCharge1 : 0) + (Model.RepairCharge1 != null ? Model.RepairCharge1 : 0) + (Model.OpenBodyCharge1 != null ? Model.OpenBodyCharge1 : 0);}
+                                                @other_all
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                মোট টাকা
+                                            </td>
+                                            <td>
+                                                @{ var net_all = TripBillDriver1 + TripBillHelper1 + other_all;}
+                                                <text> @net_all</text>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="box-body col-md-12">
+                            @**@
+                            <div class="form-group col-md-12">
+                                <label class="control-label">প্রকৃত প্রদান টাকা (অংকে):</label>
+                                <label class="control-label"></label>
+                            </div>
+                        </div>
+                        <div class="box-body col-md-12">
+                            @**@
+                            <div class="form-group col-md-12">
+                                <label class="control-label">প্রকৃত প্রদান টাকা (কথায়):</label>
+                                <label class="control-label"></label>
+                            </div>
+                        </div>
+                        <div class="box-body col-md-12">
+                            @**@
+                            <div class="form-group col-md-12">
+                                <label class="control-label"></label>
+                                <label class="control-label"></label>
+                            </div>
+                        </div>
+                        <div class="box-body col-md-12">
+                            @**@
+                            <div class="form-group col-md-12">
+                                <label class="control-label col-md-3">গ্রহণকারী</label>
+                                <label class="control-label col-md-6">প্রস্তুতকারী</label>
+                            </div>
+                        </div>
+                        <div class="box-body col-md-12">
+                            @**@
+                            <div class="form-group col-md-12">
+                                <label class="control-label"></label>
+                                <label class="control-label"></label>
+                            </div>
+                        </div>
+                        <div class="box-body col-md-12">
+                            @**@
+                            <div class="form-group col-md-12">
+                                <label class="control-label col-md-3">প্রদানকারী</label>
+                                <label class="control-label col-md-6">অনুমোদনকারী</label>
+                            </div>
+                        </div>
+                        <div class="box-body col-md-12">
+                            @**@
+                            <div class="form-group col-md-12">
+                                <label class="control-label">বিল কর্তনের পরিমাণ:</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-offset-2 col-md-5">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Driver Trip Bill</h3>
+                            <h4 class="box-title">Driver copy</h4>
+                        </div>
+                        <div class="box-body col-md-12">
+                            @*NetProfit4*@
+                            <div class="form-group col-md-12">
+                                <label class="control-label">NetProfit4:</label> &nbsp;
+                                <label class="control-label">@Html.DisplayFor(model => model.NetProfit4)</label>
+                            </div>
+                        </div>
+                        <div class="box-body col-md-12">
+                            @**@
+                            <div class="form-group col-md-6">
+                                <label class="control-label">বিলের নং:</label>
+                                <label class="control-label"> EV @Model.PK_InstantRequisition.ToString("000000")</label>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="control-label">বিলের টাইপ:</label>
+                                <label class="control-label">Expense Voucher</label>
+                            </div>
+                        </div>
+                        <div class="box-body col-md-12">
+                            @**@
+                            <div class="form-group col-md-6">
+                                <label class="control-label">বিলের তারিখ:</label>
+                                <label class="control-label">@Model.CreatedAt</label>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="control-label">গাড়ি নং:</label>
+                                <label class="control-label">@Model.Vehicle.RegistrationNumber</label>
+                            </div>
+                        </div>
+                        <div class="box-body col-md-12">
+                            @**@
+                            <div class="form-group col-md-12">
+                                <label class="control-label">ড্রাইভারের নাম:</label>
+                                <label class="control-label">@Model.DriverName</label>
+                            </div>
+                        </div>
+                        <div class="box-body col-md-12">
+                            @**@
+                            <div class="form-group col-md-12">
+                                <label class="control-label">মোট দূরত্ব:</label>
+                                <label class="control-label">@allKilo</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="box-body col-md-12">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>নং</th>
+                                            <th>খরচের খাত</th>
+                                            <th>প্রক্রিত চাহিদা</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                ১
+                                            </td>
+                                            <td>
+                                                Driver Allowance
+                                            </td>
+                                            <td>
+                                                @TripBillDriver1
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                ২
+                                            </td>
+                                            <td>
+                                                Helper Allowance
+                                            </td>
+                                            <td>
+                                                @TripBillHelper1
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                ৩
+                                            </td>
+                                            <td>
+                                                Bridge/Toll/Ferry
+                                            </td>
+                                            <td>
+                                                @BridgeTollFerryCharge1
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                ৪
+                                            </td>
+                                            <td>
+                                                Others
+                                            </td>
+                                            <td>
+                                                @other_all
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                মোট টাকা
+                                            </td>
+                                            <td>
+                                                <text> @net_all</text>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="box-body col-md-12">
+                            @**@
+                            <div class="form-group col-md-12">
+                                <label class="control-label">প্রকৃত প্রদান টাকা (অংকে):</label>
+                                <label class="control-label"></label>
+                            </div>
+                        </div>
+                        <div class="box-body col-md-12">
+                            @**@
+                            <div class="form-group col-md-12">
+                                <label class="control-label">প্রকৃত প্রদান টাকা (কথায়):</label>
+                                <label class="control-label"></label>
+                            </div>
+                        </div>
+                        <div class="box-body col-md-12">
+                            @**@
+                            <div class="form-group col-md-12">
+                                <label class="control-label"></label>
+                                <label class="control-label"></label>
+                            </div>
+                        </div>
+                        <div class="box-body col-md-12">
+                            @**@
+                            <div class="form-group col-md-12">
+                                <label class="control-label col-md-3">গ্রহণকারী</label>
+                                <label class="control-label col-md-6">প্রস্তুতকারী</label>
+                            </div>
+                        </div>
+                        <div class="box-body col-md-12">
+                            @**@
+                            <div class="form-group col-md-12">
+                                <label class="control-label"></label>
+                                <label class="control-label"></label>
+                            </div>
+                        </div>
+                        <div class="box-body col-md-12">
+                            @**@
+                            <div class="form-group col-md-12">
+                                <label class="control-label col-md-3">প্রদানকারী</label>
+                                <label class="control-label col-md-6">অনুমোদনকারী</label>
+                            </div>
+                        </div>
+                        <div class="box-body col-md-12">
+                            @**@
+                            <div class="form-group col-md-12">
+                                <label class="control-label">বিল কর্তনের পরিমাণ:</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        @*    <input type="button" class="btn btn-facebook center-block" value="Save" onclick="TrySubmit()" />*@
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+
+</section>
+<script>
+    function printDiv() {
+
+        //var divToPrint = document.getElementById('DivIdToPrint');
+
+        //var newWin = window.open('', 'Print-Window');
+
+        //newWin.document.open();
+
+        //newWin.document.write('<html><body onload="window.print()">' + divToPrint.innerHTML + '</body></html>');
+
+        //newWin.document.close();
+
+        //setTimeout(function () { newWin.close(); }, 10);
+
+
+        //var printContents = document.getElementById('DivIdToPrint').innerHTML;
+        //var originalContents = document.body.innerHTML;
+
+        //document.body.innerHTML = printContents;
+
+        //window.print();
+
+        //document.body.innerHTML = originalContents;
+
+        var mywindow = window.open('', 'my div', 'height=400,width=600');
+        mywindow.document.write('<html><head><title></title>');
+        mywindow.document.write('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css" />');
+        mywindow.document.write('<style type="text/css">.test { color:red; } </style></head><body>');
+        mywindow.document.write(document.getElementById('DivIdToPrint').innerHTML);
+        mywindow.document.write('</body></html>');
+        mywindow.document.close();
+        mywindow.print(); 
+    }
+</script>

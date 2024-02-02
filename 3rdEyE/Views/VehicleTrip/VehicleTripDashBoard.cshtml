@@ -1,0 +1,180 @@
+﻿<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BAR CHART -->
+            <div class="box box-warning">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Rental Vehicle (Last Month)</h3>
+                </div>
+                <div class="box-body">
+                    <div class="chart">
+                        <canvas id="barChart" style="height:450px"></canvas>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <div class="col-md-12">
+            <!-- Table Info -->
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Top Hired vahicles (Last 3 Months)</h3>
+                </div>
+                <div class="box-body">
+                    <table class="table table-dark">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Registaritn Number</th>
+                                <th scope="col">User Group</th>
+                                <th scope="col">Hirings</th>
+                            </tr>
+                        </thead>
+                        <tbody id="Most3HiredVehicles_tbody"></tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col (RIGHT) -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+<!-- ChartJS -->
+<script src="~/Theme/bower_components/chart.js/2.4.0/Chart.min.js"></script>
+<script>
+    $(function () {
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/VehicleTrip/GetVehicleTripDashBoardData/",
+            //data: JSON.stringify({ FK_Vehicles: FK_Vehicles, StartingDate: StartingDate, EndingDate: EndingDate, MinimumMinute: MinimumMinute }),
+            success: function (data) {
+
+                //# Making table
+                var res = "";
+                for (var i = 0; i < data.Most3HiredVehiclesForTrip.length; i++) {
+                    res = res + "<tr>";
+                    res = res + "<td>" + (i + 1) + "</td>";
+                    res = res + "<td>" + data.Most3HiredVehiclesForTrip[i].RegistrationNumber + "</td>";
+                    res = res + "<td>" + data.Most3HiredVehiclesForTrip[i].DepoName + "</td>";
+                    res = res + "<td>" + data.Most3HiredVehiclesForTrip[i].HiredCount + "</td>";
+                    res = res + "</tr>";
+                }
+                $("#Most3HiredVehicles_tbody").html(res);
+
+                console.log(data);
+                //# Making bar chart
+                var total_DepoWiseLast3monthsExpense = 0;
+                for (var i = 0; i < data.DepoWiseLastMonthVehicleTripExpense.length; i++) {
+                    total_DepoWiseLast3monthsExpense += data.DepoWiseLastMonthVehicleTripExpense[i].DepoExpense;
+                }
+                var chartLabel = "Total: " + total_DepoWiseLast3monthsExpense;
+                var data_labels = data.DepoWiseLastMonthVehicleTripExpense.map(a => a.DepoName + ';' + a.NumberOfHiring + ';' + a.DepoExpense);
+                var dataset_data = data.DepoWiseLastMonthVehicleTripExpense.map(a => a.DepoExpense);
+                var ctx = document.getElementById('barChart').getContext('2d');
+                var chart = new Chart(ctx, {
+                    // The type of chart we want to create
+                    type: 'bar',
+
+                    // The data for our dataset
+                    data: {
+                        labels: data_labels,
+                        datasets: [{
+                            label: chartLabel,
+                            backgroundColor: 'rgb(244, 155, 66)',
+                            borderColor: 'rgb(244, 155, 66)',
+                            data: dataset_data,
+                        }]
+                    },
+
+                    // Configuration options go here
+                    options: {
+                        animation: {
+                            duration: 1,
+                            onComplete: function () {
+                                var chartInstance = this.chart,
+                                    ctx = chartInstance.ctx;
+
+                                //ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                                ctx.font = Chart.helpers.fontString(16, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                                ctx.textAlign = 'center';
+                                ctx.textBaseline = 'bottom';
+
+                                this.data.datasets.forEach(function (dataset, i) {
+                                    var meta = chartInstance.controller.getDatasetMeta(i);
+                                    meta.data.forEach(function (bar, index) {
+                                        var data = (Math.round(dataset.data[index] * 100) / total_DepoWiseLast3monthsExpense).toFixed(2) + ' %';
+                                        ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                    });
+                                });
+                            }
+                        },
+                        hover: {
+                            animationDuration: 0
+                        },
+                        tooltips: {
+                            enabled: false,
+                            //backgroundColor: 'rgba(0,0,0,0.8)',
+                            //callbacks: {
+                            //    label: function (tooltipItem, data) {
+                            //        var label = (Math.round(tooltipItem.yLabel * 100) / total_DepoWiseLast3monthsExpense).toFixed(2) + ' %';
+                            //        return label;
+                            //    }
+                            //}
+                        },
+                        scales: {
+                            xAxes: [{
+                                gridLines: {
+                                    offsetGridLines: true
+                                },
+                                ticks: {
+                                    callback: function (label) {
+                                        var res = label.split(";")[0];
+                                        return res;
+                                    }
+                                }
+                            },
+                            {
+                                gridLines: {
+                                    offsetGridLines: true,
+                                    color: 'rgba(0,0,0,0)'
+                                },
+                                ticks: {
+                                    callback: function (label) {
+                                        var res = label.split(";")[1];
+                                        return res;
+                                    }
+                                }
+                            },
+                            {
+                                gridLines: {
+                                    offsetGridLines: true,
+                                    color: 'rgba(0,0,0,0)'
+                                },
+                                ticks: {
+                                    callback: function (label) {
+                                        var res = label.split(";")[2];
+                                        return res;
+                                    }
+                                }
+                            }
+                            ]
+                        }
+                    }
+                });
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: GetVehicleTripDashBoardData()");
+                $("#modalPreload").css("display", "none");
+            }
+        });
+    })
+</script>
+

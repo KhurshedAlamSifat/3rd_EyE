@@ -1,0 +1,130 @@
+﻿@model Tuple<_3rdEyE.Models.AppUser, List<_3rdEyE.ManagingTools.WebMenu>>
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Edit User
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        <a class="btn btn-block btn-info btn-sm" href="@System.Web.HttpContext.Current.Request.UrlReferrer">Back To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <section class="col-md-12 connectedSortable ui-sortable">
+            <!-- Custom tabs (Charts with tabs)-->
+            <div class="nav-tabs-custom" style="cursor: move;">
+                <!-- Tabs within a box -->
+                <ul class="nav nav-tabs pull-right ui-sortable-handle">
+                    <li class="pull-left" onclick="window.location='/AppUser/Edit_BasicInformation?PK_User=@Model.Item1.PK_User'"><a href="#TargetTab" data-toggle="tab">Basic Information</a></li>
+                    <li class="pull-left active" onclick="window.location='/AppUser/Edit_ManageWebPermission?FK_User=@Model.Item1.PK_User'"><a href="#CurrentlyActiveTab" data-toggle="tab">Extra Menu Permission</a></li>
+                    <li class="pull-left" onclick="window.location='/AppUser/Edit_ManageUserAccessibleDepo?FK_User=@Model.Item1.PK_User'"><a href="#TargetTab" data-toggle="tab">Depo Permission</a></li>
+                </ul>
+                <div class="tab-content no-padding">
+                    <!-- Morris chart - Sales -->
+                    <div id="CurrentlyActiveTab" class="chart tab-pane active" style="position: relative; height: auto; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
+                        <form name="ThisForm" class="form-horizontal" method="post" action="/AppUser/Edit_ManageWebPermission">
+                            <input name="FK_AppUser" value="@Model.Item1.PK_User" type="text" class="form-control" style="display:none;">
+                            <input name="PermittedMenus" id="PermittedMenus" type="text" style="display:none;" />
+                            <div class="box-body col-md-12">
+                                <div class="form-group col-md-6">
+                                    <label class="col-md-4 control-label">Staff Id*</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.Item1.UniqueIDNumber, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_FullName"></b>
+                                        <script>
+                                            validatorArray.push(
+                                                function () {
+                                                    var check = $('inpit[name=UniqueIDNumber]').val();
+                                                    if (check == "") {
+                                                        formValidity = false;
+                                                        $('b[name=error_UniqueIDNumber]').html("UniqueIDNumber is required.");
+                                                    }
+                                                });
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                <div class="content">
+                                    <div class="form-group col-md-6">
+                                        <div class="row">
+                                            <table id="data_table" class="table table-bordered table-striped">
+                                                <tbody id="data_tbody">
+                                                    @foreach (var menu in Model.Item2.OrderBy(m => m.Sequence))
+                                                    {
+                                                        <tr id="tr_menu_@menu.PK_AppMenu" style="background-color:#3486eb;">
+                                                            <td colspan="2">
+                                                                @*&nbsp; <input type='checkbox' name='menuPermssionCehckBoxes' id="menuPermssionCehckBox_@menu.PK_AppMenu" value='@menu.PK_AppMenu' @(menu.IsAccessible == true ? "checked" : "") onchange="toggleSubMenu(@menu.PK_AppMenu)" /> &nbsp; @menu.VisibleName*@
+                                                                &nbsp; <input type='checkbox' name='menuCehckBox_@menu.PK_AppMenu' id="menuPermssionCehckBox_@menu.PK_AppMenu" value='@menu.PK_AppMenu' @(menu.IsAccessible == true ? "checked" : "") onchange="toggleSubMenu(@menu.PK_AppMenu)" /> &nbsp; @menu.VisibleName
+                                                                <span id="span_menuSequence_@menu.PK_AppMenu" style="@(menu.IsAccessible == true ? "" : "display:none;")">
+                                                                    &nbsp; Sequence: <input type='number' name='menuSequence_@menu.PK_AppMenu' value="@menu.Sequence" min="0" style="width:50px;" />
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr id="tr_submenu_@menu.PK_AppMenu" style="@(menu.IsAccessible == true ? "" : "display:none;")">
+                                                            <td style="background-color:#34c6eb;">
+                                                                <b>Submenu permission</b><br />
+                                                                @foreach (var subMenu in menu.SubMenuList.OrderBy(m => m.Sequence))
+                                                                {
+                                                                    <input type='checkbox' name='subMenuCehckBox_@subMenu.PK_AppSubMenu' value='@subMenu.PK_AppSubMenu' @(subMenu.IsAccessible == true ? "checked" : "") /> @subMenu.VisibleName @(subMenu.IsActiveParent != true ? " (Closed by admin)" : "") <br />
+                                                                }
+                                                            </td>
+                                                            <td style="background-color:#34dceb;">
+                                                                <b>Write permission</b><br />
+                                                                @foreach (var subMenu in menu.PermissionList.OrderBy(m => m.Sequence))
+                                                                {
+                                                                    <input type='checkbox' name='permissionCehckBox_@subMenu.PK_AppPermission' value='@subMenu.PK_AppPermission' @(subMenu.IsAccessible == true ? "checked" : "") /> @subMenu.VisibleName @(subMenu.IsActiveParent != true ? " (Closed by admin)" : "") <br />
+                                                                }
+                                                            </td>
+
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-footer">
+                                <input type="button" class="btn btn-facebook center-block" value="Save" onclick="TryUpdateMenuPermission()" />
+                            </div>
+                            <!-- /.box-footer -->
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </div>
+
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $('select').select2();
+    });
+    function toggleSubMenu(menu_id) {
+        if ($('#menuPermssionCehckBox_' + menu_id).prop("checked") == true) {
+            $("#tr_submenu_" + menu_id).show();
+            $("#span_menuSequence_" + menu_id).show();
+        }
+        else {
+            $("#tr_submenu_" + menu_id).hide();
+            $("#span_menuSequence_" + menu_id).hide();
+        }
+    }
+    function TryUpdateMenuPermission() {
+        //var checkedVals = $('input[name=menuPermssionCehckBoxes]:checked').map(function () {
+        //    return this.value;
+        //}).get();
+        //$("#PermittedMenus").val(checkedVals);
+        $('form[name=ThisForm]').submit();
+    }
+</script>

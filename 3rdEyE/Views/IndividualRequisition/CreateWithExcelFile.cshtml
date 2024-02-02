@@ -1,0 +1,75 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+}
+<section class="content-header">
+    <h1>
+        Create Individual Requisition With Excell file
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/IndividualRequisition/CreateWithexcelFile" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="box-header with-border">
+                                @if (!string.IsNullOrEmpty(ViewBag.errorMessage))
+                                {
+                                    <p>
+                                        @ViewBag.errorMessage
+                                    </p>
+                                }
+                            </div>
+                            <!-- /.box-header -->
+                            <!-- form start -->
+                            @*excelFile*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Excell File*</label>
+                                    <div class="col-md-8">
+                                        <input id="excelFile" name="excelFile" type="file" class="form-control">
+                                        <b class="errorMessage" data-category="errorMessage" name="error_excelFile"></b>
+                                    </div>
+                                </div>
+                                <script>
+                                    validatorArray.push(
+                                        function () {
+                                            var check = $("#excelFile").val();
+                                            if (check == "") {
+                                                formValidity = false;
+                                                $('b[name=error_excelFile]').html("Must be selected");
+                                            }
+                                            else {
+                                                var ext = $("#excelFile").val().split('.').pop().toLowerCase();
+                                                if ($.inArray(ext, ['xlsx', 'xls']) == -1) {
+                                                    $("#excelFile").val('');
+                                                    formValidity = false;
+                                                    $('b[name=error_excelFile]').html("Invalid file format. Only .xlsx is supported");
+                                                }
+                                            }
+                                        });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-footer">
+                        @*<a class="btn btn-default" href="/Event/Index">Back To List</a>*@
+                        <input type="button" class="btn btn-facebook center-block" value="Check Data & Submit" onclick="TrySubmit()" />
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+
+</section>

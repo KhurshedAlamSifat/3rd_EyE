@@ -1,0 +1,217 @@
+﻿@model IEnumerable<_3rdEyE.Models.ReceivingRequest>
+
+@{
+    ViewBag.Title = "Vehicle list";
+}
+
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+<!-- DataTablesExportable -->
+<!--<link href="~/Content/ExportableDatatable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/ExportableDatatable/buttons.dataTables.min.css" rel="stylesheet" />-->
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+@{
+    string ConvertToDateTimeString(DateTime? dateTime)
+    {
+        return String.Format("{0:yyyy/MM/dd HH:mm}", dateTime);
+    }
+    var now = DateTime.Now;
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Pending Receiving Request
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        @*<a class="btn btn-block btn-info btn-sm" href="/TemporaryVehicle/Create">Create</a>*@
+    </div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-header">
+                    <h3 class="box-title"></h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body" style="overflow-x:scroll; height: 500px; overflow-y: scroll;">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Tr ID</th>
+                                <th>Client</th>
+                                <th>Department</th>
+                                <th>CarrerType</th>
+                                <th>Assumed Receiving Time</th>
+                                <th>Note-Creation</th>
+                                <th>item 1</th>
+                                <th>item 2</th>
+                                <th>item 3</th>
+                                <th>item 4</th>
+                                <th>item 5</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="detail_tbody">
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.TrackingID</td>
+                                    <td>@item.AppUser.FullName</td>
+                                    <td>@item.LocationDepartment.DepartmentCode</td>
+                                    <td>@item.CarrerType</td>
+                                    <td>@item.AssumedGateReceivingDateTime</td>
+                                    <td>@item.Note_Creation</td>
+                                    <td>
+                                        <b>@item.Item1_Status</b> <br />
+                                        @item.Item1_Name - @item.Item1_Note_Creation - @item.Item1_GateReceivingDoccumentNumber - @item.Item1_Note_FinalReceival
+                                        @if (item.Item1_Status == "Rejected by client")
+                                        {
+                                            <br />
+                                            <a class="btn btn-twitter btn-xs" href="/ReceivingRequest/ConfirmGateOutForRejectedItem?PK_ReceivingRequest=@item.PK_ReceivingRequest&Item_id=1">Gate out</a>
+                                        }
+                                    </td>
+                                    <td>
+                                        <b>@item.Item2_Status</b> <br />
+                                        @item.Item2_Name - @item.Item2_Note_Creation - @item.Item2_GateReceivingDoccumentNumber - @item.Item2_Note_FinalReceival
+                                        @if (item.Item2_Status == "Rejected by client")
+                                        {
+                                            <br />
+                                            <a class="btn btn-twitter btn-xs" href="/ReceivingRequest/ConfirmGateOutForRejectedItem?PK_ReceivingRequest=@item.PK_ReceivingRequest&Item_id=2">Gate out</a>
+                                        }
+                                    </td>
+                                    <td>
+                                        <b>@item.Item3_Status</b> <br />
+                                        @item.Item3_Name - @item.Item3_Note_Creation - @item.Item3_GateReceivingDoccumentNumber - @item.Item3_Note_FinalReceival
+                                        @if (item.Item3_Status == "Rejected by client")
+                                        {
+                                            <br />
+                                            <a class="btn btn-twitter btn-xs" href="/ReceivingRequest/ConfirmGateOutForRejectedItem?PK_ReceivingRequest=@item.PK_ReceivingRequest&Item_id=3">Gate out</a>
+                                        }
+                                    </td>
+                                    <td>
+                                        <b>@item.Item4_Status</b> <br />
+                                        @item.Item4_Name - @item.Item4_Note_Creation - @item.Item4_GateReceivingDoccumentNumber - @item.Item4_Note_FinalReceival
+                                        @if (item.Item4_Status == "Rejected by client")
+                                        {
+                                            <br />
+                                            <a class="btn btn-twitter btn-xs" href="/ReceivingRequest/ConfirmGateOutForRejectedItem?PK_ReceivingRequest=@item.PK_ReceivingRequest&Item_id=4">Gate out</a>
+                                        }
+                                    </td>
+                                    <td>
+                                        <b>@item.Item5_Status</b> <br />
+                                        @item.Item5_Name - @item.Item5_Note_Creation - @item.Item5_GateReceivingDoccumentNumber - @item.Item5_Note_FinalReceival
+                                        @if (item.Item5_Status == "Rejected by client")
+                                        {
+                                            <br />
+                                            <a class="btn btn-twitter btn-xs" href="/ReceivingRequest/ConfirmGateOutForRejectedItem?PK_ReceivingRequest=@item.PK_ReceivingRequest&Item_id=5">Gate out</a>
+                                        }
+                                    </td>
+                                    <td>@item.Status</td>
+                                    <td>
+                                        @if (item.Item1_Status == "Pending" || item.Item2_Status == "Pending" || item.Item3_Status == "Pending" || item.Item3_Status == "Pending" || item.Item4_Status == "Pending" || item.Item5_Status == "Pending")
+                                        {
+                                            <a class="btn btn-block btn-twitter btn-sm" href="/ReceivingRequest/ReceiveByGate?id=@item.PK_ReceivingRequest"> Receive </a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+
+            </div>
+
+        </div>
+        <!-- /.box -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+<script>
+    function ConfirmGateOutForRejectedItem(PK_ReceivingRequest, Item_id) {
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/ReceivingRequest/ConfirmGateOutForRejectedItem",
+            data: JSON.stringify({ PK_ReceivingRequest: PK_ReceivingRequest, Item_id: Item_id }),
+            success: function (data) {
+                console.log(data);
+                if (data.status == "confirmed") {
+                    $('#' + "button_conf_gate_out_" + PK_ReceivingRequest + "_" + Item_id).hide();
+                } else {
+                    alert(data.message);
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call");
+            }
+        });
+    }
+</script>
+
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+<script>
+    $(function () {
+        //$('select').select2();
+        //$('.form_datetime').datetimepicker({
+        //    format: 'yyyy-mm-dd HH:ii P',
+        //    todayBtn: 1,
+        //    autoclose: 1,
+        //});
+    });
+</script>
+<!-- DataTablesExportable -->
+<!--<script src="~/Scripts/Custom/DataTableExportable/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.flash.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/jszip.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/pdfmake.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/vfs_fonts.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.html5.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.print.min.js"></script>-->
+<!-- DataTables -->
+<script src="~/Theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/Theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script>
+    @*function scroll(speed) {
+        $('html, body').animate({ scrollTop: $(document).height() - $(window).height() }, speed, function () {
+            $(this).animate({ scrollTop: 0 }, speed);
+        });
+    }
+    speed = 10000 * @Model.Count();
+    scroll(speed);
+    setInterval(function () { scroll(speed) }, speed * 2);*@
+</script>
+<script>
+    //window.setTimeout(function () {
+    //    location.reload();
+    //}, 1000 * 60);
+    //$(function () {
+    //    $('#data_table').DataTable({
+    //        //"ordering": true,
+    //        "paging": false,
+    //        dom: 'Bfrtip',
+    //        buttons: [
+    //            'copy', 'csv', 'excel', 'pdf', 'print'
+    //        ]
+    //    });
+    //});
+    $('#data_table').DataTable({ "ordering": false, "paging": false });
+</script>
+
+

@@ -1,0 +1,357 @@
+﻿@model _3rdEyE.Models.VehicleSharingDemand
+@{
+    ViewBag.Title = "";
+}
+
+@*UberStyle-start*@
+<style>
+    .uber {
+        width: 20px;
+        height: 50px;
+        position: absolute;
+        z-index: 100;
+        margin-top: 0.25em;
+    }
+
+    .u-green {
+        height: 5px;
+        width: 5px;
+        top: -24px;
+        left: 7px;
+        border-radius: 5px;
+        background-color: green;
+        position: absolute;
+        z-index: 100;
+    }
+
+    .u-red {
+        background-color: red;
+        border-radius: 5px;
+        height: 5px;
+        left: 7px;
+        position: absolute;
+        top: 35px;
+        width: 5px;
+        z-index: 100;
+    }
+
+    .u-line {
+        background-color: #e3e3e3;
+        height: 54px;
+        left: 9px;
+        position: absolute;
+        top: -18px;
+        width: 1px;
+        z-index: 100;
+    }
+</style>
+@*UserStyle-end*@
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Create Vehicle Requisition
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        <a class="btn btn-block btn-info btn-sm" href="/VehicleSharing/DemandIndexBy_Client">Go To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/VehicleSharing/DemandCreate  " enctype="multipart/form-data">
+        <input type="text" name="DistanceGoogle" id="DistanceGoogle" value="0" style="display:none;"/>
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Todays Etry - @ViewBag.AlreadyOpenedCount</h3>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5">
+                                    @*FK_Depo_From*@
+                                    <div class="box-body col-md-12" style="border:1px dotted green;">
+                                        <div class="form-group col-md-5">
+                                            <div class="input-group col-md-12">
+                                                @Html.DropDownList("FK_Depo_From", ViewBag.Locations1 as SelectList, "From Location", new { @class = "form-control", onchange = "GetDepoLocations()" })
+                                                @*<div class="uber">
+                                                        <div class="u-green"></div>
+                                                        <div class="u-line"></div>
+                                                        <div class="u-red"></div>
+                                                    </div>*@
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <div class="input-group col-md-12">
+                                                @Html.EditorFor(model => model.StartingLocation, new { htmlAttributes = new { @class = "form-control", placeholder = "From Location" } })
+                                            </div>
+                                        </div>
+                                        <b class="errorMessage col-md-1" data-category="errorMessage" name="error_FK_Depo_From"></b>
+                                        <script>
+                                            validatorArray.push(
+                                                function () {
+                                                    var check = $('select[name=FK_Depo_From]').val();
+                                                    var check2 = $('input[name=StartingLocation]').val();
+                                                    if (check == "" && check2 == "") {
+                                                        formValidity = false;
+                                                        $('b[name=error_FK_Depo_From]').html("*required");
+                                                    }
+                                                });
+                                        </script>
+                                    </div>
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <div class="input-group col-md-12">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*FK_Depo_To*@
+                                    <div class="box-body col-md-12" style="border:1px dotted red;">
+                                        <div class="form-group col-md-5">
+                                            <div class="input-group col-md-12">
+                                                @Html.DropDownList("FK_Depo_To", ViewBag.Locations2 as SelectList, "To Location", new { @class = "form-control", onchange = "GetDepoLocations()" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <div class="input-group col-md-12">
+                                                @Html.EditorFor(model => model.FinishingLocation, new { htmlAttributes = new { @class = "form-control", placeholder = "To Location" } })
+                                            </div>
+                                        </div>
+                                        <b class="errorMessage col-md-1" data-category="errorMessage" name="error_FK_Depo_To"></b>
+                                        <script>
+                                            validatorArray.push(
+                                                function () {
+                                                    var check = $('select[name=FK_Depo_To]').val();
+                                                    var check2 = $('input[name=FinishingLocation]').val();
+                                                    if (check == "" && check2 == "") {
+                                                        formValidity = false;
+                                                        $('b[name=error_FK_Depo_To]').html("*required");
+                                                    }
+                                                });
+                                        </script>
+                                    </div>
+                                    <b class="errorMessage col-md-12" data-category="errorMessage" name="distance_message"></b>
+                                    @*FK_RequisitionVehicleType*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-10">
+                                            <div class="input-group col-md-12">
+                                                @Html.DropDownList("FK_RequisitionVehicleType", ViewBag.RequisitionVehicleTypes as SelectList, "Please Enter Vehicle Type", new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <b class="errorMessage col-md-2" data-category="errorMessage" name="error_FK_RequisitionVehicleType"></b>
+                                        <script>
+                                            validatorArray.push(
+                                                function () {
+                                                    var check = $('select[name=FK_RequisitionVehicleType]').val();
+                                                    if (check == "") {
+                                                        formValidity = false;
+                                                        $('b[name=error_FK_RequisitionVehicleType]').html("*required");
+                                                    }
+                                                });
+                                        </script>
+                                    </div>
+                                    @*WantedCount*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-10">
+                                            <div class="input-group col-md-12">
+                                                @Html.EditorFor(model => model.WantedCount, new { htmlAttributes = new { @class = "form-control", placeholder = "How Many?" } })
+                                            </div>
+                                        </div>
+                                        <b class="errorMessage col-md-2" data-category="errorMessage" name="error_WantedCount"></b>
+                                        <script>
+                                            validatorArray.push(
+                                                function () {
+                                                    var check = $('input[name=WantedCount]').val();
+                                                    if (check == "") {
+                                                        formValidity = false;
+                                                        $('b[name=error_WantedCount]').html("*required");
+                                                    }
+                                                });
+                                        </script>
+                                    </div>
+                                    @*PossibleJourneyStartDateTime*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group input-group col-md-10">
+                                            <div class="col-md-12 input-append date form_datetime" @*data-date="1979-09-16T05:25:07Z"*@ data-date-format="dd MM yyyy - HH:ii p" data-link-field="dtp_input1">
+                                                <input id="PossibleJourneyStartDateTime" name="PossibleJourneyStartDateTime" class="form-control col-md-12" type="text" placeholder="When?" value="" readonly="readonly" style="background-color: white;">
+                                                <span class="add-on"><i class="icon-remove"></i></span>
+                                                <span class="add-on"><i class="icon-th"></i></span>
+                                            </div>
+                                            <input type="hidden" id="dtp_input1" value="" style="display:none;" /><br />
+                                        </div>
+                                        <b class="errorMessage col-md-2" data-category="errorMessage" name="error_PossibleJourneyStartDateTime"></b>
+                                        <script>
+                                            validatorArray.push(
+                                                function () {
+                                                    var check = $('input[name=PossibleJourneyStartDateTime]').val();
+                                                    if (check == "") {
+                                                        formValidity = false;
+                                                        $('b[name=error_PossibleJourneyStartDateTime]').html("*required");
+                                                    }
+                                                });
+                                        </script>
+                                    </div>
+                                    @*ClientNote*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-10">
+                                            <div class="input-group col-md-12">
+                                                @Html.EditorFor(model => model.ClientNote, new { htmlAttributes = new { @class = "form-control", placeholder = "Note" } })
+                                            </div>
+                                        </div>
+                                        <b class="errorMessage col-md-2" data-category="errorMessage" name="error_Note"></b>
+                                    </div>
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-10">
+                                            <input type="button" class="btn btn-facebook" value=" Save " onclick="TrySubmit()" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-7" id="map" style="height:580px;"></div>
+                                <script async defer
+                                            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDVkwHNr_8HlH6zM8-mIOnKxErJKLHEpo0&callback=initMap">
+                                    </script>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-footer">
+                        @*<input type="button" class="btn btn-facebook left" value="Save" onclick="TrySubmit()" />*@
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+
+</section>
+<!-- /.content -->
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        //$("#PossibleJourneyStartDateTime").datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true, yearRange: '1990:2023' });
+        $("#FK_Depo_From").select2();
+        $("#FK_Depo_To").select2();
+        $("#FK_RequisitionVehicleType").select2();
+        $("#VehicleCapacity").select2();
+
+
+        $("#FK_Depoes").select2({
+            placeholder: "Additional depoes.",
+            allowClear: true
+        });
+        //$("#FK_Depo_From").select2();
+    });
+</script>
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+<script type="text/javascript">
+    $('.form_datetime').datetimepicker({
+        //format: 'yyyy-mm-dd HH:ii P',
+        format: 'yyyy-mm-dd HH:ii P',
+        //setDate: new Date(),
+        //weekStart: 1,
+        todayBtn: 1,
+        autoclose: 1,
+        //todayHighlight: 1,
+        //startView: 2,
+        //forceParse: 0,
+        //showMeridian: 0
+        startDate: '+0d',
+    });
+</script>
+<script>
+    function GetDepoLocations() {
+        $('b[name=distance_message]').html("");
+        var FK_Depo_From = $('select[name=FK_Depo_From]').val();
+        if (FK_Depo_From == '') {
+            return;
+        }
+        var FK_Depo_To = $('select[name=FK_Depo_To]').val();
+        if (FK_Depo_To == '') {
+            return;
+        }
+        if (FK_Depo_From == FK_Depo_To) {
+            formValidity = false;
+            $('b[name=distance_message]').html("Same depot can not selected.");
+            return;
+        }
+
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/VehicleSharing/GetDepoLocations/",
+            data: JSON.stringify({ FK_Depo_From: FK_Depo_From, FK_Depo_To: FK_Depo_To }),
+            success: function (data) {
+                if (data.Depo_From.Latitude != null && data.Depo_From.Longitude != null && data.Depo_To.Latitude != null && data.Depo_To.Longitude != null) {
+                    //RefreshMap(data.Depo_From, data.Depo_To);
+                    calculateAndDisplayRoute(data.Depo_From.Latitude, data.Depo_From.Longitude, data.Depo_To.Latitude, data.Depo_To.Longitude);
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: relodeFK_VehicleBrandModel()");
+            }
+        });
+    }
+</script>
+
+<script>
+    var directionsService;
+    var directionsDisplay;
+    function initMap() {
+        directionsService = new google.maps.DirectionsService;
+        directionsDisplay = new google.maps.DirectionsRenderer;
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 8,
+            center: { lat: 23.6850, lng: 90.3563 }
+        });
+        directionsDisplay.setMap(map);
+
+        //document.getElementById('submit').addEventListener('click', function () {
+        //    calculateAndDisplayRoute();
+        //});
+    }
+
+    function calculateAndDisplayRoute(Depo_From_Latitude, Depo_From_Longitude, Depo_To_Latitude, Depo_To_Longitude) {
+        var start = new google.maps.LatLng(Depo_From_Latitude, Depo_From_Longitude);
+        var end = new google.maps.LatLng(Depo_To_Latitude, Depo_To_Longitude);
+        directionsService.route({
+            origin: start,
+            destination: end,
+            //# waypoints: waypts, //waypoint are the internal loations through the road map will go
+            optimizeWaypoints: true,
+            travelMode: 'DRIVING'
+        }, function (response, status) {
+            if (status === 'OK') {
+                directionsDisplay.setDirections(response);
+                var route = response.routes[0];
+                //console.log(route.legs[0].start_address);
+                //console.log(route.legs[0].end_address);
+                //console.log(route.legs[0].distance.text);
+                $('b[name=distance_message]').html("Approximate distance: " + route.legs[0].distance.text);
+                console.log(route.legs[0].distance);
+                var DistanceGoogle = (route.legs[0].distance.value / 1000).toFixed(2);
+                $('b[name=distance_message]').html("Approximate distance: " + DistanceGoogle + " KM");
+                $('#DistanceGoogle').val(DistanceGoogle);
+            } else {
+                $('#DistanceGoogle').val('');
+                $('b[name=distance_message]').html("Approximate distance is not countable for these locations.");
+            }
+        });
+    }
+</script>
+
+
+
+

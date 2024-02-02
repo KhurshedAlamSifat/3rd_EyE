@@ -1,0 +1,232 @@
+﻿
+@{
+    ViewBag.Title = "Vehicle Movement History ";
+}
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Freezer Van Temperature History
+        <small></small>
+    </h1>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-body col-md-12">
+                    <div class="form-group col-md-6">
+                        <label class="col-md-2 control-label">Vehicles:</label>
+                        <div class="col-md-10">
+                            @Html.DropDownList("FK_Vehicles", ViewBag.Vehicles as SelectList, "Select", new { @class = "form-control", multiple = "multiple" })
+                        </div>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="col-md-3 control-label">Starting Date:</label>
+                        <div class="input-group col-md-9">
+                            <div class="col-md-12 input-append date form_datetime" @*data-date="1979-09-16T05:25:07Z"*@ data-date-format="dd MM yyyy - HH:ii p" data-link-field="dtp_input1">
+                                <input id="StartingDate" name="StartingDate" class="form-control col-md-12" type="text" value="" readonly="readonly" style="background-color: white;">
+                                <span class="add-on"><i class="icon-remove"></i></span>
+                                <span class="add-on"><i class="icon-th"></i></span>
+                            </div>
+                            <input type="hidden" id="dtp_input1" value="" style="display:none;" /><br />
+                        </div>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="col-md-3 control-label">Einding Date:</label>
+                        <div class="input-group col-md-9">
+                            <div class="col-md-12 input-append date form_datetime" @*data-date="1979-09-16T05:25:07Z"*@ data-date-format="dd MM yyyy - HH:ii p" data-link-field="dtp_input1">
+                                <input id="EndingDate" name="EndingDate" class="form-control col-md-12" type="text" value="" readonly="readonly" style="background-color: white;">
+                                <span class="add-on"><i class="icon-remove"></i></span>
+                                <span class="add-on"><i class="icon-th"></i></span>
+                            </div>
+                            <input type="hidden" id="dtp_input2" value="" style="display:none;" /><br />
+                        </div>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label class="col-md-4 control-label">Time lap:</label>
+                        <div class="col-md-8">
+                            <select name="IntervalMinute" class="form-control">
+                                <option value="5">5 Minute</option>
+                                <option value="10">10 Minute</option>
+                                <option value="30">30 Minute</option>
+                                <option value="60">1 Hour</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body col-md-12">
+                    <button class="btn btn-facebook" onclick="getData()">Get Data</button>
+                    <button class="btn btn-facebook" onclick="downloadExcel()">Download (Current)</button>
+                </div>
+                <div class="box-body col-md-12">
+                    <div class="form-group col-md-5">
+                        <label class="col-md-3 control-label">Max Temperature:</label>
+                        <div class="col-md-2">
+                            <input id="MaxTemperature" class="form-control" />
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-facebook" onclick="filterTemperature()">Filter / Refresh</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.col -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Vehicle Temperature History </h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr style="background-color:#3B5998; color:white;">
+                                <td>Reg.No</td>
+                                <td>DateTime</td>
+                                <td>Temperature (Deg.Celsius)</td>
+                            </tr>
+                        </thead>
+                        <tbody id="data_tbody">
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+@*MODAL Company START*@
+<div id="modalPreload" class="modal  modal-" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content" style="background-color:transparent; margin-top:200px;">
+            <img src="~/Content/Images/Preload.gif" />
+        </div>
+    </div>
+</div>
+@*MODAL Company END*@
+<!-- /.content -->
+<!-- DataTables -->
+<script src="~/Theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/Theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<!-- page script -->
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+<script>
+    $(function () {
+        //$('#data_table').DataTable({ "scrollX": true });
+        $('.form_datetime').datetimepicker({
+            //format: 'yyyy-mm-dd HH:ii P',
+            format: 'yyyy-mm-dd HH:ii P',
+            //setDate: new Date(),
+            //weekStart: 1,
+            //todayBtn: 1,
+            autoclose: 1,
+            //todayHighlight: 1,
+            //startView: 2,
+            //forceParse: 0,
+            //showMeridian: 0
+            //startDate: '+0d'
+        });
+    });
+</script>
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $('select[name=FK_Vehicles]').select2();
+    });
+</script>
+<script>
+    function getData() {
+        var FK_Vehicles_strings = $('select[name=FK_Vehicles]').val();
+        var StartingDate = $('Input[name=StartingDate]').val();
+        var EndingDate = $('Input[name=EndingDate]').val();
+        var IntervalMinute = $('select[name=IntervalMinute]').val();
+        if (FK_Vehicles_strings == '' || StartingDate == '' || EndingDate == '') {
+            alert("Please, Select vehicle, starting date and ending date.");
+            $('#data_tbody').html("");
+            return;
+        }
+        $("#modalPreload").css("display", "block");
+        var FK_Vehicles = "";
+        for (var i = 0; i < FK_Vehicles_strings.length; i++) {
+            FK_Vehicles = FK_Vehicles + FK_Vehicles_strings[i] + ",";
+        }
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/Report/GetTemperatureHistory/",
+            data: JSON.stringify({ FK_Vehicles: FK_Vehicles, StartingDate: StartingDate, EndingDate: EndingDate, IntervalMinute: IntervalMinute }),
+            success: function (list) {
+                if (list.length == 0) {
+                    alert("No data is found for given condition.");
+                }
+                console.log(list);
+                $('#data_tbody').html("");
+                var res = "";
+                for (var i = 0; i < list.length; i++) {
+                    res = res + "<tr>";
+                    res = res + "<td>" + list[i].RegistrationNumber + "</td>";
+                    res = res + "<td>" + list[i].UpdateTime + "</td>";
+                    res = res + "<td>" + list[i].Temperature + " </td>";
+                    res = res + "</tr>";
+                }
+                $('#data_tbody').html(res);
+                $("#modalPreload").css("display", "none");
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                alert('Too much data to load table. Please, decrease the date-time range and try again.');
+                console.log("Err on call: getData()");
+                $("#modalPreload").css("display", "none");
+            }
+        });
+    }
+    function downloadExcel() {
+        tableToExcel('data_table', 'Vehicle Movement History ', 'Vehicle Movement History .xls')
+    }
+    function filterTemperature() {
+        var MaxTemperature = $("#MaxTemperature").val();
+        if (MaxTemperature == '') {
+            $('#data_tbody > tr > td').each(function () {
+                $(this).css({
+                    "color": "black",
+                });
+            });
+        } else {
+            $('#data_tbody > tr').each(function () {
+                $(this).children('td').each(function (i) {
+                    if (i == 2) {
+                        var temp = Number($(this).text());
+                        if (temp > MaxTemperature) {
+                            $(this).parent().css({
+                                "color": "red",
+                            });
+                        } else {
+                            $(this).parent().css({
+                                "color": "black",
+                            });
+                        }
+                    }
+                });
+            });
+        }
+    }
+</script>
+

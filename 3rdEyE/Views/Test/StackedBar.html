@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+    <style>
+        canvas {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <div style="width: 100%;">
+        <canvas id="ctx" height="200" width="1000"></canvas>
+    </div>
+    <script>
+        var ctx = document.getElementById("ctx").getContext("2d");
+        var chart = new Chart(ctx, {
+            type: 'horizontalBar',
+            data: {
+                labels: [''], // responsible for how many bars are gonna show on the chart
+                datasets: [{
+                    label: 'Production',
+                    data: [3],
+                    backgroundColor: '#7ee098'
+                }, {
+                    label: 'Maintenance(Scheduled)',
+                    data: [1.5],
+                    backgroundColor: '#e08e7e'
+                }, {
+                    label: 'Production',
+                    data: [2],
+                    backgroundColor: '#7ee098'
+                },
+                {
+                    label: 'Not found',
+                    data: [1],
+                    backgroundColor: '#b0a4a2'
+                }, {
+                    label: 'Maintenance(Unscheduled)',
+                    data: [2],
+                    backgroundColor: '#e65b40'
+                }]
+            },
+            options: {
+                responsive: false,
+                legend: {
+                    display: false
+                },
+                scales: {
+                    xAxes: [{
+                        stacked: true, // this should be set to make the bars stacked
+                        ticks: {
+                            callback: function (value, index, values) {
+                                switch (value) {
+                                    case 0: return "7 AM";
+                                    case 1: return "8 AM";
+                                    case 2: return "9 AM";
+                                    case 3: return "10 AM";
+                                    case 4: return "11 AM";
+                                    case 5: return "12 PM";
+                                    case 6: return "1 PM";
+                                    case 7: return "2 PM";
+                                    case 8: return "3 PM";
+                                    case 9: return "4 PM";
+                                    case 10: return "5 PM";
+                                    case 11: return "6 PM";
+                                    case 12: return "7 PM";
+                                    default: return value;
+                                }
+                            },
+                            fontColor: "#000",
+                            fontSize: 15,
+                        },
+                        gridLines: {
+                            //display: false,
+                        },
+                    }],
+                    yAxes: [{
+                        stacked: true
+                    }]
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function (tooltipItem, data) {
+                            //return data.datasets[tooltipItem.datasetIndex].label + ": " + tooltipItem.yLabel;
+                            return data.datasets[tooltipItem.datasetIndex].label + ": " + data.datasets[tooltipItem.datasetIndex].data[0] + ' Hours';
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

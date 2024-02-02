@@ -1,0 +1,301 @@
+﻿@model IEnumerable<_3rdEyE.Models.VehicleSharingDemand>
+@{
+    ViewBag.Title = "";
+}
+
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Vehicle Requisition : Approver View
+        <small></small>
+    </h1>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-body col-md-12">
+                    <div class="form-group col-md-3">
+                        <label class="col-md-4 control-label">Starting Date:</label>
+                        <div class="input-group col-md-8">
+                            <div class="col-md-12 input-append date form_datetime" data-link-field="dtp_input1">
+                                <input id="StartingDate" name="StartingDate" class="form-control col-md-12" type="text" value="@ViewBag.StartingDate" readonly="readonly" style="background-color: white;">
+                                <span class="add-on"><i class="icon-remove"></i></span>
+                                <span class="add-on"><i class="icon-th"></i></span>
+                            </div>
+                            <input type="hidden" id="dtp_input1" value="" style="display:none;" /><br />
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label class="col-md-4 control-label">Ending Date:</label>
+                        <div class="input-group col-md-8">
+                            <div class="col-md-12 input-append date form_datetime" data-link-field="dtp_input1">
+                                <input id="EndingDate" name="EndingDate" class="form-control col-md-12" type="text" value="@ViewBag.EndingDate" readonly="readonly" style="background-color: white;">
+                                <span class="add-on"><i class="icon-remove"></i></span>
+                                <span class="add-on"><i class="icon-th"></i></span>
+                            </div>
+                            <input type="hidden" id="dtp_input2" value="" style="display:none;" /><br />
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="col-md-2 control-label">Raiser:</label>
+                        <div class="col-md-6">
+                            @Html.DropDownList("FK_AppUser_Client", ViewBag.Clients as SelectList, "Select", new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body col-md-12">
+                    <div class="form-group col-md-3">
+                        <label class="col-md-4 control-label">From:</label>
+                        <div class="col-md-8">
+                            @Html.DropDownList("FK_FromLocation", ViewBag.FromLocations as SelectList, "Select", new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label class="col-md-4 control-label">To:</label>
+                        <div class="col-md-8">
+                            @Html.DropDownList("FK_ToLocation", ViewBag.ToLocations as SelectList, "Select", new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body col-md-12">
+                    <div class="form-group col-md-4">
+                        <button class="btn btn-facebook" onclick="getData()">Get Data</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.col -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Inter Company Vehicle Requisition</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="data_table" class="table table-bordered table-striped" style="font-size:15px;">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Tracking ID
+                                </th>
+                                <th>
+                                    Creation Date Time
+                                </th>
+                                <th>
+                                    Raiser:Depo:Phone
+                                </th>
+                                <th>
+                                    From
+                                </th>
+                                <th>
+                                    To
+                                </th>
+                                <th>
+                                    Repoting Time
+                                </th>
+                                <th>
+                                    Vehicle Type
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                                <th>
+                                    Reuired:Accepted:Assigned
+                                </th>
+                                <th>
+                                    Note By Raiser
+                                </th>
+                                <th>
+                                    Note By Approver
+                                </th>
+                                <th>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="detail_tbody">
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.TrackingID
+                                    </td>
+                                    <td>
+                                        @item.CreatedAt
+                                    </td>
+                                    <td>
+                                        @item.AppUser.FullName : @item.AppUser.Depo.Name :@item.AppUser.ContactNumber
+                                    </td>
+                                    <td>
+                                        @item.Depo.Name &nbsp; @item.StartingLocation
+                                    </td>
+                                    <td>
+                                        @item.Depo1.Name &nbsp; @item.FinishingLocation
+                                    </td>
+                                    <td>
+                                        @item.PossibleJourneyStartDateTime
+                                    </td>
+                                    <td>
+                                        @item.RequisitionVehicleType.Title_English
+                                    </td>
+                                    <td>
+                                        @(item.Status == 0 ? "Pending" : item.Status == 1 ? "Approved" : item.Status == 1 ? "Rejected" : item.Status == 2 ? "Assigned" : item.Status == 3 ? "Assigned Vehicle" : "N/A")
+                                    </td>
+                                    <td align="center">
+                                        @item.WantedCount &nbsp; : &nbsp;
+                                        @if (item.Status == 0)
+                                        {
+                                            <input data-category="AcceptedCounts" id="@item.PK_VehicleSharingDemand" style="width:25px;" value="@item.WantedCount" />
+                                        }
+                                        else
+                                        {
+                                            @item.AcceptedCount
+                                        }    : &nbsp;&nbsp;
+                                        @*@(item.InterCompanyRequisition_InternalVehicle.Count() + item.InterCompanyRequisition_ExternalVehicle.Count() + item.InterCompanyRequisition_ExternalTroller.Count())*@
+                                    </td>
+                                    <td>
+                                        @item.ClientNote
+                                    </td>
+                                    <td>
+                                        @item.ApproverNote
+                                    </td>
+                                    <td>
+                                        <a title="View" href="/VehicleSharing/DemandView?id=@item.PK_VehicleSharingDemand">view</a>
+                                        @if (item.Status == 0)
+                                        {
+                                            <text>&nbsp;</text><a title="Edit" href="/VehicleSharing/DemandApprove?id=@item.PK_VehicleSharingDemand">Accept</a><text>&nbsp;&nbsp;</text>
+                                        }
+                                        @*@if (item.Status == 1 && item.PossibleJourneyStartDateTime < DateTime.Now.AddDays(2))
+                                            {
+                                                <text>&nbsp;</text><a title="Edit" href="/VehicleSharing/VehicleSharingCreate?id=@item.PK_VehicleSharingDemand">Assign</a><text>&nbsp;&nbsp;</text>
+                                            }*@
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="box-body col-md-12">
+                    <form name="ThisForm" class="form-horizontal" method="post" action="/VehicleSharing/DemandBulkApprove" enctype="multipart/form-data" style="">
+                        <input id="AcceptedCounts" name="AcceptedCounts" style="display:none;" />
+                        <input id="PK_VehicleSharingDemands" name="PK_VehicleSharingDemands" style="display:none;" />
+                    </form>
+                    <div class="form-group col-md-10">
+                        <input type="button" class="btn btn-facebook pull-right" value="Approve All" onclick="TryBulkAccept()" />
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- DataTablesExportable -->
+<script src="~/Scripts/Custom/DataTableExportable/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.flash.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/jszip.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/pdfmake.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/vfs_fonts.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.html5.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.print.min.js"></script>
+<!-- page script -->
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $('.form_datetime').datetimepicker({
+            format: 'yyyy-mm-dd HH:ii P',
+            todayBtn: 1,
+            autoclose: 1,
+        });
+        $('select').select2();
+        @if (Model.Count() > 0)
+        {
+        <text>
+        makeDataTable();
+        </text>
+        }
+    });
+</script>
+<script>
+    function makeDataTable() {
+        var table = $('#data_table').DataTable({
+            paging: false,
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'pdfHtml5',
+                    orientation: 'landscape',
+                    pageSize: 'LEGAL'
+                },
+                {
+                    extend: 'print',
+                    title: 'Event Report [@ViewBag.StartingDate - @ViewBag.EndingDate]',
+                    customize: function (win) {
+                        $(win.document.body)
+                            .css('font-size', '10pt');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', '15px');
+                            }
+                },
+                {
+                    extend: 'excel'
+                }
+            ],
+        });
+    }
+</script>
+<script>
+    function getData() {
+        var StartingDate = $('Input[name=StartingDate]').val();
+        var EndingDate = $('Input[name=EndingDate]').val();
+        if (StartingDate == '' || EndingDate == '') {
+            alert("Please, Select starting date and ending date.");
+            return;
+        }
+        var FK_AppUser_Client = $('#FK_AppUser_Client').find(":selected").val();
+        var FK_FromLocation = $('#FK_FromLocation').find(":selected").val();
+        var FK_ToLocation = $('#FK_ToLocation').find(":selected").val();
+        window.location = '/VehicleSharing/DemandIndexBy_Approver?StartingDate=' + StartingDate + '&EndingDate=' + EndingDate
+            + '&FK_AppUser_Client=' + FK_AppUser_Client + '&FK_FromLocation=' + FK_FromLocation + '&FK_ToLocation=' + FK_ToLocation;
+    }
+
+    function TryBulkAccept() {
+        var AcceptedCounts = $('Input[data-category=AcceptedCounts]');
+        if (AcceptedCounts == undefined || AcceptedCounts.length == 0) {
+            return;
+        }
+        var con = confirm("Are you sure to confirm " + AcceptedCounts.length + " requisition?");
+        if (con) {
+            var _PK_VehicleSharingDemands = "";
+            var _AcceptedCounts = "";
+            for (var i = 0; i < AcceptedCounts.length; i++) {
+                _PK_VehicleSharingDemands = _PK_VehicleSharingDemands + AcceptedCounts[i].id + ',';
+                _AcceptedCounts = _AcceptedCounts + AcceptedCounts[i].value + ',';
+            }
+            _PK_VehicleSharingDemands = _PK_VehicleSharingDemands.substr(0, _PK_VehicleSharingDemands.length - 1);
+            _AcceptedCounts = _AcceptedCounts.substr(0, _AcceptedCounts.length - 1);
+
+            $('#PK_VehicleSharingDemands').val(_PK_VehicleSharingDemands);
+            $('#AcceptedCounts').val(_AcceptedCounts);
+            TrySubmit();
+        }
+    }
+</script>

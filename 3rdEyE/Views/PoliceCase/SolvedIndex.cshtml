@@ -1,0 +1,275 @@
+﻿@model IEnumerable<_3rdEyE.Models.PoliceCase>
+@{
+    var RolePermissionList = (List<_3rdEyE.ManagingTools.Permission>)Session["RolePermissionList"];
+}
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+@*DateTimePicker*@
+<link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+<!-- DataTablesExportable -->
+<link href="~/Content/ExportableDatatable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/ExportableDatatable/buttons.dataTables.min.css" rel="stylesheet" />
+<style>
+    tfoot input {
+        width: 100%;
+        padding: 3px;
+        box-sizing: border-box;
+    }
+</style>
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Solved Police Case List
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<a class="btn btn-block btn-facebook btn-sm" href="/VehicleTrip/Create_DHT">Create New</a>*@
+    </div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-body col-md-12">
+                    <div class="form-group col-md-4">
+                        <label class="col-md-4 control-label">Vehicle</label>
+                        <div class="input-group col-md-8">
+                            @Html.DropDownList("FK_Vehicle", ViewBag.Vehicles as SelectList, "Select", new { @class = "form-control" })
+                            <b class="errorMessage" data-category="errorMessage" name="error_FK_Vehicle"></b>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="col-md-4 control-label">Date From:</label>
+                        <div class="input-group col-md-8">
+                            <input class="form-control form_datetime" name="StartingDate" id="StartingDate" value="@ViewBag.StartingDate" />
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="col-md-4 control-label">Date To:</label>
+                        <div class="input-group col-md-8">
+                            <input class="form-control form_datetime" name="EndingDate" id="EndingDate" value="@ViewBag.EndingDate" />
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body col-md-12">
+                    <button class="btn btn-facebook" onclick="getData()">Get Data</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-header">
+                    <h3 class="box-title">Solved Police Case List</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>PRG Type</th>
+                                <th>Depo</th>
+                                <th>Vehicle</th>
+                                <th>Accused Driver</th>
+                                <th>Case ID</th>
+                                <th>Law(s)</th>
+                                <th class="data_table_hidden_col">Police ContactNumber</th>
+                                <th class="data_table_hidden_col">Location</th>
+                                <th class="data_table_hidden_col">Type Of Fault</th>
+                                <th class="data_table_hidden_col">Adv.Company</th>
+                                <th class="data_table_hidden_col">Note</th>
+                                <th>Issue Date</th>
+                                <th class="data_table_hidden_col">Alert Date</th>
+                                <th class="data_table_hidden_col">SolvedEntryGivenAt</th>
+                                <th>Is Paid</th>
+                                <th>Is Solved</th>
+                                <th class="data_table_hidden_col">PaidEntryGivenAt</th>
+                                <th class="data_table_hidden_col">Primary Amount</th>
+                                <th class="data_table_hidden_col">Other Amount</th>
+                                <th class="data_table_hidden_col">Other Note</th>
+                                <th>Total Amount</th>
+                                <th class="data_table_hidden_col">Created At</th>
+                                <th class="data_table_hidden_col">Solved On</th>
+                                <th class="data_table_hidden_col">Solved Note</th>
+                                <th>Dhara(s)</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(modelItem => item.Vehicle.Depo.PRG_Type)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Vehicle.Depo.Name)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Vehicle.RegistrationNumber)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.AccusedDriverStaffID) &nbsp; @Html.DisplayFor(modelItem => item.AccusedDriverName)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.CaseID)</td>
+                                    <td>
+                                        @foreach (var law in item.PoliceCase_PoliceCaseLaw)
+                                        {
+                                            @law.FK_PoliceCaseLaw <text>,</text>
+                                        }
+                                    </td>
+                                    <td>@Html.DisplayFor(modelItem => item.PoliceContactNumber)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.District.Name) &nbsp; @Html.DisplayFor(modelItem => item.Upazila.Name) </td>
+                                    <td>@Html.DisplayFor(modelItem => item.TypeOfFault)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Company.Name)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Note)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.IssueDate)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.AlertDate)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.SolvedEntryGivenAt)</td>
+                                    <td>@(item.IsPaid == true? "Yes":"No")</td>
+                                    <td>@(item.IsSolved == true? "Yes":"No")</td>
+                                    <td>@Html.DisplayFor(modelItem => item.PaidEntryGivenAt)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.PrimaryAmount)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.OtherAmount)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.OtherNote)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.TotalAmount)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.CreatedAt)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.SolvedOn)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.SolvedNote)</td>
+                                    <td>
+                                        @foreach (var law in item.PoliceCase_PoliceCaseLaw)
+                                        {
+                                            Html.DisplayFor(m => law.PoliceCaseLaw);
+                                        }
+                                    </td>
+                                    <td>
+                                        <a href="/PoliceCase/View?id=@item.PK_PoliceCase">View</a>&nbsp;
+
+                                        @if (item.IsSolved != true)
+                                        {
+                                            if (RolePermissionList.Where(m => m.FullName == "PoliceCase-solve").Any())
+                                            {
+                                                <a href="/PoliceCase/Solve?id=@item.PK_PoliceCase">Solve</a>
+                                            }
+                                            else
+                                            {
+                                                <text>Unsolved</text>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <text>Solved</text>
+                                        }&nbsp;
+
+                                        @if (item.IsPaid != true)
+                                        {
+                                            if (RolePermissionList.Where(m => m.FullName == "PoliceCase-pay").Any())
+                                            {
+                                                <text>&nbsp;</text><a title="Pay" onclick="TryPay('@item.PK_PoliceCase','@item.Vehicle.RegistrationNumber','@item.CaseID')">Pay</a><text>&nbsp;</text>
+                                            }
+                                            else
+                                            {
+                                                <text>UnPaid</text>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <text>Paid</text>
+                                        }&nbsp;
+                                    </td>
+
+                                </tr>
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+@*MODAL DELETE START*@
+<div id="modalDelete" class="modal fade modal-" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div id="modalDelete_hiddenKey" style="display:none;"></div>
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+            </div>
+            <div id="modalDelete_body" class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="tryDelete()">Yes</button>
+                <button type="button" class="btn btn-primary" onclick="$('#modalDelete').modal('hide');">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*MODAL DELETE END*@
+<!-- /.content -->
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $('select').select2();
+    });
+</script>
+<!-- DataTablesExportable -->
+<script src="~/Scripts/Custom/DataTableExportable/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.flash.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/jszip.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/pdfmake.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/vfs_fonts.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.html5.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.print.min.js"></script>
+<!--Date picker-->
+<script src="~/Theme/bower_components/jquery-ui/jquery-ui.min.js"></script>
+<script>
+    $(function () {
+        $('.form_datetime').datepicker({
+            dateFormat: 'yy-mm-dd',
+            changeMonth: true,
+            changeYear: true
+        });
+    });
+</script>
+<script>
+    $(function () {
+        var data_table_exportableColum = [];
+        for (var i = 0; i < 26; i++) {
+            data_table_exportableColum.push(i);
+        }
+        var data_table = $('#data_table').DataTable({
+            //"scrollX": true,
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'excel',
+                    title: 'Solved Police Case List',
+                    filename: 'Solved Police Case List',
+                    footer: false,
+                    header: true,
+                    exportOptions: {
+                        columns: data_table_exportableColum
+                    }
+                }
+            ]
+        });
+        data_table.columns('.data_table_hidden_col').visible(false);
+    });
+</script>
+<!-- page script -->
+<script>
+    function getData() {
+        var FK_Vehicle = $('select[name=FK_Vehicle]').val();
+        var StartingDate = $('Input[name=StartingDate]').val();
+        var EndingDate = $('Input[name=EndingDate]').val();
+        window.location = '/PoliceCase/SolvedIndex?FK_Vehicle=' + FK_Vehicle + '&StartingDate=' + StartingDate + '&EndingDate=' + EndingDate;
+    }
+    function TryPay(PK_PoliceCase, RegistrationNumber, CaseID) {
+        var con = confirm('Are you sure to confirm payment for case ' + RegistrationNumber + '/' + CaseID);
+        if (con) {
+            window.location = '/PoliceCase/Pay?id=' + PK_PoliceCase;
+        }
+    }
+</script>
+

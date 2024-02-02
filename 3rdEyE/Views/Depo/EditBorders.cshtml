@@ -1,0 +1,229 @@
+﻿@model _3rdEyE.Models.Depo
+@{
+    ViewBag.Title = "Index";
+}
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+<!-- Content Header (Page header) -->
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <form id="ThisForm" class="col-md-3" method="post" action="/Depo/EditBorders" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-md-12 form-group" style="margin-bottom:10px;">
+                    <label style="font-size:x-large;">Set Geo fence</label>
+                </div>
+                <div class="col-md-10 form-group">
+                    <label>@Model.Name</label>
+                    <input id="FK_Depo" name="FK_Depo" value="@Model.PK_Depo" style="display:none;" />
+                    <input id="LatLongs" name="LatLongs" style="display:none;" />
+                </div>
+            </div>
+            <div class="row" style="margin-top:10px;">
+                <div class="col-md-6 form-group">
+                    <button type="button" class="btn btn-danger" onclick="clearDepoBorderList()">Cleare</button>
+                </div>
+                <div class="col-md-6 form-group">
+                    <button type="button" class="btn btn-success" onclick="SubmitToAddDepoGeofence()">Submit</button>
+                </div>
+            </div>
+            <div class="row" style="margin-top:10px;">
+                <div id="leftSlideDiv" class="col-md-10" style="overflow: scroll; ">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>sl</th>
+                                <th>Latitude</th>
+                                <th>Longitude</th>
+                            </tr>
+                        </thead>
+                        <tbody id="data_tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+        <div class="col-md-9" id="mapDiv"></div>
+        <script async defer
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDVkwHNr_8HlH6zM8-mIOnKxErJKLHEpo0">
+        </script>
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+<!-- DataTables -->
+<script src="~/Theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/Theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+
+<script>
+    function ResizeElements() {
+        var mapheight = $(window).height() - $(".main-header").height();
+        $("#mapDiv").height(mapheight.toString() + "px");
+        $("#leftSlideDiv").height((mapheight - 100).toString() + "px");
+    }
+
+    $(document).ready(function () {
+        ResizeElements();
+        setTimeout(InitiateMap, 2000);
+    });
+
+    $(window).resize(function () {
+        ResizeElements();
+    });
+</script>
+
+
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    var map;
+    var depoList;
+    var depoMarker;
+    var depoMarkerIcon;
+    var depoBorderList = [];
+    var depoBorderMarkerList = [];
+    var polyLine;
+    function InitiateMap() {
+        map = new google.maps.Map(document.getElementById('mapDiv'), {
+            zoom: 16,
+            center: { lat: 23.8103, lng: 90.4125 }
+        });
+        //# Depo
+        if (@Model.Latitude != null && @Model.Latitude != "" && @Model.Longitude != null && @Model.Longitude != "") {
+            var myLatLng = { lat: Number(@Model.Latitude), lng: Number(@Model.Longitude) };
+            map.setCenter(myLatLng);
+            depoMarker = new google.maps.Marker({
+                position: myLatLng,
+                map: map,
+                icon: '/Content/Images/icon_green.png'
+            });
+        }
+        @{
+            var itemSerial = 0;
+            foreach (var item in Model.DepoBorders)
+            {
+                itemSerial++;
+                <text>
+                depoBorderList.push({
+                    lat: @item.Latitude,
+                    lng: @item.Longitude
+                });
+                var depoBorderMarker = new google.maps.Marker({
+                    position: { lat: @item.Latitude, lng: @item.Longitude },
+                    map: map
+                });
+                depoBorderMarkerList.push(depoBorderMarker);
+            if (depoBorderList.length == 2) {
+                //console.log(depoBorderList);
+                console.log(depoBorderList);
+                polyLine = new google.maps.Polyline({
+                        path: depoBorderList,
+                        geodesic: true,
+                        strokeColor: '#FF0000',
+                        strokeOpacity: 1.0,
+                        strokeWeight: 1
+                    });
+                polyLine.setMap(map);
+            } else if (depoBorderList.length > 2) {
+                //console.log(depoBorderList);
+                if (polyLine != null) {
+                    polyLine.setMap(null);
+                    polyLine = null;
+                }
+                var _depoBorderList = [];
+                //var _depoBorderList = [{ lat: 23.949554477443755, lng: 90.60657937093356 }, { lat: 23.94296527005996, lng: 90.6106563286362 }, { lat: 23.943867383810268, lng: 90.60069996877291 }, { lat: 23.949554477443755, lng: 90.60657937093356 }];
+                for (var i = 0; i < depoBorderList.length; i++) {
+                    _depoBorderList.push({ lat: depoBorderList[i].lat, lng: depoBorderList[i].lng });
+            }
+            _depoBorderList.push({ lat: depoBorderList[0].lat, lng: depoBorderList[0].lng });
+            console.log("_depoBorderList"); console.log(_depoBorderList);
+            polyLine = new google.maps.Polyline({
+                        path: _depoBorderList,
+                        geodesic: true,
+                        strokeColor: '#FF0000',
+                        strokeOpacity: 1.0,
+                        strokeWeight: 1
+                    });
+            polyLine.setMap(map);
+                }
+            $("#data_table").append("<tr><td>" + @itemSerial + "</td><td>" + @item.Latitude + "</td><td>" + @item.Longitude + "</td></tr>");
+                </text>
+            }
+        }
+        //# Depo Border
+        depoMarkerIcon = '/Content/Images/icon_green.png';
+        google.maps.event.addListener(map, 'click', function (event) {
+            depoBorderList.push({
+                lat: event.latLng.lat(),
+                lng: event.latLng.lng()
+            });
+            var depoBorderMarker = new google.maps.Marker({
+                position: { lat: event.latLng.lat(), lng: event.latLng.lng() },
+                map: map
+            });
+            depoBorderMarkerList.push(depoBorderMarker);
+            if (depoBorderList.length == 2) {
+                //console.log(depoBorderList);
+                console.log(depoBorderList);
+                polyLine = new google.maps.Polyline({
+                    path: depoBorderList,
+                    geodesic: true,
+                    strokeColor: '#FF0000',
+                    strokeOpacity: 1.0,
+                    strokeWeight: 1
+                });
+                polyLine.setMap(map);
+            } else if (depoBorderList.length > 2) {
+                //console.log(depoBorderList);
+                if (polyLine != null) {
+                    polyLine.setMap(null);
+                    polyLine = null;
+                }
+                var _depoBorderList = [];
+                //var _depoBorderList = [{ lat: 23.949554477443755, lng: 90.60657937093356 }, { lat: 23.94296527005996, lng: 90.6106563286362 }, { lat: 23.943867383810268, lng: 90.60069996877291 }, { lat: 23.949554477443755, lng: 90.60657937093356 }];
+                for (var i = 0; i < depoBorderList.length; i++) {
+                    _depoBorderList.push({ lat: depoBorderList[i].lat, lng: depoBorderList[i].lng });
+                }
+                _depoBorderList.push({ lat: depoBorderList[0].lat, lng: depoBorderList[0].lng });
+                console.log("_depoBorderList"); console.log(_depoBorderList);
+                polyLine = new google.maps.Polyline({
+                    path: _depoBorderList,
+                    geodesic: true,
+                    strokeColor: '#FF0000',
+                    strokeOpacity: 1.0,
+                    strokeWeight: 1
+                });
+                polyLine.setMap(map);
+            }
+
+            $("#data_table").append("<tr><td>" + depoBorderList.length + "</td><td>" + event.latLng.lat() + "</td><td>" + event.latLng.lng() + "</td></tr>");
+        });
+    }
+
+    function clearDepoBorderList() {
+        for (var i = 0; i < depoBorderMarkerList.length; i++) {
+            depoBorderMarkerList[i].setMap(null);
+        }
+        depoBorderList = [];
+        depoBorderMarkerList = [];
+        $("#data_tbody").html("");
+        if (polyLine != null) {
+            polyLine.setMap(null);
+            polyLine = null;
+        }
+    }
+
+    function SubmitToAddDepoGeofence() {
+        if (depoBorderList.length == 0) {
+            alert("Click User Group Borders."); return;
+        }
+        var res = "";
+        for (var i = 0; i < depoBorderList.length; i++) {
+            res = res + depoBorderList[i].lat + "*" + depoBorderList[i].lng + "#";
+        }
+        res = res.substring(0, res.length - 1)
+        $('#LatLongs').val(res);
+        $('#ThisForm').submit();
+    }
+</script>

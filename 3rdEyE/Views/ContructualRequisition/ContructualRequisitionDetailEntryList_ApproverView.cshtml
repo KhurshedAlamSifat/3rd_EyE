@@ -1,0 +1,120 @@
+﻿@model IEnumerable<_3rdEyE.Models.ContructualRequisitionDetailEntry>
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+<!--Date picker-->
+<link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+<script src="~/Theme/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="~/Theme/bower_components/jquery-ui/jquery-ui.min.js"></script>
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Contructual Requisition List(Existing)
+        <small></small>
+    </h1>
+        <div class="breadcrumb">
+            <a class="btn btn-block btn-info btn-sm" href="/ContructualRequisition/Create">Create New</a>
+        </div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Contructual Requisition List</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Company Name
+                                </th>
+                                <th>
+                                    Type
+                                </th>
+                                <th>
+                                    From
+                                </th>
+                                <th>
+                                    To
+                                </th>
+                                <th>
+                                    Active Period
+                                </th>
+                                <th>
+                                    Trip Charge
+                                </th>
+                                <th>
+                                    Wanted
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ContructualRequisitionDetail.ContructualRequisition.ContructualRequisitionCompany.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ContructualRequisitionDetail.VehicleTypeLayer1_english)&nbsp;@Html.DisplayFor(modelItem => item.ContructualRequisitionDetail.VehicleTypeLayer2_english)&nbsp;@Html.DisplayFor(modelItem => item.ContructualRequisitionDetail.VehicleTypeLayer3_english)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ContructualRequisitionDetail.StartingLocation)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ContructualRequisitionDetail.FinishingLocation)
+                                    </td>
+                                    <td>
+                                        @item.ContructualRequisitionDetail.ContructualRequisition.ContructAcitivatingDate.ToString("dd/MM/yyyy") To @item.ContructualRequisitionDetail.ContructualRequisition.ContructDeactivatingDate.ToString("dd/MM/yyyy")
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ContructualRequisitionDetail.PricePerVehicle)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.VehicleCount)
+                                    </td>
+                                    <td>
+                                        @if (item.Status == 0)
+                                        {
+                                            <button class="btn btn-facebook btn-xs" onclick="TryApprove('@item.PK_ContructualRequisitionDetailEntry')">Approve</button>
+                                        }
+                                        else
+                                        {
+                                            <label>Approved</label>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+<!-- DataTables -->
+<script src="~/Theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/Theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<!-- page script -->
+<script>
+    $(function () {
+        $('#data_table').DataTable({ "scrollX": true });
+    });
+    function TryApprove(id) {
+        var conf = confirm("Do you want to approve?");
+        if (conf == true) {
+            window.location = "/ContructualRequisition/Approve_ContructualRequisitionDetailEntry?PK_ContructualRequisitionDetailEntry=" + id;
+        }
+    }
+</script>
+

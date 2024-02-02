@@ -1,0 +1,58 @@
+﻿@{
+    Layout = null;
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Location
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        @*<a class="btn btn-block btn-default btn-sm" href="/Helper/Index">Back To data</a>*@
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12" id="map" style="height:700px;"></div>
+        <script async defer
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDVkwHNr_8HlH6zM8-mIOnKxErJKLHEpo0&callback=initMap">
+        </script>
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+<script>
+    var map;
+    var vehicle_move;
+    var vehicle_nonMove;
+    var vehicle_egnition_off;
+    var vehicle_notConnected;
+    var marker1, marker2;
+    var markerMoveFrequency = 10;
+    var intervalTime = 1000;
+    var line;
+    var flightPath;
+
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 16,
+            center: { lat: @ViewBag.latitude1, lng: @ViewBag.longitude1 }
+        });
+
+        vehicle_start = '/Content/Images/start_point.png';
+        vehicle_end = '/Content/Images/end_point.png';
+
+        marker1 = new google.maps.Marker({
+            position: { lat: @ViewBag.latitude1, lng: @ViewBag.longitude1 },
+            map: map,
+        });
+        marker1.setIcon(vehicle_start);
+
+        marker2 = new google.maps.Marker({
+            position: { lat: @ViewBag.latitude2, lng: @ViewBag.longitude2 },
+            map: map,
+        });
+        marker2.setIcon(vehicle_end);
+    }
+</script>

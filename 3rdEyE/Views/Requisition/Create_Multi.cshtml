@@ -1,0 +1,547 @@
+﻿@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Create Multiple Demand
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        <a class="btn btn-block btn-info btn-sm" href="/Requisition/RequisitionIndex_Client">Go To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Requisition Entry</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form id="ThisForm" name="ThisForm" class="form-horizontal" method="post" action="/Requisition/Create_Multi">
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">From*</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Location_From", ViewBag.Locations as SelectList, "Select", new { @class = "form-control", onchange = "relodeOrganizationCode()" })
+                                <input name="FK_Location_From_LocationType" id="FK_Location_From_LocationType" type="text" value="@ViewBag.Location_LocationType" style="display:none;" />
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_Location_From"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">From Department</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_LocationDepartment_From", ViewBag.LocationDepartments_From as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_LocationDepartment_From"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">From Detail</label>
+                            <div class="col-md-8">
+                                <input id="StartingLocation" name="StartingLocation" class="form-control" />
+                                <b class="errorMessage" data-category="errorMessage" name="error_StartingLocation"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">To*</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Location_To", ViewBag.Locations as SelectList, "Select", new { @class = "form-control", onchange = "relodeFK_LocationDepartment_To()" })
+                                <input name="FK_Location_To_LocationType" id="FK_Location_To_LocationType" type="text" value="@ViewBag.Location_LocationType" style="display:none;" />
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_Location_To"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">To Department</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_LocationDepartment_To", ViewBag.LocationDepartments_From as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_LocationDepartment_To"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">To Detail</label>
+                            <div class="col-md-8">
+                                <input id="FinishingLocation" name="FinishingLocation" class="form-control" />
+                                <b class="errorMessage" data-category="errorMessage" name="error_FinishingLocation"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Organization*</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("OrganizationCode", ViewBag.Organizations as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_OrganizationCode"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Delivery Type</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("DeliveryType", ViewBag.RequisitionDeliveryTypes as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_DeliveryType"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Product Type*</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("ProductType", ViewBag.RequisitionProductTypes as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_ProductType"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Vehicle Type*</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_RequisitionVehicleType", ViewBag.RequisitionVehicleTypes as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_RequisitionVehicleType"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">How Many*</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("WantedCount", ViewBag.WantedQuantityDict as SelectList, new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_WantedCount"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">When*</label>
+                            <div class="col-md-8">
+                                <input id="PossibleJourneyStartDateTime" name="PossibleJourneyStartDateTime" size="16" type="text" value="" readonly class="form-control">
+                                <b class="errorMessage" data-category="errorMessage" name="error_PossibleJourneyStartDateTime"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">LC NUmber</label>
+                            <div class="col-md-8">
+                                <input id="LCNumber" name="LCNumber" class="form-control" />
+                                <b class="errorMessage" data-category="errorMessage" name="error_LCNumber"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Job No</label>
+                            <div class="col-md-8">
+                                <input id="JobNo" type="number" name="JobNo" class="form-control" />
+                                <b class="errorMessage" data-category="errorMessage" name="error_JobNo"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Unit No</label>
+                            <div class="col-md-8">
+                                <input id="UnitNo" name="UnitNo" class="form-control" />
+                                <b class="errorMessage" data-category="errorMessage" name="error_UnitNo"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Weight(KG)</label>
+                            <div class="col-md-8">
+                                <input id="WeightInKG" name="WeightInKG" class="form-control" />
+                                <b class="errorMessage" data-category="errorMessage" name="error_WeightInKG"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Note</label>
+                            <div class="col-md-8">
+                                <input id="ClientNote" name="ClientNote" class="form-control" />
+                                <b class="errorMessage" data-category="errorMessage" name="error_ClientNote"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <input type="button" class="btn btn-success" value="Add To Cart" onclick="AddToCart()" />
+                        @*<input type="button" class="btn btn-facebook pull-right" value="Save" onclick="AddToCartAndSubmit()" />*@
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="box-header with-border">
+                        </div>
+                        <div class="box-body" style="overflow-x: scroll; height: auto;">
+                            <table id="data_table" class="table table-bordered table-striped" style="font-size:12px;">
+                                <thead>
+                                    <tr>
+                                        <th style='display:none;'>
+                                            _FK_Location_From
+                                        </th>
+                                        <th>
+                                            From Location
+                                        </th>
+                                        <th>
+                                            Organization Code
+                                        </th>
+                                        <th>
+                                            Delivery Type
+                                        </th>
+                                        <th>
+                                            Product Type
+                                        </th>
+                                        <th style='display:none;'>
+                                            _FK_LocationDepartment_From
+                                        </th>
+                                        <th>
+                                            From Department
+                                        </th>
+                                        <th>
+                                            From Detail
+                                        </th>
+                                        <th style='display:none;'>
+                                            _FK_Location_To
+                                        </th>
+                                        <th>
+                                            To Location
+                                        </th>
+                                        <th style='display:none;'>
+                                            _FK_LocationDepartment_To
+                                        </th>
+                                        <th>
+                                            To Department
+                                        </th>
+                                        <th>
+                                            To Detail
+                                        </th>
+                                        <th style='display:none;'>
+                                            _FK_RequisitionVehicleType
+                                        </th>
+                                        <th>
+                                            Vehicle Type
+                                        </th>
+                                        <th>
+                                            How Many
+                                        </th>
+                                        <th>
+                                            When
+                                        </th>
+                                        <th>
+                                            LC Number
+                                        </th>
+                                        <th>
+                                            Job No
+                                        </th>
+                                        <th>
+                                            Unit No
+                                        </th>
+                                        <th>
+                                            Weight(KG)
+                                        </th>
+                                        <th>
+                                            Note
+                                        </th>
+                                        <th>
+                                            Actions
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="detail_tbody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-footer">
+                    <input type="button" class="btn btn-facebook pull-right" value="Save" onclick="TryTrySubmit()" />
+                </div>
+                <!-- /.box-footer -->
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        //$("#PossibleJourneyStartDateTime").datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true, yearRange: '1990:2023' });
+        $("select").select2();
+    });
+</script>
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var today = new Date();
+        var _startDate = (today.getMonth() + 1) + '/' + (today.getDate() + 0) + '/' + today.getFullYear() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();// 13:05'//today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        var _endDate = (today.getMonth() + 1) + '/' + (today.getDate() + 2) + '/' + today.getFullYear() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();// 13:05'//today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        $('#PossibleJourneyStartDateTime').datetimepicker({
+            //format: 'yyyy-mm-dd HH:ii P',
+            format: 'yyyy-mm-dd HH:ii P',
+            //setDate: new Date(),
+            //weekStart: 1,
+            todayBtn: 1,
+            autoclose: 1,
+            //todayHighlight: 1,
+            //startView: 2,
+            //forceParse: 0,
+            //showMeridian: 0
+            //startDate: '+0d',
+            startDate: new Date(_startDate),
+            endDate: new Date(_endDate),
+        });
+    });
+</script>
+<script>
+    function relodeOrganizationCode() {
+        var FK_Location = $('#FK_Location_From').val();
+        if (FK_Location == '') {
+            return;
+        }
+        var _url = "";
+        if ('@ViewBag.CurrentUser.PRG_Type'=='PRAN') {
+            _url = "/PranOrganization/GetPranOrganizationBy_FK_Location";
+        } else {
+            _url = "/RFLOrganization/GetRFLOrganizationBy_FK_Location";
+        }
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: _url,
+            data: JSON.stringify({ FK_Location: FK_Location }),
+            success: function (data) {
+                $('#OrganizationCode').html("");
+                var result = "<option value=''>Select</option>";
+                for (var i = 0; i < data.length; i++) {
+                    result = result + "<option value='" + data[i].OrganizationCode + "'>" + data[i].OrganizationCode + " / " + data[i].OrganizationName + "</option>";
+                }
+                $('#OrganizationCode').html(result);
+                relodeFK_LocationDepartment_From();
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: relodeOrganizationCode()");
+            }
+        });
+    }
+    function relodeFK_LocationDepartment_From() {
+        var FK_Location = $('#FK_Location_From').val();
+        if (FK_Location == '') {
+            return;
+        }
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/LocationDepartment/GetLocationInfoWithDepartment_FK_Location/",
+            data: JSON.stringify({ FK_Location: FK_Location }),
+            success: function (data) {
+                $('#FK_Location_From_LocationType').val(data.location.LocationType);
+                $('#FK_LocationDepartment_From').html("");
+                var result = "<option value=''>Select</option>";
+                for (var i = 0; i < data.locationDepartments.length; i++) {
+                    result = result + "<option value='" + data.locationDepartments[i].PK_LocationDepartment + "'>" + data.locationDepartments[i].DepartmentCode + "</option>";
+                }
+                $('#FK_LocationDepartment_From').html(result);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: relodeFK_LocationDepartment_From()");
+            }
+        });
+    }
+    function relodeFK_LocationDepartment_To() {
+        var FK_Location = $('#FK_Location_To').val();
+        if (FK_Location == '') {
+            return;
+        }
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/LocationDepartment/GetLocationInfoWithDepartment_FK_Location/",
+            data: JSON.stringify({ FK_Location: FK_Location }),
+            success: function (data) {
+                $('#FK_Location_To_LocationType').val(data.location.LocationType);
+                $('#FK_LocationDepartment_To').html("");
+                var result = "<option value=''>Select</option>";
+                for (var i = 0; i < data.locationDepartments.length; i++) {
+                    result = result + "<option value='" + data.locationDepartments[i].PK_LocationDepartment + "'>" + data.locationDepartments[i].DepartmentCode + "</option>";
+                }
+                $('#FK_LocationDepartment_To').html(result);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: relodeFK_LocationDepartment_To()");
+            }
+        });
+    }
+
+    var row_count = 1;
+    function AddToCart() {
+        //Check & Get values
+        var FK_Location_From = $('#FK_Location_From').val();
+        var Location_From = $('#FK_Location_From option:selected').text();
+        var FK_Location_From_LocationType = $('#FK_Location_From_LocationType').val();
+
+        var OrganizationCode = $('#OrganizationCode').val();
+        var DeliveryType = $('#DeliveryType').val();
+        var ProductType = $('#ProductType').val();
+
+
+        var FK_LocationDepartment_From = $('#FK_LocationDepartment_From').val();
+        var LocationDepartment_From = $('#FK_LocationDepartment_From option:selected').text();
+        if (LocationDepartment_From == 'Select') { LocationDepartment_From = ''; }
+        var FK_Location_To_LocationType = $('#FK_Location_To_LocationType').val();
+
+        var StartingLocation = $('#StartingLocation').val();
+
+        var FK_Location_To = $('#FK_Location_To').val();
+        var Location_To = $('#FK_Location_To option:selected').text();
+
+        var FK_LocationDepartment_To = $('#FK_LocationDepartment_To').val();
+        var LocationDepartment_To = $('#FK_LocationDepartment_To option:selected').text();
+        if (LocationDepartment_To == 'Select') { LocationDepartment_To = ''; }
+
+        var FinishingLocation = $('#FinishingLocation').val();
+
+        var FK_RequisitionVehicleType = $('#FK_RequisitionVehicleType').val();
+        var RequisitionVehicleType = $('#FK_RequisitionVehicleType option:selected').text();
+
+        var WantedCount = $('#WantedCount').val();
+
+        var ClientNote = $('#ClientNote').val();
+        var WeightInKG = $('#WeightInKG').val();
+        
+        var PossibleJourneyStartDateTime = $('#PossibleJourneyStartDateTime').val();
+        var LCNumber = $('#LCNumber').val();
+        var JobNo = $('#JobNo').val();
+        var UnitNo = $('#UnitNo').val();
+
+        $('b[data-category=errorMessage]').html("");
+
+        let _localValidation = true;
+        if (FK_Location_From == '') {
+            $('b[name=error_FK_Location_From]').html("Required");
+            _localValidation = false;
+        }
+        if (FK_Location_From_LocationType == 'Factory' && FK_LocationDepartment_From == '') {
+            $('b[name=error_FK_LocationDepartment_From]').html("Required");
+            _localValidation = false;
+        }
+        if ((FK_Location_From_LocationType == 'Factory' || FK_Location_From_LocationType == 'Depo') && OrganizationCode == '') {
+            $('b[name=error_OrganizationCode]').html("Required");
+            _localValidation = false;
+        }
+
+        if (FK_Location_To == '') {
+            $('b[name=error_FK_Location_To]').html("Required");
+            _localValidation = false;
+        }
+        if (FK_Location_To_LocationType == 'Factory' && FK_LocationDepartment_To == '') {
+            $('b[name=error_FK_LocationDepartment_To]').html("Required");
+            _localValidation = false;
+        }
+
+        if (FK_RequisitionVehicleType == '') {
+            $('b[name=error_FK_RequisitionVehicleType]').html("Required");
+            _localValidation = false;
+        }
+        if (WantedCount == '') {
+            $('b[name=error_WantedCount]').html("Required");
+            _localValidation = false;
+        }
+        if (PossibleJourneyStartDateTime == '') {
+            $('b[name=error_PossibleJourneyStartDateTime]').html("Required");
+            _localValidation = false;
+        }
+        if (_localValidation == false) {
+            return _localValidation;
+        }
+
+        var row = "<tr id='tr_" + row_count + "'>";
+        row = row + "<td data-key='FK_Location_From' style='display:none;'>" + FK_Location_From + "</td>";
+        row = row + "<td data-key='Location_From'>" + Location_From + "</td>";
+        row = row + "<td data-key='OrganizationCode'>" + OrganizationCode + "</td>";
+        row = row + "<td data-key='DeliveryType'>" + DeliveryType + "</td>";
+        row = row + "<td data-key='ProductType'>" + ProductType + "</td>";
+        row = row + "<td data-key='FK_LocationDepartment_From' style='display:none;'>" + FK_LocationDepartment_From + "</td>";
+        row = row + "<td data-key='LocationDepartment_From'>" + LocationDepartment_From + "</td>";
+        row = row + "<td data-key='StartingLocation'>" + StartingLocation + "</td>";
+        row = row + "<td data-key='FK_Location_To' style='display:none;'>" + FK_Location_To + "</td>";
+        row = row + "<td data-key='Location_To'>" + Location_To + "</td>";
+        row = row + "<td data-key='FK_LocationDepartment_To' style='display:none;'>" + FK_LocationDepartment_To + "</td>";
+        row = row + "<td data-key='LocationDepartment_To'>" + LocationDepartment_To + "</td>";
+        row = row + "<td data-key='FinishingLocation'>" + FinishingLocation + "</td>";
+        row = row + "<td data-key='FK_RequisitionVehicleType' style='display:none;'>" + FK_RequisitionVehicleType + "</td>";
+        row = row + "<td data-key='RequisitionVehicleType'>" + RequisitionVehicleType + "</td>";
+        row = row + "<td data-key='WantedCount'>" + WantedCount + "</td>";
+        row = row + "<td data-key='PossibleJourneyStartDateTime'>" + PossibleJourneyStartDateTime + "</td>";
+        row = row + "<td data-key='LCNumber'>" + LCNumber + "</td>";
+        row = row + "<td data-key='JobNo'>" + JobNo + "</td>";
+        row = row + "<td data-key='UnitNo'>" + UnitNo + "</td>";
+        row = row + "<td data-key='WeightInKG'>" + WeightInKG + "</td>";
+        row = row + "<td data-key='ClientNote'>" + ClientNote + "</td>";
+        row = row + "<td data-key='Actions'>" + "<a onclick='RemoveThisRow(" + row_count + ")'>DELETE</a>" + "</td>";
+        row = row + "</tr>";
+
+        $('#detail_tbody').append(row);
+        row_count++;
+        return true;
+    }
+    function RemoveThisRow(_row_serial) {
+        $("#tr_" + _row_serial).remove();
+    }
+    function TryTrySubmit() {
+        var data_table = document.getElementById('data_table');
+        var table_data = [];
+
+        for (i = 1; i < data_table.rows.length; i++) {
+            var row_cells = data_table.rows.item(i).cells;
+            var row_data = [];
+            for (var j = 0; j < row_cells.length; j++) {
+                var cell_key = row_cells.item(j).getAttribute('data-key');
+                var cell_val = row_cells.item(j).innerText;
+                row_data[cell_key] = cell_val;
+            }
+            table_data.push(row_data);
+        }
+
+        var listName = "RequisitionList";
+        for (var i = 0; i < table_data.length; i++) {
+            var row_data = table_data[i];
+            for (var cell_key in row_data) {
+                var item = "<input type='hidden' name='" + listName + "[" + i + "]." + cell_key + "' value='" + row_data[cell_key] + "'>";
+                console.log(item);
+                $("#ThisForm").prepend(item);
+            }
+        }
+        if (table_data.length > 0) {
+            TrySubmit();
+        }
+        else {
+            alert("No Demand Info given.");
+        }
+
+    }
+    //function AddToCartAndSubmit() {
+    //    var conf = AddToCart();
+    //    if (conf == true) {
+    //        TryTrySubmit();
+    //    }
+    //}
+</script>
+
+
+
+

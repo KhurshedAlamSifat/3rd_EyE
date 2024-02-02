@@ -1,0 +1,83 @@
+﻿@model _3rdEyE.Models.AppMenu
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Details</title>
+</head>
+<body>
+    <div>
+        <h4>AppMenu</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.FullName)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.FullName)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.VisibleName)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.VisibleName)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.ModelName)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.ModelName)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Icon)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Icon)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Link)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Link)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.IsDeleted)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.IsDeleted)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.IsActive)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.IsActive)
+            </dd>
+    
+    
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.PK_AppMenu }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+</body>
+</html>

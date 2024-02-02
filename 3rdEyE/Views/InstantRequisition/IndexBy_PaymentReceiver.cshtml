@@ -1,0 +1,300 @@
+﻿@model IEnumerable<_3rdEyE.Models.InstantRequisition>
+@{
+    var RolePermissionList = (List<_3rdEyE.ManagingTools.Permission>)Session["RolePermissionList"];
+}
+<!--Date picker-->
+<link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+<!-- DataTablesExportable -->
+<link href="~/Content/ExportableDatatable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/ExportableDatatable/buttons.dataTables.min.css" rel="stylesheet" />
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Instant Requisition List
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<a class="btn btn-block btn-info btn-sm" href="/InstantRequisition/Create">Create New</a>*@
+    </div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-body col-md-12">
+                    <div class="form-group col-md-4">
+                        <label class="col-md-4 control-label">Date From:</label>
+                        <div class="input-group col-md-8">
+                            <input class="form-control form_datetime" name="StartingDate" id="StartingDate" value="@ViewBag.StartingDate" />
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="col-md-4 control-label">Date To:</label>
+                        <div class="input-group col-md-8">
+                            <input class="form-control form_datetime" name="EndingDate" id="EndingDate" value="@ViewBag.EndingDate" />
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body col-md-12">
+                    <div class="col-md-2">
+                        <button class="btn btn-facebook" onclick="getData()">Get Data</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Instant Requisition List</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body" style="overflow-x: scroll;">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>GP no</th>
+                                <th>Vehicle</th>
+                                <th>Driver Info</th>
+                                <th>Helper Info</th>
+                                <th>From</th>
+                                <th>TO</th>
+                                <th>Trip Fare</th>
+                                <th>Trip Date</th>
+                                <th class="data_table_hidden_col">Product</th>
+                                <th>Transport Agency</th>
+                                <th class="data_table_hidden_col">Broker Commission</th>
+                                <th class="data_table_hidden_col">3rd Party User</th>
+                                <th class="data_table_hidden_col">Note</th>
+                                <th class="data_table_hidden_col">Stay Charge</th>
+                                <th class="data_table_hidden_col">Demerge Given</th>
+                                <th class="data_table_hidden_col">Demerge Taken</th>
+                                <th class="data_table_hidden_col">Demerge Note</th>
+                                <th class="data_table_hidden_col">Adj. EV no.</th>
+                                <th class="data_table_hidden_col">Adj. EV Amt</th>
+                                <th class="data_table_hidden_col">Adj. EV Note</th>
+                                <th>Receiver Staff</th>
+                                <th>Total Expense</th>
+                                <th>Deposited Amount</th>
+                                <th>MR no.</th>
+                                <th>EV Number</th>
+                                <th>EV Amount</th>
+                                <th>Created By</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Convert.ToDateTime(item.CreatedAt).ToString("dd/MM/yyyy")
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.GpNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Vehicle.RegistrationNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DriverName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.HelperInfo)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Location.Name) @Html.DisplayFor(modelItem => item.StartingLocation)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Location1.Name) @Html.DisplayFor(modelItem => item.FinishingLocation)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.TripFare1)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.EffectiveDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ProductInformation) @Html.DisplayFor(modelItem => item.ProductWeightInKg) KG
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.TransportAgency.Name), @Html.DisplayFor(modelItem => item.TransportAgency.DistrictName)
+                                        @Html.DisplayFor(modelItem => item.TransportAgency.MobileNumber_Primary)
+                                        @Html.DisplayFor(modelItem => item.TransportAgency.MobileNumber_Secondary)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.BrokerCommission)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ResponsibleParsonName) @Html.DisplayFor(modelItem => item.ResponsibleParsonContactNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Note1)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.StayCharge1)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DemerageChargeGiven2)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DemerageChargeTaken3)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DemerageNote)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.AdjustedEvNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.AdjustedEvAmount)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.AdjustedEvNote)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ReceiverStaffId) @Html.DisplayFor(modelItem => item.ReceiverStaffName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.TotalParent1)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DepositeAmount)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.MRNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.EvNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.EvAmount)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.AppUser.UniqueIDNumber) :
+                                        @Html.DisplayFor(modelItem => item.AppUser.FullName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.StatusText)
+                                    </td>
+                                    <td>
+                                        <a href="/InstantRequisition/View?id=@item.PK_InstantRequisition" class="btn btn-block btn-info btn-xs">View</a> &nbsp;
+                                        @if (item.StatusText == "Created")
+                                        {
+                                            <a href="/InstantRequisition/Settle?id=@item.PK_InstantRequisition" class="btn btn-block btn-success btn-xs">Settle</a>
+                                        }
+                                    </td>
+                                </tr>
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+@*MODAL DELETE START*@
+<div id="modalDelete" class="modal fade modal-" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div id="modalDelete_hiddenKey" style="display:none;"></div>
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+            </div>
+            <div id="modalDelete_body" class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="tryDelete()">Yes</button>
+                <button type="button" class="btn btn-primary" onclick="$('#modalDelete').modal('hide');">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*MODAL DELETE END*@
+<!-- /.content -->
+<!-- DataTablesExportable -->
+<script src="~/Scripts/Custom/DataTableExportable/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.flash.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/jszip.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/pdfmake.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/vfs_fonts.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.html5.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.print.min.js"></script>
+<!--Date picker-->
+<script src="~/Theme/bower_components/jquery-ui/jquery-ui.min.js"></script>
+<script>
+    $(function () {
+        $('.form_datetime').datepicker({
+            dateFormat: 'yy-mm-dd',
+            changeMonth: true,
+            changeYear: true
+        });
+    });
+    function getData() {
+        var StartingDate = $('Input[name=StartingDate]').val();
+        var EndingDate = $('Input[name=EndingDate]').val();
+        window.location = '/InstantRequisition/IndexBy_PaymentReceiver?StartingDate=' + StartingDate + '&EndingDate=' + EndingDate;
+    }
+    $(function () {
+        @if (Model.Count() > 0 )
+        {
+        <text>
+        makeDataTable();
+        </text>
+        }
+    });
+    function makeDataTable() {
+        var data_table_exportableColum = [];
+        for (var i = 0; i < 29; i++) {
+            data_table_exportableColum.push(i);
+        }
+
+        var data_table = $('#data_table').DataTable({
+            //scrollX: true,
+            paging: false,
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'pdfHtml5',
+                    orientation: 'landscape',
+                    pageSize: 'LEGAL'
+                },
+                {
+                    extend: 'print',
+                    title: 'Requisition List',
+                    customize: function (win) {
+                        $(win.document.body)
+                            .css('font-size', '10pt');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', '15px');
+                    }
+                },
+                {
+                    extend: 'excel',
+                    title: 'Requisition List',
+                    filename: 'Requisition List',
+                    footer: false,
+                    header: true,
+                    exportOptions: {
+                        columns: data_table_exportableColum
+                    }
+                }
+            ],
+        });
+        data_table.columns('.data_table_hidden_col').visible(false);
+    }
+</script>
+<!-- page script -->

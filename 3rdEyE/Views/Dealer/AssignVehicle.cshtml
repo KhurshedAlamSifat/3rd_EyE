@@ -1,0 +1,107 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+}
+
+@*Date picker*@
+<link href="~/Theme/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+
+<section class="content-header">
+    <h1>
+        Assign Vehicle To Dealer
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Assign Vehicle To Dealer</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form name="ThisForm" class="form-horizontal" method="post" action="/Dealer/AssignVehicle">
+
+                    @*FK_Vehicle*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-1 control-label">Vehicle*</label>
+                            <div class="col-md-3">
+                                @Html.DropDownList("FK_Vehicle", ViewBag.Vehicles as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_Vehicle"></b>
+                            </div>
+                        </div>
+                        <script>
+                            validatorArray.push(
+                                function () {
+                                    var check = $('select[name=FK_Vehicle]').val();
+                                    if (check == "") {
+                                        formValidity = false;
+                                        $('b[name=error_FK_Vehicle]').html("Vehicle is required.");
+                                    }
+                                });
+                        </script>
+                    </div>
+                    @*DealerCode*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-1 control-label">Dealer Codes*</label>
+                            <div class="col-md-3">
+                                <textarea name="DealerCodes" class="form-control"></textarea>
+                                <b class="errorMessage" data-category="errorMessage" name="error_DealerCodes"></b>
+                            </div>
+                        </div>
+                        <script>
+                            validatorArray.push(
+                                function () {
+                                    var check = $('textarea[name=DealerCodes]').val();
+                                    if (check == "") {
+                                        formValidity = false;
+                                        $('b[name=error_DealerCodes]').html("Dealer codes is required.");
+                                    }
+                                });
+                        </script>
+                    </div>
+                    <div class="box-body">
+                        <div class="form-group">
+                            <div class="col-md-3 col-md-offset-1">
+                                <input type="button" class="btn btn-info" value="Create" onclick="TrySubmit()" />
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+@*Date Picker*@
+<script src="~/Theme/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $('select[name=FK_Vehicle]').select2();
+    });
+</script>
+
+@*<script>
+            $(function () {
+                $('input[type=date]').datepicker({
+                    autoclose: true,
+                    format: "dd/mm/yyyy",
+                    orientation: "top auto",
+                    startView: 2
+                });
+            });
+    </script>*@

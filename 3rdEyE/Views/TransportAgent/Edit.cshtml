@@ -1,0 +1,158 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+}
+
+@*Date picker*@
+<link href="~/Theme/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Edit Transport Agent
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        <a class="btn btn-block btn-info btn-sm" href="@System.Web.HttpContext.Current.Request.UrlReferrer">Back To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Transport Agent Information</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form name="ThisForm" class="form-horizontal" method="post" action="/TransportAgent/Edit">
+                    <input name="PK_User" value="@ViewBag.model.PK_User" type="text" class="form-control" style="display:none;">
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Contact Number*</label>
+                            <div class="col-md-8">
+                                <input name="ContactNumber" value="@ViewBag.model.ContactNumber" type="number" class="form-control" placeholder="11 digit mobile number">
+                                <b class="errorMessage" data-category="errorMessage" name="error_ContactNumber"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('input[name=ContactNumber]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_ContactNumber]').html("Contact number is required.");
+                                        } else if (check.length != 11) {
+                                            formValidity = false;
+                                            $('b[name=error_ContactNumber]').html("Only 11 digit number is accepatbale.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Full Name*</label>
+                            <div class="col-md-8">
+                                <input name="FullName" value="@ViewBag.model.FullName" type="text" class="form-control" style="text-transform:uppercase">
+                                <b class="errorMessage" data-category="errorMessage" name="error_FullName"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('input[name=FullName]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_FullName]').html("Full Name is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Password*</label>
+                            <div class="col-md-8">
+                                <input name="Password" value="@ViewBag.model.Password" type="text" class="form-control">
+                                <b class="errorMessage" data-category="errorMessage" name="error_Password"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('input[name=Password]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_Password]').html("Password is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">User Group*</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Depo", ViewBag.Depoes as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_Depo"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('select[name=FK_Depo]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_FK_Depo]').html("Depo is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Transport Company</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_TransportCompany", ViewBag.TransportCompanies as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_TransportCompany"></b>
+                            </div>
+                            @*<script>
+                                    validatorArray.push(
+                                        function () {
+                                            var check = $('select[name=FK_TransportCompany]').val();
+                                            if (check == "") {
+                                                formValidity = false;
+                                                $('b[name=error_FK_TransportCompany]').html("Company is required.");
+                                            }
+                                        });
+                                </script>*@
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Contact Address</label>
+                            <div class="col-md-8">
+                                <textarea name="ContactAddress" class="form-control">@ViewBag.model.ContactAddress</textarea>
+                                <b class="errorMessage" data-category="errorMessage" name="error_ContactAddress"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        @*<a class="btn btn-default" href="/User/Index">Back To List</a>*@
+                        <a class="btn btn-block btn-info btn-sm" href="@System.Web.HttpContext.Current.Request.UrlReferrer">Back To List</a>
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+@*Date Picker*@
+<script src="~/Theme/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $('select[name=FK_Depo]').select2();
+        $('select[name=FK_UserDesignation]').select2();
+    });
+</script>

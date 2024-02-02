@@ -1,0 +1,322 @@
+﻿@model _3rdEyE.Models.ContructualRequisition
+@{
+    ViewBag.Title = "Create";
+}
+
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+<!--Date picker-->
+<link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+<script src="~/Theme/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="~/Theme/bower_components/jquery-ui/jquery-ui.min.js"></script>
+<!--/Date picker-->
+<section class="content-header">
+    <h1>
+        Create New Contructual Requisition
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        <a class="btn btn-block btn-info btn-sm" href="/Home/Index">Go Back To Home</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/ContructualRequisition/Create" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="col-md-12">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Contructual Requisition Information</h3>
+                        </div>
+                        <!-- /.box-header -->
+                        <!-- form start -->
+                        <div class="row">
+                            <div class="box-body col-md-12">
+                                @*ContructualRequisitionCompanyPhone*@
+                                <div class="form-group col-md-4">
+                                    <label class="col-md-4 control-label">Company*</label>
+                                    <div class="col-md-7">
+                                        @Html.DropDownList("FK_ContructualRequisitionCompany", ViewBag.ContructualRequisitionCompanies as SelectList, "Select", new { @class = "form-control" })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_FK_ContructualRequisitionCompany"></b>
+                                    </div>
+                                    <script>
+                                        validatorArray.push(
+                                            function () {
+                                                var check = $('select[name=FK_ContructualRequisitionCompany]').val();
+                                                if (check == "") {
+                                                    formValidity = false;
+                                                    $('b[name=error_FK_ContructualRequisitionCompany]').html("*required.");
+                                                }
+                                            });
+                                    </script>
+                                    <button class="btn btn-facebook center-block col-md-1" onclick="showModalCompanyAdd(); return false;">+</button>
+                                </div>
+                                @*ContractAcitivatingDate*@
+                                <div class="form-group col-md-4">
+                                    <label class="col-md-4 control-label">Active From</label>
+                                    <div class="col-md-4">
+                                        @*@Html.EditorFor(model => model.ContructAcitivatingDate, new { htmlAttributes = new { @class = "form-control" } })*@
+                                        @Html.EditorFor(model => model.ContructAcitivatingDate, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_ContructAcitivatingDate"></b>
+                                    </div>
+                                    <script>
+                                        validatorArray.push(
+                                            function () {
+                                                var check = $('input[name=ContructAcitivatingDate]').val();
+                                                if (check == "") {
+                                                    formValidity = false;
+                                                    $('b[name=error_ContructAcitivatingDate]').html("*required.");
+                                                }
+                                            });
+                                    </script>
+                                    <div class="col-md-4">
+                                        <strong>YYYY-MM-DD</strong>
+                                    </div>
+                                </div>
+                                @*ContractDeactivatingDate*@
+                                <div class="form-group col-md-4">
+                                    <label class="col-md-4 control-label">Active To</label>
+                                    <div class="col-md-4">
+                                        @Html.EditorFor(model => model.ContructDeactivatingDate, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_ContructDeactivatingDate"></b>
+                                    </div>
+                                    <script>
+                                        validatorArray.push(
+                                            function () {
+                                                var check = $('input[name=ContructDeactivatingDate]').val();
+                                                if (check == "") {
+                                                    formValidity = false;
+                                                    $('b[name=error_ContructDeactivatingDate]').html("*required.");
+                                                }
+                                            });
+                                    </script>
+                                    <div class="col-md-4">
+                                        <strong>YYYY-MM-DD</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <input value="1" style="display:none;" id="rowCount" name="rowCount" />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="form-group col-md-3">
+                                            <div class="col-md-12">
+                                                <label>Vehicle Type</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <div class="col-md-12">
+                                                <label>From</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <div class="col-md-12">
+                                                <label>To</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-1">
+                                            <div class="col-md-12">
+                                                <label>Rent</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <section id='baseContractContainer'>
+                                        <div class='row'>
+                                            <div class='form-group col-md-3'>
+                                                <div class='col-md-12'>
+                                                    <select name="VehicleTypeLayer_1" class="form-control">
+                                                        <option>Select</option>
+                                                        @foreach (var item in ViewBag.VehicleTypeLayersDict)
+                                                        {
+                                                            <option value="@item.Key">@item.Value</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            @*<div class='form-group col-md-2'>
+                                                    <div class='col-md-12'>
+                                                        <select name="VehicleCapacity_1" class="form-control">
+                                                            <option>Select</option>
+                                                            @foreach (var item in ViewBag.VehicleCapacityDict)
+                                                            {
+                                                                <option value="@item.Key">@item.Value</option>
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </div>*@
+                                            <div class='form-group col-md-4'>
+                                                <div class='col-md-12'>
+                                                    <input name='StartingLocation_1' class='form-control' />
+                                                </div>
+                                            </div>
+                                            <div class='form-group col-md-4'>
+                                                <div class='col-md-12'>
+                                                    <input name='FinishingLocation_1' class='form-control' />
+                                                </div>
+                                            </div>
+                                            <div class='form-group col-md-1'>
+                                                <div class='col-md-12'>
+                                                    <input name='PricePerVehicle_1' class='form-control' type='number' />
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <br />
+                                    </section>
+                                    <section id="extraContractContainer"></section>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="box-footer">
+                        @*<div class="form-group col-md-1">
+                                <div class="col-md-12">
+                                    <input type="button" class="btn btn-success btn-sm" onclick="AddRow()" value="+" />
+                                    <script>
+                                        function AddRow() {
+                                            var _html = $("#baseContractContainer").html();
+                                            rowCount = $("#rowCount").val();
+                                            rowCount = Number(rowCount) + 1;
+                                            _html = _html.replace(/_1/g, '_' + rowCount);
+
+                                            $("#extraContractContainer").append(_html);
+                                            $("#rowCount").val(rowCount);
+                                        }
+                                    </script>
+                                </div>
+                            </div>*@
+                        <input type="button" class="btn btn-success pull-left" value="Add Row" onclick="AddRow()" />
+                        <script>
+                            function AddRow() {
+                                var _html = $("#baseContractContainer").html();
+                                rowCount = $("#rowCount").val();
+                                rowCount = Number(rowCount) + 1;
+                                _html = _html.replace(/_1/g, '_' + rowCount);
+
+                                $("#extraContractContainer").append(_html);
+                                $("#rowCount").val(rowCount);
+                            }
+                        </script>
+                        @*<a class="btn btn-default" href="/Contructual Requisition/Index">Back To List</a>*@
+                        <input type="button" class="btn btn-facebook pull-right" value="Submit" onclick="TrySubmit()" />
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+
+</section>
+@*MODAL Company START*@
+<div id="modalCompanyAdd" class="modal fade modal-" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <script>
+        function showModalCompanyAdd() {
+            $("#modalCompanyAdd").modal('show');
+        }
+        var modalValidity = true;
+        var modalValidatorArray = [];
+    </script>
+
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Contruct Company Add</h4>
+            </div>
+            <div id="modalCompanyAdd_body" class="modal-body">
+                <form name="ModalForm" class="form-horizontal" method="post" action="/ContructualRequisition/CreateContructualRequisitionCompany_ByModal" enctype="multipart/form-data">
+                    @*Name*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Name*</label>
+                            <div class="col-md-8">
+                                <input name="Name" type="text" class="form-control" style="text-transform:uppercase">
+                                <b class="errorMessage" data-category="errorMessage" name="error_Name"></b>
+                            </div>
+                        </div>
+                        <script>
+                            modalValidatorArray.push(
+                                function () {
+                                    var check = $('input[name=Name]').val();
+                                    if (check == "") {
+                                        modalValidity = false;
+                                        $('b[name=error_Name]').html("Company name is required.");
+                                    }
+                                });
+                        </script>
+                    </div>
+                    @*RegistrationNumber*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Registration Number</label>
+                            <div class="col-md-8">
+                                <input RegistrationNumber="RegistrationNumber" type="text" class="form-control" style="text-transform:uppercase">
+                                <b class="errorMessage" data-category="errorMessage" RegistrationNumber="error_RegistrationNumber"></b>
+                            </div>
+                        </div>
+                    </div>
+                    @*ContactNumber*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Company Contact Number</label>
+                            <div class="col-md-8">
+                                <input ContactNumber="ContactNumber" type="text" class="form-control">
+                                <b class="errorMessage" data-category="errorMessage" ContactNumber="error_ContactNumber"></b>
+                            </div>
+                        </div>
+                    </div>
+                    @*ContactAddress*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Company Mailing Address</label>
+                            <div class="col-md-8">
+                                <textarea name="ContactAddress" class="form-control"></textarea>
+                                <b class="errorMessage" data-category="errorMessage" ContactAddress="error_ContactAddress"></b>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="TrySubmit_modal()">Add</button>
+                <button type="button" class="btn btn-default" onclick="$('#modalCompanyAdd').modal('hide');">No</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        function TrySubmit_modal() {
+            modalValidity = true;
+            $('b[data-category=errorMessage]').html("");
+            for (var i = 0; i < modalValidatorArray.length; i++) {
+                modalValidatorArray[i]();
+            }
+            if (modalValidity) {
+                $('form[name=ModalForm]').submit();
+            } else {
+                console.log("form validation failed");
+            }
+        }
+    </script>
+</div>
+@*MODAL Company END*@
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $("#ContructAcitivatingDate").datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true, yearRange: '1990:2023' });
+        $("#ContructDeactivatingDate").datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true, yearRange: '1990:2023' });
+        $("#FK_ContructualRequisitionCompany").select2();
+        $("#VehicleTypeLayer_1").select2();
+        //$("#VehicleCapacity_1").select2();
+    });
+</script>
+
+

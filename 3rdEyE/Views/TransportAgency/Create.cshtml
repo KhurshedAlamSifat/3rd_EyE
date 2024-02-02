@@ -1,0 +1,182 @@
+﻿@model _3rdEyE.Models.TransportAgency
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+<section class="content-header">
+    <h1>
+        Add New TransportAgency
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        <a class="btn btn-block btn-info btn-sm" href="/TransportAgency/Index">Back To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-5">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">TransportAgency Information</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form name="ThisForm" class="form-horizontal" method="post" action="/TransportAgency/Create">
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-12">
+                            <label class="col-md-4 control-label">Name*</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(m => m.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_Name"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('input[name=Name]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_Name]').html("required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-12">
+                            <label class="col-md-4 control-label">District*</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("DistrictName", ViewBag.Districts as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_DistrictName"></b>
+                                <script>
+                                    validatorArray.push(
+                                        function () {
+                                            var check = $('select[name=DistrictName]').val();
+                                            if (check == "") {
+                                                formValidity = false;
+                                                $('b[name=error_DistrictName]').html("required.");
+                                            }
+                                        });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-12">
+                            <label class="col-md-4 control-label">Address*</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(m => m.Address, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_Address"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('input[name=Address]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_Address]').html("required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-12">
+                            <label class="col-md-4 control-label">Deposite Amount*</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(m => m.DepositeAmount, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_DepositeAmount"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('input[name=DepositeAmount]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_DepositeAmount]').html("required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-12">
+                            <label class="col-md-4 control-label">Trade License*</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(m => m.TradeLicense, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_TradeLicense"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('input[name=TradeLicense]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_TradeLicense]').html("required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-12">
+                            <label class="col-md-4 control-label">MobileNumber Primary*</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(m => m.MobileNumber_Primary, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_MobileNumber_Primary"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('input[name=MobileNumber_Primary]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_MobileNumber_Primary]').html("required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-12">
+                            <label class="col-md-4 control-label">MobileNumber Secondary*</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(m => m.MobileNumber_Secondary, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_MobileNumber_Secondary"></b>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-12">
+                            <label class="col-md-4 control-label">Email</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(m => m.Email, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_Email"></b>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-footer">
+                        <input type="button" class="btn btn-info center-block" value="Save" onclick="TrySubmit()" />
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $('select[name=DistrictName]').select2();
+    });
+</script>

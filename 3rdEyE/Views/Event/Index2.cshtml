@@ -1,0 +1,207 @@
+﻿@model IEnumerable<_3rdEyE.Models.Event>
+@{
+    var RolePermissionList = (List<_3rdEyE.ManagingTools.Permission>)Session["RolePermissionList"];
+}
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+<!-- DataTablesExportable -->
+<link href="~/Content/ExportableDatatable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/ExportableDatatable/buttons.dataTables.min.css" rel="stylesheet" />
+@{
+    string ConvertToDateTimeString(DateTime? dateTime)
+    {
+        return String.Format("{0:yyyy/MM/dd HH:mm}", dateTime);
+    }
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Gate In Out Report
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        @*<a class="btn btn-block btn-info btn-sm" href="/TemporaryVehicle/Create">Create</a>*@
+    </div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-header">
+                    <h3 class="box-title"></h3>
+                </div>
+
+                <div class="row">
+                    <div class="box-body col-md-12">
+
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Vehicle:</label>
+                            <div class="col-md-8">
+                                <input id="RegistrationNumber" name="RegistrationNumber" value="@ViewBag.RegistrationNumber" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Event Type:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_EventType", ViewBag.EventTypes as SelectList, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="col-md-2">
+                            <button class="btn btn-facebook" onclick="FilterByInputToRedirectView()">Filter</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- /.box-header -->
+                <div class="box-body" style="overflow-x:scroll;">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Vehicle
+                                </th>
+                                <th>
+                                    E.Type
+                                </th>
+                                <th>
+                                    E.O.Type
+                                </th>
+                                <th>
+                                    Issue Date
+                                </th>
+                                <th>
+                                    Deposite Date
+                                </th>
+                                <th>
+                                    Fees
+                                </th>
+                                <th>
+                                    Fine Amount
+                                </th>
+                                <th>
+                                    Total Amount
+                                </th>
+                                <th>
+                                    Expirtion Date
+                                </th>
+                                <th>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.OrderBy(m => m.IssueDate))
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Vehicle.RegistrationNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.EventType.Title)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.OtherEventTypeDetail)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.IssueDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DepositDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PrimaryAmount)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.FineAmount)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.TotalAmount)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ExpirationDate)
+                                    </td>
+                                    <td>
+                                        <a href="/Event/View?PK_Event=@item.PK_Event">View</a> &nbsp;
+                                        @if (RolePermissionList.Where(m => m.FullName == "Event-edit").Any())
+                                        {
+                                            <a href="/Event/Edit?PK_Event=@item.PK_Event">Edit</a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+<script>
+    $(function () {
+        $('select').select2();
+        $('.form_datetime').datetimepicker({
+            format: 'yyyy-mm-dd HH:ii P',
+            todayBtn: 1,
+            autoclose: 1,
+        });
+    });
+</script>
+<!-- DataTablesExportable -->
+<script src="~/Scripts/Custom/DataTableExportable/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.flash.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/jszip.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/pdfmake.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/vfs_fonts.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.html5.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.print.min.js"></script>
+<script>
+    $(function () {
+        $('#data_table').DataTable({
+            "ordering": true,
+            "paging": false,
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+    });
+</script>
+<script>
+    function FilterByInputToRedirectView() {
+        var url = "/Event/Index2?";
+
+        var RegistrationNumber = $("input[name=RegistrationNumber]").val();
+        if (RegistrationNumber != '') {
+            url = url + "RegistrationNumber=" + RegistrationNumber;
+        } else {
+            url = url + "RegistrationNumber=";
+        }
+
+        var FK_EventType = $("select[name=FK_EventType]").val();
+        if (FK_EventType != '') {
+            url = url + "&FK_EventType=" + FK_EventType;
+        } else {
+            url = url + "&FK_EventType=null";
+        }
+
+        window.location = url;
+    }
+
+</script>
+

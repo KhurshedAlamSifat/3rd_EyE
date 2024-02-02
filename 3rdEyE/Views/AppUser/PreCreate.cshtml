@@ -1,0 +1,91 @@
+﻿@model _3rdEyE.Models.AppUser
+
+<section class="content-header">
+    <h1>
+        Add New User From HRIS
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        <a class="btn btn-block btn-info btn-sm" href="@System.Web.HttpContext.Current.Request.UrlReferrer">Back To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">User Information</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form name="ThisForm" class="form-horizontal" method="post" action="/AppUser/PreCreate">
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Staff ID Number*</label>
+                            <div class="col-md-3">
+                                @Html.EditorFor(model => model.UniqueIDNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_UniqueIDNumber"></b>
+                            </div>
+                            <div class="col-md-2">
+                                <input type="button" class="btn btn-info" value="Check" onclick="getUserInfoFromHRIS()" />
+                            </div>
+                            <script>
+                                function getUserInfoFromHRIS() {
+                                    var UniqueIDNumber = $('Input[name=UniqueIDNumber]').val();
+                                    if (UniqueIDNumber == '') {
+                                        alert("Enter staff ID");
+                                        return;
+                                    }
+                                    window.location = '/AppUser/PreCreate?UniqueIDNumber=' + UniqueIDNumber;
+                                }
+                            </script>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Full Name</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.FullName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_ContactNumber"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Designation</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.HDesignation, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_ContactNumber"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Location Name</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.HLocationName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_ContactNumber"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Contact Number</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.ContactNumber, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_ContactNumber"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        @if (ViewBag.showCreate != null)
+                        {
+                            <input type="button" class="btn btn-facebook center-block" value="Create User" onclick="TrySubmit()" />
+                        }
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>

@@ -1,0 +1,469 @@
+﻿@model List<_3rdEyE.Models.vw_RequisitionTrip>
+@{
+    var RolePermissionList = (List<_3rdEyE.ManagingTools.Permission>)Session["RolePermissionList"];
+}
+
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+<!-- DataTablesExportable -->
+<link href="~/Content/ExportableDatatable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/ExportableDatatable/buttons.dataTables.min.css" rel="stylesheet" />
+@{
+    List<string> NonVehicleTypes = new List<string> { "Troller Boat", "Hand Trolley", "Van", "Adjustment", "By Hand", "Cargo Ship" };
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Requisition List : Assigner View
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+    </div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-header">
+                    <h3 class="box-title"></h3>
+                </div>
+
+                <div class="row">
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-3">
+                            <label class="col-md-3 control-label">Starting Date:</label>
+                            <div class="input-group col-md-8">
+                                <div class="col-md-12 input-append date form_datetime" data-link-field="dtp_input1">
+                                    <input id="StartingDate" name="StartingDate" class="form-control col-md-12" type="text" value="@ViewBag.StartingDate" readonly="readonly" style="background-color: white;">
+                                    <span class="add-on"><i class="icon-remove"></i></span>
+                                    <span class="add-on"><i class="icon-th"></i></span>
+                                </div>
+                                <input type="hidden" id="dtp_input1" value="" style="display:none;" /><br />
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="col-md-3 control-label">Ending Date:</label>
+                            <div class="input-group col-md-8">
+                                <div class="col-md-12 input-append date form_datetime" data-link-field="dtp_input1">
+                                    <input id="EndingDate" name="EndingDate" class="form-control col-md-12" type="text" value="@ViewBag.EndingDate" readonly="readonly" style="background-color: white;">
+                                    <span class="add-on"><i class="icon-remove"></i></span>
+                                    <span class="add-on"><i class="icon-th"></i></span>
+                                </div>
+                                <input type="hidden" id="dtp_input2" value="" style="display:none;" /><br />
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="col-md-3 control-label">Tracking Id:</label>
+                            <div class="col-md-8">
+                                <input id="TrackingId" name="TrackingId" value="@ViewBag.TrackingId" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="col-md-3 control-label">Raiser:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_AppUser_Client", ViewBag.Clients as SelectList, "Select", new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-3">
+                            <label class="col-md-3 control-label">From:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Location_From", ViewBag.FromLocations as SelectList, "Select", new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="col-md-3 control-label">To:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Location_To", ViewBag.ToLocations as SelectList, "Select", new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="col-md-3 control-label">Vehicle:</label>
+                            <div class="col-md-8">
+                                <input id="RegistrationNumber" name="RegistrationNumber" value="@ViewBag.RegistrationNumber" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-4">
+                            <button class="btn btn-facebook" onclick="getData()">Get Data</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- /.box-header -->
+                <div class="box-body" style="overflow-x:scroll; height: 500px; overflow-y: scroll;">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Tr ID
+                                </th>
+                                <th class="data_table_hidden_col">
+                                    Ref No
+                                </th>
+                                <th class="data_table_hidden_col">
+                                    GP
+                                </th>
+                                <th class="data_table_hidden_col">
+                                    PRG Type
+                                </th>
+                                <th>
+                                    Organization / Site Code
+                                </th>
+                                <th class="data_table_hidden_col">
+                                    Delivery Type
+                                </th>
+                                <th class="data_table_hidden_col">
+                                    Product Type
+                                </th>
+                                <th class="data_table_hidden_col">
+                                    Raiser
+                                </th>
+                                <th>
+                                    From
+                                </th>
+                                <th>
+                                    From Dept
+                                </th>
+                                <th>
+                                    To
+                                </th>
+                                <th>
+                                    To Dept
+                                </th>
+                                <th>
+                                    Vehicle Type
+                                </th>
+                                <th class="data_table_hidden_col">
+                                    LC Number
+                                </th>
+                                <th class="data_table_hidden_col">
+                                    Job No
+                                </th>
+                                <th class="data_table_hidden_col">
+                                    Unit No
+                                </th>
+                                <th class="data_table_hidden_col">
+                                    Weight(KG)
+                                </th>
+                                <th>
+                                    Using Space
+                                </th>
+                                <th>
+                                    Required Time
+                                </th>
+                                <th class="data_table_hidden_col">
+                                    O/M/D
+                                </th>
+                                <th>
+                                    Registration No
+                                </th>
+                                <th>
+                                    Available At
+                                </th>
+                                <th>
+                                    Driver info
+                                </th>
+                                <th>
+                                    Total Amount
+                                </th>
+                                <th class="data_table_hidden_col">
+                                    Assigning Note
+                                </th>
+                                <th>
+                                    Raiser Note
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                                <th class="data_table_hidden_col">
+                                    Arv.Time
+                                </th>
+                                <th class="data_table_hidden_col">
+                                    Travel Time(hh:mm)
+                                </th>
+                                <th></th>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @if (item.IsForwarded == true)
+                                        {
+                                            <img src="~/Content/Images/forward_sign.png" height="12" width="12" />
+                                        }
+                                        @Html.DisplayFor(modelItem => item.TrackingID)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PK_RequisitionTrip)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.OracleDB_GPNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PRG_Type)
+                                    </td>
+                                    <td>
+                                        <!--PRAN-->
+                                        @Html.DisplayFor(modelItem => item.OrganizationCode)
+                                        &nbsp;
+                                        @Html.DisplayFor(modelItem => item.OrganizationName)
+                                        <!--RFL-->
+                                        @Html.DisplayFor(modelItem => item.Location_From_SiteCode)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DeliveryType)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ProductType)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.AppUser_Client_FullName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Location_From_Name)
+                                        &nbsp;
+                                        @item.StartingLocation
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Department_From_Code)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Location_To_Name)
+                                        &nbsp;
+                                        @item.FinishingLocation
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Department_To_Code)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.RequisitionVehicleType_Title_English)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.LCNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.JobNo)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.UnitNo)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.WeightInKG)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Requisition_WantedCount)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PossibleJourneyStartDateTime)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.OWN_MHT_DHT)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.RegistrationNumber)
+                                        &nbsp; @Html.DisplayFor(modelItem => item.VehicleType)
+                                        @(item.FK_Vehicle != null && item.CapacityTon != null &&  item.CapacityTon != null ? " " + item.CapacityTon +" Ton" : " " )
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.FinalWantedAtDateTime)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Driver_Staff_ID) &nbsp; @Html.DisplayFor(modelItem => item.Driver_Name) &nbsp; @Html.DisplayFor(modelItem => item.Driver_ContactNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.TotalAmount)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.AssigningNote)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ClientNote)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Trip_StatusText)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.TentativeFinishingDateTime)
+                                    </td>
+                                    <td>
+                                        @*TravelTime*@
+                                        @if (item.StartedAt != null && item.FinishedAt != null)
+                                        {
+                                            var FinishedAt = item.FinishedAt ?? DateTime.Now;
+                                            var StartedAt = item.StartedAt ?? DateTime.Now;
+                                            var total_hours = (FinishedAt - StartedAt).TotalHours;
+                                            var remainig_minutes = (FinishedAt - StartedAt).TotalMinutes % 60;
+                                            @total_hours.ToString("00")<text>:</text>@remainig_minutes.ToString("00")
+                                        }
+                                    </td>
+                                    <td>
+                                        @if ((item.Trip_StatusText == "Created") && item.IsForwarded != true && RolePermissionList.Where(m => m.FullName == "RequisitionTrip-assign").Any())
+                                        {
+                                            <a href="/Requisition/RequisitionTrip_Forward?id=@item.PK_RequisitionTrip">Forward</a><text>&nbsp;|&nbsp;</text>
+                                        }
+                                        @if ((item.Trip_StatusText == "Created") && RolePermissionList.Where(m => m.FullName == "RequisitionTrip-assign").Any())
+                                        {
+                                            <a href="/Requisition/AssignTrip_Vehicle?id=@item.PK_RequisitionTrip">Assign</a><text>&nbsp;|&nbsp;</text>
+                                        }
+                                        @if (item.Trip_StatusText == "Assigned" && item.OracleDB_GPNumber == null && RolePermissionList.Where(m => m.FullName == "RequisitionTrip-assign").Any())
+                                        {
+                                            <a href="/Requisition/ReassignTrip_Vehicle?id=@item.PK_RequisitionTrip">Reassign</a><text>&nbsp;|&nbsp;</text>
+                                        }
+                                        @if (item.Trip_StatusText == "Cancelled")
+                                        {
+                                            <span style="color:red">Cancelled</span>
+                                        }
+                                        @if (item.Trip_StatusText == "Assigned" && RolePermissionList.Where(m => m.FullName == "RequisitionTrip-assign").Any())
+                                        {
+                                            <a href="/Requisition/RequisitionTrip_Link?id=@item.PK_RequisitionTrip">Link with trip</a><text>&nbsp;|&nbsp;</text>
+                                        }
+                                        @if (item.Trip_StatusText == "Assigned" && RolePermissionList.Where(m => m.FullName == "RequisitionTrip-cancel").Any())
+                                        {
+                                            <a onclick="showModalDelete('@item.PK_RequisitionTrip','@item.TrackingID')">Cancel</a><text>&nbsp;|&nbsp;</text>
+                                        }
+                                        @if (item.IsNew == "Y" && item.Requisition_StatusText == "Assigned" && (item.Location_From_LocationType == "District" || item.Location_From_LocationType == "OS" || NonVehicleTypes.Contains(item.VehicleType)))
+                                        {
+                                            <a href="/Requisition/RequisitionTrip_Start_Client?id=@item.PK_RequisitionTrip&StartAutoOrManaul=Manual&FK_AppUser_Start=@ViewBag.CurrentUser.PK_User">Start</a><text>&nbsp;|&nbsp;</text>
+                                        }
+                                        @if (item.IsNew == "Y" && item.Trip_StatusText == "Started" && (item.Location_To_LocationType == "District" || item.Location_To_LocationType == "OS" || NonVehicleTypes.Contains(item.VehicleType)))
+                                        {
+                                            <a href="/Requisition/RequisitionTrip_Finish_Client?id=@item.PK_RequisitionTrip&FinishAutoOrManaul=Manual&FK_AppUser_Finish=@ViewBag.CurrentUser.PK_User">Finish</a><text>&nbsp;|&nbsp;</text>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+@*MODAL DELETE START*@
+<div id="modalDelete" class="modal fade modal-" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div id="modalDelete_hiddenKey" style="display:none;"></div>
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+            </div>
+            <div id="modalDelete_body" class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="tryDelete()">Yes</button>
+                <button type="button" class="btn btn-primary" onclick="$('#modalDelete').modal('hide');">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- DataTablesExportable -->
+<script src="~/Scripts/Custom/DataTableExportable/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.flash.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/jszip.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/pdfmake.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/vfs_fonts.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.html5.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.print.min.js"></script>
+<!-- page script -->
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $('.form_datetime').datetimepicker({
+            format: 'yyyy-mm-dd HH:ii P',
+            todayBtn: 1,
+            autoclose: 1,
+        });
+        $('select').select2();
+        makeDataTable();
+    });
+</script>
+<script>
+
+    function makeDataTable() {
+        var data_table_exportableColum = [];
+        for (var i = 0; i < 30; i++) {
+            data_table_exportableColum.push(i);
+        }
+
+        var data_table = $('#data_table').DataTable({
+            //scrollX: true,
+            paging: false,
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'pdfHtml5',
+                    orientation: 'landscape',
+                    pageSize: 'LEGAL'
+                },
+                {
+                    extend: 'print',
+                    title: 'Requisition List',
+                    customize: function (win) {
+                        $(win.document.body)
+                            .css('font-size', '10pt');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', '15px');
+                    }
+                },
+                {
+                    extend: 'excel',
+                    title: 'Requisition List',
+                    filename: 'Requisition List',
+                    footer: false,
+                    header: true,
+                    exportOptions: {
+                        columns: data_table_exportableColum
+                    }
+                }
+            ],
+        });
+        data_table.columns('.data_table_hidden_col').visible(false);
+    }
+</script>
+<script>
+    function getData() {
+        var StartingDate = $('Input[name=StartingDate]').val();
+        var EndingDate = $('Input[name=EndingDate]').val();
+        var TrackingId = $('Input[name=TrackingId]').val();
+        var FK_AppUser_Client = $('#FK_AppUser_Client').find(":selected").val();
+        var FK_Location_From = $('#FK_Location_From').find(":selected").val();
+        var FK_Location_To = $('#FK_Location_To').find(":selected").val();
+        var RegistrationNumber = $('Input[name=RegistrationNumber]').val();
+
+        if (StartingDate == '' && RegistrationNumber == '') {
+            alert("Please, Select starting date or give registration number");
+            return;
+        }
+
+        window.location = '/Requisition/RequisitionTripIndex_Assigner?StartingDate=' + StartingDate + '&EndingDate=' + EndingDate + '&TrackingId=' + TrackingId
+            + '&FK_AppUser_Client=' + FK_AppUser_Client + '&FK_Location_From=' + FK_Location_From + '&FK_Location_To=' + FK_Location_To + '&RegistrationNumber=' + RegistrationNumber;
+    }
+    function showModalDelete(model_id, model_name) {
+        $('#modalDelete_hiddenKey').html(model_id);
+        $('#modalDelete_body').html("Do you want to cancel trip (" + model_name + ")?");
+        $("#modalDelete").modal('show');
+    }
+    function tryDelete() {
+        var id = $("#modalDelete_hiddenKey").html();
+        window.location.href = "/Requisition/RequisitionTrip_Cancel?id=" + id;
+    }
+</script>

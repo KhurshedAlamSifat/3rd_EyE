@@ -1,0 +1,114 @@
+﻿@model _3rdEyE.Models.VehicleSharingBidding
+@{
+    ViewBag.Title = "Create";
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Requisition Bidding Disapproval
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        <a class="btn btn-block btn-info btn-sm" href="/Home/Index">Go Back To Home</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/VehicleSharingBidding/Create" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="col-md-12">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Requisition Bidding Disapproval</h3>
+                        </div>
+                        <!-- /.box-header -->
+                        <!-- form start -->
+                        <div class="box-body col-md-12">
+                            @*WantedCount*@
+                            <div class="form-group col-md-6">
+                                <label class="col-md-4 control-label">Total Wanted Vehicle*</label>
+                                <div class="col-md-8">
+                                    @Html.DisplayFor(viewModel => viewModel.VehicleSharing.WantedCount)
+                                    <b class="errorMessage" data-category="errorMessage" name="error_WantedCount"></b>
+                                </div>
+                            </div>
+                            @*PossibleJourneyStartDateTime*@
+                            <div class="form-group col-md-6">
+                                <label class="col-md-4 control-label">Start Time</label>
+                                <div class="col-md-8">
+                                    @Html.DisplayFor(viewModel => viewModel.VehicleSharing.PossibleJourneyStartDateTime)
+                                    <b class="errorMessage" data-category="errorMessage" name="error_PossibleJourneyStartDateTime"></b>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box-body col-md-12">
+                            @*StartingLocation*@
+                            <div class="form-group col-md-6">
+                                <label class="col-md-4 control-label">Starting Location</label>
+                                <div class="col-md-8">
+                                    @Html.DisplayFor(viewModel => viewModel.VehicleSharing.Depo.Name) @Html.DisplayFor(viewModel => viewModel.VehicleSharing.StartingLocation)
+                                    <b class="errorMessage" data-category="errorMessage" name="error_StartingLocation"></b>
+                                </div>
+                            </div>
+                            @*EndingLocation*@
+                            <div class="form-group col-md-6">
+                                <label class="col-md-4 control-label">Ending Location</label>
+                                <div class="col-md-8">
+                                    @Html.DisplayFor(viewModel => viewModel.VehicleSharing.Depo1.Name) @Html.DisplayFor(viewModel => viewModel.VehicleSharing.FinishingLocation)
+                                    <b class="errorMessage" data-category="errorMessage" name="error_EndingLocation"></b>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box-body col-md-12">
+                            @*VehicleType*@
+                            <div class="form-group col-md-6">
+                                <label class="col-md-4 control-label">Vehicle Type</label>
+                                <div class="col-md-8">
+                                    @Html.DisplayFor(viewModel => viewModel.VehicleSharing.VehicleType)
+                                    <b class="errorMessage" data-category="errorMessage" name="error_StartingLocation"></b>
+                                </div>
+                            </div>
+                        </div>
+                        @*<div class="box-body col-md-12">
+                                <div class="form-group col-md-12">
+                                    <label class="col-md-2 control-label">Detail</label>
+                                    <div class="col-md-10">
+                                        @Html.DisplayFor(viewModel => viewModel.VehicleSharing.Detail)
+                                        <b class="errorMessage" data-category="errorMessage" name="error_Detail"></b>
+                                    </div>
+                                </div>
+                            </div>*@
+                        <div class="box-body col-md-12">
+                            @*ApprovedQuantity*@
+                            <div class="form-group col-md-6">
+                                <label class="col-md-4 control-label">Approved Quantity</label>
+                                <div class="col-md-8">
+                                    @Html.DisplayFor(viewModel => viewModel.ApprovedQuantity)
+                                </div>
+                            </div>
+                            @*PricePerQuantity*@
+                            <div class="form-group col-md-6">
+                                <label class="col-md-4 control-label">PricePerQuantity</label>
+                                <div class="col-md-8">
+                                    @Html.DisplayFor(viewModel => viewModel.PricePerQuantity)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-footer">
+                        @*<input type="button" class="btn btn-facebook center-block" value="Save" onclick="TrySubmit()" />*@
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+
+</section>
+<!-- /.content -->

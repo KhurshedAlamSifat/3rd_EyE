@@ -1,0 +1,95 @@
+﻿
+@{
+    ViewBag.Title = "";
+}
+
+@*Date picker*@
+<link href="~/Theme/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+
+<section class="content-header">
+    <h1>
+        Change Trip Status
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        @*<a class="btn btn-block btn-default btn-sm" href="/Driver/Index">Back To List</a>*@
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Trip Status Change</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form name="ThisForm" class="form-horizontal" method="post" action="/VehicleSharing/TripStatusChange">
+
+                    @*PK_VehicleSharingInternalTrip*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Vehicle*</label>
+                            <div class="col-md-10">
+                                @Html.DropDownList("PK_VehicleSharingInternalTrip", ViewBag.OwnVehicles as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_PK_VehicleSharingInternalTrip"></b>
+                            </div>
+                        </div>
+                        <script>
+                            validatorArray.push(
+                                function () {
+                                    var check = $('select[name=PK_VehicleSharingInternalTrip]').val();
+                                    if (check == "") {
+                                        formValidity = false;
+                                        $('b[name=error_PK_VehicleSharingInternalTrip]').html("Vehicle is required.");
+                                    }
+                                });
+                        </script>
+                    </div>
+                    @*Status*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Status*</label>
+                            <div class="col-md-10">
+                                @Html.DropDownList("Status", ViewBag.TripStatuses as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_Status"></b>
+                            </div>
+                        </div>
+                        <script>
+                            validatorArray.push(
+                                function () {
+                                    var check = $('select[name=Status]').val();
+                                    if (check == "") {
+                                        formValidity = false;
+                                        $('b[name=error_Status]').html("Status is required.");
+                                    }
+                                });
+                        </script>
+                    </div>
+
+                    <div class="box-footer">
+                        @*<a class="btn btn-default" href="/Driver/Index">Back To List</a>*@
+                        <input type="button" class="btn btn-info pull-right" value="Create" onclick="TrySubmit()" />
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+@*Date Picker*@
+<script src="~/Theme/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $('select[name=PK_VehicleSharingInternalTrip]').select2();
+    });
+</script>

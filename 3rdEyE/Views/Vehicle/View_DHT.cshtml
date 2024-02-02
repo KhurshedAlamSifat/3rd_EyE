@@ -1,0 +1,446 @@
+﻿@model _3rdEyE.ViewModels.VM_Vehicle
+
+@{
+    ViewBag.Title = "View";
+}
+
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        View MHT Vehicle
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        <a class="btn btn-block btn-info btn-sm" href="@System.Web.HttpContext.Current.Request.UrlReferrer">Back To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">DHT Vehicle Information</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form name="ThisForm" class="form-horizontal" method="post" action="/Vehicle/Edit_MHT" enctype="multipart/form-data">
+                    @Html.EditorFor(viewModel => viewModel.Model.PK_Vehicle, new { htmlAttributes = new { @style = "display:none;" } })
+                    @Html.EditorFor(viewModel => viewModel.Model.ImageLocation, new { htmlAttributes = new { @style = "display:none;" } })
+                    @Html.EditorFor(viewModel => viewModel.Model.MHT_DeedImageLocation, new { htmlAttributes = new { @style = "display:none;" } })
+                    @Html.EditorFor(viewModel => viewModel.Model.MHT_DHT_DriverImageLocation, new { htmlAttributes = new { @style = "display:none;" } })
+                    @Html.EditorFor(viewModel => viewModel.Model.MHT_DHT_DriverLicenseImageLocation, new { htmlAttributes = new { @style = "display:none;" } })
+                    <div class="box-body col-md-12">
+                        @*RegistrationNumber*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Registration Number*</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(viewModel => viewModel.Model.RegistrationNumber, new { htmlAttributes = new { @readonly = "readonly", @class = "form-control" } })
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="box-body col-md-12">
+                        @*VehicleType*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Vehicle Type</label>
+                            <div class="col-md-8">
+                                @*@Html.DropDownList("VehicleType", ViewBag.VehicleTypesDict as SelectList, "Select", new { @class = "form-control" })*@
+                                @Html.EditorFor(viewModel => viewModel.Model.VehicleType, new { htmlAttributes = new { @readonly = "readonly", @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_VehicleType"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('select[name=VehicleType]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_VehicleType]').html("Vehicle type is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+
+
+                    </div>
+                    <div class="box-body col-md-12">
+                        @*EngineNumber*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Engine Number</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(viewModel => viewModel.Model.EngineNumber, new { htmlAttributes = new { @class = "form-control", style = "text-transform:uppercase" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_EngineNumber"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('input[name=EngineNumber]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_EngineNumber]').html("Engine Number is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                        @*ChassisNumber*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Chassis Number</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(viewModel => viewModel.Model.ChassisNumber, new { htmlAttributes = new { @class = "form-control", style = "text-transform:uppercase" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_ChassisNumber"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('input[name=ChassisNumber]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_ChassisNumber]').html("Chassis Number is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+
+                    </div>
+                    <div class="box-body col-md-12">
+                        @*CapacityTon*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Capacity Ton</label>
+                            <div class="col-md-3">
+                                @*@Html.DropDownList("CapacityTon", ViewBag.CapacityTonDict as SelectList, "Select", new { @class = "form-control" })*@
+                                @Html.EditorFor(viewModel => viewModel.Model.CapacityTon, new { htmlAttributes = new { @readonly = "readonly", @class = "form-control" } })
+                                @*<input name="ChassisNumber" value="@ViewBag.viewModel.Model.CapacityTon" type="text" class="form-control">*@
+                                <b class="errorMessage" data-category="errorMessage" name="error_CapacityTon"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('select[name=CapacityTon]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_CapacityTon]').html("CapacityTon is required.");
+                                        }
+                                    });
+                            </script>
+                            <label class="col-md-1 control-label">Ton(s)</label>
+                        </div>
+                        @*MHT_DHT_VehicleSize*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Vehicle Size</label>
+                            <div class="col-md-3">
+                                @Html.EditorFor(viewModel => viewModel.Model.MHT_DHT_VehicleSize, new { htmlAttributes = new { @readonly = "readonly", @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_MHT_DHT_VehicleSize"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('select[name=MHT_DHT_VehicleSize]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_MHT_DHT_VehicleSize]').html("Vehicle Size is required.");
+                                        } else if (Number(check) > 40) {
+                                            formValidity = false;
+                                            $('b[name=error_MHT_DHT_VehicleSize]').html("Max size is 40");
+                                        } else if (Number(check) < 8) {
+                                            formValidity = false;
+                                            $('b[name=error_MHT_DHT_VehicleSize]').html("Min size is 8");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-6">
+                            @if (Model.Model.ImageLocation != null)
+                            {
+                                @*CurrentImage*@
+                                <label class="col-md-4 control-label">Current Vehicle Image</label>
+                                <div class="col-md-8">
+                                    <img src="@Model.Model.ImageLocation" style="height:200px; width:350px;" />
+                                </div>
+                            }
+                        </div>
+                        <div class="form-group col-md-6">
+                        </div>
+                    </div>
+                    <div class="box-header with-border col-md-12">
+                        <h3 class="box-title">Driver Information</h3>
+                    </div>
+                    <div class="box-body col-md-12">
+                        @*MHT_DHT_DriverName*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Name</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(viewModel => viewModel.Model.MHT_DHT_DriverName, new { htmlAttributes = new { @class = "form-control", style = "text-transform:uppercase" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_MHT_DHT_DriverName"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('input[name=MHT_DHT_DriverName]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_MHT_DHT_DriverName]').html("Driver Name is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                        @*MHT_DHT_DriverLiceneseNumber*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Licenese Number</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(viewModel => viewModel.Model.MHT_DHT_DriverLiceneseNumber, new { htmlAttributes = new { @class = "form-control", style = "text-transform:uppercase" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_MHT_DHT_DriverLiceneseNumber"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('input[name=MHT_DHT_DriverLiceneseNumber]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_MHT_DHT_DriverLiceneseNumber]').html("Licenese Number is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        @*MHT_DHT_DriverLicenseType*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">License Type</label>
+                            <div class="col-md-8">
+                                @*@Html.DropDownList("MHT_DHT_DriverLicenseType", ViewBag.MHT_DHT_DriverLicenseTypeDict as SelectList, "Select", new { @class = "form-control" })*@
+                                @Html.EditorFor(viewModel => viewModel.Model.MHT_DHT_DriverLicenseType, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_MHT_DHT_DriverLicenseType"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('select[name=MHT_DHT_DriverLicenseType]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_MHT_DHT_DriverLicenseType]').html("License Type is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                        @*MHT_DHT_DriverContactNumber*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Contact Number</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(viewModel => viewModel.Model.MHT_DHT_DriverContactNumber, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_MHT_DHT_DriverContactNumber"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('input[name=MHT_DHT_DriverContactNumber]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_MHT_DHT_DriverContactNumber]').html("Contact Number is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        @*MHT_DHT_DriverFatherName*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Father's Name</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(viewModel => viewModel.Model.MHT_DHT_DriverFatherName, new { htmlAttributes = new { @class = "form-control", style = "text-transform:uppercase" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_MHT_DHT_DriverFatherName"></b>
+                            </div>
+                        </div>
+                        @*MHT_DHT_DriverAddressVillage*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Village</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(viewModel => viewModel.Model.MHT_DHT_DriverAddressVillage, new { htmlAttributes = new { @class = "form-control", style = "text-transform:uppercase" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_MHT_DHT_DriverAddressVillage"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        @*MHT_DHT_DriverAddressPostOfiice*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Post</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(viewModel => viewModel.Model.MHT_DHT_DriverAddressPostOfiice, new { htmlAttributes = new { @class = "form-control", style = "text-transform:uppercase" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_MHT_DHT_DriverAddressPostOfiice"></b>
+                            </div>
+                        </div>
+                        @*MHT_DHT_DriverAddressThana*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Thana</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(viewModel => viewModel.Model.MHT_DHT_DriverAddressThana, new { htmlAttributes = new { @class = "form-control", style = "text-transform:uppercase" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_MHT_DHT_DriverAddressThana"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        @*MHT_DHT_DriverAddressDistrict*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">District</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(viewModel => viewModel.Model.MHT_DHT_DriverAddressDistrict, new { htmlAttributes = new { @class = "form-control", style = "text-transform:uppercase" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_MHT_DHT_DriverAddressDistrict"></b>
+                            </div>
+                        </div>
+                        @*MHT_DHT_DriverNID*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">NID Number</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(viewModel => viewModel.Model.MHT_DHT_DriverNID, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_MHT_DHT_DriverNID"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-6">
+                            @if (Model.Model.HiredVehicleDrivers.Any() == true && Model.Model.HiredVehicleDrivers.OrderByDescending(m => m.CreatedAt).FirstOrDefault().DriverImageLocation != null)
+                            {
+                                @*CurrentImage*@
+                                <label class="col-md-4 control-label">Current Driver Image</label>
+                                <div class="col-md-8">
+                                    <img src="@Model.Model.HiredVehicleDrivers.OrderByDescending(m=>m.CreatedAt).FirstOrDefault().DriverImageLocation" style="height:200px; width:350px;" />
+                                </div>
+                            }
+                        </div>
+                        <div class="form-group col-md-6">
+                            @if (Model.Model.HiredVehicleDrivers.Any() == true && Model.Model.HiredVehicleDrivers.OrderByDescending(m => m.CreatedAt).FirstOrDefault().DriverLicenseImageLocation != null)
+                            {
+                                @*CurrentImage*@
+                                <label class="col-md-4 control-label">Current License Image</label>
+                                <div class="col-md-8">
+                                    <img src="@Model.Model.HiredVehicleDrivers.OrderByDescending(m => m.CreatedAt).FirstOrDefault().DriverLicenseImageLocation" style="height:200px; width:350px;" />
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="box-header with-border col-md-12">
+                        <h3 class="box-title">Owner Information</h3>
+                    </div>
+                    <div class="box-body col-md-12">
+                        @*MHT_DHT_OwnerName*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Name</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(viewModel => viewModel.Model.MHT_DHT_OwnerName, new { htmlAttributes = new { @class = "form-control", style = "text-transform:uppercase" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_MHT_DHT_OwnerName"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('input[name=MHT_DHT_OwnerName]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_MHT_DHT_OwnerName]').html("Owner Name is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                        @*MHT_DHT_OwnerContactNumber*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Contact Number</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(viewModel => viewModel.Model.MHT_DHT_OwnerContactNumber, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_MHT_DHT_OwnerContactNumber"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('input[name=MHT_DHT_OwnerContactNumber]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_MHT_DHT_OwnerContactNumber]').html("Contact Number is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        @*MHT_DHT_OwnerFatherName*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Father's Name</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(viewModel => viewModel.Model.MHT_DHT_OwnerFatherName, new { htmlAttributes = new { @class = "form-control", style = "text-transform:uppercase" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_MHT_DHT_OwnerFatherName"></b>
+                            </div>
+                        </div>
+                        @*MHT_DHT_OwnerAddressVillage*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Village</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(viewModel => viewModel.Model.MHT_DHT_OwnerAddressVillage, new { htmlAttributes = new { @class = "form-control", style = "text-transform:uppercase" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_MHT_DHT_OwnerAddressVillage"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        @*MHT_DHT_OwnerAddressPostOfiice*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Post</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(viewModel => viewModel.Model.MHT_DHT_OwnerAddressPostOffice, new { htmlAttributes = new { @class = "form-control", style = "text-transform:uppercase" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_MHT_DHT_OwnerAddressPostOfiice"></b>
+                            </div>
+                        </div>
+                        @*MHT_DHT_OwnerAddressThana*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Thana</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(viewModel => viewModel.Model.MHT_DHT_OwnerAddressThana, new { htmlAttributes = new { @class = "form-control", style = "text-transform:uppercase" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_MHT_DHT_OwnerAddressThana"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        @*MHT_DHT_OwnerAddressDistrict*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">District</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(viewModel => viewModel.Model.MHT_DHT_OwnerAddressDistrict, new { htmlAttributes = new { @class = "form-control", style = "text-transform:uppercase" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_MHT_DHT_OwnerAddressDistrict"></b>
+                            </div>
+                        </div>
+                        @*MHT_DHT_OwnerNID*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">NID Number</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(viewModel => viewModel.Model.MHT_DHT_OwnerNID, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_MHT_DHT_OwnerNID"></b>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-footer">
+                        @*<a class="btn btn-default" href="/Vehicle/Index">Back To List</a>*@
+                        @*<input type="button" class="btn btn-facebook pull-right" value="Create" onclick="TrySubmit()" />*@
+                        @*<input type="button" class="btn btn-facebook center-block" value="Save" onclick="GenerateRegistrationNumberAndTrySubmit()" />*@
+                    </div>
+
+
+
+                    <!-- /.box-footer -->
+                </form>
+
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+
+<script>
+    $('document').ready(function () {
+        $('input').attr("disabled", "disabled");
+        $('textarea').attr("disabled", "disabled");
+        $('select').attr("disabled", "disabled");
+    });
+</script>

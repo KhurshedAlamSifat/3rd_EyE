@@ -1,0 +1,507 @@
+﻿@model _3rdEyE.ViewModels.VM_Vehicle
+
+@{
+    ViewBag.Title = "View";
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        View Own Vehicle
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        <a class="btn btn-block btn-info btn-sm" href="@System.Web.HttpContext.Current.Request.UrlReferrer">Back To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Own Vehicle Information</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form name="ThisForm" class="form-horizontal" method="post" action="/Vehicle/Edit_OWN" enctype="multipart/form-data">
+                    @Html.EditorFor(viewModel => viewModel.Model.PK_Vehicle, new { htmlAttributes = new { @style = "display:none;" } })
+                    @Html.EditorFor(viewModel => viewModel.Model.ImageLocation, new { htmlAttributes = new { @style = "display:none;" } })
+                    <div class="box-body col-md-12">
+                        @*RegistrationNumber*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Registration Number*</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(viewModel => viewModel.Model.RegistrationNumber, new { htmlAttributes = new { @readonly = "readonly", @class = "form-control" } })
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="box-body col-md-12">
+                        @*FK_Company*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">User Company*</label>
+                            <div class="col-md-8">
+                                @*@Html.DropDownList("FK_Company", ViewBag.UserCompanies as SelectList, "Select", new { @class = "form-control" })*@
+                                @Html.EditorFor(viewModel => viewModel.Model.Company.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_Company"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('select[name=FK_Company]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_FK_Company]').html("Company is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                        @*Internal_FK_PurchasingCompany*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Purchasing Company</label>
+                            <div class="col-md-8">
+                                @*@Html.DropDownList("Internal_FK_PurchasingCompany", ViewBag.PurchaseCompanies as SelectList, "Select", new { @class = "form-control" })*@
+                                @Html.EditorFor(viewModel => viewModel.Model.Company1.Name, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="box-body col-md-12">
+                        @*Internal_FK_FinancingCompany*@
+                        <div class="form-group  col-md-6">
+                            <label class="col-md-4 control-label">Financing Company</label>
+                            <div class="col-md-8">
+                                @*@Html.DropDownList("Internal_FK_FinancingCompany", ViewBag.FinancingCompanies as SelectList, "Select", new { @class = "form-control" })*@
+                                @Html.EditorFor(viewModel => viewModel.Model.FinancingCompany.Name, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+                        @*FK_Depo*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">User Group*</label>
+                            <div class="col-md-8">
+                                @*@Html.DropDownList("FK_Depo", ViewBag.Depoes as SelectList, "Select", new { @class = "form-control", onchange = "relodeFK_DepoGroup()", data_specify = "vehicleDepo" })*@
+                                @Html.EditorFor(viewModel => viewModel.Model.Depo.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_Depo"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('select[name=FK_Depo]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_FK_Depo]').html("Depo is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        @*Internal_VehicleContactNumber*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Vehicle Contact Number</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(viewModel => viewModel.Model.Internal_VehicleContactNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_Internal_VehicleContactNumber"></b>
+                            </div>
+                        </div>
+                        @*FK_DepoGroup*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">User Sub-Group</label>
+                            <div class="col-md-7">
+                                @*@Html.DropDownList("FK_DepoGroup", ViewBag.DepoGroups as SelectList, "Select", new { @class = "form-control" })*@
+                                @Html.EditorFor(viewModel => viewModel.Model.DepoGroup.Name, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                            <div class="col-md-1">
+                                <button class="btn btn-facebook center-block" onclick="showModalDriverAdd(); return false;">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+
+                        @*FK_VehicleBrandModel*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Brand/Model</label>
+                            <div class="col-md-3">
+                                @*@Html.DropDownList("FK_VehicleBrand", ViewBag.VehicleBrands as SelectList, "Select", new { @class = "form-control", onchange = "relodeFK_VehicleBrandModel()" })*@
+                                @Html.EditorFor(viewModel => viewModel.Model.VehicleModel.VehicleBrand.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_VehicleBrand"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('select[name=FK_VehicleBrand]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_FK_VehicleBrand]').html("Brand is required.");
+                                        }
+                                    });
+                            </script>
+                            <label class="col-md-1 control-label">/</label>
+                            <div class="col-md-4">
+                                @*@Html.DropDownList("FK_VehicleModel", ViewBag.VehicleModels as SelectList, "Select", new { @class = "form-control" })*@
+                                @Html.EditorFor(viewModel => viewModel.Model.VehicleModel.Title, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_VehicleModel"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('select[name=FK_VehicleModel]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_FK_VehicleModel]').html("Brand is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+
+                        @*RegisrationDate*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Regisration Date</label>
+                            <div class="col-md-4">
+                                @*<input name="RegisrationDate" value="@ViewBag.viewModel.Model.RegisrationDate" type="text" class="form-control">*@
+                                @Html.EditorFor(viewModel => viewModel.Model.RegisrationDate, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_RegisrationDate"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('input[name=RegisrationDate]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_RegisrationDate]').html("Regisration date is required.");
+                                        }
+                                    });
+                            </script>
+                            <div class="col-md-4">
+                                <strong>YYYY-MM-DD</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+
+                        @*EngineNumber*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Engine Number</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(viewModel => viewModel.Model.EngineNumber, new { htmlAttributes = new { @class = "form-control", style = "text-transform:uppercase" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_EngineNumber"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('input[name=EngineNumber]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_EngineNumber]').html("Engine Number is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+
+                        @*EngineCC*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Engine CC</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(viewModel => viewModel.Model.EngineCC, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_EngineCC"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('input[name=EngineCC]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_EngineCC]').html("Engine CC is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+
+                        @*ChassisNumber*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Chassis Number</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(viewModel => viewModel.Model.ChassisNumber, new { htmlAttributes = new { @class = "form-control", style = "text-transform:uppercase" } })
+                                @*<input name="ChassisNumber" value="@ViewBag.viewModel.Model.ChassisNumber" type="text" class="form-control">*@
+                                <b class="errorMessage" data-category="errorMessage" name="error_ChassisNumber"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('input[name=ChassisNumber]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_ChassisNumber]').html("Chassis Number is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+
+                        @*VehicleType*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Vehicle Type</label>
+                            <div class="col-md-8">
+                                @*@Html.DropDownList("VehicleType", ViewBag.VehicleTypesDict as SelectList, "Select", new { @class = "form-control" })*@
+                                @Html.EditorFor(viewModel => viewModel.Model.VehicleType, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_VehicleType"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('select[name=VehicleType]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_VehicleType]').html("Vehicle type is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        @*FuelType*@
+                        <div class="form-group col-md-4">
+                            <label class="col-md-6 control-label">Fuel Type</label>
+                            <div class="col-md-6">
+                                @Html.EditorFor(viewModel => viewModel.Model.FuelType, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_FuelType"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('select[name=FuelType]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_FuelType]').html("Fuel Type is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+
+                        @*CapacityTon*@
+                        <div class="form-group col-md-4">
+                            <label class="col-md-6 control-label">Capacity Ton</label>
+                            <div class="col-md-6">
+                                @Html.EditorFor(viewModel => viewModel.Model.CapacityTon, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_CapacityTon"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('select[name=CapacityTon]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_CapacityTon]').html("CapacityTon is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+
+                        @*CapacitySeat*@
+                        <div class="form-group col-md-4">
+                            <label class="col-md-6 control-label">Capacity Seat [without helper]</label>
+                            <div class="col-md-6">
+                                @Html.EditorFor(viewModel => viewModel.Model.CapacitySeat, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_CapacitySeat"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-6">
+                        </div>
+                        <div class="form-group col-md-6">
+                            @if (Model.Model.ImageLocation != null)
+                            {
+                                @*CurrentImage*@
+                                <label class="col-md-4 control-label">Current image</label>
+                                <div class="col-md-8">
+                                    <img src="@Model.Model.ImageLocation" style="height:200px; width:350px;" />
+                                </div>
+
+                            }
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        @*NumberPlate_IsDigital*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Number Plate (Digital/Manual)</label>
+                            <div class="col-md-8">
+                                @*@Html.DropDownList("NumberPlate_IsDigital", ViewBag.NumberPlate_StatusesDict as SelectList, "Select", new { @class = "form-control" })*@
+                                @Html.EditorFor(viewModel => viewModel.NumberPlate_IsDigital_Text, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_NumberPlate_IsDigital"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('select[name=NumberPlate_IsDigital]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_NumberPlate_IsDigital]').html("Number plate is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+
+                        @*ImageLocation*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Select Image</label>
+                            <div class="col-md-8">
+                                <input id="VehicleImage" name="VehicleImage" type="file" class="form-control" onchange="validateVehicleImage()">
+                            </div>
+                            <script>
+                                function validateVehicleImage() {
+                                    var ext = $("#VehicleImage").val().split('.').pop().toLowerCase();
+                                    if ($.inArray(ext, ['gif', 'png', 'jpg', 'jpeg']) == -1) {
+                                        alert("Invalid File type.");
+                                        $("#VehicleImage").val('');
+                                        return;
+                                    }
+
+                                    if ($("#VehicleImage")[0].files[0].size > 300000) {
+                                        alert("Image size is too big. Can not select it.");
+                                        $("#VehicleImage").val('');
+                                    }
+                                }
+                            </script>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        @*GpsMobileNumber*@
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">GPS Device Mobile No.</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(viewModel => viewModel.Model.GpsMobileNumber, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+                            </div>
+                        </div>
+                        @*GpsIMEINumber*@
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">GPS Device IMEI</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(viewModel => viewModel.Model.GpsIMEINumber, new { htmlAttributes = new { @class = "form-control", style = "text-transform:uppercase" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_GpsIMEINumber"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('input[name=GpsIMEINumber]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_GpsIMEINumber]').html("GPS device IMEI number is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                        @*GpsDeviceModel*@
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Gps Device Model</label>
+                            <div class="col-md-8">
+                                @*@Html.DropDownList("GpsDeviceModel", ViewBag.GpsDeviceModelsDict as SelectList, "Select", new { @class = "form-control" })*@
+                                @Html.EditorFor(viewModel => viewModel.Model.GpsDeviceModel, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_GpsDeviceModel"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('select[name=GpsDeviceModel]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_GpsDeviceModel]').html("Gps device model is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        @*Internal_ShowTemperature*@
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Show Temperature</label>
+                            <div class="col-md-8">
+                                @*@Html.DropDownList("Internal_ShowTemperature", ViewBag.ShowTemperatureDict as SelectList, "Select", new { @class = "form-control" })*@
+                                @Html.EditorFor(viewModel => viewModel.Internal_ShowTemperature_Text, new { htmlAttributes = new { @class = "form-control" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_Internal_ShowTemperature"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        @*PhysicalDocumnetLocation*@
+                        <div class="form-group col-md-12">
+                            <label class="col-md-2 control-label">Physical Documnet Location</label>
+                            <div class="col-md-10">
+                                @Html.EditorFor(viewModel => viewModel.Model.PhysicalDocumnetLocation, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        @*Internal_VehiclePrice*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Vehicle Price</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(viewModel => viewModel.Model.Internal_VehiclePrice, new { htmlAttributes = new { @class = "form-control" } })
+                                @*<input name="Internal_VehiclePrice" value="@ViewBag.viewModel.Model.Internal_VehiclePrice" type="text" class="form-control">*@
+                                <b class="errorMessage" data-category="errorMessage" name="error_Internal_VehiclePrice"></b>
+                            </div>
+                            @*<script>
+                                    validatorArray.push(
+                                        function () {
+                                            if (isPranRFLGroup == true) {
+                                                var check = $('input[name=Internal_VehiclePrice]').val();
+                                                if (check == "") {
+                                                    formValidity = false;
+                                                    $('b[name=error_Internal_VehiclePrice]').html("Vehicle Price is required.");
+                                                }
+                                            }
+                                        });
+                                </script>*@
+                        </div>
+                        @*Internal_PurchaseDate*@
+                        <div class="form-group  col-md-6">
+                            <label class="col-md-4 control-label">Purchase Date</label>
+                            <div class="col-md-4">
+                                @Html.EditorFor(viewModel => viewModel.Model.Internal_PurchaseDate, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                @*<input name="Internal_PurchaseDate" value="@(ViewBag.viewModel.Model.Internal_PurchaseDate==null?"":ViewBag.viewModel.Model.Internal_PurchaseDate.ToShortDateString())" type="date" class="form-control">*@
+                                <b class="errorMessage" data-category="errorMessage" name="error_Internal_PurchaseDate"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('input[name=Internal_PurchaseDate]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_Internal_PurchaseDate]').html("Purchase Date is required.");
+                                        }
+                                    });
+                            </script>
+                            <div class="col-md-4">
+                                <strong>YYYY-MM-DD</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-footer">
+                        @*<a class="btn btn-default" href="/Vehicle/Index">Back To List</a>*@
+                        @*<input type="button" class="btn btn-facebook pull-right" value="Edit" onclick="TrySubmit()" />*@
+                        @*<input type="button" class="btn btn-facebook center-block" value="Save" onclick="TrySubmit()" />*@
+                    </div>
+
+                    <!-- /.box-footer -->
+                </form>
+
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+
+<script>
+    $('document').ready(function () {
+        $('input').attr("disabled", "disabled");
+        $('textarea').attr("disabled", "disabled");
+        $('select').attr("disabled", "disabled");
+    });
+</script>

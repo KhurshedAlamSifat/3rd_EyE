@@ -1,0 +1,108 @@
+﻿@model _3rdEyE.Models.ContructualRequisitionDetail
+@{
+    ViewBag.Title = "Create";
+}
+
+<section class="content-header">
+    <h1>
+        Create New Contructual Requisition
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        <a class="btn btn-block btn-info btn-sm" href="/ContructualRequisition/ContructualRequisitionDetailList_ExternalAgent">Contructual Requisition List(Existing)</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/ContructualRequisition/Create" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="col-md-12">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Contructual Requisition Information</h3>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body col-md-12">
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <label>Company: </label>&nbsp; @Html.DisplayFor(m => m.ContructualRequisition.ContructualRequisitionCompany.Name)
+                                        </td>
+                                        <td>
+                                            <label>Starting Location: </label>&nbsp; @Html.DisplayFor(m => m.StartingLocation)
+                                        </td>
+                                        <td>
+                                            <label>Finishing Location: </label>&nbsp;@Html.DisplayFor(m => m.FinishingLocation)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>Vehicle Type: </label>&nbsp; @Html.DisplayFor(modelItem => modelItem.VehicleTypeLayer1_english)&nbsp;@Html.DisplayFor(modelItem => modelItem.VehicleTypeLayer2_english)&nbsp;@Html.DisplayFor(modelItem => modelItem.VehicleTypeLayer3_english)
+                                        </td>
+                                        <td>
+                                            <label>Trip Charge: </label>&nbsp;@Html.DisplayFor(m => m.PricePerVehicle)  &nbsp;BDT
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3">
+                                            <label>Activa period: </label>&nbsp; @Model.ContructualRequisition.ContructAcitivatingDate - @Model.ContructualRequisition.ContructAcitivatingDate
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                    <div class="col-md-12">
+                        <table id="data_table" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Date
+                                    </th>
+                                    <th>
+                                        Hired Count
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in ViewBag.ContructualRequisitionDetailEntries)
+                                {
+                                    <tr>
+                                        <td>
+                                            @item.ExecutionDate.ToString("dd'/'MM'/'yyyy")
+                                        </td>
+                                        <td>
+                                            @item.VehicleCount
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="box-footer">
+                        @*<input type="button" class="btn btn-facebook center-block" value="Save" onclick="TrySubmit()" />*@
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+
+</section>
+
+<script>
+    $('document').ready(function () {
+        $('input').attr("disabled", "disabled");
+        $('textarea').attr("disabled", "disabled");
+        $('select').attr("disabled", "disabled");
+    });
+</script>
+

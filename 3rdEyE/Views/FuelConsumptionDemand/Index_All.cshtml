@@ -1,0 +1,245 @@
+﻿@model IEnumerable<_3rdEyE.Models.FuelConsumptionDemand>
+@{
+    var RolePermissionList = (List<_3rdEyE.ManagingTools.Permission>)Session["RolePermissionList"];
+}
+
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+<!-- DataTablesExportable -->
+<link href="~/Content/ExportableDatatable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/ExportableDatatable/buttons.dataTables.min.css" rel="stylesheet" />
+@{
+    string ConvertToDateTimeString(DateTime? dateTime)
+    {
+        return String.Format("{0:yyyy/MM/dd HH:mm}", dateTime);
+    }
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Demand List : Raiser View
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @if (RolePermissionList.Where(m => m.FullName == "Requisition-create").Any())
+        {
+            <a class="btn btn-block btn-info btn-sm" href="/Requisition/Create_Multi">Create New</a>
+        }
+    </div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-header">
+                    <h3 class="box-title"></h3>
+                </div>
+
+                <div class="row">
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-3">
+                            <label class="col-md-3 control-label">Starting Date:</label>
+                            <div class="input-group col-md-8">
+                                <div class="col-md-12 input-append date form_datetime" data-link-field="dtp_input1">
+                                    <input id="StartingDate" name="StartingDate" class="form-control col-md-12" type="text" value="@ViewBag.StartingDate" readonly="readonly" style="background-color: white;">
+                                    <span class="add-on"><i class="icon-remove"></i></span>
+                                    <span class="add-on"><i class="icon-th"></i></span>
+                                </div>
+                                <input type="hidden" id="dtp_input1" value="" style="display:none;" /><br />
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="col-md-3 control-label">Ending Date:</label>
+                            <div class="input-group col-md-8">
+                                <div class="col-md-12 input-append date form_datetime" data-link-field="dtp_input1">
+                                    <input id="EndingDate" name="EndingDate" class="form-control col-md-12" type="text" value="@ViewBag.EndingDate" readonly="readonly" style="background-color: white;">
+                                    <span class="add-on"><i class="icon-remove"></i></span>
+                                    <span class="add-on"><i class="icon-th"></i></span>
+                                </div>
+                                <input type="hidden" id="dtp_input2" value="" style="display:none;" /><br />
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="col-md-3 control-label">Tracking Id:</label>
+                            <div class="col-md-8">
+                                <input id="TrackingId" name="TrackingId" value="@ViewBag.TrackingId" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="col-md-3 control-label">PRG_Type:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("PRG_Type", ViewBag.PRG_TypesDict as SelectList, "Select", new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-3">
+                            <label class="col-md-3 control-label">From:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Location_From", ViewBag.FromLocations as SelectList, "Select", new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="col-md-3 control-label">To:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Location_To", ViewBag.ToLocations as SelectList, "Select", new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="col-md-3 control-label">Status:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("Status", ViewBag.Statuses as SelectList, "Select", new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-3">
+                            <button class="btn btn-facebook" onclick="getData()">Get Data</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- /.box-header -->
+                <div class="box-body" style="overflow-x:scroll; height: 500px; overflow-y: scroll;">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Tracking ID</th>
+                                <th>PRG Type</th>
+                                <th>Fuel Pump</th>
+                                <th>From</th>
+                                <th>To</th>
+                                <th>Required Time</th>
+                                <th>Required Qty</th>
+                                <th>Given Qty</th>
+                                <th>BU 1</th>
+                                <th>BU 1 R.Qty</th>
+                                <th>BU 2</th>
+                                <th>BU 2 R.Qty</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="detail_tbody">
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.TrackingID</td>
+                                    <td>@item.PRG_Type</td>
+                                    <td>@item.FuelPump.Name</td>
+                                    <td>@(item.Location?.Name)</td>
+                                    <td>@(item.Location1?.Name)</td>
+                                    <td>@item.RequiredAt</td>
+                                    <td>@item.RequiredQuantity_Manual</td>
+                                    <td>@item.GivenQuantity</td>
+                                    <td>@item.BusinessUnit_1</td>
+                                    <td>@item.BusinessUnit_1_CarringPercentage</td>
+                                    <td>@item.BusinessUnit_2</td>
+                                    <td>@item.BusinessUnit_2_CarringPercentage</td>
+                                    <td>@item.Status</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- DataTablesExportable -->
+<script src="~/Scripts/Custom/DataTableExportable/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.flash.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/jszip.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/pdfmake.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/vfs_fonts.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.html5.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.print.min.js"></script>
+<!-- page script -->
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $('.form_datetime').datetimepicker({
+            format: 'yyyy-mm-dd HH:ii P',
+            todayBtn: 1,
+            autoclose: 1,
+        });
+        $('select').select2();
+        makeDataTable();
+    });
+</script>
+<script>
+    function makeDataTable() {
+        var data_table_exportableColum = [];
+        for (var i = 0; i < 14; i++) {
+            data_table_exportableColum.push(i);
+        }
+
+        var data_table = $('#data_table').DataTable({
+            //scrollX: true,
+            paging: false,
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'pdfHtml5',
+                    orientation: 'landscape',
+                    pageSize: 'LEGAL'
+                },
+                {
+                    extend: 'print',
+                    title: 'Demand List',
+                    customize: function (win) {
+                        $(win.document.body)
+                            .css('font-size', '10pt');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', '15px');
+                    }
+                },
+                {
+                    extend: 'excel',
+                    title: 'Demand List',
+                    filename: 'Requisition List',
+                    footer: false,
+                    header: true,
+                    exportOptions: {
+                        columns: data_table_exportableColum
+                    }
+                }
+            ],
+        });
+        data_table.columns('.data_table_hidden_col').visible(false);
+    }
+</script>
+<script>
+    function getData() {
+        var StartingDate = $('Input[name=StartingDate]').val();
+        var EndingDate = $('Input[name=EndingDate]').val();
+        if (StartingDate == '' || EndingDate == '') {
+            alert("Please, Select starting date and ending date.");
+            return;
+        }
+
+        var PRG_Type = $('#PRG_Type').find(":selected").val();
+        var TrackingId = $('Input[name=TrackingId]').val();
+        var FK_Location_From = $('#FK_Location_From').find(":selected").val();
+        var FK_Location_To = $('#FK_Location_To').find(":selected").val();
+        var Status = $('#Status').find(":selected").val();
+
+        //window.location
+        window.location = '/FuelConsumptionDemand/Index_All?' + 'PRG_Type=' + PRG_Type + '&StartingDate=' + StartingDate + '&EndingDate=' + EndingDate + '&TrackingId=' + TrackingId
+            + '&FK_Location_From=' + FK_Location_From + '&FK_Location_To=' + FK_Location_To + '&Status=' + Status;
+        console.log(link);
+    }
+</script>

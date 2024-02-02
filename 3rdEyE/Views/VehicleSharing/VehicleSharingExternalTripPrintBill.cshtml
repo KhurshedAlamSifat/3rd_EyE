@@ -1,0 +1,299 @@
+﻿@model _3rdEyE.Models.VehicleSharingExternalTrip
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="~/Theme/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <script src="~/Theme/bower_components/jquery/dist/jquery.min.js"></script>
+</head>
+<body>
+    <button class="btn-lg btn-primary" style="margin-top:50px; margin-left:340px; margin-bottom:50px;" onclick="print_div_2()">Print</button>
+    <br />
+    <div id="printingDiv" style="width:840px; display:flex;">
+
+        <div style="width:380px; margin-left:10px;">
+            @*top*@
+            <h2 id="copy_no_accountant"></h2>
+            <div style="font-size:16px;">
+                <div>
+                    <h4>Driver Trip Bill - Accountant copy</h4>
+                </div>
+                <div>
+                    <label>বিলের নং:</label>
+                    <label> EV @Model.VehicleSharingBidding.VehicleSharing.TrackingID</label>
+                </div>
+                <div>
+                    <label>বিলের টাইপ:</label>
+                    <label>Expense Voucher</label>
+                </div>
+                <div>
+                    <label>বিলের তারিখ:</label>
+                    <label>@Model.AssingedAt</label>
+                </div>
+                <div>
+                    <label>গাড়ি নং:</label>
+                    <label>@Model.Vehicle.RegistrationNumber</label>
+                </div>
+                <div>
+                    <label>ট্র্যান্সপোর্ট এজেন্টের নাম:</label>
+                    <label>@Model.VehicleSharingBidding.AppUser.FullName</label>
+                </div>
+                <div>
+                    <label>বুকিং ডিপো:</label>
+                    <label>@Model.VehicleSharingBidding.VehicleSharing.Depo.Name &nbsp; @Model.VehicleSharingBidding.VehicleSharing.StartingLocation</label>
+                </div>
+                <div>
+                    <label>ডেস্টিনেসন ডিপো:</label>
+                    <label>@Model.VehicleSharingBidding.VehicleSharing.Depo1.Name  &nbsp; @Model.VehicleSharingBidding.VehicleSharing.FinishingLocation</label>
+                </div>
+                <div>
+                    <label>মোট দূরত্ব:</label>
+                    <label>@Model.VehicleSharingBidding.VehicleSharing.DistanceGoogle KM</label>
+                </div>
+            </div>
+            <br />
+            @*middle*@
+            <div style="font-size:16px;">
+                <table>
+                    <thead>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>নং</td>
+                            <td>খরচের খাত</td>
+                            <td>প্রক্রিত চাহিদা</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>
+                                    ১
+                                </label>
+                            </td>
+                            <td>
+                                <label>
+                                    Rent
+                                </label>
+                            </td>
+                            <td style="float:right;">
+                                <label>
+                                    <b>@Model.VehicleSharingBidding.PricePerQuantity</b>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label></label></td>
+                            <td>
+                                <label>
+                                    মোট টাকা
+                                </label>
+                            </td>
+                            <td style="float:right;">
+                                <label>
+                                    <b>@Model.VehicleSharingBidding.PricePerQuantity</b>
+                                </label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <br />
+
+            @*bottom*@
+            <div style="font-size:16px;">
+                <div>
+                    <label>প্রকৃত প্রদান টাকা (অংকে):</label>
+                    <label></label>
+                </div>
+                <div>
+                    <label>প্রকৃত প্রদান টাকা (কথায়):</label>
+                    <label></label>
+                </div>
+                <br />
+                <br />
+                <div>
+                    <label>গ্রহণকারী</label>
+                    <label style="float:right;">প্রস্তুতকারী</label>
+                </div>
+                <br />
+                <br />
+                <div>
+                    <label>প্রদানকারী</label>
+                    <label style="float:right;">অনুমোদনকারী</label>
+                </div>
+                <div>
+                    <label>বিল কর্তনের পরিমাণ:</label>
+                </div>
+            </div>
+        </div>
+        <div style="width:380px; margin-left:70px;">
+            @*top*@
+            <h2 id="copy_no_transport_agent"></h2>
+            <div style="font-size:16px;">
+                <div>
+                    <h4>Driver Trip Bill - Transport Agent copy</h4>
+                </div>
+                <div>
+                    <label>বিলের নং:</label>
+                    <label> EV @Model.VehicleSharingBidding.VehicleSharing.TrackingID</label>
+                </div>
+                <div>
+                    <label>বিলের টাইপ:</label>
+                    <label>Expense Voucher</label>
+                </div>
+                <div>
+                    <label>বিলের তারিখ:</label>
+                    <label>@Model.AssingedAt</label>
+                </div>
+                <div>
+                    <label>গাড়ি নং:</label>
+                    <label>@Model.Vehicle.RegistrationNumber</label>
+                </div>
+                <div>
+                    <label>ট্র্যান্সপোর্ট এজেন্টের নাম:</label>
+                    <label>@Model.VehicleSharingBidding.AppUser.FullName</label>
+                </div>
+                <div>
+                    <label>বুকিং ডিপো:</label>
+                    <label>@Model.VehicleSharingBidding.VehicleSharing.Depo.Name &nbsp; @Model.VehicleSharingBidding.VehicleSharing.StartingLocation</label>
+                </div>
+                <div>
+                    <label>ডেস্টিনেসন ডিপো:</label>
+                    <label>@Model.VehicleSharingBidding.VehicleSharing.Depo1.Name  &nbsp; @Model.VehicleSharingBidding.VehicleSharing.FinishingLocation</label>
+                </div>
+                <div>
+                    <label>মোট দূরত্ব:</label>
+                    <label>@Model.VehicleSharingBidding.VehicleSharing.DistanceGoogle KM</label>
+                </div>
+            </div>
+            <br />
+            @*middle*@
+            <div style="font-size:16px;">
+                <table>
+                    <thead>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>নং</td>
+                            <td>খরচের খাত</td>
+                            <td>প্রক্রিত চাহিদা</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>
+                                    ১
+                                </label>
+                            </td>
+                            <td>
+                                <label>
+                                    Rent
+                                </label>
+                            </td>
+                            <td style="float:right;">
+                                <label>
+                                    <b>@Model.VehicleSharingBidding.PricePerQuantity</b>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label></label></td>
+                            <td>
+                                <label>
+                                    মোট টাকা
+                                </label>
+                            </td>
+                            <td style="float:right;">
+                                <label>
+                                    <b>@Model.VehicleSharingBidding.PricePerQuantity</b>
+                                </label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <br />
+
+            @*bottom*@
+            <div style="font-size:16px;">
+                <div>
+                    <label>প্রকৃত প্রদান টাকা (অংকে):</label>
+                    <label></label>
+                </div>
+                <div>
+                    <label>প্রকৃত প্রদান টাকা (কথায়):</label>
+                    <label></label>
+                </div>
+                <br />
+                <br />
+                <div>
+                    <label>গ্রহণকারী</label>
+                    <label style="float:right;">প্রস্তুতকারী</label>
+                </div>
+                <br />
+                <br />
+                <div>
+                    <label>প্রদানকারী</label>
+                    <label style="float:right;">অনুমোদনকারী</label>
+                </div>
+                <div>
+                    <label>বিল কর্তনের পরিমাণ:</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    function print_div() {
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/VehicleSharing/VehicleSharingExternalTripUpdatePrintCopy/",
+            data: JSON.stringify({ id: @Model.PK_VehicleSharingExternalTrip}),
+            success: function (data) {
+                if (data.PrintCopy == 1) {
+                    $("#copy_no_accountant").html('First Copy');
+                    $("#copy_no_transport_agent").html('First Copy');
+                } else {
+                    $("#copy_no_accountant").html('Copy : ' + data.PrintCopy);
+                    $("#copy_no_transport_agent").html('Copy : ' + data.PrintCopy);
+                }
+
+
+                var contents = document.getElementById("printingDiv").innerHTML;
+                var frame1 = document.createElement('iframe');
+                frame1.name = "frame1";
+                frame1.style.position = "absolute";
+                frame1.style.top = "-1000000px";
+                document.body.appendChild(frame1);
+                var frameDoc = frame1.contentWindow ? frame1.contentWindow : frame1.contentDocument.document ? frame1.contentDocument.document : frame1.contentDocument;
+                frameDoc.document.open();
+                frameDoc.document.write('<html><head><title></title>');
+                frameDoc.document.write("<style type='text/css' media='print'>  @@page { size: auto; margin: 0; } </style>");
+                frameDoc.document.write('</head><body>');
+                frameDoc.document.write("<div style='width:1100px; display:flex;'>");
+                frameDoc.document.write(contents);
+                frameDoc.document.write("</div>");
+                frameDoc.document.write('</body></html>');
+                frameDoc.document.close();
+                setTimeout(function () {
+                    window.frames["frame1"].focus();
+                    window.frames["frame1"].print();
+                    document.body.removeChild(frame1);
+                }, 500);
+                return false;
+
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: relodeFK_VehicleBrandModel()");
+            }
+        });
+    }
+</script>

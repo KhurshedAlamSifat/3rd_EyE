@@ -1,0 +1,310 @@
+﻿@model IEnumerable<_3rdEyE.Models.Vehicle>
+
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+<!-- DataTablesExportable -->
+<link href="~/Content/ExportableDatatable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/ExportableDatatable/buttons.dataTables.min.css" rel="stylesheet" />
+@{
+    string ConvertToDateTimeString(DateTime? dateTime)
+    {
+        return String.Format("{0:yyyy/MM/dd HH:mm}", dateTime);
+    }
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Factory Entered Vehicle
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        @*<a class="btn btn-block btn-info btn-sm" href="/TemporaryVehicle/Create">Create</a>*@
+    </div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-header">
+                    <h3 class="box-title"></h3>
+                </div>
+
+                <div class="row">
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-3">
+                            <label class="col-md-4 control-label">O/M/D:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("OWN_MHT_DHT", ViewBag.OWN_MHT_DHT as SelectList, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="col-md-4 control-label">PRG Type:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("PRG_Type", ViewBag.PRG_Type as SelectList, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="col-md-4 control-label">Location:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Location", ViewBag.Locations as SelectList, new { @class = "form-control", onchange = "relode_FK_AppUser_Gate()" })
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="col-md-4 control-label">Gate:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_AppUser_Gate", ViewBag.FK_AppUser_Gate as SelectList, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-3">
+                            <label class="col-md-4 control-label">Destination:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Destination", ViewBag.FK_Destination as SelectList, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="col-md-4 control-label">Vehicle:</label>
+                            <div class="col-md-8">
+                                <input id="RegistrationNumber" name="RegistrationNumber" value="@ViewBag.RegistrationNumber" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="col-md-4 control-label">Max Waiting Hour:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("MaxStayTimeHour", ViewBag.MaxStayTimeHourDict as SelectList, "Select", new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-body col-md-12">
+                        <div class="col-md-2">
+                            <button class="btn btn-facebook" onclick="FilterByInputToRedirectView()">Filter</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- /.box-header -->
+            <div class="box-body" style="overflow-x:scroll;">
+                <table id="data_table" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                Vehicle
+                            </th>
+                            <th>
+                                O/M/D
+                            </th>
+                            <th>
+                                User Group
+                            </th>
+                            <th>
+                                PRG Type
+                            </th>
+                            <th>
+                                Location
+                            </th>
+                            <th>
+                                In Gate
+                            </th>
+                            <th>
+                                Destination
+                            </th>
+                            <th>
+                                In Time
+                            </th>
+                            <th>
+                                Stay Time (hh:mm)
+                            </th>
+                        </tr>
+                    </thead>
+                    @{
+                        var now = DateTime.Now;
+
+                        Int64 MaxStayTimeMinute = 0;
+                        if (!string.IsNullOrEmpty(ViewBag.MaxStayTimeHour))
+                        {
+                            MaxStayTimeMinute = Convert.ToInt64(ViewBag.MaxStayTimeHour) * 60;
+                        }
+                    }
+                    <tbody>
+                        @foreach (var item in Model.OrderBy(m => m.RegistrationNumber))
+                        {
+                            var InStayTimeMinute = (Int64)(now - item.LocationInOutTime).Value.TotalMinutes;
+                            @*<tr @(MaxStayTimeHour != 0 && InStayTimeMinute > MaxStayTimeHour ? "style='background-color:tomato'" : "style='background-color:green'")>*@
+                            <tr style='background-color:@(MaxStayTimeMinute != 0 && InStayTimeMinute > MaxStayTimeMinute?"#f7b2ad":"white")'>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RegistrationNumber)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.OWN_MHT_DHT)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Depo.Name)
+                                </td>
+                                <td>
+                                    @*@(item.Depo.PRG_Type == "CS" ? "CS" : "")
+                                        @(item.Depo.PRG_Type == "PRAN" ? "PRAN" : "")
+                                        @(item.Depo.PRG_Type == "RFL" ? "RFL" : "")
+                                        @(item.Depo.PK_Depo.ToString() == "00000000-0000-0000-0000-000000000000" ? item.VehicleInOutManual.AppUser.PRG_Type : "")*@
+                                    @(item.OWN_MHT_DHT != "DHT" ? item.Depo.PRG_Type : item.VehicleInOutManual.AppUser.PRG_Type)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Location.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.VehicleInOutManual.AppUser.FullName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.VehicleInOutManual.PRG_Type.Title)
+                                </td>
+                                <td>
+                                    @*@Html.DisplayFor(modelItem => item.LocationInOutTime)*@
+                                    @ConvertToDateTimeString(item.LocationInOutTime)
+                                </td>
+                                <td>
+                                    @*@InStayTimeMinute*@
+                                    @{
+                                        if (InStayTimeMinute != null)
+                                        {
+                                            var _hour = (Int64)(InStayTimeMinute / 60);
+                                            var _min = (Int64)(InStayTimeMinute % 60);
+                                            @_hour.ToString("00")<text>:</text>@_min.ToString("00")
+                                        }
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+    <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+<script>
+    $(function () {
+        $('select').select2();
+        $('.form_datetime').datetimepicker({
+            format: 'yyyy-mm-dd HH:ii P',
+            todayBtn: 1,
+            autoclose: 1,
+        });
+    });
+</script>
+<!-- DataTablesExportable -->
+<script src="~/Scripts/Custom/DataTableExportable/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.flash.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/jszip.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/pdfmake.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/vfs_fonts.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.html5.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.print.min.js"></script>
+<script>
+    $(function () {
+        $('#data_table').DataTable({
+            "ordering": true,
+            "paging": false,
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+    });
+</script>
+<script>
+    function relode_FK_AppUser_Gate() {
+        var FK_Location = $('select[name=FK_Location]').val();
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/Location/GetAppUserGate_ByLocation/",
+            data: JSON.stringify({ PK_Location: FK_Location }),
+            success: function (data) {
+                $('select[name=FK_AppUser_Gate]').html("");
+                var result = "<option value='all'>" + "All" + "</option>";
+                for (var i = 0; i < data.length; i++) {
+                    result = result + "<option value='" + data[i].Value + "'>" + data[i].Text + "</option>";
+                }
+                $('select[name=FK_AppUser_Gate]').html(result);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: relode_FK_AppUser_Gate()");
+            }
+        });
+    }
+    function FilterByInputToRedirectView() {
+        var url = "/VehicleGateNew/EnteredVehicleIndex?";
+
+        var OWN_MHT_DHT = $("select[name=OWN_MHT_DHT]").val();
+        if (OWN_MHT_DHT != '') {
+            url = url + "&OWN_MHT_DHT=" + OWN_MHT_DHT;
+        } else {
+            url = url + "&OWN_MHT_DHT=null";
+        }
+
+        var PRG_Type = $("select[name=PRG_Type]").val();
+        if (PRG_Type != '') {
+            url = url + "&PRG_Type=" + PRG_Type;
+        } else {
+            url = url + "&PRG_Type=null";
+        }
+
+        var FK_Location = $("select[name=FK_Location]").val();
+        if (FK_Location != '') {
+            url = url + "&FK_Location=" + FK_Location;
+        } else {
+            url = url + "&FK_Location=null";
+        }
+
+        var FK_AppUser_Gate = $("select[name=FK_AppUser_Gate]").val();
+        if (FK_AppUser_Gate != '') {
+            url = url + "&FK_AppUser_Gate=" + FK_AppUser_Gate;
+        } else {
+            url = url + "&FK_AppUser_Gate=all";
+        }
+
+        var FK_Destination = $("select[name=FK_Destination]").val();
+        if (FK_Destination != '') {
+            url = url + "&FK_Destination=" + FK_Destination;
+        } else {
+            url = url + "&FK_Destination=null";
+        }
+
+        var RegistrationNumber = $("input[name=RegistrationNumber]").val();
+        if (RegistrationNumber != '') {
+            url = url + "&RegistrationNumber=" + RegistrationNumber;
+        } else {
+            url = url + "&RegistrationNumber=";
+        }
+
+        var MaxStayTimeHour = $("select[name=MaxStayTimeHour]").val();
+        if (MaxStayTimeHour != '') {
+            url = url + "&MaxStayTimeHour=" + MaxStayTimeHour;
+        } else {
+            url = url + "&MaxStayTimeHour=";
+        }
+        console.log(url);
+        window.location = url;
+    }
+
+</script>
+

@@ -1,0 +1,183 @@
+﻿@model Tuple<List<_3rdEyE.Models.Requisition>, List<_3rdEyE.Models.Requisition>>
+<!-- DataTablesExportable -->
+<link href="~/Content/ExportableDatatable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/ExportableDatatable/buttons.dataTables.min.css" rel="stylesheet" />
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-success">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Yesterday's Vehicle Demand & supply [Group: @ViewBag.PRG_Type]</h3>
+                        </div>
+                        <div class="box-body">
+                            <table id="data_table_yesterday" class="table table-dark">
+                                <thead>
+                                    <tr>
+                                        <th>Location</th>
+                                        <th>Wanted</th>
+                                        <th>Accepted Count</th>
+                                        <th>Assigned Internal</th>
+                                        <th>Assigned External</th>
+                                        <th>Pending</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="YesterDay_data_tbody">
+                                    @foreach (var item in Model.Item1.OrderBy(m=>m.Location.Name).GroupBy(m => m.Location))
+                                    {
+                                        <tr>
+                                            <td>@item.FirstOrDefault().Location.Name</td>
+                                            <td>@item.Sum(m => m.WantedCount)</td>
+                                            <td>@item.Sum(m => m.AcceptedCount)</td>
+                                            <td>@item.SelectMany(m => m.RequisitionTrips).Where(m => m.FK_Vehicle != null && m.OWN_MHT_DHT == "OWN").Sum(m => m.WantedCount)</td>
+                                            <td>@item.SelectMany(m => m.RequisitionTrips).Where(m => m.FK_Vehicle != null && m.OWN_MHT_DHT != "OWN").Sum(m => m.WantedCount)</td>
+                                            <td>
+                                                @{
+                                                    var pending = item.Sum(m => m.AcceptedCount) - item.SelectMany(m => m.RequisitionTrips).Where(m => m.FK_Vehicle != null).Sum(m => m.WantedCount);
+                                                }
+                                                @pending
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*<div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-12" id="YesterDayChartDiv"></div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-12" id="LastMonthChartDiv"></div>
+                </div>
+            </div>*@
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-success">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Today's Vehicle Demand & supply [Group: @ViewBag.PRG_Type]</h3>
+                        </div>
+                        <div class="box-body">
+                            <table id="data_table_today" class="table table-dark">
+                                <thead>
+                                    <tr>
+                                        <th>Location</th>
+                                        <th>Wanted</th>
+                                        <th>Accepted Count</th>
+                                        <th>Assigned Internal</th>
+                                        <th>Assigned External</th>
+                                        <th>Pending</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="YesterDay_data_tbody">
+                                    @foreach (var item in Model.Item2.OrderBy(m => m.Location.Name).GroupBy(m => m.Location))
+                                    {
+                                        <tr>
+                                            <td>@item.FirstOrDefault().Location.Name</td>
+                                            <td>@item.Sum(m => m.WantedCount)</td>
+                                            <td>@item.Sum(m => m.AcceptedCount)</td>
+                                            <td>@item.SelectMany(m => m.RequisitionTrips).Where(m => m.FK_Vehicle != null && m.OWN_MHT_DHT == "OWN").Sum(m => m.WantedCount)</td>
+                                            <td>@item.SelectMany(m => m.RequisitionTrips).Where(m => m.FK_Vehicle != null && m.OWN_MHT_DHT != "OWN").Sum(m => m.WantedCount)</td>
+                                            <td>
+                                                @{
+                                                    var pending = item.Sum(m => m.AcceptedCount) - item.SelectMany(m => m.RequisitionTrips).Where(m => m.FK_Vehicle != null).Sum(m => m.WantedCount);
+                                                }
+                                                @pending
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*<div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-12" id="YesterDayChartDiv"></div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-12" id="LastMonthChartDiv"></div>
+                </div>
+            </div>*@
+    </div>
+    <!-- /.row -->
+</section>
+<!-- DataTablesExportable -->
+<script src="~/Scripts/Custom/DataTableExportable/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.flash.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/jszip.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/pdfmake.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/vfs_fonts.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.html5.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.print.min.js"></script>
+<script>
+    $(function () {
+        $('#data_table_yesterday').DataTable({
+            //scrollX: true,
+            paging: false,
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'pdfHtml5',
+                    orientation: 'landscape',
+                    pageSize: 'LEGAL'
+                },
+                {
+                    extend: 'print',
+                    title: 'Event Report [@ViewBag.StartingDate - @ViewBag.EndingDate]',
+                    customize: function (win) {
+                        $(win.document.body)
+                            .css('font-size', '10pt');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', '15px');
+                            }
+                },
+                {
+                    extend: 'excel'
+                }
+            ],
+        });
+        $('#data_table_today').DataTable({
+            //scrollX: true,
+            paging: false,
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'pdfHtml5',
+                    orientation: 'landscape',
+                    pageSize: 'LEGAL'
+                },
+                {
+                    extend: 'print',
+                    title: 'Event Report [@ViewBag.StartingDate - @ViewBag.EndingDate]',
+                    customize: function (win) {
+                        $(win.document.body)
+                            .css('font-size', '10pt');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', '15px');
+                            }
+                },
+                {
+                    extend: 'excel'
+                }
+            ],
+        });
+    });
+</script>

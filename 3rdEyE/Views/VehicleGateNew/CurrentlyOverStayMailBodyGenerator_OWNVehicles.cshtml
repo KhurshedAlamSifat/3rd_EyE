@@ -1,0 +1,185 @@
+﻿@{
+    Layout = null;
+}
+@model IEnumerable<_3rdEyE.Models.Vehicle>
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        /*th, td {
+            padding: 15px;
+        }*/
+    </style>
+</head>
+<body style="width:100%;">
+    @{
+        int sl_detail = 0;
+        int sl_summary = 0;
+        var Now = Convert.ToDateTime(ViewBag.Now);
+        string ConvertToDateTimeString(DateTime? dateTime)
+        {
+            return String.Format("{0:yyyy/MM/dd HH:mm}", dateTime);
+        }
+    }
+    <h3>Dear Sir</h3>
+    <p>Here is the list of OWN vehicles which are staying more than @ViewBag.MaxStayTimeHour hours inside Depot/Facotory</p>
+    <p>Total Vehicles: @Model.Count() </p>
+    <p>Report Time: @ViewBag.Now</p>
+    <br />
+    <br />
+    <h3>Summary Report</h3>
+    <table id="data_table" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th align="center" style="padding:5px;">
+                    SL.
+                </th>
+                <th align="center" style="padding:5px;">
+                    Phy Location
+                </th>
+                <th align="center" style="padding:5px;">
+                    OWN
+                </th>
+                <th align="center" style="padding:5px;">
+                    MHT
+                </th>
+                <th align="center" style="padding:5px;">
+                    DHT
+                </th>
+                <th align="center" style="padding:5px;">
+                    Total
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model.GroupBy(m => m.Location).OrderByDescending(m => m.Count()))
+            {
+                sl_summary++;
+                <tr>
+                    <td align="center" style="padding:5px;">
+                        @sl_summary
+                    </td>
+                    <td align="center" style="padding:5px;">
+                        @item.FirstOrDefault().Location.Name
+                    </td>
+                    <td align="center" style="padding:5px;">
+                        @item.ToList().Where(m => m.OWN_MHT_DHT == "OWN").Count()
+                    </td>
+                    <td align="center" style="padding:5px;">
+                        @item.ToList().Where(m => m.OWN_MHT_DHT == "MHT").Count()
+                    </td>
+                    <td align="center" style="padding:5px;">
+                        @item.ToList().Where(m => m.OWN_MHT_DHT == "DHT").Count()
+                    </td>
+                    <td align="center" style="padding:5px;">
+                        @item.ToList().Count()
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <br />
+    @*<br />
+    <h3>Detail Report</h3>
+    <table id="data_table" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th align="center" style="padding:5px;">
+                    SL.
+                </th>
+                <th align="center" style="padding:5px;">
+                    Phy Location
+                </th>
+                <th align="center" style="padding:5px;">
+                    Entry Gate
+                </th>
+                <th align="center" style="padding:5px;">
+                    Vehicle
+                </th>
+                <th align="center" style="padding:5px;">
+                    Contact
+                </th>
+                <th align="center" style="padding:5px;">
+                    O/M/D
+                </th>
+                <th align="center" style="padding:5px;">
+                    PRG Type
+                </th>
+                <th align="center" style="padding:5px;">
+                    Destination
+                </th>
+                <th align="center" style="padding:5px;">
+                    User/Depot
+                </th>
+                <th align="center" style="padding:5px;">
+                    In Time
+                </th>
+                <th align="center" style="padding:5px;">
+                    Stay Time (hh:mm)
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model.OrderBy(m => m.Location.Name).ThenBy(m => m.LocationInOutTime))
+            {
+                sl_detail++;
+                var InStayTimeMinute = (Int64)(Now - item.LocationInOutTime).TotalMinutes;
+                <tr>
+                    <td align="center" style="padding:5px;">
+                        @sl_detail
+                    </td>
+                    <td align="center" style="padding:5px;">
+                        @Html.DisplayFor(modelItem => item.Location.Name)
+                    </td>
+                    <td align="center" style="padding:5px;">
+                        @Html.DisplayFor(modelItem => item.VehicleInOutManual.AppUser.FullName)
+                    </td>
+                    <td align="center" style="padding:5px;">
+                        @Html.DisplayFor(modelItem => item.RegistrationNumber)
+                    </td>
+                    <td align="center" style="padding:5px;">
+                        @Html.DisplayFor(modelItem => item.Internal_VehicleContactNumber) @Html.DisplayFor(modelItem => item.MHT_DHT_DriverContactNumber)
+                    </td>
+                    <td align="center" style="padding:5px;">
+                        @Html.DisplayFor(modelItem => item.OWN_MHT_DHT)
+                    </td>
+                    <td align="center" style="padding:5px;">
+                        @ViewBag.PRG_Type
+                    </td>
+                    <td align="center" style="padding:5px;">
+                        @Html.DisplayFor(modelItem => item.VehicleInOutManual.PRG_Type.Title)
+                    </td>
+                    <td align="center" style="padding:5px;">
+                        @Html.DisplayFor(modelItem => item.Depo.Name)
+                    </td>
+                    <td align="center" style="padding:5px;">
+                        @ConvertToDateTimeString(item.LocationInOutTime)
+                    </td>
+                    <td align="center" style="padding:5px;">
+                        @{
+                            if (InStayTimeMinute != null)
+                            {
+                                var _hour = (Int64)(InStayTimeMinute / 60);
+                                var _min = (Int64)(InStayTimeMinute % 60);
+                                @_hour.ToString("00")<text>:</text>@_min.ToString("00")
+                            }
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <br />*@
+    <p>This mail is auto-generated, No Need To Reply</p>
+</body>
+</html>
+
+

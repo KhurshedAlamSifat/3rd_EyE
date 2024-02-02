@@ -1,0 +1,92 @@
+﻿@model IEnumerable<_3rdEyE.ViewModels.VM_Vehicle>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <p>
+        Dear user,
+    </p>
+    <p>
+        Here is the list of vehicle which maturity date is comming within short time (5 days) or already gone.
+        This mail to notify you. Please take N/A.
+    </p>
+    <p>After completion of the paper work for maturity completion, please update maturity status in 3rd EyE application.</p>
+    <table class="table" style="width:800px;">
+        <tr>
+            <th>
+                Registration No
+            </th>
+            <th>
+                Matutrity Date
+            </th>
+            <th>
+                Financing Company
+            </th>
+            <th>
+                User Group
+            </th>
+            <th>
+                Aggrement No
+            </th>
+            <th>
+                Number Of Vehicle
+            </th>
+            <th>
+                GRN/MRR
+            </th>
+            <th>
+                GRN/MRR Date
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Model.RegistrationNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Internal_FinancingAgrementMaturityDate_Text)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Model.FinancingCompany.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Model.Depo.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Model.Internal_FinancingAgrementNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Model.Internal_FinancingAgrementNumberOfVehicle)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Model.Internal_FinancingAgrementGRN_MRR)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Internal_FinancingAgrementGRN_MRR_Date_Text)
+                </td>
+            </tr>
+        }
+
+    </table>
+    <br />
+    This is an auto generated mail to notify you to take N/A. (No need to reply)
+</body>
+</html>

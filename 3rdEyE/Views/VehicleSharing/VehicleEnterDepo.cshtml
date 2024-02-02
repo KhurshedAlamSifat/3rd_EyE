@@ -1,0 +1,153 @@
+﻿
+@{
+    ViewBag.Title = "";
+}
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+
+<section class="content-header">
+    <h1>
+        Vehicle Depo In/Out
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        @*<a class="btn btn-block btn-default btn-sm" href="/Driver/Index">Back To List</a>*@
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-6">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Vehicle In/Out</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form name="ThisForm" class="form-horizontal" method="post" action="/VehicleSharing/VehicleEnterDepo">
+
+                    @*FK_Vehicle*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Vehicle*</label>
+                            <div class="col-md-10">
+                                @Html.DropDownList("FK_Vehicle", ViewBag.OwnVehicles as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_Vehicle"></b>
+                            </div>
+                        </div>
+                        <script>
+                            validatorArray.push(
+                                function () {
+                                    var check = $('select[name=FK_Vehicle]').val();
+                                    if (check == "") {
+                                        formValidity = false;
+                                        $('b[name=error_FK_Vehicle]').html("Vehicle is required.");
+                                    }
+                                });
+                        </script>
+                    </div>
+                    @*FK_Depo*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Depot*</label>
+                            <div class="col-md-10">
+                                @Html.DropDownList("FK_Depo", ViewBag.Locations as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_Depo"></b>
+                            </div>
+                        </div>
+                        <script>
+                            validatorArray.push(
+                                function () {
+                                    var check = $('select[name=FK_Depo]').val();
+                                    if (check == "") {
+                                        formValidity = false;
+                                        $('b[name=error_FK_Depo]').html("Depo is required.");
+                                    }
+                                });
+                        </script>
+                    </div>
+                    @*InOut*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">In Out*</label>
+                            <div class="col-md-10">
+                                @Html.DropDownList("InOut", ViewBag.InOrOut as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_InOut"></b>
+                            </div>
+                        </div>
+                        <script>
+                            validatorArray.push(
+                                function () {
+                                    var check = $('select[name=InOut]').val();
+                                    if (check == "") {
+                                        formValidity = false;
+                                        $('b[name=error_InOut]').html("Depo is required.");
+                                    }
+                                });
+                        </script>
+                    </div>
+                    @*InOut*@
+                    @*<div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">In/Out Time</label>
+                            <div class="input-group col-md-10">
+                                <div class="col-md-12 input-append date form_datetime" data-date="@ViewBag.CreatedAt" data-link-field="dtp_input1">
+                                    <input id="CreatedAt" name="CreatedAt" class="form-control col-md-12" type="text" value="@ViewBag.CreatedAt" readonly="readonly" style="background-color: white;">
+                                    <span class="add-on"><i class="icon-remove"></i></span>
+                                    <span class="add-on"><i class="icon-th"></i></span>
+                                </div>
+                                <input type="hidden" id="dtp_input1" value="" style="display:none;" /><br />
+                                <b class="errorMessage" data-category="errorMessage" name="error_CreatedAt"></b>
+                            </div>
+                        </div>
+                        <script>
+                            validatorArray.push(
+                                function () {
+                                    var check = $('select[name=CreatedAt]').val();
+                                    if (check == "") {
+                                        formValidity = false;
+                                        $('b[name=error_InOut]').html("Time is required.");
+                                    }
+                                });
+                        </script>
+                    </div>*@
+
+                    <div class="box-footer">
+                        @*<a class="btn btn-default" href="/Driver/Index">Back To List</a>*@
+                        @*<input type="button" class="btn btn-info pull-right" value="Create" onclick="TrySubmit()" />*@
+                        <input type="button" class="btn btn-info pull-right" value="Create" onclick="CallVehicleInOrOut()" />
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+@*Date Picker*@
+<script src="~/Theme/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+<script>
+    $(function () {
+        $('select[name=FK_Depo]').select2();
+        $('select[name=FK_Vehicle]').select2();
+    });
+    function CallVehicleInOrOut() {
+        var InOut = $('select[name=InOut]').val();
+        var FK_Vehicle = $('select[name=FK_Vehicle]').val();
+        var FK_Depo = $('select[name=FK_Depo]').val();
+        if (InOut == "True") {
+            window.location = "/VehicleSharing/Gate_In?FK_Vehicle=" + FK_Vehicle + "&FK_Depo=" + FK_Depo;
+        } else {
+            window.location = "/VehicleSharing/Gate_Out?FK_Vehicle=" + FK_Vehicle + "&FK_Depo=" + FK_Depo;
+        }
+    }
+</script>

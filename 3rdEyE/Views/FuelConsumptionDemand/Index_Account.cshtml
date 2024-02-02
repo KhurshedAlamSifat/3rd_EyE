@@ -1,0 +1,217 @@
+﻿@model IEnumerable<_3rdEyE.Models.FuelConsumptionDemand>
+@{
+    var RolePermissionList = (List<_3rdEyE.ManagingTools.Permission>)Session["RolePermissionList"];
+}
+
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+<!-- DataTablesExportable -->
+<link href="~/Content/ExportableDatatable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/ExportableDatatable/buttons.dataTables.min.css" rel="stylesheet" />
+@{
+    string ConvertToDateTimeString(DateTime? dateTime)
+    {
+        return String.Format("{0:yyyy/MM/dd HH:mm}", dateTime);
+    }
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Demand List : Raiser View
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @if (RolePermissionList.Where(m => m.FullName == "Requisition-create").Any())
+        {
+            <a class="btn btn-block btn-info btn-sm" href="/Requisition/Create_Multi">Create New</a>
+        }
+    </div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-header">
+                    <h3 class="box-title"></h3>
+                </div>
+
+                <!-- /.box-header -->
+                <div class="box-body" style="overflow-x:scroll; height: 500px; overflow-y: scroll;">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Tracking ID</th>
+                                <th>PRG Type</th>
+                                <th>Fuel Pump</th>
+                                <th>From</th>
+                                <th>To</th>
+                                <th>Required Time</th>
+                                <th>Required Qty</th>
+                                <th>Given Qty</th>
+                                <th>BU 1</th>
+                                <th>BU 1 R.Qty</th>
+                                <th>BU 2</th>
+                                <th>BU 2 R.Qty</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="detail_tbody">
+                            @foreach (var item in Model)
+                            {
+                            <tr>
+                                <td>@item.TrackingID</td>
+                                <td>@item.PRG_Type</td>
+                                <td>@item.FuelPump.Name</td>
+                                <td>@(item.Location?.Name)</td>
+                                <td>@(item.Location1?.Name)</td>
+                                <td>@item.RequiredAt</td>
+                                <td>@item.RequiredQuantity_Manual</td>
+                                <td>@item.GivenQuantity</td>
+                                <td>@item.BusinessUnit_1</td>
+                                <td>@item.BusinessUnit_1_CarringPercentage</td>
+                                <td>@item.BusinessUnit_2</td>
+                                <td>@item.BusinessUnit_2_CarringPercentage</td>
+                                <th>@item.Status</th>
+                                <td>
+                                    @if (item.Status == "Given" && item.ExcessQuantityPrice != 0 && item.ExcessMoneyGivenAt == null)
+                                    {
+                                        <button class="btn btn-flickr btn-xs" onclick="showModalPay('@item.PK_FuelConsumptionDemand', '@item.TrackingID')">Cash back</button>
+                                    }
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+@*MODAL DELETE START*@
+<div id="modalDelete" class="modal fade modal-" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div id="modalDelete_hiddenKey" style="display:none;"></div>
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+            </div>
+            <div id="modalDelete_body" class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="tryDelete()">Yes</button>
+                <button type="button" class="btn btn-primary" onclick="$('#modalDelete').modal('hide');">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*MODAL DELETE END*@
+<!-- DataTablesExportable -->
+<script src="~/Scripts/Custom/DataTableExportable/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.flash.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/jszip.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/pdfmake.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/vfs_fonts.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.html5.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.print.min.js"></script>
+<!-- page script -->
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $('.form_datetime').datetimepicker({
+            format: 'yyyy-mm-dd HH:ii P',
+            todayBtn: 1,
+            autoclose: 1,
+        });
+        $('select').select2();
+        makeDataTable();
+    });
+</script>
+<script>
+    function makeDataTable() {
+        var data_table_exportableColum = [];
+        for (var i = 0; i < 14; i++) {
+            data_table_exportableColum.push(i);
+        }
+
+        var data_table = $('#data_table').DataTable({
+            //scrollX: true,
+            paging: false,
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'pdfHtml5',
+                    orientation: 'landscape',
+                    pageSize: 'LEGAL'
+                },
+                {
+                    extend: 'print',
+                    title: 'Demand List',
+                    customize: function (win) {
+                        $(win.document.body)
+                            .css('font-size', '10pt');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', '15px');
+                    }
+                },
+                {
+                    extend: 'excel',
+                    title: 'Demand List',
+                    filename: 'Requisition List',
+                    footer: false,
+                    header: true,
+                    exportOptions: {
+                        columns: data_table_exportableColum
+                    }
+                }
+            ],
+        });
+        data_table.columns('.data_table_hidden_col').visible(false);
+    }
+</script>
+<script>
+    function getData() {
+        var StartingDate = $('Input[name=StartingDate]').val();
+        var EndingDate = $('Input[name=EndingDate]').val();
+        if (StartingDate == '' || EndingDate == '') {
+            alert("Please, Select starting date and ending date.");
+            return;
+        }
+
+        var PRG_Type = $('#PRG_Type').find(":selected").val();
+        var TrackingId = $('Input[name=TrackingId]').val();
+        var FK_Location_From = $('#FK_Location_From').find(":selected").val();
+        var FK_Location_To = $('#FK_Location_To').find(":selected").val();
+        var Status = $('#Status').find(":selected").val();
+
+        //window.location
+        window.location = '/FuelConsumptionDemand/Index_All?' + 'PRG_Type=' + PRG_Type + '&StartingDate=' + StartingDate + '&EndingDate=' + EndingDate + '&TrackingId=' + TrackingId
+            + '&FK_Location_From=' + FK_Location_From + '&FK_Location_To=' + FK_Location_To + '&Status=' + Status;
+        console.log(link);
+    }
+
+    function showModalPay(model_id, model_name) {
+        $('#modalDelete_hiddenKey').html(model_id);
+        $('#modalDelete_body').html("Do you want to confrim cash return (" + model_name + ")?");
+        $("#modalDelete").modal('show');
+    }
+    function tryDelete() {
+        var id = $("#modalDelete_hiddenKey").html();
+        window.location.href = "/FuelConsumptionDemand/ExcessQuantityPriceGiving?PK_FuelConsumptionDemand=" + id;
+    }
+</script>

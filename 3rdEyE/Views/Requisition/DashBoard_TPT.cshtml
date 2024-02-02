@@ -1,0 +1,129 @@
+﻿@model Tuple<List<_3rdEyE.Models.RequisitionTrip>, List<_3rdEyE.Models.RequisitionTrip>>
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet" href="~/Theme/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <!-- jQuery 3 -->
+    <script src="~/Theme/bower_components/jquery/dist/jquery.min.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/Theme/bower_components/font-awesome/css/font-awesome.min.css">
+    @*Select2*@
+    <link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <marquee><h2 style="color:red;">Live Vehicle Terminal Dashboard for Current User[Last 24 Hours]</h2></marquee>
+            </div>
+            <div class="col-md-1">
+                <b>Destination: </b>
+            </div>
+            <div class="col-md-3">
+                @Html.DropDownList("LocationZone", ViewBag.LocationZones as SelectList, "Select", new { @class = "form-control" })
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-success" onclick="getData()">Get Data</button>
+            </div>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>OWN Vehicle</h3>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Vehicle Number</th>
+                                    <th>From Location</th>
+                                    <th>To Location</th>
+                                    <th>Arrival Time</th>
+                                    <th>Pick</th>
+                                </tr>
+                            </thead>
+                            <tbody id="YesterDay_data_tbody">
+                                @foreach (var item in Model.Item1.OrderBy(m => m.Requisition.Location1.Name))
+                                {
+                                    <tr @(item.Vehicle.FK_RequisitionTrip_CurrentAssigner == null ? "style=background-color:#ebf2dc;color:#17992a;" : "style=background-color:#ebf2dc;color:#db2121;")>
+                                        <td>@item.Vehicle.RegistrationNumber / Driver: @item.Driver_Staff_ID @item.Driver_Name @item.Driver_ContactNumber / Started: @item.StartedAt</td>
+                                        <td>@item.Requisition.Location.Name</td>
+                                        <td>@item.Requisition.Location1.Name</td>
+                                        <td>@item.TentativeFinishingDateTime</td>
+                                        <td>
+                                            @if (item.Vehicle.FK_RequisitionTrip_CurrentAssigner == null)
+                                            {
+                                                <a onclick="redirectTpPickingLink('@item.Vehicle.PK_Vehicle')">Pick</a>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h3>Others Vehicle</h3>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Vehicle Number</th>
+                                    <th>From Location</th>
+                                    <th>To Location</th>
+                                    <th>Arrival Time</th>
+                                    <th>Pick</th>
+                                </tr>
+                            </thead>
+                            <tbody id="YesterDay_data_tbody">
+                                @foreach (var item in Model.Item2.OrderBy(m => m.Requisition.Location1.Name))
+                                {
+                                    <tr @(item.Vehicle.FK_RequisitionTrip_CurrentAssigner == null ? "style=background-color:#ebf2dc;color:#17992a;" : "style=background-color:#ebf2dc;color:#db2121;")>
+                                        <td>@item.Vehicle.RegistrationNumber/ @item.OWN_MHT_DHT / Driver: @item.Driver_Name @item.Driver_ContactNumber / Rent: @item.TotalAmount TK / Started: @item.StartedAt</td>
+                                        <td>@item.Requisition.Location.Name</td>
+                                        <td>@item.Requisition.Location1.Name</td>
+                                        <td>@item.TentativeFinishingDateTime</td>
+                                        <td>
+                                            @if (item.Vehicle.FK_RequisitionTrip_CurrentAssigner == null)
+                                            {
+                                                <a onclick="redirectTpPickingLink('@item.Vehicle.PK_Vehicle')">Pick</a>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+</body>
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $("#LocationZone").select2();
+    });
+    function getData() {
+        var LocationZone = $('select[name=LocationZone]').val();
+        if (LocationZone == '') {
+            alert("Please, Select destination.");
+            return;
+        }
+        window.location = '/Requisition/DashBoard_TPT?LocationZone=' + LocationZone;
+    }
+    function redirectTpPickingLink(PK_Vehicle) {
+        //var LocationZone = $('select[name=LocationZone]').val();
+        //if (LocationZone == '') {
+        //    alert("Please, Select destination.");
+        //    return;
+        //}
+        var url = '/Requisition/AssignVehicle_Trip?PK_Vehicle=' + PK_Vehicle;
+        var win = window.open(url, '_blank');
+        win.focus();
+    }
+</script>
+</html>

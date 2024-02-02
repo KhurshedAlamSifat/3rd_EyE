@@ -1,0 +1,105 @@
+﻿@{
+    Layout = null;
+}
+@model IEnumerable<_3rdEyE.Models.Event>
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /*.table {
+            border-collapse: collapse;
+        }
+
+        td, th {
+            border: 1px solid black;
+        }*/
+    </style>
+</head>
+<body>
+    <h3 style="text-align:center;  font-size: 35px;">
+        Company Wise Vehicle Insurance Summury Report
+    </h3>
+    <h4 style="text-align:center; font-size:25px">
+        From:@ViewBag.StartingDate_View &nbsp; To:@ViewBag.EndingDate_View
+    </h4>
+    <table align="center" cellpadding="10" style="font-size: 30px; border-collapse: collapse;">
+        <thead>
+            <tr>
+                <th style="border: 1px solid black;">SL</th>
+                <th style="border: 1px solid black;">
+                    Company
+                </th>
+                <th style="border: 1px solid black;">
+                    Total Amount
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var sl = 0;
+                var total = Model.Select(n => n.PremiumAmount).Sum().HasValue ? Decimal.Round(Model.Select(n => n.PremiumAmount).Sum().Value, 0) : 0;
+            }
+            @foreach (var group in Model.OrderBy(m => m.Vehicle.FK_Company).GroupBy(m => m.Vehicle.FK_Company))
+            {
+                sl = sl + 1;
+                <tr>
+                    <td style="border: 1px solid black;">@sl</td>
+                    @*<td style="border: 1px solid black;">@group.FirstOrDefault().Vehicle.Company.Name</td>*@
+                    <td style="border: 1px solid black;">
+                        @if (group.FirstOrDefault().Vehicle.FK_Company != null)
+                        {
+                            <text>@group.FirstOrDefault().Vehicle.Company.Name</text>
+                        }
+                        else
+                        {
+                            <text>Not Assigned</text>
+                        }
+                    </td>
+                    <td style="border: 1px solid black; text-align:right;">@group.Select(n => n.PremiumAmount).Sum()</td>
+                </tr>
+            }
+            @*<tr>
+                    <td colspan="2" style="border: 1px solid black;"><b>Total</b></td>
+                    <td style="border: 1px solid black;  text-align:right;"><b>@Model.Select(n => n.PremiumAmount).Sum().t</b></td>
+                </tr>*@
+            <tr>
+                <td colspan="2" style="border: 1px solid black;"><b>Total</b></td>
+                <td style="border: 1px solid black;  text-align:right;"><b>@total</b></td>
+            </tr>
+        </tbody>
+    </table>
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <table align="center" style="font-size: 30px;">
+        <tbody>
+            <tr>
+                <td>------------------</td>
+                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td>------------------</td>
+                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                <td>------------------</td>
+            </tr>
+            <tr>
+                <td>Submitted By</td>
+                <td></td>
+                <td>Checked By</td>
+                <td></td>
+                <td>Approved By</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

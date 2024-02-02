@@ -1,0 +1,209 @@
+﻿@model IEnumerable<Dictionary<string, string>>
+@{
+    ViewBag.Title = "Helper list";
+}
+
+<!-- DataTablesExportable -->
+<link href="~/Content/ExportableDatatable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/ExportableDatatable/buttons.dataTables.min.css" rel="stylesheet" />
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Event Report For Accountant
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<a class="btn btn-block btn-default btn-sm" href="/Helper/Create">Create New</a>*@
+    </div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-body col-md-12">
+                    <div class="form-group col-md-4">
+                        <label class="col-md-4 control-label">Starting Date:</label>
+                        <div class="col-md-8">
+                            <input name="StartingDate" type="date" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="col-md-4 control-label">Einding Date:</label>
+                        <div class="col-md-8">
+                            <input name="EndingDate" type="date" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <button class="btn btn-facebook" onclick="getData()">Get Data</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.col -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        Event Report  [ @if (ViewBag.StartingDate != null)
+                        {@ViewBag.StartingDate} to @if (ViewBag.EndingDate != null)
+                        {@ViewBag.EndingDate} ]
+                    </h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="data_table" class="table table-bordered table-striped" style="font-size:15px;">
+                        @*<thead>
+                                <tr>
+                                    <th colspan="13">
+                                        <center>
+                                            Event Report  [ @if (ViewBag.StartingDate != null)
+                                            {@ViewBag.StartingDate} - @if (ViewBag.StartingDate != null)
+                                            {@ViewBag.StartingDate} ]
+                                        </center>
+                                    </th>
+                                </tr>
+                            </thead>*@
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>UserName</th>
+                                <th>VehicleNo</th>
+                                <th>TT</th>
+                                <th>AIT</th>
+                                <th>Sup</th>
+                                <th>Ass.Fund</th>
+                                <th>F/C fee</th>
+                                <th>AIT</th>
+                                <th>F/C Extra</th>
+                                <th>Sup</th>
+                                <th>Ass.Fund</th>
+                                <th>R/P Fee</th>
+                                <th>R/P Extra</th>
+                                <th>R/C</th>
+                                <th>Ext</th>
+                                <th>WHP</th>
+                                <th>Ext</th>
+                                <th>HP</th>
+                                <th>DRC</th>
+                                <th>DRC</th>
+                                <th>Sup</th>
+                                <th>Ass.Fund</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="data_tbody">
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item["DepositDate_Formatted"].Replace(".00", "")</td>
+                                    <td>@item["Depo_Name"].Replace(".00", "")</td>
+                                    <td>@item["Vehicle_RegistrationNumber"].Replace(".00", "")</td>
+                                    <td>@item["TaxToken_PrimaryAmount"].Replace(".00", "")</td>
+                                    <td>@item["TaxToken_AdvancedIncomeTax"].Replace(".00", "")</td>
+                                    <td>@item["TaxToken_SupplementaryDutyAmount"].Replace(".00", "")</td>
+                                    <td>@item["TaxToken_FinancialAssistanceFund"].Replace(".00", "")</td>
+                                    <td>@item["FitnessPaper_PrimaryAmount"].Replace(".00", "")</td>
+                                    <td>@item["FitnessPaper_AdvancedIncomeTax"].Replace(".00", "")</td>
+                                    <td>@item["FitnessPaper_AdditionalAmount"].Replace(".00", "")</td>
+                                    <td>@item["FitnessPaper_SupplementaryDutyAmount"].Replace(".00", "")</td>
+                                    <td>@item["FitnessPaper_FinancialAssistanceFund"].Replace(".00", "")</td>
+                                    <td>@item["RoutePermit_PrimaryAmount"].Replace(".00", "")</td>
+                                    <td>@item["RoutePermit_AdditionalAmount"].Replace(".00", "")</td>
+                                    <td>@item["Others_Registration_PrimaryAmount"].Replace(".00", "")</td>
+                                    <td>@item["Others_Registration_OtherAmount"].Replace(".00", "")</td>
+                                    <td>@item["Other_OwnershipTransfer_WithdrawHirePurchaseAmount"].Replace(".00", "")</td>
+                                    <td>@item["Other_OwnershipTransfer_OtherAmount"].Replace(".00", "")</td>
+                                    <td>@item["Other_Registration_HirePurchase"].Replace(".00", "")</td>
+                                    <td>@item["Other_Registration_DigitalRegistrationFee"].Replace(".00", "")</td>
+                                    <td>@item["Other_OwnershipTransfer_DigitalRegistrationFee"].Replace(".00", "")</td>
+                                    <td>@item["Other_Registration_SupplementaryDutyAmount"].Replace(".00", "")</td>
+                                    <td>@item["Other_Registration_FinancialAssistanceFund"].Replace(".00", "")</td>
+                                    <td>@item["TotalAMount"].Replace(".00", "")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+@*MODAL Company START*@
+<div id="modalPreload" class="modal  modal-" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content" style="background-color:transparent; margin-top:200px;">
+            <img src="~/Content/Images/Preload.gif" />
+        </div>
+    </div>
+</div>
+@*MODAL Company END*@
+<!-- /.content -->
+<!-- DataTablesExportable -->
+<script src="~/Scripts/Custom/DataTableExportable/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.flash.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/jszip.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/pdfmake.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/vfs_fonts.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.html5.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.print.min.js"></script>
+<script>
+    $(function () {
+        @if (Model.Count() > 0)
+        {
+        <text>
+        makeDataTable();
+        </text>
+        }
+    });
+</script>
+<script>
+    function makeDataTable() {
+        var table = $('#data_table').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'excel',
+                    orientation: 'landscape',
+                    pageSize: 'LEGAL'
+                },
+                {
+                    extend: 'pdfHtml5',
+                    orientation: 'landscape',
+                    pageSize: 'LEGAL'
+                },
+                {
+                    extend: 'print',
+                    title: 'Event Report For Accountant [@ViewBag.StartingDate - @ViewBag.EndingDate]',
+                    customize: function (win) {
+                        $(win.document.body)
+                            .css('font-size', '10pt');
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', '15px');
+                            }
+                        }
+            ],
+        });
+    }
+</script>
+<script>
+    function getData() {
+        var StartingDate = $('Input[name=StartingDate]').val();
+        var EndingDate = $('Input[name=EndingDate]').val();
+        if (StartingDate == '' || EndingDate == '') {
+            alert("Please, Select starting date and ending date.");
+            return;
+        }
+        window.location = '/Event/EventReportForAccountant_1?StartingDate=' + StartingDate + '&EndingDate=' + EndingDate;
+    }
+</script>

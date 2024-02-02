@@ -1,0 +1,156 @@
+﻿@model IEnumerable<_3rdEyE.Models.AppUser>
+
+@{
+    ViewBag.Title = "Depo list";
+}
+
+
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Transport Agent Propossable Depo Setting
+        <small></small>
+    </h1>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/TransportAgent/ManageRequisitionAgentProposableDepo" enctype="multipart/form-data">
+        <input name="PermittedDepoes" id="PermittedDepoes" type="text" style="display:none;" />
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Transport Agent</h3>
+                            </div>
+                            @*FK_Vehicle*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Agent Mobile Number*</label>
+                                    <div class="col-md-8">
+                                        @Html.DropDownList("FK_RequisitionAgent", ViewBag.AppUsers as SelectList, "Select", new { @class = "form-control", onchange = "GetAccessibleDepoList()" })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_FK_Vehicle"></b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body">
+                                <div class="form-group">
+                                    @*<label class="col-md-4 control-label">Total Amount</label>*@
+                                    <div class="col-md-offset-8 col-md-4">
+                                        @*<input name="TotalAmount" Id="TotalAmount" value="@ViewBag.model.TotalAmount" class="form-control" type="number" readonly="readonly">*@
+                                        <input type="button" class="btn btn-facebook" value="Update Permission" onclick="TryUpdateUserPermission()" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Depo List</h3>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <table id="data_table" class="table table-bordered table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>
+                                                                Check
+                                                            </th>
+                                                            <th>
+                                                                User Group
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="data_tbody"></tbody>
+                                                </table>
+                                            </div>
+
+                                        </div>
+                                        <br />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="box-footer">
+                        @*<a class="btn btn-default" href="/Event/Index">Back To List</a>*@
+                        @*<input type="button" class="btn btn-facebook center-block" value="Save" onclick="TrySubmit()" />*@
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+
+</section>
+<!-- DataTables -->
+<script src="~/Theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/Theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $("select").select2();
+    });
+</script>
+<script>
+    function GetAccessibleDepoList() {
+        var FK_RequisitionAgent = $('select[name=FK_RequisitionAgent]').val();
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/TransportAgent/GetProposableDepoListOfRequisitionAgent/",
+            data: JSON.stringify({ FK_RequisitionAgent: FK_RequisitionAgent }),
+            success: function (list) {
+                $('#data_tbody').html("");
+                var result = "";
+                for (var i = 0; i < list.length; i++) {
+                    result = result + "<tr>";
+                    if (list[i].IsProposable == true) {
+                        result = result + "<td>" + "<input type='checkbox' name='parmssionCehckBoxes' value='" + list[i].FK_Depo + "' checked />" + "</td>";
+                    } else {
+                        result = result + "<td>" + "<input type='checkbox' name='parmssionCehckBoxes' value='" + list[i].FK_Depo + "' />" + "</td>";
+                    }
+                    result = result + "<td>" + list[i].DepoName + "</td>";
+                    result = result + "</tr>";
+                }
+                $('#data_tbody').html(result);
+                $('#data_table').DataTable({
+                    "lengthChange": false, "bPaginate": false,
+                });
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: GetAccessibleDepoList()");
+            }
+        });
+    }
+    function TryUpdateUserPermission() {
+        var FK_RequisitionAgent = $('select[name=FK_RequisitionAgent]').val();
+        if (FK_RequisitionAgent == '') {
+            alert('You must select an agent to update permission.');
+            return;
+        }
+        var checkedVals = $('input[name=parmssionCehckBoxes]:checked').map(function () {
+            return this.value;
+        }).get();
+
+        $("#PermittedDepoes").val(checkedVals);
+        $('form[name=ThisForm]').submit();
+    }
+</script>
+
+

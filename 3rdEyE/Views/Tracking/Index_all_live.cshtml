@@ -1,0 +1,399 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Live Tracking
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        @*<a class="btn btn-block btn-default btn-sm" href="/Helper/Index">Back To List</a>*@
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12 form-group">
+                    <input class="form-control" id="searchReg" placeholder="Search With Regestration" onkeyup="filterSideItemList()" />
+                </div>
+                <div class="col-md-12" style="height:700px; overflow: scroll;">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr style="background-color: white;">
+                                <th>
+                                    Vehicles
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="data_tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9" id="map" style="height:700px;"></div>
+        <script async defer
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDVkwHNr_8HlH6zM8-mIOnKxErJKLHEpo0&callback=initMap">
+        </script>
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+<!-- DataTables -->
+<script src="~/Theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/Theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script>
+    var map;
+    var vehicle_move;
+    var vehicle_nonMove;
+    var vehicle_egnition_off;
+    var vehicle_notConnected;
+    var markerList = [];
+    var updatedDataList = [];
+    var markerMoveFrequency = 10;
+    var intervalTime = 100;
+
+
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 12,
+            center: { lat: 23.8103, lng: 90.4125 }
+        });
+
+        var trafficLayer = new google.maps.TrafficLayer();
+        trafficLayer.setMap(map);
+
+        vehicle_move = '/Content/Images/icon_green.png';
+        vehicle_nonMove = '/Content/Images/icon_yellow.png';
+        vehicle_egnition_off = '/Content/Images/icon_light_red.png';
+        vehicle_notConnected = '/Content/Images/icon_dark_red.png';
+
+        MakeSideList_andMap();
+    }
+    function MakeSideList_andMap() {
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/Tracking/GetData/",
+            success: function (list) {
+                updatedDataList = list;
+                //# Making SideList
+                var res = "";
+                $('#data_tbody').html(res);
+                for (var i = 0; i < list.length; i++) {
+                    res = res + "<tr id='tr_" + list[i].PK_Vehicle + "' data-category='row_all'><td>" + "<input type='checkbox' value='" + list[i].PK_Vehicle + "' name='checkedRegistrations' onchange='RemakeCheckedSideItemList()' />"
+                        + "&nbsp;<label id='" + list[i].PK_Vehicle + "' onclick='showInfoWindow(this.id)'>" + list[i].RegistrationNumber + "</label>";
+                    res = res + "<br/>Depo: " + "<b>" + list[i].DepoName + "</b>";
+                    if (list[i].Status == 0) {
+                        res = res + "<br/>Status: " + "<b id= 'sideListStatus_" + list[i].PK_Vehicle + "'>Egnition off</b>";
+                    }
+                    else if (list[i].Status == 1) {
+                        res = res + "<br/>Status: " + "<b id= 'sideListStatus_" + list[i].PK_Vehicle + "'>Stand by</b>";
+                    }
+                    else if (list[i].Status == 2) {
+                        res = res + "<br/>Status: " + "<b id= 'sideListStatus_" + list[i].PK_Vehicle + "'>Running</b>";
+                    }
+                    else if (list[i].Status == -1) {
+                        res = res + "<br/>Status: " + "<b id= 'sideListStatus_" + list[i].PK_Vehicle + "'>Not connected</b>";
+                    }
+                    res = res + "<br/>Last Updated: <b id= 'sideListLastUpdated_" + list[i].PK_Vehicle + "'>" + list[i].UpdateTime + "</b>";
+                    res = res + "<br/><a href='/tracking/Index_single_live?PK_Vehicle=" + list[i].PK_Vehicle + "'>Live view</a>";
+                    res = res + "</td></tr>";
+                }
+                $('#data_tbody').html(res);
+
+                //# Making Map
+                for (var i = 0; i < list.length; i++) {
+                    var marker = new google.maps.Marker({
+                        id: list[i].PK_Vehicle,
+                        position: { lat: list[i].Latitude, lng: list[i].Longitude },
+                        map: map,
+                        //icon: vehicle_move,
+                    });
+                    if (list[i].Status == 0) {
+
+                        $('#tr_' + list[i].PK_Vehicle).css('background-color', '#F23C32');//light red
+                        $('#tr_' + list[i].PK_Vehicle).css('color', '	#FFFFFF');//white text
+                        marker.setIcon(vehicle_egnition_off);
+                        var infoWindowContent = "";
+                        infoWindowContent = infoWindowContent + "<h5>" + list[i].RegistrationNumber + "</h5>";
+                        infoWindowContent = infoWindowContent + "Depo: " + list[i].DepoName + "</b><br/>";
+                        if (list[i].MHT_DHT_DriverContactNumber != null) {
+                            infoWindowContent = infoWindowContent + "Driver's Number: " + list[i].MHT_DHT_DriverContactNumber + "</b><br/>";
+                        }
+                        infoWindowContent = infoWindowContent + "Status: " + "<b id= 'infoWindowStatus_" + list[i].PK_Vehicle + "'>Egnition off</b><br/>";
+                        infoWindowContent = infoWindowContent + "Last Speed: " + "<b id= 'infoWindowLastSpeed_" + list[i].PK_Vehicle + "'>" + list[i].Speed + "</b><br/>";
+                        infoWindowContent = infoWindowContent + "Updated at: " + "<b id= 'infoWindowLastUpdated_" + list[i].PK_Vehicle + "'>" + list[i].UpdateTime + "</b>";
+                        var infowindow = new google.maps.InfoWindow()
+                        google.maps.event.addListener(marker, 'click', (function (marker, html, infowindow) {
+                            return function () {
+                                infowindow.setContent(html);
+                                infowindow.open(map, marker);
+                            };
+                        })(marker, infoWindowContent, infowindow));
+                    }
+                    else if (list[i].Status == 1) {
+                        $('#tr_' + list[i].PK_Vehicle).css('background-color', '#FFDC36');//yellow
+                        $('#tr_' + list[i].PK_Vehicle).css('color', '#000000');//black text
+                        marker.setIcon(vehicle_nonMove);
+                        var infoWindowContent = "";
+                        infoWindowContent = infoWindowContent + "<h5>" + list[i].RegistrationNumber + "</h5>";
+                        infoWindowContent = infoWindowContent + "Depo: " + list[i].DepoName + "</b><br/>";
+                        if (list[i].MHT_DHT_DriverContactNumber != null) {
+                            infoWindowContent = infoWindowContent + "Driver's Number: " + list[i].MHT_DHT_DriverContactNumber + "</b><br/>";
+                        }
+                        infoWindowContent = infoWindowContent + "Status: " + "<b id= 'infoWindowStatus_" + list[i].PK_Vehicle + "'>Stand by</b><br/>";
+                        infoWindowContent = infoWindowContent + "Last Speed: " + "<b id= 'infoWindowLastSpeed_" + list[i].PK_Vehicle + "'>" + list[i].Speed + "</b><br/>";
+                        infoWindowContent = infoWindowContent + "Updated at: " + "<b id= 'infoWindowLastUpdated_" + list[i].PK_Vehicle + "'>" + list[i].UpdateTime + "</b>";
+                        var infowindow = new google.maps.InfoWindow()
+                        google.maps.event.addListener(marker, 'click', (function (marker, html, infowindow) {
+                            return function () {
+                                infowindow.setContent(html);
+                                infowindow.open(map, marker);
+                            };
+                        })(marker, infoWindowContent, infowindow));
+                    }
+                    else if (list[i].Status == 2) {
+                        $('#tr_' + list[i].PK_Vehicle).css('background-color', '#63D668');//green
+                        $('#tr_' + list[i].PK_Vehicle).css('color', '#000000');//black text
+                        marker.setIcon(vehicle_move);
+                        var infoWindowContent = "";
+                        infoWindowContent = infoWindowContent + "<h5>" + list[i].RegistrationNumber + "</h5>";
+                        infoWindowContent = infoWindowContent + "Depo: " + list[i].DepoName + "</b><br/>";
+                        if (list[i].MHT_DHT_DriverContactNumber != null) {
+                            infoWindowContent = infoWindowContent + "Driver's Number: " + list[i].MHT_DHT_DriverContactNumber + "</b><br/>";
+                        }
+                        infoWindowContent = infoWindowContent + "Status: " + "<b id= 'infoWindowStatus_" + list[i].PK_Vehicle + "'>Running</b><br/>";
+                        infoWindowContent = infoWindowContent + "Last Speed: " + "<b id= 'infoWindowLastSpeed_" + list[i].PK_Vehicle + "'>" + list[i].Speed + "</b><br/>";
+                        infoWindowContent = infoWindowContent + "Updated at: " + "<b id= 'infoWindowLastUpdated_" + list[i].PK_Vehicle + "'>" + list[i].UpdateTime + "</b>";
+                        var infowindow = new google.maps.InfoWindow()
+                        google.maps.event.addListener(marker, 'click', (function (marker, html, infowindow) {
+                            return function () {
+                                infowindow.setContent(html);
+                                infowindow.open(map, marker);
+                            };
+                        })(marker, infoWindowContent, infowindow));
+                    }
+                    else if (list[i].Status == -1) {
+                        $('#tr_' + list[i].PK_Vehicle).css('background-color', '#811F1F');//dark red
+                        $('#tr_' + list[i].PK_Vehicle).css('color', '	#FFFFFF');//white text
+                        marker.setIcon(vehicle_notConnected);
+                        var infoWindowContent = "";
+                        infoWindowContent = infoWindowContent + "<h5>" + list[i].RegistrationNumber + "</h5>";
+                        infoWindowContent = infoWindowContent + "Depo: " + list[i].DepoName + "</b><br/>";
+                        if (list[i].MHT_DHT_DriverContactNumber != null) {
+                            infoWindowContent = infoWindowContent + "Driver's Number: " + list[i].MHT_DHT_DriverContactNumber + "</b><br/>";
+                        }
+                        infoWindowContent = infoWindowContent + "Status: " + "<b id= 'infoWindowStatus_" + list[i].PK_Vehicle + "'>Disconnected</b><br/>";
+                        infoWindowContent = infoWindowContent + "Last Speed: " + "<b id= 'infoWindowLastSpeed_" + list[i].PK_Vehicle + "'>" + list[i].Speed + "</b><br/>";
+                        infoWindowContent = infoWindowContent + "Updated at: " + "<b id= 'infoWindowLastUpdated_" + list[i].PK_Vehicle + "'>" + list[i].UpdateTime + "</b>";
+                        var infowindow = new google.maps.InfoWindow()
+                        google.maps.event.addListener(marker, 'click', (function (marker, html, infowindow) {
+                            return function () {
+                                infowindow.setContent(html);
+                                infowindow.open(map, marker);
+                            };
+                        })(marker, infoWindowContent, infowindow));
+                    }
+                    markerList.push(marker);
+                }
+
+                //GetLatestData();
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: MakeSideList_andMap()");
+            }
+        });
+    }
+
+    function GetLatestData() {
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/Tracking/GetData/",
+            success: function (list) {
+                updatedDataList = list;
+                RemakeSideTable(list);
+
+                RemakeCheckedSideItemList();
+
+                RefreshMap(list);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: GetLatestData()");
+            }
+        });
+    }
+    function RemakeSideTable(list) {
+        for (var i = 0; i < list.length; i++) {
+            if (list[i].Status == 0) {
+                $('#tr_' + list[i].PK_Vehicle).css('background-color', '#F23C32');//light red
+                $('#tr_' + list[i].PK_Vehicle).css('color', '#FFFFFF');//white text
+                $('#sideListStatus_' + list[i].PK_Vehicle).html("Egnition off");
+            }
+            else if (list[i].Status == 1) {
+                $('#tr_' + list[i].PK_Vehicle).css('background-color', '#FFDC36');//yellow
+                $('#tr_' + list[i].PK_Vehicle).css('color', '#000000');//black text
+                $('#sideListStatus_' + list[i].PK_Vehicle).html("Stand by");
+            }
+            else if (list[i].Status == 2) {
+                $('#tr_' + list[i].PK_Vehicle).css('background-color', '#63D668');//green
+                $('#tr_' + list[i].PK_Vehicle).css('color', '#000000');//black text
+                $('#sideListStatus_' + list[i].PK_Vehicle).html("Running");
+            }
+            else if (list[i].Status == -1) {
+                $('#tr_' + list[i].PK_Vehicle).css('background-color', '#811F1F');//dark red
+                $('#tr_' + list[i].PK_Vehicle).css('color', '	#FFFFFF');//white text
+                $('#sideListStatus_' + list[i].PK_Vehicle).html("Time Lapsed");
+            }
+            $('#sideListLastUpdated_' + list[i].PK_Vehicle).html(list[i].UpdateTime);
+        }
+    }
+    var checkedSideItemList = [];
+    function RemakeCheckedSideItemList() {
+        //var checkedRegistrations = $('input[name=checkedRegistrations]').val();
+        var checkedVals = $('input[name=checkedRegistrations]:checked').map(function () {
+            return this.value;
+        }).get();
+        if (checkedVals.length == 0) {
+            checkedVals = $('input[name=checkedRegistrations]').map(function () {
+                return this.value;
+            }).get();
+        }
+        checkedSideItemList = checkedVals;
+    }
+
+    function RefreshMap(list) {
+        for (var i = 0; i < list.length; i++) {
+            //# Get current marker
+            var _marker = markerList.find(function (mrk) {
+                return mrk.id == list[i].PK_Vehicle;
+            });
+
+            if (list[i].Status == 0) {
+                _marker.setIcon(vehicle_egnition_off);
+                $('#infoWindowStatus_' + list[i].PK_Vehicle).html("Egnition off");
+            }
+            else if (list[i].Status == 1) {
+                _marker.setIcon(vehicle_nonMove);
+                $('#infoWindowStatus_' + list[i].PK_Vehicle).html("Stand by");
+            }
+            else if (list[i].Status == 2) {
+                _marker.setIcon(vehicle_move);
+                $('#infoWindowStatus_' + list[i].PK_Vehicle).html("Running");
+            }
+            else if (list[i].Status == -1) {
+                _marker.setIcon(vehicle_notConnected);
+                $('#infoWindowStatus_' + list[i].PK_Vehicle).html("Time Lapsed");
+            }
+            $('#infoWindowLastSpeed_' + list[i].PK_Vehicle).html(list[i].Speed);
+            $('#infoWindowLastUpdated_' + list[i].PK_Vehicle).html(list[i].UpdateTime);
+
+            if (jQuery.inArray(list[i].PK_Vehicle, checkedSideItemList) == -1) {
+                _marker.setMap(null);
+            }
+            else {
+                if (_marker.map == null) {
+                    _marker.setMap(map);
+                }
+            }
+            _marker.lat_inc = (list[i].Latitude - _marker.position.lat()) / markerMoveFrequency;
+            _marker.lng_inc = (list[i].Longitude - _marker.position.lng()) / markerMoveFrequency;
+            _marker.lat_last = list[i].Latitude;
+            _marker.lng_last = list[i].Longitude;
+        }
+
+        var c = 0;
+        var interval = setInterval(function () {
+            c = c + 1;
+            if (c < markerMoveFrequency) {
+                for (var i = 0; i < markerList.length; i++) {
+                    markerList[i].setPosition(new google.maps.LatLng(markerList[i].position.lat() + markerList[i].lat_inc, markerList[i].position.lng() + markerList[i].lng_inc));
+                }
+            }
+            else {
+
+                for (var i = 0; i < markerList.length; i++) {
+                    markerList[i].setPosition(new google.maps.LatLng(markerList[i].lat_last, markerList[i].lng_last));
+                }
+                clearInterval(interval);
+            }
+        }, intervalTime);
+
+
+        //GetLatestData();
+        setTimeout(GetLatestData, markerMoveFrequency * intervalTime);
+    }
+</script>
+
+<script>
+    function filterSideItemList() {
+        var searchReg = $('#searchReg').val();
+        if (searchReg == '') {
+            $('tr[data-category=row_all]').show();
+        } else {
+            for (var i = 0; i < updatedDataList.length; i++) {
+                if (updatedDataList[i].RegistrationNumber.indexOf(searchReg.toUpperCase()) == -1) {
+                    $("#tr_" + updatedDataList[i].PK_Vehicle).hide();
+                } else {
+                    $("#tr_" + updatedDataList[i].PK_Vehicle).show();
+                }
+            }
+        }
+    }
+    function showInfoWindow(tr_id) {
+        var id = tr_id.replace("tr_", "");
+        //get marker
+        var _marker = markerList.find(function (mrk) {
+            return mrk.id == id;
+        });
+        var _data = updatedDataList.find(function (mrk) {
+            return mrk.PK_Vehicle == id;
+        });
+
+
+
+        var infoWindowContent = "";
+        infoWindowContent = infoWindowContent + "<h5>" + _data.RegistrationNumber + "</h5>";
+        infoWindowContent = infoWindowContent + "Depo: " + _data.DepoName + "</b><br/>";
+        if (_data.MHT_DHT_DriverContactNumber != null) {
+            infoWindowContent = infoWindowContent + "Driver's Number: " + _data.MHT_DHT_DriverContactNumber + "</b><br/>";
+        }
+        if (_data.Status == 0) {
+            _marker.setIcon(vehicle_egnition_off);
+            infoWindowContent = infoWindowContent + "Status: " + "<b id= 'infoWindowStatus_" + _data.PK_Vehicle + "'>Egnition off</b><br/>";
+        }
+        else if (_data.Status == 1) {
+            _marker.setIcon(vehicle_nonMove);
+            infoWindowContent = infoWindowContent + "Status: " + "<b id= 'infoWindowStatus_" + _data.PK_Vehicle + "'>Stand by</b><br/>";
+        }
+        else if (_data.Status == 2) {
+            _marker.setIcon(vehicle_move);
+            infoWindowContent = infoWindowContent + "Status: " + "<b id= 'infoWindowStatus_" + _data.PK_Vehicle + "'>Running</b><br/>";
+        }
+        else if (_data.Status == -1) {
+            _marker.setIcon(vehicle_notConnected);
+            infoWindowContent = infoWindowContent + "Status: " + "<b id= 'infoWindowStatus_" + _data.PK_Vehicle + "'>Disconnected</b><br/>";
+        }
+        infoWindowContent = infoWindowContent + "Last Speed: " + "<b id= 'infoWindowLastSpeed_" + _data.PK_Vehicle + "'>" + _data.Speed + "</b><br/>";
+        infoWindowContent = infoWindowContent + "Updated at: " + "<b id= 'infoWindowLastUpdated_" + _data.PK_Vehicle + "'>" + _data.UpdateTime + "</b>";
+        var infowindow = new google.maps.InfoWindow();
+        infowindow.setContent(infoWindowContent);
+        infowindow.open(map, _marker
+        );
+    }
+
+    $(document).ready(function () {
+        setTimeout(GetLatestData, 5000);
+    });
+</script>

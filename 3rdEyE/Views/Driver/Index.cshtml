@@ -1,0 +1,125 @@
+﻿@model IEnumerable<_3rdEyE.ViewModels.VM_Driver>
+
+@{
+    ViewBag.Title = "Driver list";
+}
+
+
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Driver List
+        <small></small>
+    </h1>
+
+    <div class="breadcrumb">
+        <a class="btn btn-block btn-default btn-sm" href="/Driver/Create">Create New</a>
+    </div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Driver List</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Driver Name
+                                </th>
+                                <th>
+                                    U.ID
+                                </th>
+                                <th>
+                                    Active/Inactive
+                                </th>
+                                <th>
+                                    Depo
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Model.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Model.UniqueIDNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.IsActive_Text)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Model.Depo.Name)
+                                    </td>
+                                    <td>
+                                        <a href="/Driver/View?id=@item.Model.PK_Driver" class="btn btn-block btn-info btn-xs">View</a>
+                                        <a href="/Driver/Edit?id=@item.Model.PK_Driver" class="btn btn-block btn-success btn-xs">Edit</a>
+                                        <button class="btn btn-block btn-danger btn-xs" onclick="showModalDelete('@item.Model.PK_Driver','@item.Model.Name')">Delete</button>
+                                    </td>
+
+                                </tr>
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+@*MODAL DELETE START*@
+<div id="modalDelete" class="modal fade modal-" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div id="modalDelete_hiddenKey" style="display:none;"></div>
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+            </div>
+            <div id="modalDelete_body" class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="tryDelete()">Yes</button>
+                <button type="button" class="btn btn-primary" onclick="$('#modalDelete').modal('hide');">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*MODAL DELETE END*@
+<!-- /.content -->
+<!-- DataTables -->
+<script src="~/Theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/Theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<!-- page script -->
+<script>
+    $(function () {
+        $('#data_table').DataTable({ "scrollX": true });
+    });
+    function showModalDelete(model_id, model_name) {
+        $('#modalDelete_hiddenKey').html(model_id);
+        $('#modalDelete_body').html("Do you want to delete compnay (" + model_name + ")?");
+        $("#modalDelete").modal('show');
+    }
+    function tryDelete() {
+        var id = $("#modalDelete_hiddenKey").html();
+        window.Depo.href = "/Driver/Delete?id=" + id;
+    }
+</script>
+

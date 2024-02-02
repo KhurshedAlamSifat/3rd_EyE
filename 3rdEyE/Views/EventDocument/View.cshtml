@@ -1,0 +1,79 @@
+﻿
+@{
+    ViewBag.Title = "View";
+}
+
+<section class="content-header">
+    <h1>
+        View Event Document
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        <a class="btn btn-block btn-default btn-sm" href="/Event/View?PK_Event=@ViewBag.viewModel.Model.FK_Event">Back</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Document Information</h3>
+                </div>
+                <!-- /.box-header -->
+                @*Title*@
+                <div class="box-body">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Title</label>
+                        <div class="col-md-10">
+                            <input name="Title" value="@ViewBag.viewModel.Model.Title" type="text" class="form-control">
+                            <b class="errorMessage" data-category="errorMessage" name="error_Title"></b>
+                        </div>
+                    </div>
+                </div>
+                @*IdentitficaitonKey*@
+                <div class="box-body">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Identitficaiton Key</label>
+                        <div class="col-md-10">
+                            <input name="IdentitficaitonKey" value="@ViewBag.viewModel.Model.IdentitficaitonKey" type="text" class="form-control">
+                            <b class="errorMessage" data-category="errorMessage" name="error_IdentitficaitonKey"></b>
+                        </div>
+                    </div>
+                </div>
+                @*IdentitficaitonValue*@
+                <div class="box-body">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Identitficaiton Value</label>
+                        <div class="col-md-10">
+                            <input name="IdentitficaitonValue" value="@ViewBag.viewModel.Model.IdentitficaitonValue" type="text" class="form-control">
+                            <b class="errorMessage" data-category="errorMessage" name="error_IdentitficaitonValue"></b>
+                        </div>
+                    </div>
+                </div>
+                @*ImageLocation*@
+                <div class="box-body">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Document Image</label>
+                        <div class="col-md-10">
+                            <img src="@ViewBag.viewModel.Model.ImageLocation" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+
+
+<script>
+    $('document').ready(function () {
+        $('input').attr("disabled", "disabled");
+        $('textarea').attr("disabled", "disabled");
+        $('select').attr("disabled", "disabled");
+    });
+</script>

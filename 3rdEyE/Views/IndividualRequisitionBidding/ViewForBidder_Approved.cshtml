@@ -1,0 +1,86 @@
+﻿@model _3rdEyE.ViewModels.VM_IndividualRequisitionBidding
+@{
+    ViewBag.Title = "Create";
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Individual Requisition Bidding Confirmation
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        <a class="btn btn-block btn-info btn-sm" href="/Home/Index">Go Back To Home</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/IndividualRequisitionBidding/Create" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="col-md-12">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Individual Requisition Bidding Confirmation</h3>
+                        </div>
+                        <!-- /.box-header -->
+                        <!-- form start -->
+                        <div class="box-body col-md-12">
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <label>Agent ID: </label>&nbsp; @Html.DisplayFor(m => m.Model.IndividualRequisition.AppUser.UniqueIDNumber)
+                                        </td>
+                                        <td>
+                                            <label>Agent Name: </label>&nbsp; @Html.DisplayFor(m => m.Model.IndividualRequisition.AppUser.FullName)
+                                        </td>
+                                        <td>
+                                            <label>Contact: </label>&nbsp;@Html.DisplayFor(m => m.Model.IndividualRequisition.AppUser.ContactNumber)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>From: </label>&nbsp; @Html.DisplayFor(m => m.Model.IndividualRequisition.Depo.Name) @Html.DisplayFor(m => m.Model.IndividualRequisition.StartingLocation)
+                                        </td>
+                                        <td>
+                                            <label>To: </label>&nbsp; @Html.DisplayFor(m => m.Model.IndividualRequisition.Depo1.Name) @Html.DisplayFor(m => m.Model.IndividualRequisition.FinishingLocation)
+                                        </td>
+                                        <td>
+                                            <label>Trip Date-Time: </label> &nbsp; @Html.DisplayFor(m => m.Model.IndividualRequisition.PossibleJourneyStartDateTime)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>Vehicle Type: </label>&nbsp; @Model.Model.IndividualRequisition.VehicleTypeLayer1_english : @Model.Model.IndividualRequisition.VehicleTypeLayer2_english : @Model.Model.IndividualRequisition.VehicleTypeLayer3_english
+                                        </td>
+                                        <td>
+                                            <label>Approved Vehicle: </label>&nbsp; @Html.DisplayFor(m => m.Model.ApprovedQuantity)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>Rent Per Vehicle: </label>&nbsp; BDT &nbsp; @Html.DisplayFor(m => m.Model.PricePerQuantity)
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="box-footer">
+                        @*<input type="button" class="btn btn-facebook center-block" value="Save" onclick="TrySubmit()" />*@
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+
+</section>
+<!-- /.content -->

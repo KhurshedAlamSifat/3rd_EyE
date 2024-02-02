@@ -1,0 +1,494 @@
+﻿@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Create Multiple Demand
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        <a class="btn btn-block btn-info btn-sm" href="/Requisition/RequisitionIndex_Client">Go To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Requisition Entry</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form id="ThisForm" name="ThisForm" class="form-horizontal" method="post" action="/Requisition/Create_Multi_Import" enctype="multipart/form-data">
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">From*</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Location_From", ViewBag.Locations as SelectList, "Select", new { @class = "form-control", onchange = "relodeOrganizationCode()" })
+                                <input name="FK_Location_From_LocationType" id="FK_Location_From_LocationType" type="text" value="@ViewBag.Location_LocationType" style="display:none;" />
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_Location_From"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">From Department</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_LocationDepartment_From", ViewBag.LocationDepartments_From as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_LocationDepartment_From"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">From Detail</label>
+                            <div class="col-md-8">
+                                <input id="StartingLocation" name="StartingLocation" class="form-control" />
+                                <b class="errorMessage" data-category="errorMessage" name="error_Name"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12" style='display:@(ViewBag.CurrentUser.PRG_Type == "PRAN"? ";":"none;");'>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Organization*</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("OrganizationCode", ViewBag.PranOrganizations as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_OrganizationCode"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">To*</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Location_To", ViewBag.Locations as SelectList, "Select", new { @class = "form-control", onchange = "relodeFK_LocationDepartment_To()" })
+                                <input name="FK_Location_To_LocationType" id="FK_Location_To_LocationType" type="text" value="@ViewBag.Location_LocationType" style="display:none;" />
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_Location_To"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">To Department</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_LocationDepartment_To", ViewBag.LocationDepartments_From as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_LocationDepartment_To"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">To Detail</label>
+                            <div class="col-md-8">
+                                <input id="FinishingLocation" name="FinishingLocation" class="form-control" />
+                                <b class="errorMessage" data-category="errorMessage" name="error_Name"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Vehicle Type*</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_RequisitionVehicleType", ViewBag.RequisitionVehicleTypes as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_RequisitionVehicleType"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">How Many*</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("WantedCount", ViewBag.WantedQuantityDict as SelectList, new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_WantedCount"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">When*</label>
+                            <div class="col-md-8">
+                                <input id="PossibleJourneyStartDateTime" name="PossibleJourneyStartDateTime" size="16" type="text" value="" readonly class="form-control">
+                                <b class="errorMessage" data-category="errorMessage" name="error_PossibleJourneyStartDateTime"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">LC NUmber</label>
+                            <div class="col-md-8">
+                                <input id="LCNumber" name="LCNumber" class="form-control" />
+                                <b class="errorMessage" data-category="errorMessage" name="error_Name"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Note</label>
+                            <div class="col-md-8">
+                                <input id="ClientNote" name="ClientNote" class="form-control" />
+                                <b class="errorMessage" data-category="errorMessage" name="error_Name"></b>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Mail Group*</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("MailReceiverGroup", ViewBag.MailReceiverGroupDict as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_RequisitionVehicleType"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <input type="button" class="btn btn-success" value="Add To Cart" onclick="AddToCart()" />
+                        @*<input type="button" class="btn btn-facebook pull-right" value="Save" onclick="AddToCartAndSubmit()" />*@
+                    </div>
+                    <div class="box-body" style="overflow-x: scroll; height: auto;">
+                        <table id="data_table" class="table table-bordered table-striped" style="font-size:12px;">
+                            <thead>
+                                <tr>
+                                    <th style='display:none;'>
+                                        _FK_Location_From
+                                    </th>
+                                    <th>
+                                        From Location
+                                    </th>
+                                    <th style='display:none;'>
+                                        _OrganizationCode
+                                    </th>
+                                    <th style='display:@(ViewBag.CurrentUser.PRG_Type == "PRAN"? ";":"none;");'>
+                                        Organization
+                                    </th>
+                                    <th style='display:none;'>
+                                        _FK_LocationDepartment_From
+                                    </th>
+                                    <th>
+                                        From Department
+                                    </th>
+                                    <th>
+                                        From Detail
+                                    </th>
+                                    <th style='display:none;'>
+                                        _FK_Location_To
+                                    </th>
+                                    <th>
+                                        To Location
+                                    </th>
+                                    <th style='display:none;'>
+                                        _FK_LocationDepartment_To
+                                    </th>
+                                    <th>
+                                        To Department
+                                    </th>
+                                    <th>
+                                        To Detail
+                                    </th>
+                                    <th style='display:none;'>
+                                        _FK_RequisitionVehicleType
+                                    </th>
+                                    <th>
+                                        Vehicle Type
+                                    </th>
+                                    <th>
+                                        How Many
+                                    </th>
+                                    <th>
+                                        When
+                                    </th>
+                                    <th>
+                                        LC Number
+                                    </th>
+                                    <th>
+                                        File 1
+                                    </th>
+                                    <th style='display:none;'>
+                                        _MailReceiverGroup
+                                    </th>
+                                    <th>
+                                        Mail Group
+                                    </th>
+                                    <th>
+                                        Note
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="detail_tbody">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="box-footer">
+                        <input type="button" class="btn btn-facebook pull-right" value="Save" onclick="TryTrySubmit()" />
+                    </div>
+
+                </form>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        //$("#PossibleJourneyStartDateTime").datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true, yearRange: '1990:2023' });
+        $("select").select2();
+    });
+</script>
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var today = new Date();
+        var _startDate = (today.getMonth() + 1) + '/' + (today.getDate() + 0) + '/' + today.getFullYear() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();// 13:05'//today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        var _endDate = (today.getMonth() + 1) + '/' + (today.getDate() + 2) + '/' + today.getFullYear() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();// 13:05'//today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        $('#PossibleJourneyStartDateTime').datetimepicker({
+            //format: 'yyyy-mm-dd HH:ii P',
+            format: 'yyyy-mm-dd HH:ii P',
+            //setDate: new Date(),
+            //weekStart: 1,
+            todayBtn: 1,
+            autoclose: 1,
+            //todayHighlight: 1,
+            //startView: 2,
+            //forceParse: 0,
+            //showMeridian: 0
+            //startDate: '+0d',
+            startDate: new Date(_startDate),
+            endDate: new Date(_endDate),
+        });
+    });
+</script>
+<script>
+    function relodeOrganizationCode() {
+        var FK_Location = $('#FK_Location_From').val();
+        if (FK_Location == '') {
+            return;
+        }
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/PranOrganization/GetPranOrganizationBy_FK_Location/",
+            data: JSON.stringify({ FK_Location: FK_Location }),
+            success: function (data) {
+                $('#OrganizationCode').html("");
+                var result = "<option value=''>Select</option>";
+                for (var i = 0; i < data.length; i++) {
+                    result = result + "<option value='" + data[i].OrganizationCode + "'>" + data[i].OrganizationCode + " / " + data[i].OrganizationName + "</option>";
+                }
+                $('#OrganizationCode').html(result);
+                relodeFK_LocationDepartment_From();
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: relodeOrganizationCode()");
+            }
+        });
+    }
+    function relodeFK_LocationDepartment_From() {
+        var FK_Location = $('#FK_Location_From').val();
+        if (FK_Location == '') {
+            return;
+        }
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/LocationDepartment/GetLocationInfoWithDepartment_FK_Location/",
+            data: JSON.stringify({ FK_Location: FK_Location }),
+            success: function (data) {
+                $('#FK_Location_From_LocationType').val(data.location.LocationType);
+                $('#FK_LocationDepartment_From').html("");
+                var result = "<option value=''>Select</option>";
+                for (var i = 0; i < data.locationDepartments.length; i++) {
+                    result = result + "<option value='" + data.locationDepartments[i].PK_LocationDepartment + "'>" + data.locationDepartments[i].DepartmentCode + "</option>";
+                }
+                $('#FK_LocationDepartment_From').html(result);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: relodeFK_LocationDepartment_From()");
+            }
+        });
+    }
+    function relodeFK_LocationDepartment_To() {
+        var FK_Location = $('#FK_Location_To').val();
+        if (FK_Location == '') {
+            return;
+        }
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/LocationDepartment/GetLocationInfoWithDepartment_FK_Location/",
+            data: JSON.stringify({ FK_Location: FK_Location }),
+            success: function (data) {
+                $('#FK_Location_To_LocationType').val(data.location.LocationType);
+                $('#FK_LocationDepartment_To').html("");
+                var result = "<option value=''>Select</option>";
+                for (var i = 0; i < data.locationDepartments.length; i++) {
+                    result = result + "<option value='" + data.locationDepartments[i].PK_LocationDepartment + "'>" + data.locationDepartments[i].DepartmentCode + "</option>";
+                }
+                $('#FK_LocationDepartment_To').html(result);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: relodeFK_LocationDepartment_To()");
+            }
+        });
+    }
+
+    var row_count = 0;
+    function AddToCart() {
+        //Check & Get values
+        var FK_Location_From = $('#FK_Location_From').val();
+        var Location_From = $('#FK_Location_From option:selected').text();
+        var FK_Location_From_LocationType = $('#FK_Location_From_LocationType').val();
+
+        var OrganizationCode = $('#OrganizationCode').val();
+        var Organization = $('#OrganizationCode option:selected').text();
+        if (Organization == 'Select') { Organization = ''; }
+
+        var FK_LocationDepartment_From = $('#FK_LocationDepartment_From').val();
+        var LocationDepartment_From = $('#FK_LocationDepartment_From option:selected').text();
+        if (LocationDepartment_From == 'Select') { LocationDepartment_From = ''; }
+        var FK_Location_To_LocationType = $('#FK_Location_To_LocationType').val();
+
+        var StartingLocation = $('#StartingLocation').val();
+
+        var FK_Location_To = $('#FK_Location_To').val();
+        var Location_To = $('#FK_Location_To option:selected').text();
+
+        var FK_LocationDepartment_To = $('#FK_LocationDepartment_To').val();
+        var LocationDepartment_To = $('#FK_LocationDepartment_To option:selected').text();
+        if (LocationDepartment_To == 'Select') { LocationDepartment_To = ''; }
+
+        var FinishingLocation = $('#FinishingLocation').val();
+
+        var FK_RequisitionVehicleType = $('#FK_RequisitionVehicleType').val();
+        var RequisitionVehicleType = $('#FK_RequisitionVehicleType option:selected').text();
+
+        var WantedCount = $('#WantedCount').val();
+
+        var ClientNote = $('#ClientNote').val();
+
+        var PossibleJourneyStartDateTime = $('#PossibleJourneyStartDateTime').val();
+        var LCNumber = $('#LCNumber').val();
+
+        var MailReceiverGroup = $('#MailReceiverGroup').val();
+        var MailReceiverGroup_Name = $('#MailReceiverGroup option:selected').text();
+        if (MailReceiverGroup_Name == 'Select') { MailReceiverGroup_Name = ''; }
+
+        $('b[data-category=errorMessage]').html("");
+
+        let _localValidation = true;
+        if (FK_Location_From == '') {
+            $('b[name=error_FK_Location_From]').html("Required");
+            _localValidation = false;
+        }
+        if (FK_Location_From_LocationType == 'Factory' && FK_LocationDepartment_From == '') {
+            $('b[name=error_FK_LocationDepartment_From]').html("Required");
+            _localValidation = false;
+        }
+        if ('@ViewBag.CurrentUser.PRG_Type' == 'PRAN' && (FK_Location_From_LocationType == 'Factory' || FK_Location_From_LocationType == 'Depo') && OrganizationCode == '') {
+            $('b[name=error_OrganizationCode]').html("Required");
+            _localValidation = false;
+        }
+
+        if (FK_Location_To == '') {
+            $('b[name=error_FK_Location_To]').html("Required");
+            _localValidation = false;
+        }
+        if (FK_Location_To_LocationType == 'Factory' && FK_LocationDepartment_To == '') {
+            $('b[name=error_FK_LocationDepartment_To]').html("Required");
+            _localValidation = false;
+        }
+
+        if (FK_RequisitionVehicleType == '') {
+            $('b[name=error_FK_RequisitionVehicleType]').html("Required");
+            _localValidation = false;
+        }
+        if (WantedCount == '') {
+            $('b[name=error_WantedCount]').html("Required");
+            _localValidation = false;
+        }
+        if (PossibleJourneyStartDateTime == '') {
+            $('b[name=error_PossibleJourneyStartDateTime]').html("Required");
+            _localValidation = false;
+        }
+        if (_localValidation == false) {
+            return _localValidation;
+        }
+
+        var row = "<tr id='tr_" + row_count + "'>";
+        row = row + "<td data-key='FK_Location_From' style='display:none;'>" + FK_Location_From + "</td>";
+        row = row + "<td data-key='Location_From'>" + Location_From + "</td>";
+        row = row + "<td data-key='OrganizationCode' style='display:none;'>" + OrganizationCode + "</td>";
+        @*row = row + "<td data-key='Organization' " + '@(ViewBag.CurrentUser.PRG_Type.ToString() == "PRAN" ? "style = 'display:none;' " : "")' + ">" + Organization + "</td>";*@
+        row = row + "<td data-key='Organization' " + ('@ViewBag.CurrentUser.PRG_Type' == 'PRAN' ? "" : "style='display:none;") + ">" + Organization + "</td>";
+
+        row = row + "<td data-key='FK_LocationDepartment_From' style='display:none;'>" + FK_LocationDepartment_From + "</td>";
+        row = row + "<td data-key='LocationDepartment_From'>" + LocationDepartment_From + "</td>";
+        row = row + "<td data-key='StartingLocation'>" + StartingLocation + "</td>";
+        row = row + "<td data-key='FK_Location_To' style='display:none;'>" + FK_Location_To + "</td>";
+        row = row + "<td data-key='Location_To'>" + Location_To + "</td>";
+        row = row + "<td data-key='FK_LocationDepartment_To' style='display:none;'>" + FK_LocationDepartment_To + "</td>";
+        row = row + "<td data-key='LocationDepartment_To'>" + LocationDepartment_To + "</td>";
+        row = row + "<td data-key='FinishingLocation'>" + FinishingLocation + "</td>";
+        row = row + "<td data-key='FK_RequisitionVehicleType' style='display:none;'>" + FK_RequisitionVehicleType + "</td>";
+        row = row + "<td data-key='RequisitionVehicleType'>" + RequisitionVehicleType + "</td>";
+        row = row + "<td data-key='WantedCount'>" + WantedCount + "</td>";
+        row = row + "<td data-key='PossibleJourneyStartDateTime'>" + PossibleJourneyStartDateTime + "</td>";
+        row = row + "<td data-key='LCNumber'>" + LCNumber + "</td>";
+        row = row + "<td data-key='AttachedFile1'>" + "<input type='file' id='RequisitionList[" + row_count + "].AttachedFile1' name='RequisitionList[" + row_count + "].AttachedFile1' onchange='validateAttachmentFile(this)'/>" + "</td>";
+        row = row + "<td data-key='AttachedFile2'>" + "<input type='file' id='RequisitionList[" + row_count + "].AttachedFile2' name='RequisitionList[" + row_count + "].AttachedFile2' onchange='validateAttachmentFile(this)'/>" + "</td>";
+        row = row + "<td data-key='AttachedFile3'>" + "<input type='file' id='RequisitionList[" + row_count + "].AttachedFile3' name='RequisitionList[" + row_count + "].AttachedFile3' onchange='validateAttachmentFile(this)'/>" + "</td>";
+        row = row + "<td data-key='MailReceiverGroup' style='display:none;'>" + MailReceiverGroup + "</td>";
+        row = row + "<td data-key='MailReceiverGroup_Name'>" + MailReceiverGroup_Name + "</td>";
+        row = row + "<td data-key='ClientNote'>" + ClientNote + "</td>";
+        row = row + "</tr>";
+
+        $('#detail_tbody').append(row);
+        row_count++;
+        return true;
+    }
+    function validateAttachmentFile(element) {
+        if (element.files.length > 0 && element.files[0].size > (1024*1024*5)) {
+            alert("Image size is too big. Can not select it.");
+            element.value  = '';
+        }
+    }
+    function RemoveThisRow(_row_serial) {
+        $("#tr_" + _row_serial).remove();
+    }
+    function TryTrySubmit() {
+        var data_table = document.getElementById('data_table');
+        if (data_table.rows.length == 0) {
+            alert("No Demand Info given.");
+            return;
+        }
+
+        for (i = 1; i < data_table.rows.length; i++) {
+            var row_cells = data_table.rows.item(i).cells;
+            for (var j = 0; j < row_cells.length; j++) {
+                var cell_key = row_cells.item(j).getAttribute('data-key');
+                if (cell_key != 'AttachedFile1') {
+                    var cell_val = row_cells.item(j).innerText;
+                    console.log(cell_key + ':' + cell_val);
+                    var item = "<input type='hiden' name='" + "RequisitionList[" + (i - 1) + "]." + cell_key + "' value='" + cell_val + "'>";
+                    $("#ThisForm").prepend(item);
+                } else {
+                    //var cell_val = $(row_cells.item(j).getElementsByTagName("input")[0]).val();
+                    //console.log(cell_key + ':' + cell_val);
+                    //var item = "<input type='file' name='" + "RequisitionList[" + (i - 1) + "]." + cell_key + "' value='" + cell_val + "' style='display:none;'>";
+                    //$("#ThisForm").prepend(item);
+                }
+            }
+        }
+        TrySubmit();
+
+    }
+    //function AddToCartAndSubmit() {
+    //    var conf = AddToCart();
+    //    if (conf == true) {
+    //        TryTrySubmit();
+    //    }
+    //}
+</script>
+
+
+
+

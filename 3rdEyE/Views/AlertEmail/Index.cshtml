@@ -1,0 +1,134 @@
+﻿@model IEnumerable<_3rdEyE.Models.AlertEmail>
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        AlertEmail List
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        <a class="btn btn-block btn-info btn-sm" href="/AlertEmail/Create">Create New</a>
+    </div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Alert Email List</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Email
+                                </th>
+                                <th>
+                                    Event Mail 1
+                                </th>
+                                <th>
+                                    Event Mail 2
+                                </th>
+                                <th>
+                                    Event Mail 3
+                                </th>
+                                <th>
+                                    Police Case 1
+                                </th>
+                                <th>
+                                    Police Case 2
+                                </th>
+                                <th>
+                                    User Group Count
+                                </th>
+
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.MailAddress)
+                                    </td>
+                                    <td>
+                                        @(item.EventAlert_1 == true ? "Yes":"")
+                                    </td>
+                                    <td>
+                                        @(item.EventAlert_2 == true ? "Yes":"")
+                                    </td>
+                                    <td>
+                                        @(item.EventAlert_3 == true ? "Yes":"")
+                                    </td>
+                                    <td>
+                                        @(item.PoliceCaseAlert_1 == true ? "Yes":"")
+                                    </td>
+                                    <td>
+                                        @(item.PoliceCaseAlert_2 == true ? "Yes":"")
+                                    </td>
+                                    <td>
+                                        @item.AlertEmailAttachedDepoes.Where(m => m.IsAttachable == true).Count()
+                                    </td>
+                                    <td>
+                                        <a href="/AlertEmail/Edit?id=@item.PK_AlertEmail" class="btn btn-block btn-success btn-xs">Edit</a>
+                                        <button class="btn btn-block btn-danger btn-xs" onclick="showModalDelete('@item.PK_AlertEmail','@item.MailAddress')">Delete</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+@*MODAL DELETE START*@
+<div id="modalDelete" class="modal fade modal-" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div id="modalDelete_hiddenKey" style="display:none;"></div>
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+            </div>
+            <div id="modalDelete_body" class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="tryDelete()">Yes</button>
+                <button type="button" class="btn btn-primary" onclick="$('#modalDelete').modal('hide');">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*MODAL DELETE END*@
+<!-- /.content -->
+<!-- DataTables -->
+<script src="~/Theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/Theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<!-- page script -->
+<script>
+    $(function () {
+        $('#data_table').DataTable({ "scrollX": true });
+    });
+    function showModalDelete(model_id, model_name) {
+        $('#modalDelete_hiddenKey').html(model_id);
+        $('#modalDelete_body').html("Do you want to delete alert mail (" + model_name + ")?");
+        $("#modalDelete").modal('show');
+    }
+    function tryDelete() {
+        var id = $("#modalDelete_hiddenKey").html();
+        window.location.href = "/AlertEmail/Delete?id=" + id;
+    }
+</script>
+

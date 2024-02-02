@@ -1,0 +1,162 @@
+﻿@model _3rdEyE.Models.Requisition
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        View Demand
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        <a class="btn btn-block btn-info btn-sm" href="@System.Web.HttpContext.Current.Request.UrlReferrer">Back To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">#@Model.TrackingID</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form name="ThisForm" class="form-horizontal" method="post" action="" enctype="multipart/form-data">
+                    @*@Html.EditorFor(viewModel => viewModel.PK_IndividualRequisition, new { htmlAttributes = new { @readonly = "readonly", @class = "form-control" } })*@
+                    <input name="PK_IndividualRequisition" value="@Model.PK_Requisition" style="display:none;" />
+                    <div class="box-body col-md-12">
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <label>Raiser: </label>&nbsp; @Html.DisplayFor(m => m.AppUser.FullName)
+                                    </td>
+                                    <td>
+                                        <label>Location: </label>&nbsp;@Html.DisplayFor(m => m.Location.Name)
+                                    </td>
+                                    <td>
+                                        <label>Created At: </label>&nbsp;@Html.DisplayFor(m => m.CreatedAt)
+                                    </td>
+                                    <td>
+                                        <label>Updated At: </label>&nbsp;@Html.DisplayFor(m => m.UpdatedAt)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>From: </label>&nbsp; @Html.DisplayFor(m => m.Location.Name) @Html.DisplayFor(m => m.OrganizationCode) @Html.DisplayFor(m => m.OrganizationName) @Html.DisplayFor(m => m.StartingLocation)
+                                    </td>
+                                    <td>
+                                        <label>To: </label>&nbsp; @Html.DisplayFor(m => m.Location1.Name) @Html.DisplayFor(m => m.FinishingLocation)
+                                    </td>
+                                    <td>
+                                        <label>Journey Time: </label>&nbsp;@Html.DisplayFor(m => m.PossibleJourneyStartDateTime)
+                                    </td>
+                                    <td>
+                                        <label>Vehicle Type: </label>&nbsp; @Model.RequisitionVehicleType.Title_English
+                                    </td>
+                                </tr>
+                                @*<tr>
+                                        <td>
+                                            <label>Business Unit: </label>&nbsp; @Html.DisplayFor(m => m.RequisitionBusinessUnit.Title)
+                                        </td>
+                                        <td></td>
+                                        <td>
+                                            <label>Product Type: </label>&nbsp;@Html.DisplayFor(m => m.RequisitionProductType.Title)
+                                        </td>
+                                        <td></td>
+                                    </tr>*@
+                                <tr>
+                                    <td>
+                                        <label>Status: </label>&nbsp; @Html.DisplayFor(m => m.StatusText)
+                                    </td>
+                                    <td>
+                                        <label>Wanted: </label>&nbsp; @Html.DisplayFor(m => m.WantedCount)
+                                    </td>
+                                    <td>
+                                        <label>Accepted: </label>&nbsp;@Html.DisplayFor(m => m.AcceptedCount)
+                                    </td>
+                                    <td>
+                                        <label>Given: </label>&nbsp;@Model.RequisitionTrips.Where(n => n.FK_Vehicle != null).Count()
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Verified By: </label>&nbsp; @Html.DisplayFor(m => m.AppUser1.FullName)
+                                    </td>
+                                    <td>
+                                        <label>Verified At: </label>&nbsp;@Html.DisplayFor(m => m.VerifiedAt)
+                                    </td>
+                                    <td>
+                                        <label>Raiser Note: </label>&nbsp; @Html.DisplayFor(m => m.ClientNote)
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Internal Assigned Vehicle: </label><br>
+                                        @foreach (var item in Model.RequisitionTrips.Where(m => m.Vehicle != null && m.Vehicle.OWN_MHT_DHT == "OWN").OrderBy(m => m.AssingedAt))
+                                        {
+                                            <text> <b>@item.TrackingID</b>&nbsp;<b>@item.Vehicle.RegistrationNumber</b>&nbsp;@item.StatusText&nbsp;@item.Driver_Staff_ID @item.Driver_Name @item.FinalWantedAtDateTime
+                                            @if (@item.Vehicle.VehicleTrackingInformation != null && @item.Vehicle.VehicleTrackingInformation.VehicleTracking != null)
+                                            {
+                                                <br>
+                                                <text><a target='_blank' href='/tracking/Index_single_live?PK_Vehicle=@item.Vehicle.PK_Vehicle'>map</a></text>
+                                            }
+                                            </text>
+                                            <br>
+                                        }
+                                        @foreach (var item in Model.RequisitionTrip_Finished.Where(m => m.Vehicle != null && m.Vehicle.OWN_MHT_DHT == "OWN").OrderBy(m => m.AssingedAt))
+                                        {
+                                            <text> <b>@item.TrackingID</b>&nbsp;<b>@item.Vehicle.RegistrationNumber</b>&nbsp;@item.StatusText&nbsp;@item.Driver_Staff_ID @item.Driver_Name @item.FinalWantedAtDateTime
+                                            @if (@item.Vehicle.VehicleTrackingInformation != null && @item.Vehicle.VehicleTrackingInformation.VehicleTracking != null)
+                                            {
+                                                <br>
+                                                <text><a target='_blank' href='/tracking/Index_single_live?PK_Vehicle=@item.Vehicle.PK_Vehicle'>map</a></text>
+                                            }
+                                            </text>
+                                            <br>
+                                        }
+                                    </td>
+                                    <td>
+                                        <label>Externally Assigned Vehicle: </label><br>
+                                        @foreach (var item in Model.RequisitionTrips.Where(m => m.Vehicle != null && m.Vehicle.OWN_MHT_DHT != "OWN").OrderBy(m => m.AssingedAt))
+                                        {
+                                            <text> <b>@item.TrackingID</b><b>@item.Vehicle.RegistrationNumber</b>&nbsp;@item.StatusText&nbsp;@item.Driver_Staff_ID @item.Driver_Name @item.FinalWantedAtDateTime
+                                            @if (@item.Vehicle.VehicleTrackingInformation != null && @item.Vehicle.VehicleTrackingInformation.VehicleTracking != null)
+                                            {
+                                                <br>
+                                                <text><a target='_blank' href='/tracking/Index_single_live?PK_Vehicle=@item.Vehicle.PK_Vehicle'>map</a></text>
+                                            }
+                                            </text>
+                                            <br>
+                                        }
+                                        @foreach (var item in Model.RequisitionTrip_Finished.Where(m => m.Vehicle != null && m.Vehicle.OWN_MHT_DHT != "OWN").OrderBy(m => m.AssingedAt))
+                                        {
+                                            <text> <b>@item.TrackingID</b><b>@item.Vehicle.RegistrationNumber</b>&nbsp;@item.StatusText&nbsp;@item.Driver_Staff_ID @item.Driver_Name @item.FinalWantedAtDateTime
+                                            @if (@item.Vehicle.VehicleTrackingInformation != null && @item.Vehicle.VehicleTrackingInformation.VehicleTracking != null)
+                                            {
+                                                <br>
+                                                <text><a target='_blank' href='/tracking/Index_single_live?PK_Vehicle=@item.Vehicle.PK_Vehicle'>map</a></text>
+                                            }
+                                            </text>
+                                            <br>
+                                        }
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="box-footer">
+                        @*<button class="btn btn-facebook center-block" onclick="TrySubmit()">Bid</button>*@
+                        @*<input type="button" class="btn btn-facebook center-block" onclick="TrySubmit()" value="Confirm" />*@
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>

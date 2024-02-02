@@ -1,0 +1,193 @@
+﻿@model _3rdEyE.Models.AlertEmail
+
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Email Linked User Group Setting
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        <a class="btn btn-block btn-info btn-sm" href="@System.Web.HttpContext.Current.Request.UrlReferrer">Back To List</a>
+    </div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" method="post" action="/AlertEmail/Create" enctype="multipart/form-data">
+        <input name="PermittedDepoes" id="PermittedDepoes" type="text" style="display:none;" />
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-info">
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <div class="row">
+                                    <label class="col-md-3 control-label">Email Address:</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(m => m.MailAddress, new { htmlAttributes = new { @class = "form-control" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_MailAddress"></b>
+                                    </div>
+                                    <script>
+                                        validatorArray.push(
+                                            function () {
+                                                var check = $('input[name=MailAddress]').val();
+                                                if (check == "") {
+                                                    formValidity = false;
+                                                    $('b[name=error_MailAddress]').html("Email address is required.");
+                                                }
+                                            });
+                                    </script>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label class="col-md-6 control-label">Event Mail 1:</label>
+                                        <div class="col-md-6">
+                                            @Html.EditorFor(m => m.EventAlert_1, new { htmlAttributes = new { @class = "form-control" } })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="col-md-6 control-label">Event Mail 2:</label>
+                                        <div class="col-md-6">
+                                            @Html.EditorFor(m => m.EventAlert_2, new { htmlAttributes = new { @class = "form-control" } })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="col-md-6 control-label">Event Mail 3:</label>
+                                        <div class="col-md-6">
+                                            @Html.EditorFor(m => m.EventAlert_3, new { htmlAttributes = new { @class = "form-control" } })
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label class="col-md-6 control-label">Police Case Mail 1:</label>
+                                        <div class="col-md-6">
+                                            @Html.EditorFor(m => m.PoliceCaseAlert_1, new { htmlAttributes = new { @class = "form-control" } })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="col-md-6 control-label">Police Case Mail 2:</label>
+                                        <div class="col-md-6">
+                                            @Html.EditorFor(m => m.PoliceCaseAlert_2, new { htmlAttributes = new { @class = "form-control" } })
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <input type="button" class="btn btn-facebook pull-right" value="Save" onclick="TryUpdatePermission()" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <input type="checkbox" id="checkbox_pran" onclick="check_pran()" />&nbsp;<label id="label_egnitionOff">Pran</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="checkbox" id="checkbox_rfl" onclick="check_rfl()" />&nbsp;<label id="label_egnitionOff">RFL</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <table id="data_table" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                </th>
+                                                <th>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="data_tbody">
+                                            @foreach (var item in ViewBag.Depoes)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <input type='checkbox' name='parmssionCehckBoxes' value='@item.PK_Depo' />
+                                                    </td>
+                                                    <td>
+                                                        @item.Name
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-footer">
+                        @*<input type="button" class="btn btn-facebook" value="Update Permission" onclick="TryUpdatePermission()" />*@
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+            </div>
+        </div>
+
+
+    </form>
+
+</section>
+<!-- DataTables -->
+<script src="~/Theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/Theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script>
+    var depoList = [];
+    $(function () {
+        pushToDepoList();
+        $('#data_table').DataTable({
+            "lengthChange": false, "bPaginate": false,
+        });
+    });
+
+    function pushToDepoList() {
+        @foreach (var item in ViewBag.Depoes)
+        {
+            <text>
+            var _depo = { 'FK_Depo': '@item.PK_Depo', 'DepoName': '@item.Name', 'PRG_Type': '@item.PRG_Type', };
+            depoList.push(_depo);
+            </text>
+        }
+    }
+
+    function TryUpdatePermission() {
+        var checkedVals = $('input[name=parmssionCehckBoxes]:checked').map(function () {
+            return this.value;
+        }).get();
+
+        $("#PermittedDepoes").val(checkedVals);
+        TrySubmit();
+    }
+
+    function check_pran() {
+        var check = $('input[id=checkbox_pran]:checked').val();
+        for (var i = 0; i < depoList.length; i++) {
+            if (depoList[i].PRG_Type == 'PRAN') {
+                if (check == 'on') {
+                    $('input[value=' + depoList[i].FK_Depo + ']').attr('checked', true);
+                } else {
+                    $('input[value=' + depoList[i].FK_Depo + ']').attr('checked', false);
+                }
+            }
+        }
+    }
+
+    function check_rfl() {
+        var check = $('input[id=checkbox_rfl]:checked').val();
+        for (var i = 0; i < depoList.length; i++) {
+            if (depoList[i].PRG_Type == 'RFL') {
+                if (check == 'on') {
+                    $('input[value=' + depoList[i].FK_Depo + ']').attr('checked', true);
+                } else {
+                    $('input[value=' + depoList[i].FK_Depo + ']').attr('checked', false);
+                }
+            }
+        }
+    }
+</script>

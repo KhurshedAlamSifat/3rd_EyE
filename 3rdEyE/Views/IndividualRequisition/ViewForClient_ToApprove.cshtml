@@ -1,0 +1,150 @@
+﻿@model _3rdEyE.ViewModels.VM_IndividualRequisition
+
+@{
+    ViewBag.Title = "View";
+}
+
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Individual Requisition Approval View
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        <a class="btn btn-block btn-info btn-sm" href="/IndividualRequisition/IndexBy_Client">Go To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Individual Requisition Approval View</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form name="ThisForm" class="form-horizontal" method="post" action="" enctype="multipart/form-data">
+                    @*@Html.EditorFor(viewModel => viewModel.Model.PK_IndividualRequisition, new { htmlAttributes = new { @readonly = "readonly", @class = "form-control" } })*@
+                    <input name="PK_IndividualRequisition" value="@Model.Model.PK_IndividualRequisition" style="display:none;" />
+                    <input name="WantedCount" id="WantedCount" value="@Model.Model.WantedCount" style="display:none;" />
+                    <div class="box-body col-md-12">
+                        <table id="data_table" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        SL
+                                    </th>
+                                    <th>
+                                        Depo Name
+                                    </th>
+                                    <th>
+                                        Agent Id
+                                    </th>
+                                    <th>
+                                        Agent Full Name
+                                    </th>
+                                    <th>
+                                        Contact Number
+                                    </th>
+                                    <th>
+                                        Managable Qty
+                                    </th>
+                                    <th>
+                                        Rent/Vehicle
+                                    </th>
+                                    <th>
+                                        Booking Qty
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="data_tbody"></tbody>
+                        </table>
+                    </div>
+                    <div class="box-footer">
+                        @*<button class="btn btn-facebook center-block" onclick="TrySubmit()">Bid</button>*@
+                        <input type="button" id="SubmitButton" class="btn btn-facebook center-block" onclick="TrySubmit()" value="Confirm" />
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+<script>
+    validatorArray.push(
+        function () {
+            var totalGiven = 0;
+            for (var i = 0; i < biddingList.length; i++) {
+                var check = $("input[name=bookingQuantity_" + i + "]").val();
+                if (check == "") {
+                    continue;
+                }
+                if (check > biddingList[i].ManagableQuantity) {
+                    alert("Managable quantity is " + biddingList[i].ManagableQuantity + " but you wanted " + check + " vehicle(s).\n");
+                    formValidity = false;
+                    return;
+                } else {
+                    totalGiven = totalGiven + parseInt(check);
+                }
+            }
+            var WantedCount = $("#WantedCount").val();
+
+            if (WantedCount < totalGiven) {
+                alert("You are trying to book more than wanted vehicle.");
+                formValidity = false;
+            }
+        });
+</script>
+<script>
+    $('document').ready(function () {
+        $("#SubmitButton").hide();
+        makeBiddingTable();
+    });
+    var biddingList = [];
+    function makeBiddingTable() {
+        var PK_IndividualRequisition = $("input[name=PK_IndividualRequisition]").val();
+        console.log(PK_IndividualRequisition);
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/IndividualRequisition/GetIndividualRequisitionBiddingList_Bidded_ByIndividualRequisition/",
+            data: JSON.stringify({ FK_IndividualRequisition: PK_IndividualRequisition }),
+            success: function (list) {
+                biddingList = list;
+                $("#data_tbody").html("");
+                var res = "";
+                for (var i = 0; i < list.length; i++) {
+                    res = res + "<tr >";
+                    res = res + "<td>" + (i + 1) + "</td>";
+                    res = res + "<td>" + list[i].Depo_Name + "</td>";
+                    res = res + "<td>" + list[i].RequisitionAgent_UserName + "</td>";
+                    res = res + "<td>" + list[i].RequisitionAgent_FullName + "</td>";
+                    res = res + "<td>" + list[i].RequisitionAgent_ContactNumber + "</td>";
+                    res = res + "<td>" + list[i].ManagableQuantity + "</td>";
+                    res = res + "<td>" + list[i].PricePerQuantity + "</td>";
+                    res = res + "<td>"
+                        + "<input name='bookingID_" + i + "' value='" + list[i].PK_IndividualRequisitionBidding + "' style='display:none;' />"
+                        + "<input name='bookingQuantity_" + i + "' type='number' value='' />"
+                        + "</td>";
+                    res = res + "</tr>";
+                }
+                $("#data_tbody").html(res);
+                if (list.length > 0) {
+                    $("#SubmitButton").show();
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: makeBiddingTable()");
+            }
+        });
+    }
+</script>

@@ -1,0 +1,181 @@
+﻿@model _3rdEyE.Models.ParkingInOut
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Assign Bay
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-4">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">P @Model.PK_ParkingInOut @Model.Vehicle.RegistrationNumber</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form id="ThisForm" name="ThisForm" class="form-horizontal" method="post" action="/ParkingInOut/ChangeBayAssignTimeForRassign">
+                    <input name="PK_ParkingInOut" value="@Model.PK_ParkingInOut" style="display:none;" />
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-12">
+                            <label class="col-md-4 control-label">Building:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("BayAssign_FK_LocationBuilding", ViewBag.LocationBuildings as SelectList, "Select", new { @class = "form-control", onchange = "relodeBayAssign_FK_LoadingBay()" })
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var BayAssign_FK_LocationBuilding = $('#BayAssign_FK_LocationBuilding').val();
+                                        if (BayAssign_FK_LocationBuilding == '') {
+                                            alert('select Building. Then, try again.');
+                                            formValidity = false;
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-12">
+                            <label class="col-md-4 control-label">Bay:</label>
+                            <div class="col-md-8">
+                                @*<select id="BayAssign_FK_LoadingBay" name="BayAssign_FK_LoadingBay" class="form-control">
+                                    </select>*@
+                                @Html.DropDownList("BayAssign_FK_LoadingBay", ViewBag.LoadingBays as SelectList, "Select", new { @class = "form-control" })
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var BayAssign_FK_LocationBuilding = $('#BayAssign_FK_LocationBuilding option:selected').text();
+
+                                        if (BayAssign_FK_LocationBuilding.includes('Out Side') == false) {
+                                            var BayAssign_FK_LoadingBay = $('#BayAssign_FK_LoadingBay').val();
+                                            if (BayAssign_FK_LoadingBay == null || BayAssign_FK_LoadingBay == '') {
+                                                alert('Select Loading Bay. Then, try again.');
+                                                formValidity = false;
+                                            }
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-12">
+                            <label class="col-md-4 control-label">Department:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("BayAssign_FK_LocationDepartment", ViewBag.LocationDepartments as SelectList, "Select", new { @class = "form-control" })
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var BayAssign_FK_LocationDepartment = $('#BayAssign_FK_LocationDepartment').val();
+                                        if (BayAssign_FK_LocationDepartment == '') {
+                                            alert('select Department. Then, try again.');
+                                            formValidity = false;
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-12">
+                            <label class="col-md-4 control-label">Set Time*</label>
+                            <div class="col-md-8">
+                                <input id="BayAssign_IssueDateTime" name="BayAssign_IssueDateTime"  size="16" type="text" value="@Model.BayAssign_IssueDateTime" readonly class="form-control">
+                                <b class="errorMessage" data-category="errorMessage" name="error_Name"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var BayAssign_IssueDateTime = $('#BayAssign_IssueDateTime').val();
+                                        if (BayAssign_IssueDateTime == '') {
+                                            alert('Set Date time. Then, try again.');
+                                            formValidity = false;
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <input type="button" class="btn btn-facebook" value="Save" onclick="TrySubmit()" />
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        //$("#BayAssign_IssueDateTime").datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true, yearRange: '1990:2023' });
+        $("select").select2();
+    });
+</script>
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var today = new Date();
+        var _startDate = (today.getMonth() + 1) + '/' + (today.getDate() + 0) + '/' + today.getFullYear() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();// 13:05'//today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        var _endDate = (today.getMonth() + 1) + '/' + (today.getDate() + 2) + '/' + today.getFullYear() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();// 13:05'//today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        $('#BayAssign_IssueDateTime').datetimepicker({
+            //format: 'yyyy-mm-dd HH:ii P',
+            format: 'yyyy-mm-dd HH:ii P',
+            //setDate: new Date(),
+            //weekStart: 1,
+            todayBtn: 1,
+            autoclose: 1,
+            //todayHighlight: 1,
+            //startView: 2,
+            //forceParse: 0,
+            //showMeridian: 0
+            //startDate: '+0d',
+            startDate: new Date(_startDate),
+            endDate: new Date(_endDate),
+        });
+    });
+</script>
+<script>
+    function relodeBayAssign_FK_LoadingBay() {
+        var BayAssign_FK_LocationBuilding = $('select[name=BayAssign_FK_LocationBuilding]').val();
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/LoadingBay/GetLoadingBayBy_FK_LocationBuilding/",
+            data: JSON.stringify({ FK_LocationBuilding: BayAssign_FK_LocationBuilding }),
+            success: function (data) {
+                console.log(data);
+                $('select[name=BayAssign_FK_LoadingBay]').html("");
+                var result = "";
+                for (var i = 0; i < data.length; i++) {
+                    result = result + "<option value='" + data[i].PK_LoadingBay + "'>" + data[i].Name + "</option>";
+                }
+                $('select[name=BayAssign_FK_LoadingBay]').html(result);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: relodeFK_VehicleBrandModel()");
+            }
+        });
+    }
+</script>
+
+
+
+

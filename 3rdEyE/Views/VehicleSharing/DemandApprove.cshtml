@@ -1,0 +1,237 @@
+﻿@model _3rdEyE.Models.VehicleSharingDemand
+@{
+    ViewBag.Title = "";
+}
+
+@*UberStyle-start*@
+<style>
+    .uber {
+        width: 20px;
+        height: 50px;
+        position: absolute;
+        z-index: 100;
+        margin-top: 0.25em;
+    }
+
+    .u-green {
+        height: 5px;
+        width: 5px;
+        top: -24px;
+        left: 7px;
+        border-radius: 5px;
+        background-color: green;
+        position: absolute;
+        z-index: 100;
+    }
+
+    .u-red {
+        background-color: red;
+        border-radius: 5px;
+        height: 5px;
+        left: 7px;
+        position: absolute;
+        top: 35px;
+        width: 5px;
+        z-index: 100;
+    }
+
+    .u-line {
+        background-color: #e3e3e3;
+        height: 54px;
+        left: 9px;
+        position: absolute;
+        top: -18px;
+        width: 1px;
+        z-index: 100;
+    }
+</style>
+@*UserStyle-end*@
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+
+<!--Date picker-->
+<link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+<script src="~/Theme/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="~/Theme/bower_components/jquery-ui/jquery-ui.min.js"></script>
+<!--/Date picker-->
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Requisition Approval List
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        <a class="btn btn-block btn-info btn-sm" href="/InterCompanyRequisition/IndexBy_Client">Go To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/VehicleSharing/DemandApprove" enctype="multipart/form-data">
+        <input name="PK_VehicleSharingDemand" value="@Model.PK_VehicleSharingDemand" style="display:none" />
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Inter-Company Requisition Entry</h3>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5">
+                                    @*FK_InterCompanyRequisitionLocation_From*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <label class="col-md-3 control-label">From</label>
+                                            <div class="col-md-4">
+                                                @Html.EditorFor(model => model.Depo.Name, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                            </div>
+                                            <div class="col-md-4">
+                                                @Html.EditorFor(model => model.StartingLocation, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*FK_InterCompanyRequisitionLocation_To*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <label class="col-md-3 control-label">To</label>
+                                            <div class="col-md-4">
+                                                @Html.EditorFor(model => model.Depo1.Name, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                            </div>
+                                            <div class="col-md-4">
+                                                @Html.EditorFor(model => model.FinishingLocation, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <b class="errorMessage col-md-12" data-category="errorMessage" name="distance_message"></b>
+                                    @*VehicleType*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <label class="col-md-3 control-label">Vehicle Type</label>
+                                            <div class="col-md-7">
+                                                <input type="text" class="form-control" value="@Model.RequisitionVehicleType.Title_English" readonly="readonly" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*WantedCount*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <label class="col-md-3 control-label">Wanted Quantity</label>
+                                            <div class="col-md-7">
+                                                @Html.EditorFor(model => model.WantedCount, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*PossibleJourneyStartDateTime*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <label class="col-md-3 control-label">Start Time</label>
+                                            <div class="col-md-7 input-append date form_datetime" @*data-date="1979-09-16T05:25:07Z"*@ data-date-format="dd MM yyyy - HH:ii p" data-link-field="dtp_input1">
+                                                <input id="PossibleJourneyStartDateTime" name="PossibleJourneyStartDateTime" class="form-control col-md-12" type="text" value="@Model.PossibleJourneyStartDateTime" readonly="readonly" disabled="disabled" style="background-color: white;">
+                                                <span class="add-on"><i class="icon-remove"></i></span>
+                                                <span class="add-on"><i class="icon-th"></i></span>
+                                            </div>
+                                            <input type="hidden" id="dtp_input1" value="" style="display:none;" /><br />
+                                        </div>
+                                    </div>
+                                    @*ClientNote*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <label class="col-md-3 control-label">Client Note</label>
+                                            <div class="col-md-7">
+                                                @Html.EditorFor(model => model.ClientNote, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                            </div>
+                                        </div>
+                                        <b class="errorMessage col-md-2" data-category="errorMessage" name="error_Note"></b>
+                                    </div>
+                                </div>
+                                <div class="col-md-5 col-md-offset-1">
+                                    @*Status*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <label class="col-md-3 control-label">Accept/Reject</label>
+                                            <div class="col-md-7">
+                                                <select name="Status" class="form-control">
+                                                    <option value=1>Accept</option>
+                                                    <option value=-1>Reject</option>
+                                                </select>
+                                            </div>
+                                            <b class="errorMessage col-md-7 col-md-offset-3" data-category="errorMessage" name="error_VehicleType"></b>
+                                        </div>
+                                        <script>
+                                            validatorArray.push(
+                                                function () {
+                                                    var check = $('select[name=Status]').val();
+                                                    if (check == "") {
+                                                        formValidity = false;
+                                                        $('b[name=error_VehicleType]').html("*required");
+                                                    }
+                                                });
+                                        </script>
+                                    </div>
+                                    @*AcceptedCount*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <label class="col-md-3 control-label">Accepted Quantity</label>
+                                            <div class="col-md-7">
+                                                <input name="AcceptedCount" value="@Model.WantedCount" class="form-control" />
+                                            </div>
+                                        </div>
+                                        <b class="errorMessage col-md-2" data-category="errorMessage" name="error_AcceptedCount"></b>
+                                        <script>
+                                            validatorArray.push(
+                                                function () {
+                                                    var check = $('input[name=AcceptedCount]').val();
+                                                    if (check == "") {
+                                                        formValidity = false;
+                                                        $('b[name=error_AcceptedCount]').html("*required");
+                                                    }
+                                                });
+                                        </script>
+                                    </div>
+                                    @*ApproverNote*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <label class="col-md-3 control-label">Approver Note</label>
+                                            <div class="col-md-7">
+                                                @Html.EditorFor(model => model.ApproverNote, new { htmlAttributes = new { @class = "form-control" } })
+                                            </div>
+                                        </div>
+                                        <b class="errorMessage col-md-2" data-category="errorMessage" name="error_ApproverNote"></b>
+                                        @*<script>
+                                                validatorArray.push(
+                                                    function () {
+                                                        var check = $('input[name=ApproverNote]').val();
+                                                        if (check == "") {
+                                                            formValidity = false;
+                                                            $('b[name=error_ApproverNote]').html("*required");
+                                                        }
+                                                    });
+                                            </script>*@
+                                    </div>
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <button type="button" class="btn btn-facebook center-block" onclick="TrySubmit()"> Save </button>
+                                            @*<input type="button" class="btn btn-info center-block" value="Save" onclick="TrySubmit()" />*@
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-footer">
+                        @*<input type="button" class="btn btn-facebook left" value="Save" onclick="TrySubmit()" />*@
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+
+</section>
+<!-- /.content -->

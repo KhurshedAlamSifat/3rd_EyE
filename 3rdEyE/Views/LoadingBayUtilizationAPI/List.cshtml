@@ -1,0 +1,90 @@
+﻿@model IEnumerable<_3rdEyE.Models.LoadingBayUtilization>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+</head>
+<body>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.PK_LoadingBayUtilization)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UseType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FK_ParkingInOut)
+            </th>
+            <th>
+                LoactionBuilding
+            </th>
+            <th>
+                LoadingBay
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartDateTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndDateTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StayTimeMinute)
+            </th>
+
+        </tr>
+    
+    @foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.PK_LoadingBayUtilization)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UseType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FK_ParkingInOut)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LoadingBay.LocationBuilding.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LoadingBay.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.StartDateTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EndDateTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.StayTimeMinute)
+        </td>
+    </tr>
+    }
+    
+    </table>
+</body>
+</html>

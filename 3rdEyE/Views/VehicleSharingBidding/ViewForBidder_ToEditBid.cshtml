@@ -1,0 +1,146 @@
+﻿@model _3rdEyE.Models.VehicleSharingBidding
+@{
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Update Bid Requisition
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        <a class="btn btn-block btn-info btn-sm" href="/VehicleSharingBidding/Index_Bidder">Go Biddings</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/VehicleSharingBidding/ViewForBidder_ToEditBid" enctype="multipart/form-data">
+        <input name="PK_VehicleSharingBidding" value="@Model.PK_VehicleSharingBidding" style="display:none;" />
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="col-md-12">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Bid Requisition</h3>
+                        </div>
+                        <!-- /.box-header -->
+                        <!-- form start -->
+                        <div class="box-body col-md-12">
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <label>Agent: </label>&nbsp; @Html.DisplayFor(m => m.AppUser.FullName)
+                                        </td>
+                                        <td>
+                                            <label>Contact No: </label>&nbsp; @Html.DisplayFor(m => m.AppUser.ContactNumber)
+                                        </td>
+                                        <td>
+                                            <label>Depo: </label>&nbsp; @Html.DisplayFor(m => m.AppUser.Depo.Name)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>From: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharing.Depo.Name) @Html.DisplayFor(m => m.VehicleSharing.StartingLocation)
+                                        </td>
+                                        <td>
+                                            <label>To: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharing.Depo1.Name) @Html.DisplayFor(m => m.VehicleSharing.FinishingLocation)
+                                        </td>
+                                        <td>
+                                            <label>Date-Time: </label>&nbsp; @String.Format("{0:dd'/'MM'/'yy  H:mm tt}", Model.VehicleSharing.PossibleJourneyStartDateTime)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>Vehicle Type: </label>&nbsp; @Model.VehicleSharing.VehicleType
+                                        </td>
+                                        <td>
+                                            <label>Required Vehicle: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharing.WantedCount)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-md-5">
+                                                    <label>Managable Quanity: </label>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    @Html.EditorFor(model => model.ManagableQuantity, new { htmlAttributes = new { @class = "form-control", min = 1, max = Model.VehicleSharing.WantedCount } })
+                                                </div>
+                                            </div>
+                                            <input id="VehicleSharing_WantedCount" value="@Model.VehicleSharing.WantedCount" style="display:none;" />
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <b class="errorMessage" data-category="errorMessage" name="error_ManagableQuantity"></b>
+                                                    <script>
+                                                        validatorArray.push(
+                                                            function () {
+                                                                var check = $('#ManagableQuantity').val();
+                                                                if (check == "" || check == 0) {
+                                                                    formValidity = false;
+                                                                    $('b[name=error_ManagableQuantity]').html("Managable Quantity is required.");
+                                                                } else {
+                                                                    var WantedCount = $('#VehicleSharing_WantedCount').val();
+                                                                    if (parseInt(WantedCount) < parseInt(check)) {
+                                                                        formValidity = false;
+                                                                        $('b[name=error_ManagableQuantity]').html("Exceeds limit of quantity.");
+                                                                    }
+                                                                }
+                                                            });
+                                                    </script>
+                                                </div>
+                                            </div>
+
+                                        </td>
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-md-5">
+                                                    <label>Rent Per Vehicle: </label>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    @Html.EditorFor(model => model.PricePerQuantity, new { htmlAttributes = new { @class = "form-control", min = 1 } })
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <b class="errorMessage" data-category="errorMessage" name="error_PricePerQuantity"></b>
+                                                    <script>
+                                                        validatorArray.push(
+                                                            function () {
+                                                                var check = $('input[name=PricePerQuantity]').val();
+                                                                if (check == "" || check == 0) {
+                                                                    formValidity = false;
+                                                                    $('b[name=error_PricePerQuantity]').html("Rent  is required.");
+                                                                }
+                                                            });
+                                                    </script>
+                                                </div>
+                                            </div>
+
+                                        </td>
+                                        <td>
+
+                                            @if (Model.VehicleSharing.Status == 0 && Model.StatusText == "BIdded")
+                                            {
+                                                <input type="button" class="btn btn-facebook pull-left bottom" value="Update Bid" onclick="TrySubmit()" />
+                                            }
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="box-footer">
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+
+</section>
+<!-- /.content -->

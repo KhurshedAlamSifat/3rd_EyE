@@ -1,0 +1,1118 @@
+﻿@model _3rdEyE.Models.VehicleSharingInternalTripAdjustment
+@{
+    ViewBag.Title = "Create";
+}
+
+<section class="content-header">
+    <h1>
+        Adjusment for internal trip
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        <a class="btn btn-block btn-info btn-sm" href="/InstantRequisition/IndexBy_PaymentReceiver">Go To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/VehicleSharing/VehicleSharingInternalTripCreateBillAdjustment" enctype="multipart/form-data">
+        <input name="PK_VehicleSharingInternalTripAdjustment" value="@Model.VehicleSharingInternalTrip.PK_VehicleSharingInternalTrip" style="display:none;" />
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="col-md-12">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Instant Requisition Adjustment</h3>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="col-md-12">
+                            <div class="box-body col-md-12">
+                                @*<table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label>Status: </label>&nbsp; @(Model.Status == 0 ? "Created" : Model.Status == 1 ? "Bill Paid" : "Adjusted")
+                            </td>
+                            <td>
+                                <label>Agent: </label>&nbsp; @Html.DisplayFor(m => m.AppUser.FullName)
+                            </td>
+                            <td>
+                                <label>Created: </label>&nbsp;@Html.DisplayFor(m => m.CreatedAt)
+                            </td>
+                            <td>
+                                <label>Vehicle: </label>&nbsp; @Html.DisplayFor(m => m.Vehicle.RegistrationNumber)
+                            </td>
+                        </tr>
+                        <tr>
+
+                            <td>
+                                <label>Driver Info: </label>&nbsp; @Html.DisplayFor(m => m.DriverStaffID) &nbsp; @Html.DisplayFor(m => m.DriverName)
+                            </td>
+                            <td>
+                                <label>Helper Info: </label>&nbsp;@Html.DisplayFor(m => m.HelperInfo)
+                            </td>
+                            <td>
+                                <label>Booking Depo: </label>&nbsp; @Html.DisplayFor(m => m.Depo.Name)
+                            </td>
+                            <td>
+                                <label>Destination Depo: </label>&nbsp; @Html.DisplayFor(m => m.Depo1.Name)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Starting Locaiton: </label>&nbsp; @Html.DisplayFor(m => m.StartingLocation)
+                            </td>
+                            <td>
+                                <label>Finishing Location: </label>&nbsp; @Html.DisplayFor(m => m.FinishingLocation)
+                            </td>
+                            <td>
+                                <label>Trip Fare: </label>&nbsp; @Html.DisplayFor(m => m.TripFare1)
+                                <input id="TripFare1" value="@Model.TripFare1" style="display:none;" />
+                            </td>
+                            <td>
+                                <label>Advanced To Driver: </label>&nbsp; @Html.DisplayFor(m => m.AdvancedToDriver1)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Empty1 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.Distance_Empty1) /  @Html.DisplayFor(m => m.KPL_Empty1)
+                            </td>
+                            <td>
+                                <label>Loaded1 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.Distance_Loaded1) /  @Html.DisplayFor(m => m.KPL_Loaded1)
+                            </td>
+                            <td>
+                                <label>Loaded 8-12 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.Distance_Loaded_8_To_12_Tons_Out1) /  @Html.DisplayFor(m => m.KPL_Loaded_8_To_12_Tons_Out1)
+                            </td>
+                            <td>
+                                <label>Loaded 12-25 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.Distance_Loaded_12_To_25_Tons_Out1) /  @Html.DisplayFor(m => m.KPL_Loaded_12_To_25_Tons_Out1)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Fuel Consumed Litre1: </label>&nbsp; @Html.DisplayFor(m => m.FuelConsumedLitre1)
+                            </td>
+                            <td>
+                                <label>Fuel Price Per Litre1: </label>&nbsp; @Html.DisplayFor(m => m.FuelPricePerLitre1)
+                            </td>
+                            <td>
+                                <label>Fuel Expence1: </label>&nbsp; @Html.DisplayFor(m => m.FuelExpence1)
+                            </td>
+                            <td>
+                                <label>Stay Charge1: </label>&nbsp; @Html.DisplayFor(m => m.StayCharge1)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Trip Bill Driver1: </label>&nbsp; @Html.DisplayFor(m => m.TripBillDriver1)
+                            </td>
+                            <td>
+                                <label>TripBill Helper1: </label>&nbsp; @Html.DisplayFor(m => m.TripBillHelper1)
+                            </td>
+                            <td>
+                                <label>Entertainment A Charge1: </label>&nbsp; @Html.DisplayFor(m => m.EntertainmentACharge1)
+                            </td>
+                            <td>
+                                <label>Repair Charge1: </label>&nbsp; @Html.DisplayFor(m => m.RepairCharge1)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Bridge Toll Ferry Charge1: </label>&nbsp; @Html.DisplayFor(m => m.BridgeTollFerryCharge1)
+                            </td>
+                            <td>
+                                <label>OpenBody Charge1: </label>&nbsp; @Html.DisplayFor(m => m.OpenBodyCharge1)
+                            </td>
+                            <td>
+                                <label>Transport Agency: </label>&nbsp;  @Html.DisplayFor(m => m.TransportAgencyName)&nbsp; @Html.DisplayFor(m => m.TransportAgencyContactNumber)
+                            </td>
+                            <td>
+                                <label>Responsible Parson: </label>&nbsp;  @Html.DisplayFor(m => m.ResponsibleParsonName)&nbsp; @Html.DisplayFor(m => m.ResponsibleParsonContactNumber)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <label>Note1: </label>&nbsp; @Html.DisplayFor(m => m.Note1)
+                            </td>
+                            <td>
+                                <label>Total1: </label>&nbsp; @Html.DisplayFor(m => m.TotalParent1)
+                                <input id="Total1" value="@Model.TotalParent1" style="display:none;" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>*@
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <h3>Adjustment-Given</h3>
+                            <div class="box-body col-md-6" @(Model.VehicleSharingInternalTrip.Distance_Empty == 0 ? "style='display:none;'" : "")>
+                                @*Distance_Empty2*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Empty2</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.Distance_Empty2, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalGiven2()", onwheel = "CalculateTotalGiven2()" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">/</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.VehicleSharingInternalTrip.KPL_Empty, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">=</label>
+                                        <div class="col-md-2">
+                                            <input name="Fuel_Empty2" id="Fuel_Empty2" data-category="Fuel" value='0' class="form-control" readonly="readonly" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6" @(Model.VehicleSharingInternalTrip.Distance_Loaded == 0 ? "style='display:none;'" : "")>
+                                @*Distance_Loaded2*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Loaded2</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.Distance_Loaded2, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalGiven2()", onwheel = "CalculateTotalGiven2()" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">/</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.VehicleSharingInternalTrip.KPL_Loaded, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">=</label>
+                                        <div class="col-md-2">
+                                            <input name="Fuel_Loaded2" id="Fuel_Loaded2" data-category="Fuel" value='0' class="form-control" readonly="readonly" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6" @(Model.VehicleSharingInternalTrip.Distance_Loaded_Plastic == 0 ? "style='display:none;'" : "")>
+                                @*Distance_Loaded_Plastic2*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Loaded_Plastic2</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.Distance_Loaded_Plastic2, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalGiven2()", onwheel = "CalculateTotalGiven2()" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">/</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.VehicleSharingInternalTrip.KPL_Loaded_Plastic, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">=</label>
+                                        <div class="col-md-2">
+                                            <input name="Fuel_Loaded_Plastic2" id="Fuel_Loaded_Plastic2" data-category="Fuel" value='0' class="form-control" readonly="readonly" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6" @(Model.VehicleSharingInternalTrip.Distance_InterCity == 0 ? "style='display:none;'" : "")>
+                                @*Distance_InterCity2*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">InterCity2</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.Distance_InterCity2, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalGiven2()", onwheel = "CalculateTotalGiven2()" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">/</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.VehicleSharingInternalTrip.KPL_InterCity, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">=</label>
+                                        <div class="col-md-2">
+                                            <input name="Fuel_InterCity2" id="Fuel_InterCity2" data-category="Fuel" value='0' class="form-control" readonly="readonly" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6" @(Model.VehicleSharingInternalTrip.Distance_InterCHT == 0 ? "style='display:none;'" : "")>
+                                @*Distance_InterCHT2*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">InterCHT2</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.Distance_InterCHT2, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalGiven2()", onwheel = "CalculateTotalGiven2()" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">/</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.VehicleSharingInternalTrip.KPL_InterCHT, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">=</label>
+                                        <div class="col-md-2">
+                                            <input name="Fuel_InterCHT2" id="Fuel_InterCHT2" data-category="Fuel" value='0' class="form-control" readonly="readonly" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6" @(Model.VehicleSharingInternalTrip.Distance_Hill == 0 ? "style='display:none;'" : "")>
+                                @*Distance_Hill2*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Hill2</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.Distance_Hill2, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalGiven2()", onwheel = "CalculateTotalGiven2()" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">/</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.VehicleSharingInternalTrip.KPL_Hill, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">=</label>
+                                        <div class="col-md-2">
+                                            <input name="Fuel_Hill2" id="Fuel_Hill2" data-category="Fuel" value='0' class="form-control" readonly="readonly" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6" @(Model.VehicleSharingInternalTrip.Distance_OnlyMover == 0 ? "style='display:none;'" : "")>
+                                @*Distance_OnlyMover2*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">OnlyMover2</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.Distance_OnlyMover2, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalGiven2()", onwheel = "CalculateTotalGiven2()" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">/</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.VehicleSharingInternalTrip.KPL_OnlyMover, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">=</label>
+                                        <div class="col-md-2">
+                                            <input name="Fuel_OnlyMover2" id="Fuel_OnlyMover2" data-category="Fuel" value='0' class="form-control" readonly="readonly" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6" @(Model.VehicleSharingInternalTrip.Distance_Loaded_8_To_12_Tons == 0 ? "style='display:none;'" : "")>
+                                @*Distance_Loaded_8_To_12_Tons2*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Loaded_8_To_12_Tons2</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.Distance_Loaded_8_To_12_Tons2, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalGiven2()", onwheel = "CalculateTotalGiven2()" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">/</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.VehicleSharingInternalTrip.KPL_Loaded_8_To_12_Tons, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">=</label>
+                                        <div class="col-md-2">
+                                            <input name="Fuel_Loaded_8_To_12_Tons2" id="Fuel_Loaded_8_To_12_Tons2" data-category="Fuel" value='0' class="form-control" readonly="readonly" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6" @(Model.VehicleSharingInternalTrip.Distance_Loaded_12_To_25_Tons == 0 ? "style='display:none;'" : "")>
+                                @*Distance_Loaded_12_To_25_Tons2*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Loaded_12_To_25_Tons2</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.Distance_Loaded_12_To_25_Tons2, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalGiven2()", onwheel = "CalculateTotalGiven2()" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">/</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.VehicleSharingInternalTrip.KPL_Loaded_12_To_25_Tons, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">=</label>
+                                        <div class="col-md-2">
+                                            <input name="Fuel_Loaded_12_To_25_Tons2" id="Fuel_Loaded_12_To_25_Tons2" data-category="Fuel" value='0' class="form-control" readonly="readonly" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6">
+                                @*FuelConsumedLitre2*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Fuel Consumed (Litre)</label>
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.FuelConsumedLitre2, new { htmlAttributes = new { @class = "form-control", @readonly = "True", onkeyup = "CalculateTotalGiven2()", onwheel = "CalculateTotalGiven2()" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6">
+                                @*FuelPricePerLitre2*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Fuel Price/Litre</label>
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.FuelPricePerLitre2, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalGiven2()", onwheel = "CalculateTotalGiven2()" } })
+                                            <b class="errorMessage" data-category="errorMessage" name="error_FuelPricePerLitre2"></b>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6">
+                                @*FuelExpence2*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Fuel Expense</label>
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.FuelExpence2, new { htmlAttributes = new { @class = "form-control", @readonly = "True", onkeyup = "CalculateTotalGiven2()", onwheel = "CalculateTotalGiven2()" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6">
+                                @*FuelExpenceGivenCashOrOil*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Fuel Cash/Oil*</label>
+                                        <div class="col-md-8">
+                                            @*@Html.DropDownList("FuelExpenceGivenCashOrOil", ViewBag.Depoes as SelectList, "Select", new { @class = "form-control" })*@
+                                            <select name="FuelExpenceGivenCashOrOil2" id="FuelExpenceGivenCashOrOil2" class="form-control" onchange="CalculateNetProfit()">
+                                                <option value="">select</option>
+                                                <option value=true>Cash</option>
+                                                <option value=false>Oil</option>
+                                            </select>
+                                            <b class="errorMessage" data-category="errorMessage" name="error_FuelExpenceGivenCashOrOil2"></b>
+                                        </div>
+                                    </div>
+                                    <script>
+                                        validatorArray.push(
+                                            function () {
+                                                var check = $('select[name=FuelExpenceGivenCashOrOil2]').val();
+                                                if (check == "") {
+                                                    formValidity = false;
+                                                    $('b[name=error_FuelExpenceGivenCashOrOil2]').html("Fuel Cash/Oil is required.");
+                                                }
+                                            });
+                                    </script>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6">
+                                @*BridgeTollFerryCharge2*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">BridgeTollFerryCharge2</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.BridgeTollFerryCharge2, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalGiven2()", onwheel = "CalculateTotalGiven2()" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_PreDepositedMoney"></b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6">
+                                @*EntertainmentCCharge2*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">EntertainmentCCharge2</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.EntertainmentCCharge2, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalGiven2()", onwheel = "CalculateTotalGiven2()" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_PreDepositedMoney"></b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6">
+                                @*ParkingCharge2*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">ParkingCharge2</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.ParkingCharge2, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalGiven2()", onwheel = "CalculateTotalGiven2()" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_PreDepositedMoney"></b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6">
+                                @*EntertainmentACharge2*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">EntertainmentACharge2</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.EntertainmentACharge2, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalGiven2()", onwheel = "CalculateTotalGiven2()" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_PreDepositedMoney"></b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6">
+                                @*RepairCharge2*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">RepairCharge2</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.RepairCharge2, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalGiven2()", onwheel = "CalculateTotalGiven2()" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_PreDepositedMoney"></b>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="box-body col-md-6">
+                                @*OverStayCharge2*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">OverStayCharge2</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.OverStayCharge2, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalGiven2()", onwheel = "CalculateTotalGiven2()" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_PreDepositedMoney"></b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6">
+                                @*OpenBodyCharge2*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">OpenBodyCharge2</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.OpenBodyCharge2, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalGiven2()", onwheel = "CalculateTotalGiven2()" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_PreDepositedMoney"></b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6">
+                                @*DemurrageCharge2*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">DemurrageCharge2</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.DemurrageCharge2, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalGiven2()", onwheel = "CalculateTotalGiven2()" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_PreDepositedMoney"></b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6">
+                                @*TotalExpense2*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">TotalExpense2</label>
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.TotalExpense2, new { htmlAttributes = new { @class = "form-control", @readonly = "True", @Value = 0 } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6">
+                                @*AdjustmentNote2*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">AdjustmentNote2</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.AdjustmentNote2, new { htmlAttributes = new { @class = "form-control" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_PreDepositedMoney"></b>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <h3>Adjustment-Taken</h3>
+                            <div class="box-body col-md-6" @(Model.VehicleSharingInternalTrip.Distance_Empty == 0 ? "style='display:none;'" : "")>
+                                @*Distance_Empty3*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Empty3</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.Distance_Empty3, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalTaken3()", onwheel = "CalculateTotalTaken3()" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">/</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.VehicleSharingInternalTrip.KPL_Empty, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">=</label>
+                                        <div class="col-md-2">
+                                            <input name="Fuel_Empty3" id="Fuel_Empty3" data-category="Fuel" value='0' class="form-control" readonly="readonly" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6" @(Model.VehicleSharingInternalTrip.Distance_Loaded == 0 ? "style='display:none;'" : "")>
+                                @*Distance_Loaded3*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Loaded3</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.Distance_Loaded3, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalTaken3()", onwheel = "CalculateTotalTaken3()" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">/</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.VehicleSharingInternalTrip.KPL_Loaded, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">=</label>
+                                        <div class="col-md-2">
+                                            <input name="Fuel_Loaded3" id="Fuel_Loaded3" data-category="Fuel" value='0' class="form-control" readonly="readonly" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6" @(Model.VehicleSharingInternalTrip.Distance_Loaded_Plastic == 0 ? "style='display:none;'" : "")>
+                                @*Distance_Loaded_Plastic3*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Loaded_Plastic3</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.Distance_Loaded_Plastic3, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalTaken3()", onwheel = "CalculateTotalTaken3()" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">/</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.VehicleSharingInternalTrip.KPL_Loaded_Plastic, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">=</label>
+                                        <div class="col-md-2">
+                                            <input name="Fuel_Loaded_Plastic3" id="Fuel_Loaded_Plastic3" data-category="Fuel" value='0' class="form-control" readonly="readonly" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6" @(Model.VehicleSharingInternalTrip.Distance_InterCity == 0 ? "style='display:none;'" : "")>
+                                @*Distance_InterCity3*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">InterCity3</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.Distance_InterCity3, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalTaken3()", onwheel = "CalculateTotalTaken3()" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">/</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.VehicleSharingInternalTrip.KPL_InterCity, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">=</label>
+                                        <div class="col-md-2">
+                                            <input name="Fuel_InterCity3" id="Fuel_InterCity3" data-category="Fuel" value='0' class="form-control" readonly="readonly" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6" @(Model.VehicleSharingInternalTrip.Distance_InterCHT == 0 ? "style='display:none;'" : "")>
+                                @*Distance_InterCHT3*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">InterCHT3</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.Distance_InterCHT3, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalTaken3()", onwheel = "CalculateTotalTaken3()" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">/</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.VehicleSharingInternalTrip.KPL_InterCHT, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">=</label>
+                                        <div class="col-md-2">
+                                            <input name="Fuel_InterCHT3" id="Fuel_InterCHT3" data-category="Fuel" value='0' class="form-control" readonly="readonly" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6" @(Model.VehicleSharingInternalTrip.Distance_Hill == 0 ? "style='display:none;'" : "")>
+                                @*Distance_Hill3*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Hill3</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.Distance_Hill3, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalTaken3()", onwheel = "CalculateTotalTaken3()" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">/</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.VehicleSharingInternalTrip.KPL_Hill, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">=</label>
+                                        <div class="col-md-2">
+                                            <input name="Fuel_Hill3" id="Fuel_Hill3" data-category="Fuel" value='0' class="form-control" readonly="readonly" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6" @(Model.VehicleSharingInternalTrip.Distance_OnlyMover == 0 ? "style='display:none;'" : "")>
+                                @*Distance_OnlyMover3*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">OnlyMover3</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.Distance_OnlyMover3, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalTaken3()", onwheel = "CalculateTotalTaken3()" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">/</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.VehicleSharingInternalTrip.KPL_OnlyMover, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">=</label>
+                                        <div class="col-md-2">
+                                            <input name="Fuel_OnlyMover3" id="Fuel_OnlyMover3" data-category="Fuel" value='0' class="form-control" readonly="readonly" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6" @(Model.VehicleSharingInternalTrip.Distance_Loaded_8_To_12_Tons == 0 ? "style='display:none;'" : "")>
+                                @*Distance_Loaded_8_To_12_Tons3*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Loaded_8_To_12_Tons3</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.Distance_Loaded_8_To_12_Tons3, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalTaken3()", onwheel = "CalculateTotalTaken3()" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">/</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.VehicleSharingInternalTrip.KPL_Loaded_8_To_12_Tons, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">=</label>
+                                        <div class="col-md-2">
+                                            <input name="Fuel_Loaded_8_To_12_Tons3" id="Fuel_Loaded_8_To_12_Tons3" data-category="Fuel" value='0' class="form-control" readonly="readonly" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6" @(Model.VehicleSharingInternalTrip.Distance_Loaded_12_To_25_Tons == 0 ? "style='display:none;'" : "")>
+                                @*Distance_Loaded_12_To_25_Tons3*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Loaded_12_To_25_Tons3</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.Distance_Loaded_12_To_25_Tons3, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalTaken3()", onwheel = "CalculateTotalTaken3()" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">/</label>
+                                        <div class="col-md-2">
+                                            @Html.EditorFor(model => model.VehicleSharingInternalTrip.KPL_Loaded_12_To_25_Tons, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                        </div>
+                                        <label class="col-md-1 control-label">=</label>
+                                        <div class="col-md-2">
+                                            <input name="Fuel_Loaded_12_To_25_Tons3" id="Fuel_Loaded_12_To_25_Tons3" data-category="Fuel" value='0' class="form-control" readonly="readonly" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6">
+                                @*FuelConsumedLitre3*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Fuel Consumed (Litre)</label>
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.FuelConsumedLitre3, new { htmlAttributes = new { @class = "form-control", @readonly = "True", onkeyup = "CalculateTotalTaken3()", onwheel = "CalculateTotalTaken3()" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6">
+                                @*FuelPricePerLitre3*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Fuel Price/Litre</label>
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.FuelPricePerLitre3, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalTaken3()", onwheel = "CalculateTotalTaken3()" } })
+                                            <b class="errorMessage" data-category="errorMessage" name="error_FuelPricePerLitre3"></b>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6">
+                                @*FuelExpence3*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Fuel Expense</label>
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.FuelExpence3, new { htmlAttributes = new { @class = "form-control", @readonly = "True", onkeyup = "CalculateTotalTaken3()", onwheel = "CalculateTotalTaken3()" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6">
+                                @*FuelExpenceGivenCashOrOil*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Fuel Cash/Oil*</label>
+                                        <div class="col-md-8">
+                                            @*@Html.DropDownList("FuelExpenceGivenCashOrOil", ViewBag.Depoes as SelectList, "Select", new { @class = "form-control" })*@
+                                            <select name="FuelExpenceGivenCashOrOil3" id="FuelExpenceGivenCashOrOil3" class="form-control" onchange="CalculateNetProfit()">
+                                                <option value="">select</option>
+                                                <option value=true>Cash</option>
+                                                <option value=false>Oil</option>
+                                            </select>
+                                            <b class="errorMessage" data-category="errorMessage" name="error_FuelExpenceGivenCashOrOil3"></b>
+                                        </div>
+                                    </div>
+                                    <script>
+                                        validatorArray.push(
+                                            function () {
+                                                var check = $('select[name=FuelExpenceGivenCashOrOil3]').val();
+                                                if (check == "") {
+                                                    formValidity = false;
+                                                    $('b[name=error_FuelExpenceGivenCashOrOil3]').html("Fuel Cash/Oil is required.");
+                                                }
+                                            });
+                                    </script>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6">
+                                @*BridgeTollFerryCharge3*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">BridgeTollFerryCharge3</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.BridgeTollFerryCharge3, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalTaken3()", onwheel = "CalculateTotalTaken3()" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_PreDepositedMoney"></b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6">
+                                @*EntertainmentCCharge3*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">EntertainmentCCharge3</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.EntertainmentCCharge3, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalTaken3()", onwheel = "CalculateTotalTaken3()" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_PreDepositedMoney"></b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6">
+                                @*ParkingCharge3*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">ParkingCharge3</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.ParkingCharge3, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalTaken3()", onwheel = "CalculateTotalTaken3()" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_PreDepositedMoney"></b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6">
+                                @*EntertainmentACharge3*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">EntertainmentACharge3</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.EntertainmentACharge3, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalTaken3()", onwheel = "CalculateTotalTaken3()" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_PreDepositedMoney"></b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6">
+                                @*RepairCharge3*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">RepairCharge3</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.RepairCharge3, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalTaken3()", onwheel = "CalculateTotalTaken3()" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_PreDepositedMoney"></b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6">
+                                @*OverStayCharge3*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">OverStayCharge3</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.OverStayCharge3, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalTaken3()", onwheel = "CalculateTotalTaken3()" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_PreDepositedMoney"></b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6">
+                                @*OpenBodyCharge3*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">OpenBodyCharge3</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.OpenBodyCharge3, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalTaken3()", onwheel = "CalculateTotalTaken3()" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_PreDepositedMoney"></b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6">
+                                @*DemurrageCharge3*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">DemurrageCharge3</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.DemurrageCharge3, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number", onkeyup = "CalculateTotalTaken3()", onwheel = "CalculateTotalTaken3()" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_PreDepositedMoney"></b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6">
+                                @*TotalExpense3*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">TotalExpense3</label>
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.TotalExpense3, new { htmlAttributes = new { @class = "form-control", @readonly = "True", @Value = 0 } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-6">
+                                @*AdjustmentNote3*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">AdjustmentNote3</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.AdjustmentNote3, new { htmlAttributes = new { @class = "form-control" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_PreDepositedMoney"></b>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        @if (true)
+                        {
+                            <input type="button" class="btn btn-facebook center-block" value="Save" onclick="TrySubmit()" />
+                        }
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+
+</section>
+
+<script>
+    $(document).ready(function () {
+        CalculateTotalGiven3();
+        CalculateTotalTaken3();
+    });
+
+    function CalculateTotalGiven2() {
+        var FuelConsumedLitre2 = 0;
+        var FuelExpence2 = 0;
+
+        var Distance_Empty2 = $("#Distance_Empty2").val() != '' ? Number($("#Distance_Empty2").val()) : 0;
+        var KPL_Empty1 = $("#VehicleSharingInternalTrip_KPL_Empty").val() != '' ? Number($("#VehicleSharingInternalTrip_KPL_Empty").val()) : 0;
+        if (Distance_Empty2 > 0 && KPL_Empty1 != 0) {
+            var Fuel_Empty2 = (Distance_Empty2 / KPL_Empty1).toFixed(2);
+            $("#Fuel_Empty2").val(Fuel_Empty2);
+            FuelConsumedLitre2 = FuelConsumedLitre2 + Number(Fuel_Empty2);
+        }
+
+        var Distance_Loaded2 = $("#Distance_Loaded2").val() != '' ? Number($("#Distance_Loaded2").val()) : 0;
+        var KPL_Loaded1 = $("#VehicleSharingInternalTrip_KPL_Loaded").val() != '' ? Number($("#VehicleSharingInternalTrip_KPL_Loaded").val()) : 0;
+        if (Distance_Loaded2 > 0 && KPL_Loaded1 != 0) {
+            var Fuel_Loaded2 = (Distance_Loaded2 / KPL_Loaded1).toFixed(2);
+            $("#Fuel_Loaded2").val(Fuel_Loaded2);
+            FuelConsumedLitre2 = FuelConsumedLitre2 + Number(Fuel_Loaded2);
+        }
+
+        var Distance_Loaded_Plastic2 = $("#Distance_Loaded_Plastic2").val() != '' ? Number($("#Distance_Loaded_Plastic2").val()) : 0;
+        var KPL_Loaded_Plastic1 = $("#VehicleSharingInternalTrip_KPL_Loaded_Plastic").val() != '' ? Number($("#VehicleSharingInternalTrip_KPL_Loaded_Plastic").val()) : 0;
+        if (Distance_Loaded_Plastic2 > 0 && KPL_Loaded_Plastic1 != 0) {
+            var Fuel_Loaded_Plastic2 = (Distance_Loaded_Plastic2 / KPL_Loaded_Plastic1).toFixed(2);
+            $("#Fuel_Loaded_Plastic2").val(Fuel_Loaded_Plastic2);
+            FuelConsumedLitre2 = FuelConsumedLitre2 + Number(Fuel_Loaded_Plastic2);
+        }
+
+        var Distance_InterCity2 = $("#Distance_InterCity2").val() != '' ? Number($("#Distance_InterCity2").val()) : 0;
+        var KPL_InterCity1 = $("#VehicleSharingInternalTrip_KPL_InterCity").val() != '' ? Number($("#VehicleSharingInternalTrip_KPL_InterCity").val()) : 0;
+        if (Distance_InterCity2 > 0 && KPL_InterCity1 != 0) {
+            var Fuel_InterCity2 = (Distance_InterCity2 / KPL_InterCity1).toFixed(2);
+            $("#Fuel_InterCity2").val(Fuel_InterCity2);
+            FuelConsumedLitre2 = FuelConsumedLitre2 + Number(Fuel_InterCity2);
+        }
+
+        var Distance_InterCHT2 = $("#Distance_InterCHT2").val() != '' ? Number($("#Distance_InterCHT2").val()) : 0;
+        var KPL_InterCHT1 = $("#VehicleSharingInternalTrip_KPL_InterCHT").val() != '' ? Number($("#VehicleSharingInternalTrip_KPL_InterCHT").val()) : 0;
+        if (Distance_InterCHT2 > 0 && KPL_InterCHT1 != 0) {
+            var Fuel_InterCHT2 = (Distance_InterCHT2 / KPL_InterCHT1).toFixed(2);
+            $("#Fuel_InterCHT2").val(Fuel_InterCHT2);
+            FuelConsumedLitre2 = FuelConsumedLitre2 + Number(Fuel_InterCHT2);
+        }
+
+        var Distance_Hill2 = $("#Distance_Hill2").val() != '' ? Number($("#Distance_Hill2").val()) : 0;
+        var KPL_Hill1 = $("#VehicleSharingInternalTrip_KPL_Hill").val() != '' ? Number($("#VehicleSharingInternalTrip_KPL_Hill").val()) : 0;
+        if (Distance_Hill2 > 0 && KPL_Hill1 != 0) {
+            var Fuel_Hill2 = (Distance_Hill2 / KPL_Hill1).toFixed(2);
+            $("#Fuel_Hill2").val(Fuel_Hill2);
+            FuelConsumedLitre2 = FuelConsumedLitre2 + Number(Fuel_Hill2);
+        }
+
+        var Distance_OnlyMover2 = $("#Distance_OnlyMover2").val() != '' ? Number($("#Distance_OnlyMover2").val()) : 0;
+        var KPL_OnlyMover1 = $("#VehicleSharingInternalTrip_KPL_OnlyMover").val() != '' ? Number($("#VehicleSharingInternalTrip_KPL_OnlyMover").val()) : 0;
+        if (Distance_OnlyMover2 > 0 && KPL_OnlyMover1 != 0) {
+            var Fuel_OnlyMover2 = (Distance_OnlyMover2 / KPL_OnlyMover1).toFixed(2);
+            $("#Fuel_OnlyMover2").val(Fuel_OnlyMover2);
+            FuelConsumedLitre2 = FuelConsumedLitre2 + Number(Fuel_OnlyMover2);
+        }
+
+        var Distance_Loaded_8_To_12_Tons2 = $("#Distance_Loaded_8_To_12_Tons2").val() != '' ? Number($("#Distance_Loaded_8_To_12_Tons2").val()) : 0;
+        var KPL_Loaded_8_To_12_Tons1 = $("#VehicleSharingInternalTrip_KPL_Loaded_8_To_12_Tons").val() != '' ? Number($("#VehicleSharingInternalTrip_KPL_Loaded_8_To_12_Tons").val()) : 0;
+        if (Distance_Loaded_8_To_12_Tons2 > 0 && KPL_Loaded_8_To_12_Tons1 != 0) {
+            var Fuel_Loaded_8_To_12_Tons2 = (Distance_Loaded_8_To_12_Tons2 / KPL_Loaded_8_To_12_Tons1).toFixed(2);
+            $("#Fuel_Loaded_8_To_12_Tons2").val(Fuel_Loaded_8_To_12_Tons2);
+            FuelConsumedLitre2 = FuelConsumedLitre2 + Number(Fuel_Loaded_8_To_12_Tons2);
+        }
+
+        var Distance_Loaded_12_To_25_Tons2 = $("#Distance_Loaded_12_To_25_Tons2").val() != '' ? Number($("#Distance_Loaded_12_To_25_Tons2").val()) : 0;
+        var KPL_Loaded_12_To_25_Tons1 = $("#VehicleSharingInternalTrip_KPL_Loaded_12_To_25_Tons").val() != '' ? Number($("#VehicleSharingInternalTrip_KPL_Loaded_12_To_25_Tons").val()) : 0;
+        if (Distance_Loaded_12_To_25_Tons2 > 0 && KPL_Loaded_12_To_25_Tons1 != 0) {
+            var Fuel_Loaded_12_To_25_Tons2 = (Distance_Loaded_12_To_25_Tons2 / KPL_Loaded_12_To_25_Tons1).toFixed(2);
+            $("#Fuel_Loaded_12_To_25_Tons2").val(Fuel_Loaded_12_To_25_Tons2);
+            FuelConsumedLitre2 = FuelConsumedLitre2 + Number(Fuel_Loaded_12_To_25_Tons2);
+        }
+
+        $("#FuelConsumedLitre2").val(FuelConsumedLitre2.toFixed(2));
+        var FuelPricePerLitre2 = $("#FuelPricePerLitre2").val() != '' ? Number($("#FuelPricePerLitre2").val()) : 0;
+        var FuelExpence2 = FuelConsumedLitre2 * FuelPricePerLitre2;
+        FuelExpence2 = Number(FuelExpence2.toFixed(2));
+        $("#FuelExpence2").val(FuelExpence2);
+
+        var BridgeTollFerryCharge2 = $("#BridgeTollFerryCharge2").val() != '' ? Number($("#BridgeTollFerryCharge2").val()) : 0;
+        var EntertainmentCCharge2 = $("#EntertainmentCCharge2").val() != '' ? Number($("#EntertainmentCCharge2").val()) : 0;
+        var ParkingCharge2 = $("#ParkingCharge2").val() != '' ? Number($("#ParkingCharge2").val()) : 0;
+        var EntertainmentACharge2 = $("#EntertainmentACharge2").val() != '' ? Number($("#EntertainmentACharge2").val()) : 0;
+        var RepairCharge2 = $("#RepairCharge2").val() != '' ? Number($("#RepairCharge2").val()) : 0;
+        var OverStayCharge2 = $("#OverStayCharge2").val() != '' ? Number($("#OverStayCharge2").val()) : 0;
+        var OpenBodyCharge2 = $("#OpenBodyCharge2").val() != '' ? Number($("#OpenBodyCharge2").val()) : 0;
+        var DemurrageCharge2 = $("#DemurrageCharge2").val() != '' ? Number($("#DemurrageCharge2").val()) : 0;
+
+        var TotalExpense2 = FuelExpence2 + BridgeTollFerryCharge2 + EntertainmentCCharge2 + ParkingCharge2
+            + EntertainmentACharge2 + RepairCharge2 + OverStayCharge2 + OpenBodyCharge2 + DemurrageCharge2;
+        TotalExpense2 = Number(TotalExpense2.toFixed(2));
+        $("#TotalExpense2").val(TotalExpense2);
+        //CalculateProfit();
+    }
+
+
+    function CalculateTotalTaken3() {
+        var FuelConsumedLitre3 = 0;
+        var FuelExpence3 = 0;
+
+        var Distance_Empty3 = $("#Distance_Empty3").val() != '' ? Number($("#Distance_Empty3").val()) : 0;
+        var KPL_Empty1 = $("#VehicleSharingInternalTrip_KPL_Empty").val() != '' ? Number($("#VehicleSharingInternalTrip_KPL_Empty").val()) : 0;
+        if (Distance_Empty3 > 0 && KPL_Empty1 != 0) {
+            var Fuel_Empty3 = (Distance_Empty3 / KPL_Empty1).toFixed(3);
+            $("#Fuel_Empty3").val(Fuel_Empty3);
+            FuelConsumedLitre3 = FuelConsumedLitre3 + Number(Fuel_Empty3);
+        }
+
+        var Distance_Loaded3 = $("#Distance_Loaded3").val() != '' ? Number($("#Distance_Loaded3").val()) : 0;
+        var KPL_Loaded1 = $("#VehicleSharingInternalTrip_KPL_Loaded").val() != '' ? Number($("#VehicleSharingInternalTrip_KPL_Loaded").val()) : 0;
+        if (Distance_Loaded3 > 0 && KPL_Loaded1 != 0) {
+            var Fuel_Loaded3 = (Distance_Loaded3 / KPL_Loaded1).toFixed(3);
+            $("#Fuel_Loaded3").val(Fuel_Loaded3);
+            FuelConsumedLitre3 = FuelConsumedLitre3 + Number(Fuel_Loaded3);
+        }
+
+        var Distance_Loaded_Plastic3 = $("#Distance_Loaded_Plastic3").val() != '' ? Number($("#Distance_Loaded_Plastic3").val()) : 0;
+        var KPL_Loaded_Plastic1 = $("#VehicleSharingInternalTrip_KPL_Loaded_Plastic").val() != '' ? Number($("#VehicleSharingInternalTrip_KPL_Loaded_Plastic").val()) : 0;
+        if (Distance_Loaded_Plastic3 > 0 && KPL_Loaded_Plastic1 != 0) {
+            var Fuel_Loaded_Plastic3 = (Distance_Loaded_Plastic3 / KPL_Loaded_Plastic1).toFixed(3);
+            $("#Fuel_Loaded_Plastic3").val(Fuel_Loaded_Plastic3);
+            FuelConsumedLitre3 = FuelConsumedLitre3 + Number(Fuel_Loaded_Plastic3);
+        }
+
+        var Distance_InterCity3 = $("#Distance_InterCity3").val() != '' ? Number($("#Distance_InterCity3").val()) : 0;
+        var KPL_InterCity1 = $("#VehicleSharingInternalTrip_KPL_InterCity").val() != '' ? Number($("#VehicleSharingInternalTrip_KPL_InterCity").val()) : 0;
+        if (Distance_InterCity3 > 0 && KPL_InterCity1 != 0) {
+            var Fuel_InterCity3 = (Distance_InterCity3 / KPL_InterCity1).toFixed(3);
+            $("#Fuel_InterCity3").val(Fuel_InterCity3);
+            FuelConsumedLitre3 = FuelConsumedLitre3 + Number(Fuel_InterCity3);
+        }
+
+        var Distance_InterCHT3 = $("#Distance_InterCHT3").val() != '' ? Number($("#Distance_InterCHT3").val()) : 0;
+        var KPL_InterCHT1 = $("#VehicleSharingInternalTrip_KPL_InterCHT").val() != '' ? Number($("#VehicleSharingInternalTrip_KPL_InterCHT").val()) : 0;
+        if (Distance_InterCHT3 > 0 && KPL_InterCHT1 != 0) {
+            var Fuel_InterCHT3 = (Distance_InterCHT3 / KPL_InterCHT1).toFixed(3);
+            $("#Fuel_InterCHT3").val(Fuel_InterCHT3);
+            FuelConsumedLitre3 = FuelConsumedLitre3 + Number(Fuel_InterCHT3);
+        }
+
+        var Distance_Hill3 = $("#Distance_Hill3").val() != '' ? Number($("#Distance_Hill3").val()) : 0;
+        var KPL_Hill1 = $("#VehicleSharingInternalTrip_KPL_Hill").val() != '' ? Number($("#VehicleSharingInternalTrip_KPL_Hill").val()) : 0;
+        if (Distance_Hill3 > 0 && KPL_Hill1 != 0) {
+            var Fuel_Hill3 = (Distance_Hill3 / KPL_Hill1).toFixed(3);
+            $("#Fuel_Hill3").val(Fuel_Hill3);
+            FuelConsumedLitre3 = FuelConsumedLitre3 + Number(Fuel_Hill3);
+        }
+
+        var Distance_OnlyMover3 = $("#Distance_OnlyMover3").val() != '' ? Number($("#Distance_OnlyMover3").val()) : 0;
+        var KPL_OnlyMover1 = $("#VehicleSharingInternalTrip_KPL_OnlyMover").val() != '' ? Number($("#VehicleSharingInternalTrip_KPL_OnlyMover").val()) : 0;
+        if (Distance_OnlyMover3 > 0 && KPL_OnlyMover1 != 0) {
+            var Fuel_OnlyMover3 = (Distance_OnlyMover3 / KPL_OnlyMover1).toFixed(3);
+            $("#Fuel_OnlyMover3").val(Fuel_OnlyMover3);
+            FuelConsumedLitre3 = FuelConsumedLitre3 + Number(Fuel_OnlyMover3);
+        }
+
+        var Distance_Loaded_8_To_12_Tons3 = $("#Distance_Loaded_8_To_12_Tons3").val() != '' ? Number($("#Distance_Loaded_8_To_12_Tons3").val()) : 0;
+        var KPL_Loaded_8_To_12_Tons1 = $("#VehicleSharingInternalTrip_KPL_Loaded_8_To_12_Tons").val() != '' ? Number($("#VehicleSharingInternalTrip_KPL_Loaded_8_To_12_Tons").val()) : 0;
+        if (Distance_Loaded_8_To_12_Tons3 > 0 && KPL_Loaded_8_To_12_Tons1 != 0) {
+            var Fuel_Loaded_8_To_12_Tons3 = (Distance_Loaded_8_To_12_Tons3 / KPL_Loaded_8_To_12_Tons1).toFixed(3);
+            $("#Fuel_Loaded_8_To_12_Tons3").val(Fuel_Loaded_8_To_12_Tons3);
+            FuelConsumedLitre3 = FuelConsumedLitre3 + Number(Fuel_Loaded_8_To_12_Tons3);
+        }
+
+        var Distance_Loaded_12_To_25_Tons3 = $("#Distance_Loaded_12_To_25_Tons3").val() != '' ? Number($("#Distance_Loaded_12_To_25_Tons3").val()) : 0;
+        var KPL_Loaded_12_To_25_Tons1 = $("#VehicleSharingInternalTrip_KPL_Loaded_12_To_25_Tons").val() != '' ? Number($("#VehicleSharingInternalTrip_KPL_Loaded_12_To_25_Tons").val()) : 0;
+        if (Distance_Loaded_12_To_25_Tons3 > 0 && KPL_Loaded_12_To_25_Tons1 != 0) {
+            var Fuel_Loaded_12_To_25_Tons3 = (Distance_Loaded_12_To_25_Tons3 / KPL_Loaded_12_To_25_Tons1).toFixed(3);
+            $("#Fuel_Loaded_12_To_25_Tons3").val(Fuel_Loaded_12_To_25_Tons3);
+            FuelConsumedLitre3 = FuelConsumedLitre3 + Number(Fuel_Loaded_12_To_25_Tons3);
+        }
+
+        $("#FuelConsumedLitre3").val(FuelConsumedLitre3.toFixed(3));
+        var FuelPricePerLitre3 = $("#FuelPricePerLitre3").val() != '' ? Number($("#FuelPricePerLitre3").val()) : 0;
+        var FuelExpence3 = FuelConsumedLitre3 * FuelPricePerLitre3;
+        FuelExpence3 = Number(FuelExpence3.toFixed(3));
+        $("#FuelExpence3").val(FuelExpence3);
+
+        var BridgeTollFerryCharge3 = $("#BridgeTollFerryCharge3").val() != '' ? Number($("#BridgeTollFerryCharge3").val()) : 0;
+        var EntertainmentCCharge3 = $("#EntertainmentCCharge3").val() != '' ? Number($("#EntertainmentCCharge3").val()) : 0;
+        var ParkingCharge3 = $("#ParkingCharge3").val() != '' ? Number($("#ParkingCharge3").val()) : 0;
+        var EntertainmentACharge3 = $("#EntertainmentACharge3").val() != '' ? Number($("#EntertainmentACharge3").val()) : 0;
+        var RepairCharge3 = $("#RepairCharge3").val() != '' ? Number($("#RepairCharge3").val()) : 0;
+        var OverStayCharge3 = $("#OverStayCharge3").val() != '' ? Number($("#OverStayCharge3").val()) : 0;
+        var OpenBodyCharge3 = $("#OpenBodyCharge3").val() != '' ? Number($("#OpenBodyCharge3").val()) : 0;
+        var DemurrageCharge3 = $("#DemurrageCharge3").val() != '' ? Number($("#DemurrageCharge3").val()) : 0;
+
+        var TotalExpense3 = FuelExpence3 + BridgeTollFerryCharge3 + EntertainmentCCharge3 + ParkingCharge3
+            + EntertainmentACharge3 + RepairCharge3 + OverStayCharge3 + OpenBodyCharge3 + DemurrageCharge3;
+        TotalExpense3 = Number(TotalExpense3.toFixed(3));
+        $("#TotalExpense3").val(TotalExpense3);
+        //CalculateProfit();
+    }
+
+
+    function CalculateProfit() {
+        console.log('CalculateProfit()');
+        var TripFare1 = $("#TripFare1").val() != '' ? Number($("#TripFare1").val()) : 0;
+        var Total1 = $("#Total1").val() != '' ? Number($("#Total1").val()) : 0;
+        var TotalGiven2 = $("#TotalGiven2").val() != '' ? Number($("#TotalGiven2").val()) : 0;
+        var TotalTaken3 = $("#TotalTaken3").val() != '' ? Number($("#TotalTaken3").val()) : 0;
+
+        var NetProfit4 = (TripFare1 - ((TotalGiven2 - TotalTaken3) + (Total1 - TripFare1))).toFixed(2);
+        $("#NetProfit4").val(NetProfit4);
+
+        //{( Total1 - TotalGiven2 + TotalTaken3) - ( Total1 - Trip Fare)}
+        var GrossProfit4 = ((Total1 - TotalGiven2 + TotalTaken3) - (Total1 - TripFare1)).toFixed(2);
+        $("#GrossProfit4").val(GrossProfit4);
+    }
+
+
+    function implementPolicy() {
+        var PolicyKey = $("#PolicyKey").val();
+        var TripFare1 = $("#TripFare1").val();
+        var TripBillDriver1 = 0;
+        var TripBillHelper1 = 0;
+        var TPTsMoney = 0;
+
+        if (PolicyKey == 'Common Policy-1') {
+            if (TripFare1 >= 1000 && TripFare1 < 2001) {
+                TripBillDriver1 = 150;
+                TripBillHelper1 = 105;
+                TPTsMoney = 100;
+            } else if (TripFare1 >= 2001 && TripFare1 < 3501) {
+                TripBillDriver1 = 180;
+                TripBillHelper1 = 126;
+                TPTsMoney = 100;
+            } else if (TripFare1 >= 3501 && TripFare1 < 5001) {
+                TripBillDriver1 = 200;
+                TripBillHelper1 = 140;
+                TPTsMoney = 150;
+            } else if (TripFare1 >= 5001 && TripFare1 < 6501) {
+                TripBillDriver1 = 250;
+                TripBillHelper1 = 175;
+                TPTsMoney = 150;
+            } else if (TripFare1 >= 6501 && TripFare1 < 9001) {
+                TripBillDriver1 = 300;
+                TripBillHelper1 = 210;
+                TPTsMoney = 200;
+            } else if (TripFare1 >= 9001 && TripFare1 < 12001) {
+                TripBillDriver1 = 350;
+                TripBillHelper1 = 245;
+                TPTsMoney = 200;
+            } else if (TripFare1 >= 12001 && TripFare1 < 15501) {
+                TripBillDriver1 = 400;
+                TripBillHelper1 = 280;
+                TPTsMoney = 300;
+            } else if (TripFare1 >= 15501 && TripFare1 < 20001) {
+                TripBillDriver1 = 450;
+                TripBillHelper1 = 315;
+                TPTsMoney = 300;
+            } else if (TripFare1 >= 20001 && TripFare1 < 25001) {
+                TripBillDriver1 = 500;
+                TripBillHelper1 = 350;
+                TPTsMoney = 300;
+            } else if (TripFare1 >= 25001 && TripFare1 < 30001) {
+                TripBillDriver1 = 550;
+                TripBillHelper1 = 385;
+                TPTsMoney = 300;
+            }
+            else if (TripFare1 >= 30001) {
+                TripBillDriver1 = 600;
+                TripBillHelper1 = 420;
+                TPTsMoney = 300;
+            }
+        }
+        $("#TripBillDriver1").val(TripBillDriver1);
+        $("#TripBillHelper1").val(TripBillHelper1);
+        $("#TPTsMoney").val(TPTsMoney);
+        CalculateTotalTaken3();
+    }
+
+</script>

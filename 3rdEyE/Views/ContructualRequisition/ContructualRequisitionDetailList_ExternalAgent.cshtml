@@ -1,0 +1,199 @@
+﻿@model IEnumerable<_3rdEyE.Models.ContructualRequisitionDetail>
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+<!--Date picker-->
+<link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+<script src="~/Theme/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="~/Theme/bower_components/jquery-ui/jquery-ui.min.js"></script>
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Contructual Requisition List(Existing)
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        <a class="btn btn-block btn-info btn-sm" href="/ContructualRequisition/Create">Create New</a>
+    </div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Contructual Requisition List</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Company Name
+                                </th>
+                                <th>
+                                    Type
+                                </th>
+                                <th>
+                                    From
+                                </th>
+                                <th>
+                                    To
+                                </th>
+                                <th>
+                                    Active Period
+                                </th>
+                                <th>
+                                    Trip Charge
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ContructualRequisition.ContructualRequisitionCompany.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.VehicleTypeLayer1_english)&nbsp;@Html.DisplayFor(modelItem => item.VehicleTypeLayer2_english)&nbsp;@Html.DisplayFor(modelItem => item.VehicleTypeLayer3_english)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.StartingLocation)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.FinishingLocation)
+                                    </td>
+                                    <td>
+                                        @item.ContructualRequisition.ContructAcitivatingDate.ToString("dd/MM/yyyy") To @item.ContructualRequisition.ContructDeactivatingDate.ToString("dd/MM/yyyy")
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PricePerVehicle)
+                                    </td>
+                                    <td>
+                                        <a href="/ContructualRequisition/View_ContructualRequisitionDetail?PK_ContructualRequisitionDetail=@item.PK_ContructualRequisitionDetail" class="btn btn-facebook btn-md">Trip List</a>
+                                        <button class="btn btn-twitter btn-md" onclick="showModalEntry('@item.PK_ContructualRequisitionDetail'); return false;">Add Trip</button>
+                                        <button class="btn btn-danger btn-md" onclick="showModalDelete('@item.PK_ContructualRequisitionDetail')">Delete</button>
+
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+@*MODAL DELETE START*@
+<div id="modalDelete" class="modal fade modal-" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div id="modalDelete_hiddenKey" style="display:none;"></div>
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+            </div>
+            <div id="modalDelete_body" class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="tryDelete()">Yes</button>
+                <button type="button" class="btn btn-primary" onclick="$('#modalDelete').modal('hide');">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*MODAL DELETE END*@
+
+@*MODAL ENTRY START*@
+<div id="modalEntry" class="modal fade modal-" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Entry</h4>
+            </div>
+            <div id="modalEntry_body" class="modal-body">
+                <form name="ThisForm" class="form-horizontal" method="post" action="/ContructualRequisition/Create_ContructualRequisitionDetailEntry_ByModal" enctype="multipart/form-data">
+                    <input name="FK_ContructualRequisitionDetail" id="FK_ContructualRequisitionDetail" class="form-control" style="display:none;" />
+                    <div class="box-body">
+                        @*PricePerVehicle*@
+                        <div class="form-group">
+                            <label class="col-md-6 control-label">How many?</label>
+                            <div class="col-md-6">
+                                <input name="VehicleCount" type="number" class="form-control" />
+                                <b class="errorMessage" data-category="errorMessage" name="error_VehicleCount"></b>
+                                <script>
+                                    validatorArray.push(
+                                        function () {
+                                            var check = $('input[name=VehicleCount]').val();
+                                            if (check == "") {
+                                                formValidity = false;
+                                                $('b[name=error_VehicleCount]').html("*required");
+                                            }
+                                        });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col">
+                        @*PricePerVehicle*@
+                        <div class="form-group">
+                            <label class="col-md-6 control-label">Execution Date</label>
+                            <div class="col-md-6">
+                                <input name="ExecutionDate" class="form-control" />
+                                <b class="errorMessage" data-category="errorMessage" name="error_ExecutionDate"></b>
+                                <script>
+                                    validatorArray.push(
+                                        function () {
+                                            var check = $('input[name=ExecutionDate]').val();
+                                            if (check == "") {
+                                                formValidity = false;
+                                                $('b[name=error_ExecutionDate]').html("*required");
+                                            }
+                                        });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="TrySubmit()">Add</button>
+                <button type="button" class="btn btn-default" onclick="$('#modalEntry').modal('hide');">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*MODAL ENTRY END*@
+<!-- /.content -->
+<!-- DataTables -->
+<script src="~/Theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/Theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<!-- page script -->
+<script>
+    $(function () {
+        $('#data_table').DataTable({ "scrollX": true });
+        $("input[name=ExecutionDate]").datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true, yearRange: '1990:2023' });
+    });
+    function showModalEntry(model_id) {
+        $('#FK_ContructualRequisitionDetail').val(model_id);
+        $("#modalEntry").modal('show');
+    }
+    function showModalDelete(model_id) {
+        $('#modalDelete_hiddenKey').html(model_id);
+        $('#modalDelete_body').html("Do you want to delete?");
+        $("#modalDelete").modal('show');
+    }
+    function tryDelete() {
+        var id = $("#modalDelete_hiddenKey").html();
+        window.location.href = "/ContructualRequisition/Delete_ContructualRequisitionDetail?id=" + id;
+    }
+</script>
+

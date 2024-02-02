@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="0f494ba2c3ff45608b4669c7c494c9a2" Name="Diagram1">
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.Accident" Width="1.5" PointX="3" PointY="113" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.AccidentDocument" Width="1.5" PointX="5.25" PointY="120.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.AccidentExpense" Width="1.5" PointX="11.25" PointY="113.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.AlertEmail" Width="1.5" PointX="3.75" PointY="108.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.AlertEmailAttachedDepo" Width="1.5" PointX="6" PointY="116.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.AlertEmailLog" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.AppAction" Width="1.5" PointX="15" PointY="137" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.AppErrorLog" Width="1.5" PointX="5.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.AppMenu" Width="1.5" PointX="0.75" PointY="4.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.AppModule" Width="1.5" PointX="12" PointY="132.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.AppModule_AppAction" Width="1.5" PointX="17.25" PointY="132.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.AppPermission" Width="1.5" PointX="3" PointY="2.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.AppRole" Width="1.5" PointX="6.75" PointY="91.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.AppRole_AppMenu" Width="1.5" PointX="9" PointY="51.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.AppRole_AppPermission" Width="1.5" PointX="9" PointY="48" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.AppRole_AppSubMenu" Width="1.5" PointX="12" PointY="51.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.AppSetting" Width="1.5" PointX="5.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.AppSubMenu" Width="1.5" PointX="3" PointY="9.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.AppUser" Width="1.5" PointX="9" PointY="107.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.AppUser_AppModule" Width="1.5" PointX="14.25" PointY="116.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.AppUserAccessibleDepo" Width="1.5" PointX="14.25" PointY="113.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.AppUserLoginHistory" Width="1.5" PointX="11.25" PointY="119.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.AppUserSurpervisedContructualCompany" Width="1.5" PointX="14.25" PointY="119.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.Company" Width="1.5" PointX="25.5" PointY="96.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.ContructualRequisition" Width="1.5" PointX="17.25" PointY="116.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.ContructualRequisitionCompany" Width="1.5" PointX="6.75" PointY="96" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.ContructualRequisitionDetail" Width="1.5" PointX="19.5" PointY="129.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.ContructualRequisitionDetailEntry" Width="1.5" PointX="22.75" PointY="119.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.DairyVehicle" Width="1.5" PointX="30" PointY="117.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.Dealer" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.Depo" Width="1.5" PointX="0.75" PointY="112.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.DepoBorder" Width="1.5" PointX="3" PointY="146.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.DepoGroup" Width="1.5" PointX="3" PointY="149.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.DeviceData" Width="1.5" PointX="7.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.DisplayMessage" Width="1.5" PointX="2.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.District" Width="1.5" PointX="0.75" PointY="88.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.Driver" Width="1.5" PointX="3" PointY="153.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.Event" Width="1.5" PointX="33" PointY="123.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.EventDocument" Width="1.5" PointX="35.25" PointY="115.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.EventType" Width="1.5" PointX="30.75" PointY="138.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.FinancingCompany" Width="1.5" PointX="25.5" PointY="129.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.GPS_DeviceChangeLog" Width="1.5" PointX="7.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.GPS_DeviceExisting" Width="1.5" PointX="9.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.GroupOfCompany" Width="1.5" PointX="23.25" PointY="97.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.Helper" Width="1.5" PointX="3" PointY="157.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.HiredVehicleDriver" Width="1.5" PointX="30" PointY="129.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.IndividualRequisition" Width="1.5" PointX="17.25" PointY="107.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.IndividualRequisitionBidding" Width="1.5" PointX="22.5" PointY="113.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.InstantRequisition" Width="1.5" PointX="20.25" PointY="107.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.InterCompanyRequisition" Width="1.5" PointX="17.25" PointY="120.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.InterCompanyRequisition_ExternalTroller" Width="1.5" PointX="19.5" PointY="135.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.InterCompanyRequisition_ExternalVehicle" Width="1.5" PointX="22.5" PointY="124.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.InterCompanyRequisition_InternalVehicle" Width="1.5" PointX="22.5" PointY="128.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.InterCompanyRequisitionBidding" Width="1.5" PointX="25.5" PointY="118.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.InterCompanyRequisitionLocation" Width="1.5" PointX="15" PointY="132.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.KPLChangeLog" Width="1.5" PointX="9.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.Location" Width="1.5" PointX="6.75" PointY="99.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.LocationToLocationMapping" Width="1.5" PointX="9.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.LocationWiseGP" Width="1.5" PointX="11.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.MapLocation" Width="1.5" PointX="11.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.MobileMenu" Width="1.5" PointX="6.75" PointY="87.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.MobileRole" Width="1.5" PointX="6.75" PointY="107.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.MobileRole_MobileMenu" Width="1.5" PointX="9" PointY="103.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.MonthlyBillEntry" Width="1.5" PointX="11.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.PoliceCase" Width="1.5" PointX="30" PointY="120.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.PoliceCase_PoliceCaseLaw" Width="1.5" PointX="41.25" PointY="126.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.PoliceCaseDocument" Width="1.5" PointX="32.25" PointY="133.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.PoliceCaseLaw" Width="1.5" PointX="39" PointY="133.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.PRG_Type" Width="1.5" PointX="30.75" PointY="114" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.ReadyReport" Width="1.5" PointX="11.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.Report_ConsolidatedRport" Width="1.5" PointX="0.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.Report_TemperatureReport" Width="1.5" PointX="2.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.Report_TemperatureReport_Helper" Width="1.5" PointX="4.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.Report_VehicleConsolidatedReport" Width="1.5" PointX="6.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.Report_VehicleHaltReadyReport_Helper" Width="1.5" PointX="13.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.Report_VehicleHaltReadyReport_Helper_Helper" Width="1.5" PointX="13.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.Report_VehicleHaltReport" Width="1.5" PointX="8.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.Report_VehicleHaltReport_Helper" Width="1.5" PointX="13.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.Report_VehicleHistory" Width="1.5" PointX="15.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.Report_VehicleHistoryDetail" Width="1.5" PointX="2.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.Report_VehicleInOutHistoryDetail" Width="1.5" PointX="15.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.Report_VehicleOutOverStay" Width="1.5" PointX="30" PointY="144.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.Requisition" Width="1.5" PointX="11.25" PointY="123" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.RequisitionAgentNotification" Width="1.5" PointX="11.25" PointY="172.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.RequisitionAgentProposedDepo" Width="1.5" PointX="14.25" PointY="110.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.RequisitionBusinessUnit" Width="1.5" PointX="9" PointY="130.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.RequisitionProductType" Width="1.5" PointX="9" PointY="132.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.RequisitionTrip" Width="1.5" PointX="22.5" PointY="102.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.RequisitionTrip_Finished" Width="1.5" PointX="13.5" PointY="100.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.RequisitionVehicleType" Width="1.5" PointX="9" PointY="135.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.RFID_AutoDistSuggession" Width="1.5" PointX="15.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.RFID_AutoLetterSuggession" Width="1.5" PointX="10.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.RFID_Entry" Width="1.5" PointX="15.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.RFID_EntryLog" Width="1.5" PointX="12.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.RouteChart" Width="1.5" PointX="17.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.ServiceCall" Width="1.5" PointX="17.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.sysdiagram" Width="1.5" PointX="4.75" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.TempMail" Width="1.5" PointX="17.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.TemporaryVehicle" Width="1.5" PointX="11.25" PointY="107.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.TestRfidData" Width="1.5" PointX="17.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.TransportCompany" Width="1.5" PointX="6.75" PointY="111.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.TripExpense" Width="1.5" PointX="17.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.Upazila" Width="1.5" PointX="0.75" PointY="92.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.UserDesignation" Width="1.5" PointX="14.75" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.Vehicle" Width="1.5" PointX="27.75" PointY="114.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.VehicleBrand" Width="1.5" PointX="23.25" PointY="133" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.VehicleInOutManual" Width="1.5" PointX="33" PointY="114.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.VehicleInOutManualReason" Width="1.5" PointX="30.75" PointY="110.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.VehicleInOutManualTypesOfProduct" Width="1.5" PointX="30.75" PointY="106.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.VehicleModel" Width="1.5" PointX="25.5" PointY="132.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.VehicleSharing" Width="1.5" PointX="14.25" PointY="122.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.VehicleSharingBidding" Width="1.5" PointX="25.5" PointY="123.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.VehicleSharingDemand" Width="1.5" PointX="25.5" PointY="107.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.VehicleSharingExternalTrip" Width="1.5" PointX="36" PointY="121" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.VehicleSharingInternalTrip" Width="1.5" PointX="39" PointY="115.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.VehicleSharingInternalTripAdjustment" Width="1.5" PointX="41.25" PointY="114.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.VehicleTracking" Width="1.5" PointX="32.25" PointY="166.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.VehicleTrackingInformation" Width="1.5" PointX="30" PointY="168.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.VehicleTrip" Width="1.5" PointX="36" PointY="128.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.VehicleSharingAgentMapping" Width="1.5" PointX="11.25" PointY="201.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.SillyView" Width="1.5" PointX="10.75" PointY="18.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EntityDataModelNameSpace.view_StayReportDaily" Width="1.5" PointX="19.75" PointY="0.75" IsExpanded="true" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_Accident_AppUser" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_Accident_AppUser1" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_Accident_Depo" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_Accident_District" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_Accident_Upazila" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_Accident_Vehicle" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_AccidentDocument_Accident" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_AccidentExpense_Accident" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_AccidentExpense_AppUser" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_AlertEmail_AlertEmailAttachedDepo" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_Depo_AlertEmailAttachedDepo" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_AppModule_AppAction_AppAction" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_AppPermission_AppMenu" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_AppRole_AppMenu_AppMenu" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_AppSubMenu_AppMenu" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_AppModule_AppAction_AppModule1" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_AppUser_AppModule_AppModule" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_AppRole_AppPermission_AppPermission" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_AppRole_AppMenu_AppRole" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_AppRole_AppPermission_AppRole" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_AppRole_AppSubMenu_AppRole" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_AppUser_AppRole" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_AppRole_AppSubMenu_AppSubMenu" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_AppUser_AppModule_AppUser" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_AppUser_AppUser" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_AppUser_AppUser1" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_AppUser_ContructualRequisitionCompany" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_AppUser_Depo" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_AppUser_Location" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_AppUser_MobileRole" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_AppUser_TransportCompany" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_AppUser_VehicleSharingInternalTrip" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_AppUser_VehicleSharingInternalTrip1" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_AppUserAccessibleDepo_AppUser1" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_AppUserLoginHistory_AppUser" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_AppUserSurpervisedContructualCompany_AppUser" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_ContractualRequisition_RequisitionAgent" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_ContructualRequisitionDetailEntry_AppUser" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_ContructualRequisitionDetailEntry_AppUser1" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_IndividualRequisition_AppUser" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_IndividualRequisitionBidding_AppUser1" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_InstantRequisition_RequisitionAgent" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_InterCompanyRequisition_AppUser" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_InterCompanyRequisition_AppUser1" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_InterCompanyRequisitionBidding_AppUser" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_Requisition_AppUser" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_Requisition_AppUser1" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_RequisitionAgentNotification_RequisitionAgent" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_RequisitionAgentProposedDepo_RequisitionAgent" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_RequisitionTrip_AppUser_Assigner" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_RequisitionTrip_Finished_AppUser_Assigner" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_TemporaryVehicle_AppUser" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleInOutManual_AppUser" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleInOutManual_AppUser1" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleSharing_AppUser" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleSharing_AppUser1" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleSharing_AppUser2" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleSharingAgentMapping_ExternalAgent" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleSharingAgentMapping_InternalAgent" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleSharingBidding_Bidder" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleSharingDemand_AppUser" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleSharingExternalTrip_Assigner" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleSharingExternalTrip_BillApprover" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleSharingExternalTrip_Payer" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleSharingInternalTrip_Assigner" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleSharingInternalTrip_BillApprover" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleSharingInternalTrip_BillCreator" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleSharingInternalTrip_BillPayer" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleSharingInternalTrip_Driver" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleSharingInternalTripAdjustment_AppUser" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleSharingInternalTripAdjustment_AppUser1" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_AppUserAccessibleDepo_Depo" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_AppUserSurpervisedContructualCompany_ContructualRequisitionCompany" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_Company_GroupOfCompany" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_Vehicle_Company" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_Vehicle_PurchasingCompany" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_ContructualRequisition_ContructualRequisitionCompany" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_ContructualRequisitionDetail_ContructualRequisition" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_ContructualRequisitionDetailEntry_ContructualRequisitionDetail" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_DairyVehicle_Vehicle" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_DepoBorder_Depo" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_DepoGroup_Depo" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_Driver_Depo" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_Helper_Depo" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_IndividualRequisition_Depo" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_IndividualRequisition_Depo1" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_InstantRequisition_Depo" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_InstantRequisition_Depo1" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_InterCompanyRequisition_Depo" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_InterCompanyRequisitionNew_Depo" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_InterCompanyRequisitionNew_Depo1" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_RequisitionAgentProposedDepo_Depo" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_Vehicle_Depo" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_Vehicle_DepoInOut" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleInOutManual_Depo" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleInOutManual_Depo1" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleSharing_Depo" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleSharing_Depo1" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleSharingDemand_Depo" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleSharingDemand_Depo1" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleTrip_Depo_From" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleTrip_Depo_To" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_Vehicle_DepoGroup" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_PoliceCase_District" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_Upazila_District" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_Event_EventType" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_EventDocument_Event" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_Vehicle_Event" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_Vehicle_FinancingCompany" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_HiredVehicleDriver_Vehicle" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_IndividualRequisitionBidding_IndividualRequisition" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_InstantRequisition_Vehicle" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_InterCompanyRequisition_ExternalTroller_InterCompanyRequisition" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_InterCompanyRequisition_ExternalVehicle_InterCompanyRequisition" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_InterCompanyRequisition_InterCompanyRequisitionLocation" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_InterCompanyRequisition_InterCompanyRequisitionLocation1" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_InterCompanyRequisition_RequisitionVehicleType" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_InterCompanyRequisition_Vehicle_InterCompanyRequisition" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_InterCompanyRequisitionBidding_InterCompanyRequisition" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_InterCompanyRequisition_ExternalVehicle_Vehicle" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_InterCompanyRequisition_Vehicle_Vehicle" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_Requisition_Location_From" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_Requisition_Location_To" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_TemporaryVehicle_Location" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_Vehicle_Location" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleInOutManual_Location" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_MobileRole_MobileMenu_MobileMenu" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_MobileRole_MobileMenu_MobileRole" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_Case_Vehicle" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_PoliceCase_PoliceCaseLaw_PoliceCase1" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_PoliceCase_Upazila" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_PoliceCaseDocument_PoliceCase" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_PoliceCase_PoliceCaseLaw_PoliceCaseLaw" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_TemporaryVehicle_PRG_Type" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleInOutManual_PRG_Type" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_Report_VehicleOutOverStay_Vehicle" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_InterCompanyRequisitionNew_InterCompanyRequisitionNewBusinessUnit" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_InterCompanyRequisitionNew_InterCompanyRequisitionNewProductType" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_InterCompanyRequisitionNew_RequisitionVehicleType" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_Requisition_RequisitionTrip_Finished" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_RequisitionTrip_Requisition" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_RequisitionTrip_Vehicle" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_RequisitionTripParent_RequisitionTrip" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_Vehicle_RequisitionTrip_Current" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_Vehicle_RequisitionTrip_Pending" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_RequisitionTrip_Finished_Vehicle" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_RequisitionTrip_FinishedParent_RequisitionTrip_Finished" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleSharing_RequisitionVehicleType" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleSharingDemand_RequisitionVehicleType" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_Vehicle_VehicleInOutManual" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_Vehicle_VehicleModel" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_Vehicle_VehicleSharingInternalTrip" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_Vehicle_VehicleSharingInternalTrip1" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleInOutManual_Vehicle" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleSharingExternalTrip_Vehicle" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleSharingInternalTrip_Vehicle" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleTrackingInformation_Vehicle" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleTrip_Vehicle" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleModel_VehicleBrand" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleInOutManual_VehicleInOutManualReason" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleInOutManual_VehicleInOutManualReason1" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleInOutManual_VehicleInOutManualTypesOfProduct" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleInOutManual_VehicleInOutManualTypesOfProduct1" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleSharingBidding_VehicleSharing" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleSharingDemand_VehicleSharing" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleSharingTrip_VehicleSharing" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleSharingBidding_VehicleSharingBidding" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleSharingExternalTrip_VehicleSharingBidding" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleSharingInternalTripAdjustment_VehicleSharingInternalTrip" ManuallyRouted="false" />
+        <AssociationConnector Association="EntityDataModelNameSpace.FK_VehicleTracking_VehicleTrackingInformation" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

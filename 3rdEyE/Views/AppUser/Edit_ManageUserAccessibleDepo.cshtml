@@ -1,0 +1,211 @@
+﻿@model _3rdEyE.Models.AppUser
+@{
+    ViewBag.Title = "Create";
+}
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Edit User Group Access Permission
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        <a class="btn btn-block btn-info btn-sm" href="@System.Web.HttpContext.Current.Request.UrlReferrer">Back To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <section class="col-md-12 connectedSortable ui-sortable">
+            <!-- Custom tabs (Charts with tabs)-->
+            <div class="nav-tabs-custom" style="cursor: move;">
+                <!-- Tabs within a box -->
+                <ul class="nav nav-tabs pull-right ui-sortable-handle">
+                    <li class="pull-left" onclick="window.location='/AppUser/Edit_BasicInformation?id=@Model.PK_User'"><a href="#TargetTab" data-toggle="tab">Basic Information</a></li>
+                    <li class="pull-left" onclick="window.location='/AppUser/Edit_ManageWebPermission?FK_User=@Model.PK_User'"><a href="#TargetTab" data-toggle="tab">Extra Menu Permission</a></li>
+                    <li class="pull-left active" onclick="window.location='/AppUser/Edit_ManageUserAccessibleDepo?FK_User=@Model.PK_User'"><a href="#CurrentlyActiveTab" data-toggle="tab">Depo Permission</a></li>
+                </ul>
+                <div class="tab-content no-padding">
+                    <!-- Morris chart - Sales -->
+                    <div id="CurrentlyActiveTab" class="chart tab-pane active" style="position: relative; height: auto; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
+                        <form name="ThisForm" method="post" action="/AppUser/Edit_ManageUserAccessibleDepo" enctype="multipart/form-data">
+                            <input name="PermittedDepoes" id="PermittedDepoes" type="text" style="display:none;" />
+                            <input name="FK_User" id="FK_User" type="text" value="@Model.PK_User" style="display:none;" />
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="box">
+                                        <div class="box-body">
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <div class="row">
+                                                        <label class="col-md-4 control-label">Staff ID:</label>
+                                                        <div class="col-md-8">
+                                                            @Html.DisplayFor(m => m.UniqueIDNumber)
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <label class="col-md-4 control-label">Full Name:</label>
+                                                        <div class="col-md-8">
+                                                            @Html.DisplayFor(m => m.FullName)
+                                                        </div>
+                                                    </div>
+                                                    @*<div class="row">
+                                                        <label class="col-md-4 control-label">Accessible Depoes:</label>
+                                                        <div class="col-md-8">
+                                                            @foreach (var item in ViewBag.AppUserAccessibleDepoes)
+                                                            {
+                                                                @item; <text>,&nbsp;</text>
+                                                            }
+                                                        </div>
+                                                    </div>*@
+                                                    <br />
+                                                    <div class="row">
+                                                        <div class="col-md-8">
+                                                            <input type="button" class="btn btn-facebook pull-right" value="Update Permission" onclick="TryUpdateUserPermission()" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            <input type="checkbox" id="checkbox_pran" onclick="check_pran()" />&nbsp;<label id="label_egnitionOff">Pran</label>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <input type="checkbox" id="checkbox_rfl" onclick="check_rfl()" />&nbsp;<label id="label_egnitionOff">RFL</label>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <input type="checkbox" id="checkbox_cs" onclick="check_cs()" />&nbsp;<label id="label_egnitionOff">CS</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <table id="data_table" class="table table-bordered table-striped">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>
+                                                                    </th>
+                                                                    <th>
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="data_tbody"></tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="box-footer">
+                                            @*<input type="button" class="btn btn-facebook" value="Update Permission" onclick="TryUpdateUserPermission()" />*@
+                                        </div>
+                                        <!-- /.box-footer -->
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </div>
+
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+<!-- DataTables -->
+<script src="~/Theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/Theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script>
+    $(function () {
+        GetAccessibleDepoList();
+    });
+</script>
+<script>
+    var dataTable;
+    var depoList = [];
+    function GetAccessibleDepoList() {
+        var FK_User = '@Model.PK_User';
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/AppUser/GetAccessibleDepoListOfUser/",
+            data: JSON.stringify({ FK_User: FK_User }),
+            success: function (list) {
+                depoList = list;
+                $('#data_tbody').html("");
+                var result = "";
+                for (var i = 0; i < list.length; i++) {
+                    result = result + "<tr>";
+                    if (list[i].IsAccessible == true) {
+                        result = result + "<td>" + "<input type='checkbox' name='parmssionCehckBoxes' value='" + list[i].FK_Depo + "' checked />" + "</td>";
+                    } else {
+                        result = result + "<td>" + "<input type='checkbox' name='parmssionCehckBoxes' value='" + list[i].FK_Depo + "' />" + "</td>";
+                    }
+                    result = result + "<td>" + list[i].DepoName + "</td>";
+                    result = result + "</tr>";
+                }
+                $('#data_tbody').html(result);
+                dataTable = $('#data_table').DataTable({
+                    "lengthChange": false, "bPaginate": false,
+                });
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: GetAccessibleDepoList()");
+            }
+        });
+    }
+
+    function check_pran() {
+        var check = $('input[id=checkbox_pran]:checked').val();
+        for (var i = 0; i < depoList.length; i++) {
+            if (depoList[i].PRG_Type == 'PRAN') {
+                if (check == 'on') {
+                    $('input[value=' + depoList[i].FK_Depo + ']').attr('checked', true);
+                } else {
+                    $('input[value=' + depoList[i].FK_Depo + ']').attr('checked', false);
+                }
+            }
+        }
+    }
+
+    function check_rfl() {
+        var check = $('input[id=checkbox_rfl]:checked').val();
+        for (var i = 0; i < depoList.length; i++) {
+            if (depoList[i].PRG_Type == 'RFL') {
+                if (check == 'on') {
+                    $('input[value=' + depoList[i].FK_Depo + ']').attr('checked', true);
+                } else {
+                    $('input[value=' + depoList[i].FK_Depo + ']').attr('checked', false);
+                }
+            }
+        }
+    }
+
+    function check_cs() {
+        var check = $('input[id=checkbox_cs]:checked').val();
+        for (var i = 0; i < depoList.length; i++) {
+            if (depoList[i].PRG_Type == 'CS') {
+                if (check == 'on') {
+                    $('input[value=' + depoList[i].FK_Depo + ']').attr('checked', true);
+                } else {
+                    $('input[value=' + depoList[i].FK_Depo + ']').attr('checked', false);
+                }
+            }
+        }
+    }
+
+    function TryUpdateUserPermission() {
+        dataTable.destroy();
+        var checkedVals = $('input[name=parmssionCehckBoxes]:checked').map(function () {
+            return this.value;
+        }).get();
+        $("#PermittedDepoes").val(checkedVals);
+        $('form[name=ThisForm]').submit();
+    }
+</script>

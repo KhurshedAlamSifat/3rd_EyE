@@ -1,0 +1,199 @@
+﻿
+@{
+    ViewBag.Title = "Edit";
+}
+
+<section class="content-header">
+    <h1>
+        Edit Existing Company
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        <a class="btn btn-block btn-info btn-sm" href="@System.Web.HttpContext.Current.Request.UrlReferrer">Back To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Company Information</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form name="ThisForm" class="form-horizontal" method="post" action="/Company/Edit">
+                    <input name="PK_Company" value="@ViewBag.model.PK_Company" type="text" style="display:none;">
+                    @*FK_GroupOfCompany*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Group Of Company*</label>
+                            <div class="col-md-10">
+                                @Html.DropDownList("FK_GroupOfCompany", ViewBag.GroupOfCompanies as SelectList, "Select", new { @class = "form-control", onchange = "manageUI_externalOwnerElement()" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_GroupOfCompany"></b>
+                            </div>
+                        </div>
+                        <script>
+                            validatorArray.push(
+                                function () {
+                                    var check = $('select[name=FK_GroupOfCompany]').val();
+                                    if (check == "") {
+                                        formValidity = false;
+                                        $('b[name=error_FK_GroupOfCompany]').html("Group of company is required.");
+                                    }
+                                });
+                        </script>
+                    </div>
+                    @*Name*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Name*</label>
+                            <div class="col-md-10">
+                                <input name="Name" value="@ViewBag.model.Name" type="text" class="form-control">
+                                <b class="errorMessage" data-category="errorMessage" name="error_Name"></b>
+                            </div>
+                        </div>
+                        <script>
+                            validatorArray.push(
+                                function () {
+                                    var check = $('input[name=Name]').val();
+                                    if (check == "") {
+                                        formValidity = false;
+                                        $('b[name=error_Name]').html("Company name is required.");
+                                    }
+                                });
+                        </script>
+                    </div>
+                    @*CompanyRegistrationNumber*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Registration Number</label>
+                            <div class="col-md-10">
+                                <input name="CompanyRegistrationNumber" value="@ViewBag.model.CompanyRegistrationNumber" type="text" class="form-control" style="text-transform:uppercase">
+                            </div>
+                        </div>
+                    </div>
+                    @*CompnayAddress*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Address</label>
+                            <div class="col-md-10">
+                                <textarea name="CompnayAddress" class="form-control">@ViewBag.model.CompnayAddress</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <section data-category="externalOwnerElement">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">External Owner's Information</h3>
+                        </div>
+                        @*ExternalOwnersFullName*@
+                        <div class="box-body">
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Full Name*</label>
+                                <div class="col-md-10">
+                                    <input name="ExternalOwnersFullName" value="@ViewBag.model.ExternalOwnersFullName" type="text" class="form-control" style="text-transform:uppercase">
+                                    <b class="errorMessage" data-category="errorMessage" name="error_ExternalOwnersFullName"></b>
+                                </div>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+
+                                        if (isPranRFLGroup == false) {
+                                            //console.log(isPranRFLGroup);
+                                            var check = $('input[name=ExternalOwnersFullName]').val();
+                                            console.log(check);
+                                            if (check == '') {
+                                                formValidity = false;
+                                                $('b[name=error_ExternalOwnersFullName]').html("For any other group of company except PRAN RFL Group, external owner's full name is required.");
+                                            }
+                                        }
+                                    });
+                            </script>
+                        </div>
+                        @*ExternalOwnersNID*@
+                        <div class="box-body">
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">NID Number</label>
+                                <div class="col-md-10">
+                                    <input name="ExternalOwnersNID" value="@ViewBag.model.ExternalOwnersNID" type="text" class="form-control" style="text-transform:uppercase">
+                                </div>
+                            </div>
+                        </div>
+                        @*ExternalOwnersFathersName*@
+                        <div class="box-body">
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Father's Name</label>
+                                <div class="col-md-10">
+                                    <input name="ExternalOwnersFathersName" value="@ViewBag.model.ExternalOwnersFathersName" type="text" class="form-control" style="text-transform:uppercase">
+                                </div>
+                            </div>
+                        </div>
+                        @*ExternalOwnersContactNumber*@
+                        <div class="box-body">
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Contact Number</label>
+                                <div class="col-md-10">
+                                    <input name="ExternalOwnersContactNumber" value="@ViewBag.model.ExternalOwnersContactNumber" type="text" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        @*ExternalOwnersAddress*@
+                        <div class="box-body">
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Address</label>
+                                <div class="col-md-10">
+                                    <textarea name="ExternalOwnersAddress" class="form-control">@ViewBag.model.ExternalOwnersAddress</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <div class="box-footer">
+                        @*<a class="btn btn-default" href="/Company/Index">Back To List</a>*@
+                        <input type="button" class="btn btn-info pull-right" value="Edit" onclick="TrySubmit()" />
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+
+
+<script>
+    var isPranRFLGroup = null;
+    $('document').ready(function () {
+        manageUI_externalOwnerElement();
+    });
+    function manageUI_externalOwnerElement() {
+        $('section[data-category=externalOwnerElement]').hide();
+        var PK_GroupOfCompany = $('select[name=FK_GroupOfCompany]').val();
+        if (PK_GroupOfCompany == '') {
+            return;
+        }
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/Company/IsPranRFLGroup_ByGroupOfCompany_PK/",
+            data: JSON.stringify({ PK_GroupOfCompany: PK_GroupOfCompany }),
+            success: function (data) {
+                if (data == true) {
+                    //# hide, already done
+                    isPranRFLGroup = true;
+                } else {
+                    isPranRFLGroup = false;
+                    $('section[data-category=externalOwnerElement]').show();
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: CheckPranRFLGroupByGroupOfCompany_PK()");
+            }
+        });
+    }
+</script>

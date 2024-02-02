@@ -1,0 +1,567 @@
+﻿@model _3rdEyE.Models.InstantRequisition
+@{
+    ViewBag.Title = "Create Instant Requisition";
+}
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+<!--Date picker-->
+<link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+<script src="~/Theme/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="~/Theme/bower_components/jquery-ui/jquery-ui.min.js"></script>
+<!--/Date picker-->
+<!-- Content Wrapper. Contains page content -->
+<section class="content-header">
+    <h1>
+        Create New Third Party Trip
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        <a class="btn btn-block btn-info btn-sm" href="/InstantRequisition/IndexBy_Agent">Go To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/InstantRequisition/Create" enctype="multipart/form-data">
+        @Html.EditorFor(model => model.PK_InstantRequisition, new { htmlAttributes = new { @class = "form-control", style = "display:none;" } })
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="col-md-12">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Instant Requisition Information</h3>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="box-body col-md-12">
+                                @*Vehicle*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Vehicle*</label>
+                                        <div class="col-md-4">
+                                            <input name="RegistrationNumber" id="RegistrationNumber" placeholder="Search Vehicle" class="form-control">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input class="form-control" type="button" value="Search" onclick="LoadFK_Vehicle()" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label"></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("FK_Vehicle", ViewBag.Vehicles as SelectList, "Select", new { @class = "form-control" })
+                                            <b class="errorMessage" data-category="errorMessage" name="error_FK_Vehicle"></b>
+                                        </div>
+                                    </div>
+                                    <script>
+                                        validatorArray.push(
+                                            function () {
+                                                var check = $('select[name=FK_Vehicle]').val();
+                                                if (check == "") {
+                                                    formValidity = false;
+                                                    $('b[name=error_FK_Vehicle]').html("required.");
+                                                }
+                                            });
+                                    </script>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                @*DriverStaffID*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Driver Info</label>
+                                        <div class="col-md-2" style="padding-right:0%;">
+                                            <input name="DriverStaffID" id="DriverStaffID" placeholder="St.Id" class="form-control">
+                                            <b class="errorMessage" data-category="errorMessage" name="error_DriverStaffID"></b>
+                                            <script>
+                                                validatorArray.push(
+                                                    function () {
+                                                        var check = $('input[name=DriverStaffID]').val();
+                                                        if (check == "") {
+                                                            formValidity = false;
+                                                            $('b[name=error_DriverStaffID]').html("required.");
+                                                        }
+                                                    });
+                                            </script>
+                                        </div>
+                                        <div class="col-md-4" style="padding-left: 0%; padding-right: 0%;">
+                                            <input name="DriverName" id="DriverName" class="form-control" readonly="readonly" placeholder="Dirver Name">
+                                            <b class="errorMessage" data-category="errorMessage" name="error_DriverName"></b>
+                                            <script>
+                                                validatorArray.push(
+                                                    function () {
+                                                        var check = $('input[name=DriverName]').val();
+                                                        if (check == "") {
+                                                            formValidity = false;
+                                                            $('b[name=error_DriverName]').html("required.");
+                                                        }
+                                                    });
+                                            </script>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input class="form-control" type="button" value="clear" onclick="clearDriverInfo()" />
+                                        </div>
+                                    </div>
+                                    <script>
+                                        var DriverStaffID_element = document.getElementById("DriverStaffID");
+                                        DriverStaffID_element.addEventListener("focusout", function (event) {
+                                            var DriverStaffID = $("#DriverStaffID").val();
+                                            $("#DriverName").val("Loading..");
+                                            $.ajax({
+                                                traditional: true,
+                                                type: "post",
+                                                dataType: "json",
+                                                contentType: "application/json",
+                                                url: "/Base/GetUserInfoFromHRIS_Json",
+                                                data: JSON.stringify({ staffID: DriverStaffID }),
+                                                success: function (data) {
+                                                    if (data != null) {
+                                                        $("#DriverName").val(data.NAME);
+                                                    } else {
+                                                        $("#DriverName").val('Not Found/HRIS unavailable');
+                                                    }
+                                                },
+                                                error: function (xhr, textStatus, errorThrown) {
+                                                    console.log("Err on call");
+                                                }
+                                            });
+                                        });
+                                        function clearDriverInfo() {
+                                            $("#DriverStaffID").val("");
+                                            $("#DriverName").val("");
+                                        }
+
+                                    </script>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                @*HelperInfo*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Helper Info</label>
+                                        <div class="col-md-8">
+                                            <input name="HelperInfo" id="HelperInfo" class="form-control">
+                                            <b class="errorMessage" data-category="errorMessage" name="error_HelperInfo"></b>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                @*FK_Location_From*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">From Location*</label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("FK_Location_From", ViewBag.LocationsFrom as SelectList, "Select", new { @class = "form-control" })
+                                            <b class="errorMessage" data-category="errorMessage" name="error_FK_Location_From"></b>
+                                        </div>
+                                    </div>
+                                    <script>
+                                        validatorArray.push(
+                                            function () {
+                                                var check = $('select[name=FK_Location_From]').val();
+                                                if (check == "") {
+                                                    formValidity = false;
+                                                    $('b[name=error_FK_Location_From]').html("required.");
+                                                }
+                                            });
+                                    </script>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                @*StartingLocation*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">Pick-up Point*</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.StartingLocation, new { htmlAttributes = new { @class = "form-control" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_StartingLocation"></b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                @*FinishingLocation*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">Dropping Point*</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.FinishingLocation, new { htmlAttributes = new { @class = "form-control" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_FinishingLocation"></b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                @*FK_Location_To*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">To Location*</label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("FK_Location_To", ViewBag.LocationsTo as SelectList, "Select", new { @class = "form-control" })
+                                            <b class="errorMessage" data-category="errorMessage" name="error_FK_Location_To"></b>
+                                        </div>
+                                    </div>
+                                    <script>
+                                        validatorArray.push(
+                                            function () {
+                                                var check = $('select[name=FK_Location_To]').val();
+                                                if (check == "") {
+                                                    formValidity = false;
+                                                    $('b[name=error_FK_Location_To]').html("required.");
+                                                }
+                                            });
+                                    </script>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                @*TripFare1*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">Trip Fare*</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.TripFare1, new { htmlAttributes = new { @class = "form-control", min = '0', @type = "Number" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_TripFare1"></b>
+                                    </div>
+                                    <script>
+                                        validatorArray.push(
+                                            function () {
+                                                var check = $('input[name=TripFare1]').val();
+                                                if (check == "") {
+                                                    formValidity = false;
+                                                    $('b[name=error_TripFare1]').html("required.");
+                                                }
+                                            });
+                                    </script>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                @*ProductInformation*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">Product Information*</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.ProductInformation, new { htmlAttributes = new { @class = "form-control" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_ProductInformation"></b>
+                                    </div>
+                                    <script>
+                                        validatorArray.push(
+                                            function () {
+                                                var check = $('input[name=ProductInformation]').val();
+                                                if (check == "") {
+                                                    formValidity = false;
+                                                    $('b[name=error_ProductInformation]').html("required.");
+                                                }
+                                            });
+                                    </script>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                @*ProductWeightInKg*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">Product Weight*</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.ProductWeightInKg, new { htmlAttributes = new { @class = "form-control", @type = "number", @placeholder = "Product Weight In Kg" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_ProductWeightInKg"></b>
+                                    </div>
+                                    <script>
+                                        validatorArray.push(
+                                            function () {
+                                                var check = $('input[name=ProductWeightInKg]').val();
+                                                if (check == "") {
+                                                    formValidity = false;
+                                                    $('b[name=error_ProductWeightInKg]').html("required.");
+                                                }
+                                            });
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            @*EffectiveDate*@
+                            <div class="box-body col-md-12">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Trip Date</label>
+                                    <div class="col-md-4">
+                                        @*<input name="EffectiveDate" id="EffectiveDate" @(ViewBag.model.EffectiveDate == null ? "" : "value=" + ViewBag.model.EffectiveDate.ToShortDateString()) class="form-control all_input" readonly="readonly">*@
+                                        <input name="EffectiveDate" id="EffectiveDate" class="form-control all_input" type="text" readonly="readonly">
+                                        <b class="errorMessage" data-category="errorMessage" name="error_EffectiveDate"></b>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <strong>YYYY-MM-DD</strong>
+                                    </div>
+                                </div>
+                                <script>
+                                    validatorArray.push(
+                                        function () {
+                                            var check = $('input[name=EffectiveDate]').val();
+                                            if (check == "") {
+                                                formValidity = false;
+                                                $('b[name=error_EffectiveDate]').html("Effective is required.");
+                                            }
+                                        });
+                                </script>
+                            </div>
+                            <div class="box-body col-md-12">
+                                @*EvNumber*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">EV No*</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.EvNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_EvNumber"></b>
+                                    </div>
+                                    <script>
+                                        validatorArray.push(
+                                            function () {
+                                                var check = $('input[name=EvNumber]').val();
+                                                if (check == "") {
+                                                    formValidity = false;
+                                                    $('b[name=error_EvNumber]').html("required.");
+                                                }
+                                            });
+                                    </script>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                @*EvAmount*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">EV Amt*</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.EvAmount, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_EvAmount"></b>
+                                    </div>
+                                    <script>
+                                        validatorArray.push(
+                                            function () {
+                                                var check = $('input[name=EvAmount]').val();
+                                                if (check == "") {
+                                                    formValidity = false;
+                                                    $('b[name=error_EvAmount]').html("required.");
+                                                }
+                                            });
+                                    </script>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                @*TransportAgencyName*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">Trasport Agency</label>
+                                    <div class="col-md-8">
+                                        @Html.DropDownList("FK_TransportAgency", ViewBag.TransportAgency as SelectList, "Select", new { @class = "form-control" })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_FK_TransportAgency"></b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                @*BrokerInformation*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">Broker Information</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.BrokerInformation, new { htmlAttributes = new { @class = "form-control", placeholder = "Name, Location, Contact" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_BrokerInformation"></b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                @*BrokerCommission*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">Broker Commission</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.BrokerCommission, new { htmlAttributes = new { @class = "form-control", @type = "Number" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_BrokerCommission"></b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                @*ResponsibleParsonName*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">3rd Party User Name</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.ResponsibleParsonName, new { htmlAttributes = new { @class = "form-control" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_ResponsibleParsonName"></b>
+                                    </div>
+                                    <script>
+                                        validatorArray.push(
+                                            function () {
+                                                var check = $('input[name=ResponsibleParsonName]').val();
+                                                if (check == "") {
+                                                    formValidity = false;
+                                                    $('b[name=error_ResponsibleParsonName]').html("required.");
+                                                }
+                                            });
+                                    </script>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                @*ResponsibleParsonContactNumber*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">3rd Party User no</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.ResponsibleParsonContactNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_ResponsibleParsonContactNumber"></b>
+                                    </div>
+                                    <script>
+                                        validatorArray.push(
+                                            function () {
+                                                var check = $('input[name=ResponsibleParsonContactNumber]').val();
+                                                if (check == "") {
+                                                    formValidity = false;
+                                                    $('b[name=error_ResponsibleParsonContactNumber]').html("required.");
+                                                }
+                                            });
+                                    </script>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                @*Note1*@
+                                <div class="form-group col-md-10">
+                                    <label class="col-md-4 control-label">Note</label>
+                                    <div class="col-md-8">
+                                        @Html.EditorFor(model => model.Note1, new { htmlAttributes = new { @class = "form-control" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_Note1"></b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                @*RecevierAccountNumber*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">GP Number</label>
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.GpNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                            <b class="errorMessage" data-category="errorMessage" name="error_GpNumber"></b>
+                                        </div>
+                                        <script>
+                                            validatorArray.push(
+                                                function () {
+                                                    var check = $('input[name=GpNumber]').val();
+                                                    if (check == "") {
+                                                        formValidity = false;
+                                                        $('b[name=error_GpNumber]').html("required.");
+                                                    }
+                                                });
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                @*ReceiverStaffID*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Receiver Staff ID</label>
+                                        <div class="col-md-2" style="padding-right:0%;">
+                                            <input name="ReceiverStaffID" id="ReceiverStaffID" class="form-control" placeholder="St.Id">
+                                            <b class="errorMessage" data-category="errorMessage" name="error_ReceiverStaffID"></b>
+                                        </div>
+                                        <script>
+                                            validatorArray.push(
+                                                function () {
+                                                    var check = $('input[name=ReceiverStaffID]').val();
+                                                    if (check == "") {
+                                                        formValidity = false;
+                                                        $('b[name=error_ReceiverStaffID]').html("required.");
+                                                    }
+                                                });
+                                        </script>
+                                        <div class="col-md-4" style="padding-left: 0%; padding-right: 0%;">
+                                            <input name="ReceiverStaffName" id="ReceiverStaffName" class="form-control" readonly="readonly" placeholder="Receiver Name">
+                                            <b class="errorMessage" data-category="errorMessage" name="error_ReceiverStaffName"></b>
+                                        </div>
+                                        <script>
+                                            validatorArray.push(
+                                                function () {
+                                                    var check = $('input[name=ReceiverStaffName]').val();
+                                                    if (check == "") {
+                                                        formValidity = false;
+                                                        $('b[name=error_ReceiverStaffName]').html("required.");
+                                                    }
+                                                });
+                                        </script>
+                                        <div class="col-md-2">
+                                            <input class="form-control" type="button" value="clear" onclick="clearReceiverInfo()" />
+                                        </div>
+                                    </div>
+                                    <script>
+                                        var ReceiverStaffID_element = document.getElementById("ReceiverStaffID");
+                                        ReceiverStaffID_element.addEventListener("focusout", function (event) {
+                                            var ReceiverStaffID = $("#ReceiverStaffID").val();
+                                            $("#ReceiverStaffName").val("Loading..");
+                                            $.ajax({
+                                                traditional: true,
+                                                type: "post",
+                                                dataType: "json",
+                                                contentType: "application/json",
+                                                url: "/Base/GetUserInfoFromHRIS_Json",
+                                                data: JSON.stringify({ staffID: ReceiverStaffID }),
+                                                success: function (data) {
+                                                    if (data != null) {
+                                                        $("#ReceiverStaffName").val(data.NAME);
+                                                    } else {
+                                                        $("#ReceiverStaffName").val('Not Found/HRIS unavailable');
+                                                    }
+                                                },
+                                                error: function (xhr, textStatus, errorThrown) {
+                                                    console.log("Err on call");
+                                                }
+                                            });
+                                        });
+                                        function clearReceiverInfo() {
+                                            $("#ReceiverStaffID").val("");
+                                            $("#ReceiverStaffName").val("");
+                                        }
+
+                                    </script>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        @*<a class="btn btn-default" href="/Instant Requisition/Index">Back To List</a>*@
+                        <input type="button" class="btn btn-facebook center-block" value="Save" onclick="TrySubmit()" />
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+
+</section>
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $("select").select2();
+    });
+</script>
+@*Date picker*@
+<script>
+    $(document).ready(function () {
+        $("#EffectiveDate").datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true, yearRange: '1990:2023' });
+    });
+</script>
+<script>
+    function LoadFK_Vehicle() {
+        var RegistrationNumber = $("#RegistrationNumber").val();
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/InstantRequisition/FindOwnVehicle",
+            data: JSON.stringify({ RegistrationNumber: RegistrationNumber }),
+            success: function (data) {
+                $('select[name=FK_Vehicle]').html("");
+                var result = "<option >Select</option>";
+                for (var i = 0; i < data.length; i++) {
+                    result = result + "<option value='" + data[i].PK_Vehicle + "'>" + data[i].RegistrationNumber + "</option>";
+                }
+                $('select[name=FK_Vehicle]').html(result);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call");
+            }
+        });
+    }
+</script>
+
+

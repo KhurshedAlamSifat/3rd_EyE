@@ -1,0 +1,133 @@
+﻿@model _3rdEyE.Models.VehicleSharingBidding
+@{
+    ViewBag.Title = "";
+}
+
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+
+<section class="content-header">
+    <h1>
+        Bidding Assign Vehicle
+        <small></small>
+    </h1>
+</section>
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/VehicleSharing/VehicleSharingBiddingAssign" enctype="multipart/form-data">
+        <input name="PK_VehicleSharingBidding" id="PK_VehicleSharingBidding" value="@Model.PK_VehicleSharingBidding" style="display:none;" />
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="col-md-12">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Bidding Assign Vehicle</h3>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="box-body col-md-12">
+                                @*TrackingID*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">RM Tracking Number</label>
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.VehicleSharing.TrackingID, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                            <b class="errorMessage" data-category="errorMessage" name="error_HelperInfo"></b>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                @*TarnsportAgent*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Tarnsport Agent</label>
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.AppUser.FullName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                            <b class="errorMessage" data-category="errorMessage" name="error_HelperInfo"></b>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                @*TarnsportAgent*@
+                                <div class="form-group col-md-10">
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Vehicle</label>
+                                        <div class="col-md-3">
+                                            <input name="ExternalVehicleRegNum" id="ExternalVehicleRegNum" class="form-control" onkeyup="searchExternalVehicle()">
+                                        </div>
+                                        <div class="col-md-5">
+                                            <select name="FK_Vehicle" id="FK_Vehicle" class="form-control"></select>
+                                            <b class="errorMessage" data-category="errorMessage" name="error_FK_Vehicle"></b>
+                                        </div>
+                                    </div>
+                                </div>
+                                <script>
+                                    validatorArray.push(
+                                        function () {
+                                            var check = $('select[name=FK_Vehicle]').val();
+                                            if (check == "" || check == null) {
+                                                formValidity = false;
+                                                $('b[name=error_FK_Vehicle]').html("Vehicle is required.");
+                                            }
+                                        });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        @*<a class="btn btn-default" href="/Instant Requisition/Index">Back To List</a>*@
+                        <input type="button" class="btn btn-info center-block" value="Save" onclick="TrySubmit()" />
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+
+</section>
+
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $('select').select2();
+    });
+</script>
+<script>
+    function searchExternalVehicle() {
+        if (event.keyCode == 13) {
+            var ExternalVehicleRegNum = $("#ExternalVehicleRegNum").val();
+            $("#ExternalVehicleRegNum").attr("readonly", true);
+            $.ajax({
+                traditional: true,
+                type: "post",
+                dataType: "json",
+                contentType: "application/json",
+                url: "/VehicleSharing/GetExternalVehicles",
+                data: JSON.stringify({ ExternalVehicleRegNum: ExternalVehicleRegNum }),
+                success: function (data) {
+                    var res = "";
+                    $("#FK_Vehicle").html(res);
+                    if (data.length == 0) {
+                        res = "<option value=''>Not Found</option>";
+                    } else {
+                        res = "<option value=''>Select</option>";
+                        for (var i = 0; i < data.length; i++) {
+                            res = res + "<option value='" + data[i].PK_Vehicle + "' data-contact_number='" + data[i].ContactNumber + "'>" + data[i].RegistrationNumber + "</option>";
+                        }
+                    }
+                    $("#FK_Vehicle").html(res);
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log("Err on call");
+                }
+            });
+            $("#ExternalVehicleRegNum").removeAttr("readonly");
+        }
+    }
+</script>
+
+

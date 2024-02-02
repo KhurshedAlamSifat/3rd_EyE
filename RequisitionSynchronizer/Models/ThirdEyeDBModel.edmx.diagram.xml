@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="851afbefe3284e79b1b8aa94f73016ba" Name="Diagram1">
+        <EntityTypeShape EntityType="rdEyEModel.Accident" Width="1.5" PointX="3" PointY="108.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.AccidentDocument" Width="1.5" PointX="5.25" PointY="116.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.AccidentExpense" Width="1.5" PointX="11.25" PointY="108.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.AlertEmail" Width="1.5" PointX="3.75" PointY="104.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.AlertEmailAttachedDepo" Width="1.5" PointX="6" PointY="112.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.AlertEmailLog" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.AppAction" Width="1.5" PointX="12" PointY="95.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.AppErrorLog" Width="1.5" PointX="5.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.AppMenu" Width="1.5" PointX="0.75" PointY="4.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.AppModule" Width="1.5" PointX="12" PointY="99.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.AppModule_AppAction" Width="1.5" PointX="14.25" PointY="99.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.AppPermission" Width="1.5" PointX="3" PointY="2.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.AppRole" Width="1.5" PointX="6.75" PointY="87.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.AppRole_AppMenu" Width="1.5" PointX="9" PointY="49.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.AppRole_AppPermission" Width="1.5" PointX="9" PointY="45.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.AppRole_AppSubMenu" Width="1.5" PointX="12" PointY="49.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.AppSetting" Width="1.5" PointX="5.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.AppSubMenu" Width="1.5" PointX="3" PointY="9.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.AppUser" Width="1.5" PointX="9" PointY="103.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.AppUser_AppModule" Width="1.5" PointX="14.25" PointY="112.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.AppUserAccessibleDepo" Width="1.5" PointX="14.25" PointY="109.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.AppUserLoginHistory" Width="1.5" PointX="11.25" PointY="115.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.AppUserSurpervisedContructualCompany" Width="1.5" PointX="14.25" PointY="115.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.Company" Width="1.5" PointX="25.5" PointY="94.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.ContructualRequisition" Width="1.5" PointX="17.25" PointY="112" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.ContructualRequisitionCompany" Width="1.5" PointX="6.75" PointY="91.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.ContructualRequisitionDetail" Width="1.5" PointX="19.5" PointY="125.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.ContructualRequisitionDetailEntry" Width="1.5" PointX="22.75" PointY="115.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.DairyVehicle" Width="1.5" PointX="30" PointY="115.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.Dealer" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.Depo" Width="1.5" PointX="0.75" PointY="108.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.DepoBorder" Width="1.5" PointX="3" PointY="142.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.DepoGroup" Width="1.5" PointX="3" PointY="145.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.DeviceData" Width="1.5" PointX="7.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.DisplayMessage" Width="1.5" PointX="2.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.District" Width="1.5" PointX="0.75" PointY="84.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.Driver" Width="1.5" PointX="3" PointY="149.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.Event" Width="1.5" PointX="33" PointY="119.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.EventDocument" Width="1.5" PointX="35.25" PointY="128.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.EventType" Width="1.5" PointX="30.75" PointY="112.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.FinancingCompany" Width="1.5" PointX="25.5" PointY="125.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.GPS_DeviceChangeLog" Width="1.5" PointX="7.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.GPS_DeviceExisting" Width="1.5" PointX="9.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.GroupOfCompany" Width="1.5" PointX="23.25" PointY="95.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.Helper" Width="1.5" PointX="3" PointY="153.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.HiredVehicleDriver" Width="1.5" PointX="30" PointY="127.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.IndividualRequisition" Width="1.5" PointX="17.25" PointY="103" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.IndividualRequisitionBidding" Width="1.5" PointX="22.5" PointY="109" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.InstantRequisition" Width="1.5" PointX="20.25" PointY="103" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.InterCompanyRequisition" Width="1.5" PointX="17.25" PointY="116.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.InterCompanyRequisition_ExternalTroller" Width="1.5" PointX="19.5" PointY="131.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.InterCompanyRequisition_ExternalVehicle" Width="1.5" PointX="22.5" PointY="120.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.InterCompanyRequisition_InternalVehicle" Width="1.5" PointX="22.5" PointY="124.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.InterCompanyRequisitionBidding" Width="1.5" PointX="25.5" PointY="114.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.InterCompanyRequisitionLocation" Width="1.5" PointX="15" PointY="128" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.KPLChangeLog" Width="1.5" PointX="9.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.Location" Width="1.5" PointX="6.75" PointY="95.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.LocationToLocationMapping" Width="1.5" PointX="9.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.LocationWiseGP" Width="1.5" PointX="11.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.MapLocation" Width="1.5" PointX="11.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.MobileMenu" Width="1.5" PointX="6.75" PointY="84.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.MobileRole" Width="1.5" PointX="6.75" PointY="102.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.MobileRole_MobileMenu" Width="1.5" PointX="9" PointY="99.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.MonthlyBillEntry" Width="1.5" PointX="11.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.PoliceCase" Width="1.5" PointX="36" PointY="119.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.PoliceCase_PoliceCaseLaw" Width="1.5" PointX="41.25" PointY="122.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.PoliceCaseDocument" Width="1.5" PointX="38.25" PointY="129.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.PoliceCaseLaw" Width="1.5" PointX="39" PointY="134.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.PRG_Type" Width="1.5" PointX="33.75" PointY="106.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.ReadyReport" Width="1.5" PointX="11.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.Report_ConsolidatedRport" Width="1.5" PointX="0.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.Report_TemperatureReport" Width="1.5" PointX="2.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.Report_TemperatureReport_Helper" Width="1.5" PointX="4.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.Report_VehicleConsolidatedReport" Width="1.5" PointX="6.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.Report_VehicleHaltReadyReport_Helper" Width="1.5" PointX="13.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.Report_VehicleHaltReadyReport_Helper_Helper" Width="1.5" PointX="13.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.Report_VehicleHaltReport" Width="1.5" PointX="8.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.Report_VehicleHaltReport_Helper" Width="1.5" PointX="13.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.Report_VehicleHistory" Width="1.5" PointX="15.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.Report_VehicleHistoryDetail" Width="1.5" PointX="2.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.Report_VehicleInOutHistoryDetail" Width="1.5" PointX="15.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.Requisition" Width="1.5" PointX="11.25" PointY="118.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.RequisitionAgentNotification" Width="1.5" PointX="11.25" PointY="167.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.RequisitionAgentProposedDepo" Width="1.5" PointX="14.25" PointY="106.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.RequisitionBusinessUnit" Width="1.5" PointX="9" PointY="126" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.RequisitionProductType" Width="1.5" PointX="9" PointY="128.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.RequisitionTrip" Width="1.5" PointX="22.5" PointY="99.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.RequisitionTrip_Finished" Width="1.5" PointX="33" PointY="110" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.RequisitionVehicleType" Width="1.5" PointX="9" PointY="131.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.RFID_AutoDistSuggession" Width="1.5" PointX="15.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.RFID_AutoLetterSuggession" Width="1.5" PointX="10.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.RFID_Entry" Width="1.5" PointX="15.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.RFID_EntryLog" Width="1.5" PointX="12.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.RouteChart" Width="1.5" PointX="17.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.ServiceCall" Width="1.5" PointX="17.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.sysdiagram" Width="1.5" PointX="4.75" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.TempMail" Width="1.5" PointX="17.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.TemporaryVehicle" Width="1.5" PointX="11.25" PointY="103.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.TransportCompany" Width="1.5" PointX="6.75" PointY="106.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.TripExpense" Width="1.5" PointX="17.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.Upazila" Width="1.5" PointX="0.75" PointY="88" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.UserDesignation" Width="1.5" PointX="14.75" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.Vehicle" Width="1.5" PointX="27.75" PointY="109.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.VehicleBrand" Width="1.5" PointX="23.25" PointY="128.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.VehicleInOutManual" Width="1.5" PointX="36" PointY="109.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.VehicleInOutManualReason" Width="1.5" PointX="33.75" PointY="102.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.VehicleInOutManualTypesOfProduct" Width="1.5" PointX="33.75" PointY="99.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.VehicleModel" Width="1.5" PointX="25.5" PointY="128.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.VehicleSharing" Width="1.5" PointX="14.25" PointY="118.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.VehicleSharingBidding" Width="1.5" PointX="25.5" PointY="119.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.VehicleSharingDemand" Width="1.5" PointX="25.5" PointY="103.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.VehicleSharingExternalTrip" Width="1.5" PointX="30" PointY="118.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.VehicleSharingInternalTrip" Width="1.5" PointX="39" PointY="111.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.VehicleSharingInternalTripAdjustment" Width="1.5" PointX="41.25" PointY="110" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.VehicleTracking" Width="1.5" PointX="32.25" PointY="167.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.VehicleTrackingInformation" Width="1.5" PointX="30" PointY="169.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.VehicleTrip" Width="1.5" PointX="33" PointY="128.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="rdEyEModel.VehicleSharingAgentMapping" Width="1.5" PointX="11.25" PointY="197.5" IsExpanded="true" />
+        <AssociationConnector Association="rdEyEModel.FK_Accident_AppUser" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_Accident_AppUser1" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_Accident_Depo" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_Accident_District" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_Accident_Upazila" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_Accident_Vehicle" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_AccidentDocument_Accident" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_AccidentExpense_Accident" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_AccidentExpense_AppUser" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_AlertEmail_AlertEmailAttachedDepo" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_Depo_AlertEmailAttachedDepo" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_AppModule_AppAction_AppAction" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_AppPermission_AppMenu" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_AppRole_AppMenu_AppMenu" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_AppSubMenu_AppMenu" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_AppModule_AppAction_AppModule1" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_AppUser_AppModule_AppModule" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_AppRole_AppPermission_AppPermission" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_AppRole_AppMenu_AppRole" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_AppRole_AppPermission_AppRole" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_AppRole_AppSubMenu_AppRole" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_AppUser_AppRole" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_AppRole_AppSubMenu_AppSubMenu" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_AppUser_AppModule_AppUser" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_AppUser_AppUser" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_AppUser_AppUser1" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_AppUser_ContructualRequisitionCompany" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_AppUser_Depo" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_AppUser_Location" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_AppUser_MobileRole" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_AppUser_TransportCompany" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_AppUser_VehicleSharingInternalTrip" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_AppUser_VehicleSharingInternalTrip1" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_AppUserAccessibleDepo_AppUser1" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_AppUserLoginHistory_AppUser" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_AppUserSurpervisedContructualCompany_AppUser" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_ContractualRequisition_RequisitionAgent" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_ContructualRequisitionDetailEntry_AppUser" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_ContructualRequisitionDetailEntry_AppUser1" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_IndividualRequisition_AppUser" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_IndividualRequisitionBidding_AppUser1" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_InstantRequisition_RequisitionAgent" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_InterCompanyRequisition_AppUser" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_InterCompanyRequisition_AppUser1" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_InterCompanyRequisitionBidding_AppUser" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_Requisition_AppUser" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_Requisition_AppUser1" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_RequisitionAgentNotification_RequisitionAgent" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_RequisitionAgentProposedDepo_RequisitionAgent" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_RequisitionTrip_AppUser_Assigner" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_RequisitionTrip_Finished_AppUser_Assigner" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_TemporaryVehicle_AppUser" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleInOutManual_AppUser" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleInOutManual_AppUser1" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleSharing_AppUser" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleSharing_AppUser1" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleSharing_AppUser2" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleSharingAgentMapping_ExternalAgent" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleSharingAgentMapping_InternalAgent" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleSharingBidding_Bidder" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleSharingDemand_AppUser" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleSharingExternalTrip_Assigner" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleSharingExternalTrip_BillApprover" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleSharingExternalTrip_Payer" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleSharingInternalTrip_Assigner" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleSharingInternalTrip_BillApprover" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleSharingInternalTrip_BillCreator" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleSharingInternalTrip_BillPayer" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleSharingInternalTrip_Driver" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleSharingInternalTripAdjustment_AppUser" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleSharingInternalTripAdjustment_AppUser1" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_AppUserAccessibleDepo_Depo" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_AppUserSurpervisedContructualCompany_ContructualRequisitionCompany" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_Company_GroupOfCompany" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_Vehicle_Company" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_Vehicle_PurchasingCompany" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_ContructualRequisition_ContructualRequisitionCompany" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_ContructualRequisitionDetail_ContructualRequisition" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_ContructualRequisitionDetailEntry_ContructualRequisitionDetail" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_DairyVehicle_Vehicle" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_DepoBorder_Depo" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_DepoGroup_Depo" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_Driver_Depo" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_Helper_Depo" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_IndividualRequisition_Depo" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_IndividualRequisition_Depo1" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_InstantRequisition_Depo" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_InstantRequisition_Depo1" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_InterCompanyRequisition_Depo" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_InterCompanyRequisitionNew_Depo" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_InterCompanyRequisitionNew_Depo1" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_RequisitionAgentProposedDepo_Depo" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_Vehicle_Depo" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_Vehicle_DepoInOut" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleInOutManual_Depo" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleInOutManual_Depo1" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleSharing_Depo" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleSharing_Depo1" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleSharingDemand_Depo" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleSharingDemand_Depo1" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleTrip_Depo_From" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleTrip_Depo_To" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_Vehicle_DepoGroup" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_PoliceCase_District" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_Upazila_District" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_Event_EventType" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_EventDocument_Event" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_Vehicle_Event" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_Vehicle_FinancingCompany" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_HiredVehicleDriver_Vehicle" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_IndividualRequisitionBidding_IndividualRequisition" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_InstantRequisition_Vehicle" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_InterCompanyRequisition_ExternalTroller_InterCompanyRequisition" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_InterCompanyRequisition_ExternalVehicle_InterCompanyRequisition" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_InterCompanyRequisition_InterCompanyRequisitionLocation" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_InterCompanyRequisition_InterCompanyRequisitionLocation1" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_InterCompanyRequisition_RequisitionVehicleType" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_InterCompanyRequisition_Vehicle_InterCompanyRequisition" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_InterCompanyRequisitionBidding_InterCompanyRequisition" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_InterCompanyRequisition_ExternalVehicle_Vehicle" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_InterCompanyRequisition_Vehicle_Vehicle" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_Requisition_Location_From" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_Requisition_Location_To" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_TemporaryVehicle_Location" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_Vehicle_Location" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleInOutManual_Location" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_MobileRole_MobileMenu_MobileMenu" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_MobileRole_MobileMenu_MobileRole" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_Case_Vehicle" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_PoliceCase_PoliceCaseLaw_PoliceCase1" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_PoliceCase_Upazila" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_PoliceCaseDocument_PoliceCase" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_PoliceCase_PoliceCaseLaw_PoliceCaseLaw" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_TemporaryVehicle_PRG_Type" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleInOutManual_PRG_Type" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_InterCompanyRequisitionNew_InterCompanyRequisitionNewBusinessUnit" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_InterCompanyRequisitionNew_InterCompanyRequisitionNewProductType" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_InterCompanyRequisitionNew_RequisitionVehicleType" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_Requisition_RequisitionTrip" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_Requisition_RequisitionTrip_Finished" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_RequisitionTrip_Vehicle" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_RequisitionTripParent_RequisitionTrip" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_Vehicle_RequisitionTrip_Current" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_Vehicle_RequisitionTrip_Pending" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_RequisitionTrip_Finished_Vehicle" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_RequisitionTrip_FinishedParent_RequisitionTrip_Finished" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleSharing_RequisitionVehicleType" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleSharingDemand_RequisitionVehicleType" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_Vehicle_VehicleInOutManual" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_Vehicle_VehicleModel" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_Vehicle_VehicleSharingInternalTrip" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_Vehicle_VehicleSharingInternalTrip1" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleInOutManual_Vehicle" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleSharingExternalTrip_Vehicle" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleSharingInternalTrip_Vehicle" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleTrackingInformation_Vehicle" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleTrip_Vehicle" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleModel_VehicleBrand" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleInOutManual_VehicleInOutManualReason" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleInOutManual_VehicleInOutManualReason1" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleInOutManual_VehicleInOutManualTypesOfProduct" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleInOutManual_VehicleInOutManualTypesOfProduct1" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleSharingBidding_VehicleSharing" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleSharingDemand_VehicleSharing" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleSharingTrip_VehicleSharing" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleSharingBidding_VehicleSharingBidding" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleSharingExternalTrip_VehicleSharingBidding" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleSharingInternalTripAdjustment_VehicleSharingInternalTrip" ManuallyRouted="false" />
+        <AssociationConnector Association="rdEyEModel.FK_VehicleTracking_VehicleTrackingInformation" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

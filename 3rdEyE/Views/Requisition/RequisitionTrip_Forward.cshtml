@@ -1,0 +1,82 @@
+﻿@model _3rdEyE.Models.RequisitionTrip
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+<section class="content-header">
+    <h1>
+        Requisition forward
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        <a class="btn btn-block btn-info btn-sm" href="@System.Web.HttpContext.Current.Request.UrlReferrer">Back To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">#@Model.TrackingID</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form name="ThisForm" class="form-horizontal" method="post" action="/Requisition/RequisitionTrip_Forward">
+                    <input id="PK_RequisitionTrip" name="PK_RequisitionTrip" value="@Model.PK_RequisitionTrip" style="display:none;" />
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">PRG Type*</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("PRG_Type_ForwaredTo", ViewBag.PRG_Types_Forwarding_Dict as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_PRG_Type_ForwaredTo"></b>
+                                <script>
+                                    validatorArray.push(
+                                        function () {
+                                            var check = $('select[name=PRG_Type_ForwaredTo]').val();
+                                            if (check == "") {
+                                                formValidity = false;
+                                                $('b[name=error_PRG_Type_ForwaredTo]').html("PRG Type is required.");
+                                            }
+                                        });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Locations*</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Location_ForwardedTo", ViewBag.Locations as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_Location_ForwardedTo"></b>
+                                <script>
+                                    validatorArray.push(
+                                        function () {
+                                            var check = $('select[name=FK_Location_ForwardedTo]').val();
+                                            if (check == "") {
+                                                formValidity = false;
+                                                $('b[name=error_FK_Location_ForwardedTo]').html("Location is required.");
+                                            }
+                                        });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <input type="button" class="btn btn-info pull-left" value="Save" onclick="TrySubmit()" />
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $("select").select2();
+    });
+</script>

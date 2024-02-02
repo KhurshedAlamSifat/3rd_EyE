@@ -1,0 +1,320 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Live Tracking @ViewBag.vehicle.RegistrationNumber
+        <small>Vehicle contact: @ViewBag.vehicle.Internal_VehicleContactNumber</small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        @*<a class="btn btn-block btn-default btn-sm" href="/Helper/Index">Back To data</a>*@
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-bordered table-striped">
+                        <tbody>
+                            <tr>
+                                <td>Status:</td>
+                                <td id="vehicleStatus"></td>
+                            </tr>
+                            <tr>
+                                <td>Last Speed:</td>
+                                <td id="vehicleLastSpeed"></td>
+                            </tr>
+                            <tr>
+                                <td>Last Updated:</td>
+                                <td id="vehicleLastUpdated"></td>
+                            </tr>
+                            <tr>
+                                <td>Nearest Location:</td>
+                                <td id="vehicleNearestLocation"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12" style="height:500px; overflow: scroll;">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Status</th>
+                                <th>Speed</th>
+                            </tr>
+                        </thead>
+                        <tbody id="data_tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9" id="map" style="height:700px;"></div>
+        <script async defer
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDVkwHNr_8HlH6zM8-mIOnKxErJKLHEpo0">
+        </script>
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+<!-- DataTables -->
+<script src="~/Theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/Theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script>
+    var map;
+    var vehicle_move;
+    var vehicle_nonMove;
+    var vehicle_egnition_off;
+    var footprint_move;
+    var footprint_nonMove;
+    var footprint_egnition_off;
+    var marker;
+    var markerMoveFrequency = 100;
+    var intervalTime = 100;
+    var PreviousUpdateTime;
+    var previousData;
+
+
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 12,
+            center: { lat: 23.8103, lng: 90.4125 }
+        });
+
+        var trafficLayer = new google.maps.TrafficLayer();
+        trafficLayer.setMap(map);
+
+        vehicle_move = '/Content/Images/truck/truck_green.png';
+        vehicle_nonMove = '/Content/Images/truck/truck_yellow.png';
+        vehicle_egnition_off = '/Content/Images/truck/truck_lightRed.png';
+
+        footprint_move = '/Content/Images/filled_circle_green.png';
+        footprint_nonMove = '/Content/Images/filled_circle_yellow.png';
+        footprint_egnition_off = '/Content/Images/filled_circle_red.png';
+        //vehicle_notConnected = '/Content/Images/truck/truck_darkRed.png';
+        var overlay = new google.maps.OverlayView();
+        overlay.draw = function () {
+            this.getPanes().markerLayer.id = 'markerLayer';
+        };
+        overlay.setMap(map)
+        MakeSideList_andMap();
+    }
+
+    function MakeSideList_andMap() {
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify({ PK_Vehicle: '@ViewBag.vehicle.PK_Vehicle' }),
+            url: "/Tracking/GetData_Single_firstTime/",
+            success: function (data) {
+                //# Making SideList
+                if (data.EngineStatus == "0" && data.Speed == "0") {
+                    $("#vehicleStatus").html("Egnition off");
+                }
+                else if (data.EngineStatus == "1" && data.Speed == "0") {
+                    $("#vehicleStatus").html("Stand By");
+                }
+                else if (data.EngineStatus == "1" && data.Speed != "0") {
+                    $("#vehicleStatus").html("Running");
+                }
+                $("#vehicleLastSpeed").html(data.Speed);
+                $("#vehicleLastUpdated").html(data.UpdateTime);
+                $("#vehicleNearestLocation").html(data.NearestMapLocationDistance + " KM from " + data.NearestMapLocation);
+
+                //# Making Map
+                map.setCenter({ lat: Number(data.Latitude), lng: Number(data.Longitude) });
+                marker = new google.maps.Marker({
+                id: data.PK_Vehicle,
+                position: { lat: Number(data.Latitude), lng: Number(data.Longitude) },
+                map: map,
+                //icon: vehicle_move,
+                });
+                if (data.EngineStatus == "0" && data.Speed == "0") {
+                    marker.setIcon(vehicle_egnition_off);
+                    var infoWindowContent = "Status: " + "<b id= 'infoWindowStatus'>Egnition off</b><br/>"
+                    + "Last Speed: <b id= 'infoWindowLastSpeed'>" + data.Speed + "</b><br/>"
+                    + "Updated at: <b id= 'infoWindowLastUpdated'>" + data.UpdateTime + "</b>";
+                    var infowindow = new google.maps.InfoWindow()
+                    google.maps.event.addListener(marker, 'click', (function (marker, html, infowindow) {
+                        return function () {
+                            infowindow.setContent(html);
+                            infowindow.open(map, marker);
+                        };
+                    })(marker, infoWindowContent, infowindow));
+                    $("#data_tbody").prepend("<tr><td>" + data.UpdateTime + "</td><td>Egnition off</td><td>" + data.Speed +"</td></tr>");
+                }
+                else if (data.EngineStatus == "1" && data.Speed == "0") {
+                    marker.setIcon(vehicle_nonMove);
+                    var infoWindowContent = "Status: " + "<b id= 'infoWindowStatus'>Stand by</b><br/>"
+                    + "Last Speed: <b id= 'infoWindowLastSpeed'>" + data.Speed + "</b><br/>"
+                    + "Updated at: <b id= 'infoWindowLastUpdated'>" + data.UpdateTime + "</b>";
+                    var infowindow = new google.maps.InfoWindow()
+                    google.maps.event.addListener(marker, 'click', (function (marker, html, infowindow) {
+                        return function () {
+                            infowindow.setContent(html);
+                            infowindow.open(map, marker);
+                        };
+                    })(marker, infoWindowContent, infowindow));
+                    $("#data_tbody").prepend("<tr><td>" + data.UpdateTime + "</td><td>Stand by</td><td>" + data.Speed + "</td></tr>");
+                }
+                else if (data.EngineStatus == "1" && data.Speed != "0") {
+                    marker.setIcon(vehicle_move);
+                    var infoWindowContent = "Status: " + "<b id= 'infoWindowStatus'>Running</b><br/>"
+                    + "Last Speed: <b id= 'infoWindowLastSpeed'>" + data.Speed + "</b><br/>"
+                    + "Updated at: <b id= 'infoWindowLastUpdated'>" + data.UpdateTime + "</b>";
+                    var infowindow = new google.maps.InfoWindow()
+                    google.maps.event.addListener(marker, 'click', (function (marker, html, infowindow) {
+                        return function () {
+                            infowindow.setContent(html);
+                            infowindow.open(map, marker);
+                        };
+                    })(marker, infoWindowContent, infowindow));
+                    $("#data_tbody").prepend("<tr><td>" + data.UpdateTime + "</td><td>Running</td><td>" + data.Speed + "</td></tr>");
+                }
+                previousData = data;
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: MakeSideList_andMap()");
+            }
+        });
+    }
+
+    function GetLatestData() {
+        console.log('called');
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify({ PK_Vehicle: '@ViewBag.vehicle.PK_Vehicle', PreviousUpdateTime: previousData.UpdateTime }),
+            url: "/Tracking/GetData_Single/",
+            success: function (data) {
+                if (data != "NotFound") {
+                    //# Making SideList
+                    if (data.EngineStatus == "0" && data.Speed == "0") {
+                        $("#vehicleStatus").html("Egnition off");
+                    }
+                    else if (data.EngineStatus == "1" && data.Speed == "0") {
+                        $("#vehicleStatus").html("Stand By");
+                    }
+                    else if (data.EngineStatus == "1" && data.Speed != "0") {
+                        $("#vehicleStatus").html("Running");
+                    }
+                    $("#vehicleLastSpeed").html(data.Speed);
+                    $("#vehicleLastUpdated").html(data.UpdateTime);
+                    $("#vehicleNearestLocation").html(data.NearestMapLocationDistance + " KM from " + data.NearestMapLocation);
+
+                    SetFootPrint();
+
+                    RemakeSideTable(data);
+                    RefreshMap(data);
+
+                    previousData = data;
+                }
+                else {
+                    console.log("NotFound");
+                    setTimeout(GetLatestData, 10000);
+                }
+
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: GetLatestData()");
+            }
+        });
+    }
+    function RemakeSideTable(data) {
+        if (data.EngineStatus == "0" && data.Speed == "0") {
+            $("#vehicleStatus").html("Egnition off");
+            $("#infoWindowStatus").html("Egnition off");
+            $("#data_tbody").prepend("<tr><td>" + data.UpdateTime + "</td><td>Egnition off</td><td>" + data.Speed + "</td></tr>");
+        }
+        else if (data.EngineStatus == "1" && data.Speed == "0") {
+            $("#vehicleStatus").html("Stand By");
+            $("#infoWindowStatus").html("Stand By");
+            $("#data_tbody").prepend("<tr><td>" + data.UpdateTime + "</td><td>Stand By</td><td>" + data.Speed + "</td></tr>");
+        }
+        else if (data.EngineStatus == "1" && data.Speed != "0") {
+            $("#vehicleStatus").html("Running");
+            $("#infoWindowStatus").html("Running");
+            $("#data_tbody").prepend("<tr><td>" + data.UpdateTime + "</td><td>Running</td><td>" + data.Speed + "</td></tr>");
+        }
+        $("#vehicleLastSpeed").html(data.Speed);
+        $("#vehicleLastUpdated").html(data.UpdateTime);
+        $("#vehicleNearestLocation").html(data.NearestMapLocationDistance + " KM from " + data.NearestMapLocation);
+
+        $("#infoWindowLastSpeed").html(data.Speed);
+        $("#infoWindowLastUpdated").html(data.UpdateTime);
+    }
+
+    function RefreshMap(data) {
+        var angle_deg = Math.atan2(data.Longitude - previousData.Longitude, data.Latitude - previousData.Latitude) * 180 / Math.PI;
+        document.querySelector('#markerLayer img').style.transform = 'rotate(' + angle_deg + 'deg)';
+
+        marker.lat_inc = (data.Latitude - marker.position.lat()) / markerMoveFrequency;
+        marker.lng_inc = (data.Longitude - marker.position.lng()) / markerMoveFrequency;
+        marker.lat_last = data.Latitude;
+        marker.lng_last = data.Longitude;
+
+        if (data.EngineStatus == "0" && data.Speed == "0") {
+            marker.setIcon(vehicle_egnition_off);
+        }
+        else if (data.EngineStatus == "1" && data.Speed == "0") {
+            marker.setIcon(vehicle_nonMove);
+        }
+        else if (data.EngineStatus == "1" && data.Speed != "0") {
+            marker.setIcon(vehicle_move);
+        }
+
+        var c = 0;
+        var interval = setInterval(function () {
+            c = c + 1;
+            if (c < markerMoveFrequency) {
+                marker.setPosition(new google.maps.LatLng(marker.position.lat() + marker.lat_inc, marker.position.lng() + marker.lng_inc));
+            }
+            else {
+                marker.setPosition(new google.maps.LatLng(marker.lat_last, marker.lng_last));
+                clearInterval(interval);
+            }
+        }, intervalTime);
+
+        setTimeout(GetLatestData, markerMoveFrequency * intervalTime);
+    }
+
+    function RotateMarker(oldData, newdata) {
+        var brng = Math.atan2(newdata.Longitude - oldData.Longitude, newdata.Latitude - oldData.Latitude) * 180 / Math.PI;
+        document.querySelector('#markerLayer img').style.transform = 'rotate(' + brng + 'deg)';
+    }
+
+    function SetFootPrint() {
+        var marker = new google.maps.Marker({
+            position: { lat: Number(previousData.Latitude), lng: Number(previousData.Longitude) },
+            map: map,
+        });
+
+        if (Number(previousData.Speed) > 0 && previousData.EngineStatus == "1") {
+
+            marker.setIcon(footprint_move);
+        }
+        else if (previousData.EngineStatus == "1") {
+            marker.setIcon(footprint_nonMove);
+        }
+        else if (previousData.EngineStatus == "0") {
+            marker.setIcon(footprint_egnition_off);
+        }
+    }
+    $(document).ready(function () {
+        setTimeout(initMap, 2000);
+        setTimeout(GetLatestData, 10000);
+    });
+</script>

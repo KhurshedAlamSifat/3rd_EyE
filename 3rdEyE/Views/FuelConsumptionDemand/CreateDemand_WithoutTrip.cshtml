@@ -1,0 +1,257 @@
+﻿@model _3rdEyE.Models.FuelConsumptionDemand
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Assign Requisition-Vehicle
+        <small></small>
+    </h1>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/FuelConsumptionDemand/CreateDemand_WithTrip" enctype="multipart/form-data">
+        <input id="PK_RequisitionTrip_SL" name="PK_RequisitionTrip_SL" value="0" style='display:none;' />
+
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="box-body col-md-12">
+                                @*Vehicle*@
+                                <div class="form-group col-md-12">
+                                    <label class="col-md-3 control-label">Vehicle*</label>
+                                    <div class="col-md-2">
+                                        <input name="VehicleRegNumSearch" id="VehicleRegNumSearch" class="form-control" onfocusout="searchAllVehicle()">
+                                    </div>
+                                    <div class="col-md-7">
+                                        @Html.DropDownList("FK_Vehicle", ViewBag.Vehicles as SelectList, "Select", new { @class = "form-control" })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_FK_Vehicle"></b>
+                                        <script>
+                                            validatorArray.push(
+                                                function () {
+                                                    var check = $('select[name=FK_Vehicle]').val();
+                                                    if (check == "") {
+                                                        formValidity = false;
+                                                        $('b[name=error_FK_Vehicle]').html("required.");
+                                                    }
+                                                });
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                <div class="form-group col-md-12">
+                                    <label class="col-md-3 control-label">Fuel Pumps*</label>
+                                    <div class="col-md-6">
+                                        @Html.DropDownList("FK_FuelPump", ViewBag.FuelPumps as SelectList, "Select", new { @class = "form-control" })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_FK_FuelPump"></b>
+                                        <script>
+                                            validatorArray.push(
+                                                function () {
+                                                    var check = $('select[name=FK_FuelPump]').val();
+                                                    if (check == "") {
+                                                        formValidity = false;
+                                                        $('b[name=error_FK_FuelPump]').html("required.");
+                                                    }
+                                                });
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                <div class="form-group col-md-12">
+                                    <label class="col-md-3 control-label">From</label>
+                                    <div class="col-md-6">
+                                        @Html.DropDownList("FK_LocationFrom", ViewBag.Locations1 as SelectList, "Select", new { @class = "form-control" })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_FK_LocationFrom"></b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                <div class="form-group col-md-12">
+                                    <label class="col-md-3 control-label">To</label>
+                                    <div class="col-md-6">
+                                        @Html.DropDownList("FK_LocationTo", ViewBag.Locations2 as SelectList, "Select", new { @class = "form-control" })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_FK_LocationTo"></b>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="box-body col-md-12">
+                                <div class="form-group col-md-12">
+                                    <label class="col-md-3 control-label">Required Time</label>
+                                    <div class="col-md-6">
+                                        <input id="RequiredAt" name="RequiredAt" size="16" type="text" value="" readonly class="form-control">
+                                        <b class="errorMessage" data-category="errorMessage" name="error_RequiredAt"></b>
+                                    </div>
+                                    <script>
+                                        validatorArray.push(
+                                            function () {
+                                                var check = $('input[name=RequiredAt]').val();
+                                                if (check == "") {
+                                                    formValidity = false;
+                                                    $('b[name=error_RequiredAt]').html("required.");
+                                                }
+                                            });
+                                    </script>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                <div class="form-group col-md-12">
+                                    <label class="col-md-3 control-label">Required Qty*</label>
+                                    <div class="col-md-6">
+                                        @Html.EditorFor(m => m.RequiredQuantity_Manual, new { htmlAttributes = new { @class = "form-control" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_RequiredQuantity_Manual"></b>
+                                        <script>
+                                            validatorArray.push(
+                                                function () {
+                                                    var check = $('input[name=RequiredQuantity_Manual]').val();
+                                                    if (check == "") {
+                                                        formValidity = false;
+                                                        $('b[name=error_RequiredQuantity_Manual]').html("required.");
+                                                    }
+                                                });
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                <div class="form-group col-md-12">
+                                    <label class="col-md-3 control-label">B.Unit 1</label>
+                                    <div class="col-md-3">
+                                        @Html.EditorFor(m => m.BusinessUnit_1, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                    <div class="col-md-3">
+                                        @Html.EditorFor(m => m.BusinessUnit_1_CarringPercentage, new { htmlAttributes = new { @class = "form-control" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_BusinessUnit_1_CarringPercentage"></b>
+                                        <script>
+                                            validatorArray.push(
+                                                function () {
+                                                    var check1 = $('input[name=BusinessUnit_1]').val();
+                                                    var check2 = $('input[name=BusinessUnit_1_CarringPercentage]').val();
+                                                    if (check1 != "" && check2 == "") {
+                                                        console.log('BusinessUnit_1_CarringPercentage');
+                                                        formValidity = false;
+                                                        $('b[name=error_BusinessUnit_1_CarringPercentage]').html("required.");
+                                                    }
+                                                });
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body col-md-12">
+                                <div class="form-group col-md-12">
+                                    <label class="col-md-3 control-label">B.Unit 2</label>
+                                    <div class="col-md-3">
+                                        @Html.EditorFor(m => m.BusinessUnit_2, new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                    <div class="col-md-3">
+                                        @Html.EditorFor(m => m.BusinessUnit_2_CarringPercentage, new { htmlAttributes = new { @class = "form-control" } })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_BusinessUnit_2_CarringPercentage"></b>
+                                        <script>
+                                            validatorArray.push(
+                                                function () {
+                                                    var check1 = $('input[name=BusinessUnit_2]').val();
+                                                    var check2 = $('input[name=BusinessUnit_2_CarringPercentage]').val();
+                                                    if (check1 != "" && check2 == "") {
+                                                        console.log('BusinessUnit_2_CarringPercentage');
+                                                        formValidity = false;
+                                                        $('b[name=error_BusinessUnit_2_CarringPercentage]').html("required.");
+                                                    }
+                                                });
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <input type="button" class="btn btn-facebook center-block" onclick="TrySubmit()" value="Save" />
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+</section>
+@*MODAL Company START*@
+<div id="modalPreload" class="modal  modal-" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content" style="background-color:transparent; margin-top:200px;">
+            <img src="~/Content/Images/Preload.gif" />
+        </div>
+    </div>
+</div>
+<!-- DataTables -->
+<script src="~/Theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/Theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    //RequiredAt
+    $(function () {
+        $('select').select2();
+        var today = new Date();
+        var _startDate = (today.getMonth() + 1) + '/' + (today.getDate() + 0) + '/' + today.getFullYear() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();// 13:05'//today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        var _endDate = (today.getMonth() + 1) + '/' + (today.getDate() + 2) + '/' + today.getFullYear() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();// 13:05'//today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        $('#RequiredAt').datetimepicker({
+            format: 'yyyy-mm-dd HH:ii P',
+            //format: 'yyyy-mm-dd',
+            //setDate: new Date(),
+            //weekStart: 1,
+            todayBtn: 1,
+            autoclose: 1,
+            //todayHighlight: 1,
+            //startView: 2,
+            //forceParse: 0,
+            //showMeridian: 0
+            //startDate: '+0d',
+            startDate: new Date(_startDate),
+            endDate: new Date(_endDate),
+        });
+    });
+    function searchAllVehicle() {
+        var VehicleRegNumSearch = $("#VehicleRegNumSearch").val();
+        if (VehicleRegNumSearch != "") {
+            $("#VehicleRegNumSearch").attr("readonly", true);
+            $.ajax({
+                traditional: true,
+                type: "post",
+                dataType: "json",
+                contentType: "application/json",
+                url: "/Vehicle/GetAllVehicleByRegistrationNumber",
+                data: JSON.stringify({ VehicleRegNumSearch: VehicleRegNumSearch }),
+                success: function (data) {
+                    var res = "";
+                    $("#FK_Vehicle").html(res);
+                    if (data.length == 0) {
+                        res = "<option value=''>Not Found</option>";
+                    } else {
+                        res = "<option value=''>Select</option>";
+                        for (var i = 0; i < data.length; i++) {
+                            res = res + "<option value='" + data[i].PK_Vehicle + "' data-contact_number='" + data[i].ContactNumber + "'>" + data[i].RegistrationNumber + "</option>";
+                        }
+                    }
+                    $("#FK_Vehicle").html(res);
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log("Err on call");
+                }
+            });
+            $("#VehicleRegNumSearch").removeAttr("readonly");
+        }
+    }
+</script>

@@ -1,0 +1,9 @@
+#REl Service auto-restart problem
+--UPDATE Complain SET SendAssign = 1 Where TicketCode in (Select TicketID From Assign Where AssignZoneId is not null)
+--UPDATE Assign Set StatusId = 1 Where TicketID in (Select TicketID From Feedback Where StatusId = 1)
+--UPDATE Assign Set StatusId = 2 Where TicketID in (Select TicketID From Feedback Where StatusId = 2)
+--UPDATE Assign Set SendFeedback = 0 Where SendFeedback = 1 and TicketID not in (Select TicketID From Feedback)
+--UPDATE Assign Set SendFeedback = 1 Where SendFeedback = 0 and TicketID in (Select TicketID From Feedbac;
+
+#
+=CONCATENATE("insert into BankAccountInfo(AccountNo,CompId,BankId,BranchId,AccTypId,CurrencyCode,EntryBy) values('",A2,"','",C2,"','",E2,"','",G2,"','",I2,"','",J2,"','",L2,"');")

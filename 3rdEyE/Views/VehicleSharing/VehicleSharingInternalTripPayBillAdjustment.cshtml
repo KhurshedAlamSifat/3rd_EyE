@@ -1,0 +1,198 @@
+﻿@model _3rdEyE.Models.VehicleSharingInternalTripAdjustment
+@{
+    ViewBag.Title = "";
+}
+
+<section class="content-header">
+    <h1>
+        Internal Trip - Bill Adjustment Pay
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<a class="btn btn-block btn-info btn-sm" href="/InstantRequisition/IndexBy_PaymentReceiver">Go To List</a>*@
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/VehicleSharing/VehicleSharingInternalTripPayBillAdjustment" enctype="multipart/form-data">
+        <input name="PK_VehicleSharingInternalTripAdjustment" value="@Model.PK_VehicleSharingInternalTripAdjustment" style="display:none;" />
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="col-md-12">
+                        <div class="col-md-12">
+                            <div class="col-md-6">
+                                <label>বিলের নং:</label>
+                                <label> EV-A @Model.VehicleSharingInternalTrip.VehicleSharing.TrackingID</label>
+                            </div>
+                            <div class="col-md-6">
+                                <label>বিলের টাইপ:</label>
+                                <label>Expense Voucher Adjustment</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-6">
+                                <label>বিলের তারিখ:</label>
+                                <label>@Model.BillAdjustmentCreatedAt</label>
+                            </div>
+                            <div class="col-md-6">
+                                <label>গাড়ি নং:</label>
+                                <label>@Model.VehicleSharingInternalTrip.Vehicle.RegistrationNumber</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-12">
+                                <label>ড্রাইভারের নাম:</label>
+                                <label>@Model.VehicleSharingInternalTrip.AppUser.FullName</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-12">
+                                <label>বুকিং ডিপো:</label>
+                                <label>@Model.VehicleSharingInternalTrip.VehicleSharing.Depo.Name  &nbsp; @Model.VehicleSharingInternalTrip.VehicleSharing.StartingLocation</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-12">
+                                <label>ডেস্টিনেসন ডিপো:</label>
+                                <label>@Model.VehicleSharingInternalTrip.VehicleSharing.Depo1.Name  &nbsp; @Model.VehicleSharingInternalTrip.VehicleSharing.FinishingLocation</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-12">
+                                <label>মোট দূরত্ব:</label>
+                                @{
+                                    var allKilo = (Model.VehicleSharingInternalTrip.Distance_Empty != null ? Model.VehicleSharingInternalTrip.Distance_Empty : 0)
+                                        + (Model.VehicleSharingInternalTrip.Distance_Loaded != null ? Model.VehicleSharingInternalTrip.Distance_Loaded : 0)
+                                        + (Model.VehicleSharingInternalTrip.Distance_Loaded_Plastic != null ? Model.VehicleSharingInternalTrip.Distance_Loaded_Plastic : 0)
+                                        + (Model.VehicleSharingInternalTrip.Distance_InterCity != null ? Model.VehicleSharingInternalTrip.Distance_InterCity : 0)
+                                        + (Model.VehicleSharingInternalTrip.Distance_InterCHT != null ? Model.VehicleSharingInternalTrip.Distance_InterCHT : 0)
+                                        + (Model.VehicleSharingInternalTrip.Distance_Hill != null ? Model.VehicleSharingInternalTrip.Distance_Hill : 0)
+                                        + (Model.VehicleSharingInternalTrip.Distance_OnlyMover != null ? Model.VehicleSharingInternalTrip.Distance_OnlyMover : 0)
+                                        + (Model.VehicleSharingInternalTrip.Distance_Loaded_8_To_12_Tons != null ? Model.VehicleSharingInternalTrip.Distance_Loaded_8_To_12_Tons : 0)
+                                        + (Model.VehicleSharingInternalTrip.Distance_Loaded_12_To_25_Tons != null ? Model.VehicleSharingInternalTrip.Distance_Loaded_12_To_25_Tons : 0);
+                                }
+                                <label>@allKilo KM</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-12">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>নং</th>
+                                            <th>খরচের খাত</th>
+                                            <th>প্রক্রিত চাহিদা</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <label>
+                                                    1
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <label>
+                                                    Total Given 2(excpt fuel)
+                                                </label>
+                                            </td>
+                                            <td style="float:right;">
+                                                <label>
+                                                    @{
+                                                        var totalExpense_except_fuel2 = Model.TotalExpense2 - Model.FuelExpence2;
+                                                    }
+                                                    <b>@totalExpense_except_fuel2 TK</b>
+                                                </label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>
+                                                    2
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <label>
+                                                    Total Given 3(excpt fuel)
+                                                </label>
+                                            </td>
+                                            <td style="float:right;">
+                                                <label>
+                                                    @{
+                                                        var totalExpense_except_fuel3 = Model.TotalExpense3 - Model.FuelExpence3;
+                                                    }
+                                                    <b>@totalExpense_except_fuel3 TK</b>
+                                                </label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>
+                                                    3
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <label>
+                                                    Total Given oil/cash
+                                                </label>
+                                            </td>
+                                            <td style="float:right;">
+                                                <label>
+                                                    @if (Model.FuelExpenceGivenCashOrOil2 == true)
+                                                    {
+                                                        <b>@Model.FuelExpence2 TK</b>
+                                                    }
+                                                    else
+                                                    {
+                                                        <b>@Model.FuelConsumedLitre2 Litr</b>
+                                                    }
+                                                </label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>
+                                                    4
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <label>
+                                                    Total Taken oil/cash
+                                                </label>
+                                            </td>
+                                            <td style="float:right;">
+                                                <label>
+                                                    @if (Model.FuelExpenceGivenCashOrOil3 == true)
+                                                    {
+                                                        <b>@Model.FuelExpence3 TK</b>
+                                                    }
+                                                    else
+                                                    {
+                                                        <b>@Model.FuelConsumedLitre3 Litr</b>
+                                                    }
+                                                </label>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        @if (Model.VehicleSharingInternalTrip.AdjustmentStatusText == "Created Adjustment")
+                        {
+                            <input type="button" class="btn btn-facebook center-block" value="Confirm Bill Adjustment Giving" onclick="TrySubmit()" />
+                        }
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+
+</section>
+

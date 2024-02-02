@@ -1,0 +1,398 @@
+﻿@model _3rdEyE.Models.VehicleSharingInternalTrip
+
+<section class="content-header">
+    <h1>
+        View Internal Trip
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        <a class="btn btn-block btn-info btn-sm" href="/VehicleSharing/VehicleSharingInternalTripIndex">Go To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/InstantRequisition/PayAdjustmnet" enctype="multipart/form-data">
+        <input name="PK_VehicleSharingInternalTrip" value="@Model.PK_VehicleSharingInternalTrip" style="display:none;" />
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="col-md-12">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">@Model.VehicleSharing.TrackingID @Model.Vehicle.RegistrationNumber</h3>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="col-md-12">
+                            <div class="box-body col-md-12">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <label>Status: </label>&nbsp; @Html.DisplayFor(m => m.StatusText)
+                                            </td>
+                                            <td>
+                                                <label>Assigned: </label>&nbsp; @Html.DisplayFor(m => m.AppUser.FullName) &nbsp; @Html.DisplayFor(m => m.AssingedAt)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>Driver: </label>&nbsp; @Html.DisplayFor(m => m.AppUser4.UniqueIDNumber) &nbsp;@Html.DisplayFor(m => m.AppUser4.FullName) &nbsp;@Html.DisplayFor(m => m.AppUser4.ContactNumber)
+                                            </td>
+                                            <td>
+                                                <label>Vehicle: </label>&nbsp; @Html.DisplayFor(m => m.Vehicle.RegistrationNumber)
+                                            </td>
+                                            <td>
+                                                <label>From: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharing.Depo.Name) &nbsp; @Html.DisplayFor(m => m.VehicleSharing.StartingLocation)
+                                            </td>
+                                            <td>
+                                                <label>To: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharing.Depo1.Name) &nbsp; @Html.DisplayFor(m => m.VehicleSharing.FinishingLocation)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>Entered Startinng Loc: </label>&nbsp; @Html.DisplayFor(m => m.EnteredStartingLocationDateTime)
+                                            </td>
+                                            <td>
+                                                <label>Load Start: </label>&nbsp; @Html.DisplayFor(m => m.LoadingStartDateTime)
+                                            </td>
+                                            <td>
+                                                <label>Load Finish: </label>&nbsp; @Html.DisplayFor(m => m.LoadingDoneDateTime)
+                                            </td>
+                                            <td>
+                                                <label>Left Startinng Loc: </label>&nbsp; @Html.DisplayFor(m => m.LeftStartingLoactionDateTime)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>Entered Finishing Loc: </label>&nbsp; @Html.DisplayFor(m => m.EnteredFinishingLocationDateTime)
+                                            </td>
+                                            <td>
+                                                <label>Unload Start: </label>&nbsp; @Html.DisplayFor(m => m.UnloadingStartDateTime)
+                                            </td>
+                                            <td>
+                                                <label>Unload Finish: </label>&nbsp; @Html.DisplayFor(m => m.UnloadingDoneDateTime)
+                                            </td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>Bill Created: </label>&nbsp; @Html.DisplayFor(m => m.AppUser2.FullName) &nbsp; @Html.DisplayFor(m => m.BillCreatedAt)
+                                            </td>
+                                            <td>
+                                                <label>Billing Note: </label>&nbsp; @Html.DisplayFor(m => m.BillingNote)
+                                            </td>
+                                            <td>
+                                                <label>Bill Approved: </label>&nbsp; @Html.DisplayFor(m => m.AppUser1.FullName) &nbsp; @Html.DisplayFor(m => m.BillApprovedAt)
+                                            </td>
+                                            <td>
+                                                <label>Bill Paid: </label>&nbsp; @Html.DisplayFor(m => m.AppUser3.FullName) &nbsp; @Html.DisplayFor(m => m.BillPaidAt)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>Empty1 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.Distance_Empty) /  @Html.DisplayFor(m => m.KPL_Empty)
+                                            </td>
+                                            <td>
+                                                <label>Loaded1 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.Distance_Loaded) /  @Html.DisplayFor(m => m.KPL_Loaded)
+                                            </td>
+                                            <td>
+                                                <label>Loaded Plastic 1 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.Distance_Loaded_Plastic) /  @Html.DisplayFor(m => m.KPL_Loaded_Plastic)
+                                            </td>
+                                            <td>
+                                                <label>InterCity1 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.Distance_InterCity) /  @Html.DisplayFor(m => m.KPL_InterCity)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>InterCHT1 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.Distance_InterCHT) /  @Html.DisplayFor(m => m.KPL_InterCHT)
+                                            </td>
+                                            <td>
+                                                <label>Hill1 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.Distance_Hill) /  @Html.DisplayFor(m => m.KPL_Hill)
+                                            </td>
+                                            <td>
+                                                <label>OnlyMover1 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.Distance_OnlyMover) /  @Html.DisplayFor(m => m.KPL_OnlyMover)
+                                            </td>
+                                            <td>
+                                                <label>Loaded 8-12 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.Distance_Loaded_8_To_12_Tons) /  @Html.DisplayFor(m => m.KPL_Loaded_8_To_12_Tons)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>Loaded 12-25 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.Distance_Loaded_12_To_25_Tons) /  @Html.DisplayFor(m => m.KPL_Loaded_12_To_25_Tons)
+                                            </td>
+                                            <td>
+                                                <label>Distance Google: </label>&nbsp; @Html.DisplayFor(m => m.DistanceGoogle)
+                                            </td>
+                                            <td>
+                                                <label>Distance Route Chart: </label>&nbsp; @Html.DisplayFor(m => m.DistanceRouteChart)
+                                            </td>
+                                            <td>
+                                                <label>Distance Manual: </label>&nbsp; @Html.DisplayFor(m => m.DistanceManual)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>Fuel Consumed Litre1: </label>&nbsp; @Html.DisplayFor(m => m.FuelConsumedLitre)
+                                            </td>
+                                            <td>
+                                                <label>Fuel Price Per Litre1: </label>&nbsp; @Html.DisplayFor(m => m.FuelPricePerLitre)
+                                            </td>
+                                            <td>
+                                                <label>Fuel Expence1: </label>&nbsp; @Html.DisplayFor(m => m.FuelExpence)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>Drivers Money1: </label>&nbsp; @Html.DisplayFor(m => m.DriversMoney)
+                                            </td>
+                                            <td>
+                                                <label>Helpers Money1: </label>&nbsp; @Html.DisplayFor(m => m.HelpersMoney)
+                                            </td>
+                                            <td>
+                                                <label>Bridge/Toll/Ferry Charge1: </label>&nbsp; @Html.DisplayFor(m => m.BridgeTollFerryCharge)
+                                            </td>
+                                            <td>
+                                                <label>Loading Cost1: </label>&nbsp; @Html.DisplayFor(m => m.LoadingCost)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>Unloading Cost1: </label>&nbsp; @Html.DisplayFor(m => m.UnloadingCost)
+                                            </td>
+                                            <td>
+                                                <label>Labor Charge1: </label>&nbsp; @Html.DisplayFor(m => m.LaborCharge)
+                                            </td>
+                                            <td>
+                                                <label>Entertainment C Charge1: </label>&nbsp; @Html.DisplayFor(m => m.EntertainmentCCharge)
+                                            </td>
+                                            <td>
+                                                <label>ParkingCharge1: </label>&nbsp; @Html.DisplayFor(m => m.ParkingCharge)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>Entertainment A Charge1: </label>&nbsp; @Html.DisplayFor(m => m.EntertainmentACharge)
+                                            </td>
+                                            <td>
+                                                <label>Repair Charge1: </label>&nbsp; @Html.DisplayFor(m => m.RepairCharge)
+                                            </td>
+                                            <td>
+                                                <label>Over Stay Charge1: </label>&nbsp; @Html.DisplayFor(m => m.OverStayCharge)
+                                            </td>
+                                            <td>
+                                                <label>Open Body Charge1: </label>&nbsp; @Html.DisplayFor(m => m.OpenBodyCharge)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>Demurrage Charge1: </label>&nbsp; @Html.DisplayFor(m => m.DemurrageCharge)
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>
+                                                <label>Total1: </label>&nbsp; @Html.DisplayFor(m => m.TotalExpense)
+                                            </td>
+                                        </tr>
+                                        @if (Model.AdjustmentStatusText != null)
+                                        {
+                                            <tr>
+                                                <td colspan="4">
+                                                    <h3>Adjustment</h3>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label>Adjustment Status: </label>&nbsp; @Html.DisplayFor(m => m.AdjustmentStatusText)
+                                                </td>
+                                                <td>
+                                                    <label>Adjustment Created: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.AppUser.FullName) &nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.BillAdjustmentCreatedAt)
+                                                </td>
+                                                <td>
+                                                    <label>Adjustment Paid: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.AppUser1.FullName) &nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.BillAdjustmentPaidAt)
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                        }
+                                        @if (Model.AdjustmentStatusText != null)
+                                        {
+                                            <tr>
+                                                <td colspan="4">
+                                                    <h3>Adjustment-Given</h3>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label>Empty2 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.Distance_Empty2) /  @Html.DisplayFor(m => m.KPL_Empty)
+                                                </td>
+                                                <td>
+                                                    <label>Loaded2 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.Distance_Loaded2) /  @Html.DisplayFor(m => m.KPL_Loaded)
+                                                </td>
+                                                <td>
+                                                    <label>Loaded Plastic 2 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.Distance_Loaded_Plastic2) /  @Html.DisplayFor(m => m.KPL_Loaded_Plastic)
+                                                </td>
+                                                <td>
+                                                    <label>InterCity2 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.Distance_InterCity2) /  @Html.DisplayFor(m => m.KPL_InterCity)
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label>InterCHT2 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.Distance_InterCHT2) /  @Html.DisplayFor(m => m.KPL_InterCHT)
+                                                </td>
+                                                <td>
+                                                    <label>Hill2 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.Distance_Hill2) /  @Html.DisplayFor(m => m.KPL_Hill)
+                                                </td>
+                                                <td>
+                                                    <label>OnlyMover2 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.Distance_OnlyMover2) /  @Html.DisplayFor(m => m.KPL_OnlyMover)
+                                                </td>
+                                                <td>
+                                                    <label>Loaded 8-22 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.Distance_Loaded_8_To_12_Tons2) /  @Html.DisplayFor(m => m.KPL_Loaded_8_To_12_Tons)
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label>Loaded 22-25 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.Distance_Loaded_12_To_25_Tons2) /  @Html.DisplayFor(m => m.KPL_Loaded_12_To_25_Tons)
+                                                </td>
+                                                <td>
+                                                    <label>Fuel Consumed Litre2: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.FuelConsumedLitre2)
+                                                </td>
+                                                <td>
+                                                    <label>Fuel Price Per Litre2: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.FuelPricePerLitre2)
+                                                </td>
+                                                <td>
+                                                    <label>Fuel Expence2: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.FuelExpence2)
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label>Bridge/Toll/Ferry Charge2: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.BridgeTollFerryCharge2)
+                                                </td>
+                                                <td>
+                                                    <label>Entertainment C Charge2: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.EntertainmentCCharge2)
+                                                </td>
+                                                <td>
+                                                    <label>ParkingCharge2: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.ParkingCharge2)
+                                                </td>
+                                                <td>
+                                                    <label>Entertainment A Charge2: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.EntertainmentACharge2)
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label>Repair Charge2: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.RepairCharge2)
+                                                </td>
+                                                <td>
+                                                    <label>Over Stay Charge2: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.OverStayCharge2)
+                                                </td>
+                                                <td>
+                                                    <label>Open Body Charge2: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.OpenBodyCharge2)
+                                                </td>
+                                                <td>
+                                                    <label>Demurrage Charge2: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.DemurrageCharge2)
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label>Total2: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.TotalExpense2)
+                                                </td>
+                                            </tr>
+                                        }
+                                        @if (Model.AdjustmentStatusText != null)
+                                        {
+                                            <tr>
+                                                <td colspan="4">
+                                                    <h3>Adjustment-Taken</h3>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label>Empty3 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.Distance_Empty3) /  @Html.DisplayFor(m => m.KPL_Empty)
+                                                </td>
+                                                <td>
+                                                    <label>Loaded3 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.Distance_Loaded3) /  @Html.DisplayFor(m => m.KPL_Loaded)
+                                                </td>
+                                                <td>
+                                                    <label>Loaded Plastic 3 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.Distance_Loaded_Plastic3) /  @Html.DisplayFor(m => m.KPL_Loaded_Plastic)
+                                                </td>
+                                                <td>
+                                                    <label>InterCity3 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.Distance_InterCity3) /  @Html.DisplayFor(m => m.KPL_InterCity)
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label>InterCHT3 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.Distance_InterCHT3) /  @Html.DisplayFor(m => m.KPL_InterCHT)
+                                                </td>
+                                                <td>
+                                                    <label>Hill3 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.Distance_Hill3) /  @Html.DisplayFor(m => m.KPL_Hill)
+                                                </td>
+                                                <td>
+                                                    <label>OnlyMover3 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.Distance_OnlyMover3) /  @Html.DisplayFor(m => m.KPL_OnlyMover)
+                                                </td>
+                                                <td>
+                                                    <label>Loaded 8-33 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.Distance_Loaded_8_To_12_Tons3) /  @Html.DisplayFor(m => m.KPL_Loaded_8_To_12_Tons)
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label>Loaded 33-35 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.Distance_Loaded_12_To_25_Tons3) /  @Html.DisplayFor(m => m.KPL_Loaded_12_To_25_Tons)
+                                                </td>
+                                                <td>
+                                                    <label>Fuel Consumed Litre3: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.FuelConsumedLitre3)
+                                                </td>
+                                                <td>
+                                                    <label>Fuel Price Per Litre3: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.FuelPricePerLitre3)
+                                                </td>
+                                                <td>
+                                                    <label>Fuel Expence3: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.FuelExpence3)
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label>Bridge/Toll/Ferry Charge3: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.BridgeTollFerryCharge3)
+                                                </td>
+                                                <td>
+                                                    <label>Entertainment C Charge3: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.EntertainmentCCharge3)
+                                                </td>
+                                                <td>
+                                                    <label>ParkingCharge3: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.ParkingCharge3)
+                                                </td>
+                                                <td>
+                                                    <label>Entertainment A Charge3: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.EntertainmentACharge3)
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label>Repair Charge3: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.RepairCharge3)
+                                                </td>
+                                                <td>
+                                                    <label>Over Stay Charge3: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.OverStayCharge3)
+                                                </td>
+                                                <td>
+                                                    <label>Open Body Charge3: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.OpenBodyCharge3)
+                                                </td>
+                                                <td>
+                                                    <label>Demurrage Charge3: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.DemurrageCharge3)
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <label>Total3: </label>&nbsp; @Html.DisplayFor(m => m.VehicleSharingInternalTripAdjustment.TotalExpense3)
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+
+</section>

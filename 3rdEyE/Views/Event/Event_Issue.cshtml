@@ -1,0 +1,680 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+}
+
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+<!--Date picker-->
+<link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+<script src="~/Theme/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="~/Theme/bower_components/jquery-ui/jquery-ui.min.js"></script>
+<!--/Date picker-->
+<section class="content-header">
+    <h1>
+        Issue Existing Event
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        <a class="btn btn-block btn-info btn-sm" href="/Event/Index">Go To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/Event/Event_Issue" enctype="multipart/form-data">
+        <input name="PK_Event" value="@ViewBag.model.PK_Event" type="text" class="form-control" style="display:none;">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Event Information</h3>
+                            </div>
+                            <!-- /.box-header -->
+                            <!-- form start -->
+                            @*FK_Vehicle*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Vehicle*</label>
+                                    <div class="col-md-8">
+                                        @Html.DropDownList("FK_Vehicle", ViewBag.Vehicles as SelectList, "Select", new { @class = "form-control", onchange = "updateSimilarEventList()", @disabled = "disabled" })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_FK_Vehicle"></b>
+                                    </div>
+                                </div>
+                                <script>
+                                    validatorArray.push(
+                                        function () {
+                                            var check = $('select[name=FK_Vehicle]').val();
+                                            if (check == "") {
+                                                formValidity = false;
+                                                $('b[name=error_FK_Vehicle]').html("Vehicle is required.");
+                                            }
+                                        });
+                                </script>
+                            </div>
+                            @*Type*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Type*</label>
+                                    <div class="col-md-8">
+                                        @Html.DropDownList("FK_EventType", ViewBag.EventTypes as SelectList, "Select", new { @class = "form-control", @onchange = "manageUI_EventTypeElement(),updateSimilarEventList()", @disabled = "disabled" })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_FK_EventType"></b>
+                                    </div>
+                                </div>
+                                <script>
+                                    validatorArray.push(
+                                        function () {
+                                            var check = $('select[name=FK_EventType]').val();
+                                            if (check == "") {
+                                                formValidity = false;
+                                                $('b[name=error_FK_EventType]').html("Event type is required.");
+                                            }
+                                        });
+                                </script>
+                            </div>
+                            @*OtherEventTypeDetail*@
+                            <div class="box-body yes_Others">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Other*</label>
+                                    <div class="col-md-8">
+                                        @Html.DropDownList("OtherEventTypeDetail", ViewBag.OtherEventTypeDetailDict as SelectList, "Select", new { @class = "form-control", onchange = "manageUI_EventTypeElement()", @disabled = "disabled" })
+                                        <b class="errorMessage" data-category="errorMessage" name="error_OtherEventTypeDetail"></b>
+                                    </div>
+                                </div>
+                                <script>
+                                    validatorArray.push(
+                                        function () {
+                                            var FK_EventType = $('select[name=FK_EventType]').val();
+                                            if (FK_EventType != "others") {
+                                                return;
+                                            }
+                                            var check = $('select[name=OtherEventTypeDetail]').val();
+                                            if (check == "") {
+                                                formValidity = false;
+                                                $('b[name=error_OtherEventTypeDetail]').html("Other Detail is required.");
+                                            }
+                                        });
+                                </script>
+                            </div>
+                            @*DepositDate*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Deposit Date</label>
+                                    <div class="col-md-4">
+                                        <input name="DepositDate" id="DepositDate" @(ViewBag.model.DepositDate == null ? "" : "value=" + ViewBag.model.DepositDate.ToShortDateString()) class="form-control all_input" readonly="readonly">
+                                        @*<input name="DepositDate" id="DepositDate" class="form-control all_input" type="text" readonly="readonly">*@
+                                        <b class="errorMessage" data-category="errorMessage" name="error_DepositDate"></b>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <strong>YYYY-MM-DD</strong>
+                                    </div>
+                                </div>
+                                <script>
+                                    validatorArray.push(
+                                        function () {
+                                            var check = $('input[name=DepositDate]').val();
+                                            if (check == "") {
+                                                formValidity = false;
+                                                $('b[name=error_DepositDate]').html("required.");
+                                            }
+                                        });
+                                </script>
+                            </div>
+                            @*PolicyNumber*@
+                            <div class="box-body yes_Insurance">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Policy Number</label>
+                                    <div class="col-md-8">
+                                        <input name="PolicyNumber" id="PolicyNumber" @(ViewBag.model.PolicyNumber == null ? "" : "value=" + ViewBag.model.PolicyNumber) class="form-control all_input" type="text" readonly="readonly">
+                                        @*<input name="PolicyNumber" Id="PolicyNumber" value="@ViewBag.model.PolicyNumber" class="form-control all_input" type="text">*@
+                                    </div>
+                                </div>
+                            </div>
+                            @*PrimaryAmount*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Fees</label>
+                                    <div class="col-md-8">
+                                        <input name="PrimaryAmount" id="PrimaryAmount" value="@ViewBag.model.PrimaryAmount" class="form-control all_input" type="number" data-category="amountCalculation" onkeyup="calculatePrimaryAmount()" readonly="readonly">
+                                    </div>
+                                </div>
+                            </div>
+                            @*PremiumAmount*@
+                            <div class="box-body yes_Insurance">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Premium Amount</label>
+                                    <div class="col-md-8">
+                                        <input name="PremiumAmount" Id="PremiumAmount" value="@ViewBag.model.PremiumAmount" class="form-control all_input" type="number" readonly="readonly">
+                                    </div>
+                                </div>
+                            </div>
+                            @*AdvancedIncomeTax*@
+                            <div class="box-body yes_FitnessPaper yes_TaxToken">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Advanced Income Tax</label>
+                                    <div class="col-md-8">
+                                        <input name="AdvancedIncomeTax" Id="AdvancedIncomeTax" value="@ViewBag.model.AdvancedIncomeTax" class="form-control all_input" type="number" data-category="amountCalculation" readonly="readonly">
+                                    </div>
+                                </div>
+                            </div>
+                            @*DigitalRegistrationFee*@
+                            <div class="box-body yes_Others_Registration">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Digital Registration Fee</label>
+                                    <div class="col-md-8">
+                                        <input name="DigitalRegistrationFee" Id="DigitalRegistrationFee" value="@ViewBag.model.DigitalRegistrationFee" class="form-control all_input" type="number" data-category="amountCalculation" readonly="readonly">
+                                    </div>
+                                </div>
+                            </div>
+                            @*HirePurchase*@
+                            <div class="box-body yes_Others_Registration">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Hire purchase</label>
+                                    <div class="col-md-8">
+                                        <input name="HirePurchase" Id="HirePurchase" value="@ViewBag.model.HirePurchase" class="form-control all_input" type="number" data-category="amountCalculation" readonly="readonly">
+                                    </div>
+                                </div>
+                            </div>
+                            @*FineAmount*@
+                            <div class="box-body non_Others_OwnershipTransfer">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Fine Amount</label>
+                                    <div class="col-md-8">
+                                        <input name="FineAmount" Id="FineAmount" value="@ViewBag.model.FineAmount" class="form-control all_input" type="number" data-category="amountCalculation" readonly="readonly">
+                                    </div>
+                                </div>
+                            </div>
+                            @*OtherAmount*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Other Amount</label>
+                                    <div class="col-md-8">
+                                        <input name="OtherAmount" Id="OtherAmount" value="@ViewBag.model.OtherAmount" class="form-control all_input" type="number" data-category="amountCalculation" readonly="readonly">
+                                    </div>
+                                </div>
+                            </div>
+                            @*OtherNote*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Other Note</label>
+                                    <div class="col-md-8">
+                                        <textarea name="OtherNote" Id="OtherNote" class="form-control all_input" readonly="readonly">@ViewBag.model.OtherNote</textarea>
+                                        <b class="errorMessage" data-category="errorMessage" name="error_OtherNote"></b>
+                                    </div>
+                                </div>
+                                <script>
+                                    validatorArray.push(
+                                        function () {
+                                            var OtherAmount = $('input[name=OtherAmount]').val();
+                                            if (OtherAmount != "") {
+                                                var OtherNote = $('textarea[name=OtherNote]').val();
+                                                if (OtherNote == '') {
+                                                    formValidity = false;
+                                                    $('b[name=error_OtherNote]').html("Please, give note.");
+                                                }
+                                            }
+                                        });
+                                </script>
+                            </div>
+                            @*IssueDate*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Issue Date</label>
+                                    <div class="col-md-4">
+                                        @*<input name="IssueDate" id="IssueDate" @(ViewBag.model.IssueDate == null ? "" : "value=" + ViewBag.model.IssueDate.ToShortDateString()) class="form-control all_input" readonly="readonly">*@
+                                        <input name="IssueDate" id="IssueDate" class="form-control all_input" type="text" readonly="readonly" onchange="setExpirationDate()">
+                                        <b class="errorMessage" data-category="errorMessage" name="error_IssueDate"></b>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <strong>YYYY-MM-DD</strong>
+                                    </div>
+                                </div>
+                                <script>
+                                    validatorArray.push(
+                                        function () {
+                                            var check = $('input[name=IssueDate]').val();
+                                            if (check == "") {
+                                                formValidity = false;
+                                                $('b[name=error_IssueDate]').html("Issue is required.");
+                                            }
+                                        });
+                                </script>
+                            </div>
+                            @*ExpirationDate*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Expiration Date</label>
+                                    <div class="col-md-4">
+                                        @*<input name="ExpirationDate" id="ExpirationDate" @(ViewBag.model.ExpirationDate == null ? "" : "value=" + ViewBag.model.ExpirationDate.ToShortDateString()) class="form-control all_input" readonly="readonly">*@
+                                        <input name="ExpirationDate" id="ExpirationDate" class="form-control all_input" type="text" readonly="readonly">
+                                        <b class="errorMessage" data-category="errorMessage" name="error_ExpirationDate"></b>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <strong>YYYY-MM-DD</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            @*AdditionalAmount*@
+                            <div class="box-body yes_RoutePermit">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Additional Amount</label>
+                                    <div class="col-md-8">
+                                        <input name="AdditionalAmount" Id="AdditionalAmount" value="@ViewBag.model.AdditionalAmount" class="form-control all_input" type="number" data-category="amountCalculation">
+                                    </div>
+                                </div>
+                            </div>
+                            @*TotalAmount*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Total Amount</label>
+                                    <div class="col-md-8">
+                                        <input name="TotalAmount" Id="TotalAmount" value="@ViewBag.model.TotalAmount" class="form-control all_input" type="number" readonly="readonly">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Earlier Event</h3>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <table id="data_table" class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="width: 10%">
+                                                                SL
+                                                            </th>
+                                                            <th style="width: 25%">
+                                                                Event Type
+                                                            </th>
+                                                            <th style="width: 25%">
+                                                                issue Date
+                                                            </th>
+                                                            <th style="width: 25%">
+                                                                Expiration Date
+                                                            </th>
+                                                            <th style="width: 15%">
+                                                                View
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="oldEventTableBody"></tbody>
+                                                </table>
+                                            </div>
+
+                                        </div>
+                                        <br />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Current Document List</h3>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <table id="data_table" class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="width: 5%">
+                                                                SL
+                                                            </th>
+                                                            <th style="width: 30%">
+                                                                Document Type
+                                                            </th>
+                                                            <th style="width: 20%">
+                                                                Name
+                                                            </th>
+                                                            <th style="width: 20%">
+                                                                Number
+                                                            </th>
+                                                            <th style="width: 25%">
+                                                                Delete
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @{
+                                                            int i = 0;
+                                                        }
+                                                        @foreach (var item in ViewBag.EventDocuments)
+                                                        {
+                                                            i = i + 1;
+                                                            <tr>
+                                                                <td>@i</td>
+                                                                <td>@item.Title</td>
+                                                                <td>@item.IdentitficaitonKey</td>
+                                                                <td>@item.IdentitficaitonValue</td>
+                                                                <td>
+                                                                    <a href="/EventDocument/Download?id=@item.PK_EventDocument" class="btn btn-block btn-success btn-xs">Delete</a>
+                                                                    <a href="/EventDocument/Delete?id=@item.PK_EventDocument" class="btn btn-block btn-danger btn-xs">Delete</a>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">New Document List</h3>
+                                        <input type="text" name="rowCount" id="rowCount" value="0" style="display:none" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <input type="button" class="btn btn-info pull-right" value="Add row" onclick="addRow()" />
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <table id="data_table" class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="width: 5%">
+                                                                SL
+                                                            </th>
+                                                            <th style="width: 15%">
+                                                                Document Type
+                                                            </th>
+                                                            <th style="width: 15%">
+                                                                Name
+                                                            </th>
+                                                            <th style="width: 15%">
+                                                                Number
+                                                            </th>
+                                                            <th style="width: 25%">
+                                                                File
+                                                            </th>
+                                                            <th style="width: 25%">
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="tbody"></tbody>
+                                                </table>
+                                            </div>
+
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <input type="button" class="btn btn-info pull-right" value="remove row" onclick="removeRow()" />
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <script>
+                                    function addRow() {
+                                        var rowCount = parseInt($("#rowCount").val());
+
+                                        var lastImage = $("#ImageFiles_" + (rowCount - 1)).val();
+                                        if (lastImage == '') {
+                                            return;
+                                        }
+                                        var sl = rowCount + 1;
+                                        var res = "<tr id='row_" + rowCount + "'>";
+                                        res = res + "<td style='width: 5%'>" + sl + "</td>";
+                                        res = res + "<td style='width: 15%'><input name='Title_" + rowCount + "' style='width: 100%' /></td>";
+                                        res = res + "<td style='width: 15%'><input name='IdentitficaitonKey_" + rowCount + "' style='width: 100%' /></td>";
+                                        res = res + "<td style='width: 15%'><input name='IdentitficaitonValue_" + rowCount + "' style='width: 100%' /></td>";
+                                        res = res + "<td style='width: 25%'><input id='ImageFiles_" + rowCount + "' name='ImageFiles' type='file' onchange='validateImage(" + rowCount + ")' style='width: 100%' /></td>";
+                                        res = res + "<td style='width: 25%'><b class='errorMessage' data-category='errorMessage' name='error_ImageFiles_" + rowCount + "'></b></td>";
+                                        res = res + "</tr>";
+                                        $("#tbody").append(res);
+                                        rowCount++;
+                                        $("#rowCount").val(rowCount);
+                                    }
+                                    function removeRow() {
+                                        var rowCount = parseInt($("#rowCount").val());
+
+                                        var lastRow = $("#row_" + (rowCount - 1));
+                                        if (lastRow == undefined) {
+                                            return;
+                                        }
+                                        lastRow.remove();
+                                        rowCount--;
+                                        $("#rowCount").val(rowCount);
+                                    }
+                                    function validateImage(rowNumber) {
+                                        var ext = $("#ImageFiles_" + (rowNumber)).val().split('.').pop().toLowerCase();
+                                        if ($.inArray(ext, ['gif', 'png', 'jpg', 'jpeg']) == -1) {
+                                            alert("Invalid File type.");
+                                            $("#ImageFiles_" + (rowNumber)).val('');
+                                            return;
+                                        }
+
+                                        if ($("#ImageFiles_" + (rowNumber))[0].files[0].size > 300000) {
+                                            alert("Image size is too big. Can not select it.");
+                                            $("#ImageFiles_" + (rowNumber)).val('');
+                                        }
+                                    }
+                                </script>
+                                <script>
+                                    validatorArray.push(
+                                        function () {
+                                            var rowCount = $("#rowCount").val();
+
+                                            var localValidator = true;
+                                            for (var i = 0; i < rowCount; i++) {
+                                                var img = $("#ImageFiles_" + i).val();
+                                                if (img == '') {
+                                                    localValidator = false;
+                                                    $('b[name=error_ImageFiles_' + i + ']').html("Image required");
+                                                }
+                                            }
+                                            if (localValidator == false) {
+                                                formValidity = false;
+                                            }
+                                        });
+                                </script>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="box-footer">
+                        @*<a class="btn btn-default" href="/Event/Index">Back To List</a>*@
+                        <input type="button" class="btn btn-facebook center-block" value="Issue" onclick="TrySubmit()" />
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+
+</section>
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $('select[name=FK_Vehicle]').select2();
+    });
+</script>
+
+@*Date picker*@
+<script>
+    //var ExpirationDate
+    $(document).ready(function () {
+        $("#IssueDate").datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true, yearRange: '1990:2023' });
+        $("#ExpirationDate").datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true, yearRange: '1990:2023' });
+    });
+</script>
+
+<script>
+    $('document').ready(function () {
+        manageUI_EventTypeElement();
+        updateSimilarEventList();
+    });
+    function manageUI_EventTypeElement() {
+        $('.non_Others_OwnershipTransfer').show();
+
+        $('.yes_FitnessPaper').hide();
+        $('.yes_Insurance').hide();
+        $('.yes_TaxToken').hide();
+        $('.yes_Others').hide();
+        $('.yes_Others_Registration').hide();
+        var FK_EventType = $('select[name=FK_EventType').val();
+        if (FK_EventType == "fitness_paper") {
+            $('.yes_FitnessPaper').show();
+        } else if (FK_EventType == "insurance") {
+            $('.yes_Insurance').show();
+        } else if (FK_EventType == "route_permit") {
+            $('.yes_RoutePermit').show();
+        } else if (FK_EventType == "tax_token") {
+            $('.yes_TaxToken').show();
+        }
+        else if (FK_EventType == "others") {
+            $('.yes_Others').show();
+            var OtherEventTypeDetail = $('select[name=OtherEventTypeDetail').val();
+            if (OtherEventTypeDetail == "Registration") {
+                $('.yes_Others_Registration').show();
+            } else if (OtherEventTypeDetail == "OwnershipTransfer") {
+                $('.non_Others_OwnershipTransfer').hide();
+            }
+        }
+    }
+</script>
+
+<script>
+    function setExpirationDate(){
+        var IssueDate = $('input[name=IssueDate]').val();
+        var _IssueDate = new Date(IssueDate);
+        //var _ExpirationDate = new Date();
+        //_ExpirationDate.setDate(_IssueDate.getDate() + @ViewBag.model.EventType.NextCycleDays);
+        _IssueDate.setFullYear(_IssueDate.getFullYear() + @ViewBag.model.EventType.NextCycleYears)
+        $('#ExpirationDate').val(_IssueDate.toISOString().slice(0, 10));
+    }
+
+    $('document').ready(function () {
+        $('input[data-category=amountCalculation]').on('keyup', function (e) {
+            calculateTotalAmount();
+        });
+    });
+    function calculatePrimaryAmount() {
+        var FK_EventType = $('select[name=FK_EventType]').val();
+        //if (FK_EventType == "insurance") { # Do not check the logic
+        var PrimaryAmount = $("#PrimaryAmount").val();
+        if (PrimaryAmount != "") {
+            var PremiumAmount = (Number(PrimaryAmount) * 0.35).toFixed(2);
+            $("#PremiumAmount").val(PremiumAmount);
+        } else {
+            $("#PremiumAmount").val('');
+        }
+        //}
+    }
+
+    function calculateTotalAmount() {
+        var FK_EventType = $('select[name=FK_EventType]').val();
+        var totalAmount = 0;
+
+        var PrimaryAmount = $("#PrimaryAmount").val();
+        if (PrimaryAmount != "") {
+            PrimaryAmount = Number(PrimaryAmount);
+            if (FK_EventType == "insurance") {
+                PrimaryAmount = (PrimaryAmount * 0.35).toFixed(2);
+            }
+            totalAmount = totalAmount + PrimaryAmount;
+        }
+
+        if (FK_EventType == "fitness_paper") {
+            var AdvancedIncomeTax = $("#AdvancedIncomeTax").val();
+            if (AdvancedIncomeTax != "") {
+                totalAmount = totalAmount + Number(AdvancedIncomeTax);
+            }
+        } else if (FK_EventType == "others") {
+            var OtherEventTypeDetail = $('select[name=OtherEventTypeDetail]').val();
+            if (OtherEventTypeDetail == "Registration") {
+
+                var DigitalRegistrationFee = $("#DigitalRegistrationFee").val();
+                if (DigitalRegistrationFee != "") {
+                    totalAmount = totalAmount + Number(DigitalRegistrationFee);
+                }
+
+                var HirePurchase = $("#HirePurchase").val();
+                if (HirePurchase != "") {
+                    totalAmount = totalAmount + Number(HirePurchase);
+                }
+            }
+        }
+
+        var FineAmount = $("#FineAmount").val();
+        if (FineAmount != "") {
+            totalAmount = totalAmount + Number(FineAmount);
+        }
+
+        var AdditionalAmount = $("#AdditionalAmount").val();
+        if (AdditionalAmount != "") {
+            totalAmount = totalAmount + Number(AdditionalAmount);
+        }
+
+        var OtherAmount = $("#OtherAmount").val();
+        if (OtherAmount != "") {
+            totalAmount = totalAmount + Number(OtherAmount);
+        }
+
+        $("#TotalAmount").val(totalAmount);
+    }
+
+    function updateSimilarEventList() {
+        var PK_Event = $('input[name=PK_Event]').val();
+        var FK_Vehicle = $('select[name=FK_Vehicle]').val();
+        if (FK_Vehicle == '') {
+            return;
+        }
+        var FK_EventType = $('select[name=FK_EventType]').val();
+        if (FK_EventType == '') {
+            return;
+        }
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/Event/GetEventsBy_FK_Vehicle_and_FK_EventType/",
+            data: JSON.stringify({ FK_Vehicle: FK_Vehicle, FK_EventType: FK_EventType, PK_Event: PK_Event }),
+            success: function (list) {
+
+                $("#oldEventTableBody").html("");
+                var res = "";
+                for (var i = 0; i < list.length; i++) {
+                    res = res + "<tr >";
+                    res = res + "<td style='width: 10%'>" + (i + 1) + "</td>";
+                    res = res + "<td style='width: 25%'>" + list[i].EventType_Title + "</td>";
+                    res = res + "<td style='width: 25%'>" + list[i].IssueDate + "</td>";
+                    res = res + "<td style='width: 25%'>" + list[i].ExpirationDate + "</td>";
+                    res = res + "<td style='width: 15%'>" + "<a target='_blank' href='/Event/View?PK_Event=" + list[i].PK_Event + "'>view</a>" + "</td>";
+                    res = res + "</tr>";
+                }
+                $("#oldEventTableBody").html(res);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: updateSimilarEventList()");
+            }
+        });
+    }
+</script>

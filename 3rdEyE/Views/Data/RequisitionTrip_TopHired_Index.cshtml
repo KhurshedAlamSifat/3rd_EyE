@@ -1,0 +1,190 @@
+﻿@model IEnumerable<_3rdEyE.Controllers.DataController.VM_RequisitionTrip_TopHired>
+
+
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+<!-- DataTablesExportable -->
+<link href="~/Content/ExportableDatatable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/ExportableDatatable/buttons.dataTables.min.css" rel="stylesheet" />
+@{
+    string ConvertToDateTimeString(DateTime? dateTime)
+    {
+        return String.Format("{0:yyyy/MM/dd HH:mm}", dateTime);
+    }
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Top Hired 10 Vehicle
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        @*<a class="btn btn-block btn-info btn-sm" href="/TemporaryVehicle/Create">Create</a>*@
+    </div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-header">
+                    <h3 class="box-title"></h3>
+                </div>
+                <div class="row">
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-3">
+                            <label class="col-md-4 control-label">PRG Type*:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("PRG_Type", ViewBag.PRG_TypesDict as SelectList, "Select", new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="col-md-4 control-label">Location*:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Location", ViewBag.Locations as SelectList, "Select", new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="col-md-4 control-label">Starting Date*:</label>
+                            <div class="col-md-8">
+                                <input name="StartingDate" type="date" value="@ViewBag.StartingDate" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="col-md-4 control-label">Einding Date*:</label>
+                            <div class="col-md-8">
+                                <input name="EndingDate" type="date" value="@ViewBag.EndingDate" class="form-control">
+                                <label>max date 3 days before today</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="col-md-2">
+                            <button class="btn btn-facebook" onclick="FilterByInputToRedirectView()">Filter</button>
+                        </div>
+                        @*<div class="col-md-2">
+                                <button class="btn btn-facebook" onclick="FilterByInputToExportExcel()">Download Excel</button>
+                            </div>*@
+                    </div>
+                </div>
+
+                <!-- /.box-header -->
+                <div class="box-body" style="overflow-x:scroll;">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <caption>Top 10 hired vehicle</caption>
+                        <thead>
+                            <tr>
+                                <th>
+                                    Vehicle
+                                </th>
+                                <th>
+                                    Total Trip
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.RegistrationNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.TotalTrip)
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+<script>
+    $(function () {
+        $('select').select2();
+        $('.form_datetime').datetimepicker({
+            format: 'yyyy-mm-dd HH:ii P',
+            todayBtn: 1,
+            autoclose: 1,
+        });
+    });
+</script>
+<!-- DataTablesExportable -->
+<script src="~/Scripts/Custom/DataTableExportable/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.flash.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/jszip.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/pdfmake.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/vfs_fonts.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.html5.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.print.min.js"></script>
+<script>
+    $(function () {
+        $('#data_table').DataTable({
+            "ordering": true,
+            "paging": false,
+            "ordering": false,
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+    });
+</script>
+<script>
+    function FilterByInputToRedirectView() {
+        var url = "/Data/RequisitionTrip_TopHired_Index?";
+
+        var PRG_Type = $("select[name=PRG_Type]").val();
+        if (PRG_Type != '') {
+            url = url + "&PRG_Type=" + PRG_Type;
+        } else {
+            url = url + "&PRG_Type=";
+        }
+
+        var FK_Location = $("select[name=FK_Location]").val();
+        if (FK_Location != '') {
+            url = url + "&FK_Location=" + FK_Location;
+        } else {
+            url = url + "&FK_Location=";
+        }
+
+        var StartingDate = $("input[name=StartingDate]").val();
+        if (StartingDate != '') {
+            url = url + "&StartingDate=" + StartingDate;
+        } else {
+            url = url + "&StartingDate=";
+        }
+
+        var EndingDate = $("input[name=EndingDate]").val();
+        if (EndingDate != '') {
+            url = url + "&EndingDate=" + EndingDate;
+        } else {
+            url = url + "&EndingDate=";
+        }
+
+        if (StartingDate == '' || EndingDate == '') {
+            alert("Please, Select Starting Date Ending Date");
+            return;
+        }
+
+        window.location = url;
+    }
+
+</script>
+

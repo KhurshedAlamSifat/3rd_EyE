@@ -1,0 +1,141 @@
+﻿@model _3rdEyE.ViewModels.VM_InterCompanyRequisition
+
+@{
+    ViewBag.Title = "View";
+}
+
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Inter Comapany Requisition View
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        <a class="btn btn-block btn-info btn-sm" href="@System.Web.HttpContext.Current.Request.UrlReferrer">Back To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Inter Comapany Requisition View</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form name="ThisForm" class="form-horizontal" method="post" action="" enctype="multipart/form-data">
+                    @*@Html.EditorFor(viewModel => viewModel.Model.PK_IndividualRequisition, new { htmlAttributes = new { @readonly = "readonly", @class = "form-control" } })*@
+                    <input name="PK_IndividualRequisition" value="@Model.Model.PK_InterCompanyRequisition" style="display:none;" />
+                    <div class="box-body col-md-12">
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <label>Raiser: </label>&nbsp; @Html.DisplayFor(m => m.Model.AppUser.FullName)
+                                    </td>
+                                    <td>
+                                        <label>Depot: </label>&nbsp;@Html.DisplayFor(m => m.Model.Depo.Name)
+                                    </td>
+                                    <td>
+                                        <label>Created At: </label>&nbsp;@Html.DisplayFor(m => m.CreationDateTime_Text)
+                                    </td>
+                                    <td>
+                                        <label>Updated At: </label>&nbsp;@Html.DisplayFor(m => m.UpdateDateTime_Text)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>From: </label>&nbsp; @Html.DisplayFor(m => m.Model.InterCompanyRequisitionLocation.Name) @Html.DisplayFor(m => m.Model.StartingLocation)
+                                    </td>
+                                    <td>
+                                        <label>To: </label>&nbsp; @Html.DisplayFor(m => m.Model.InterCompanyRequisitionLocation1.Name) @Html.DisplayFor(m => m.Model.FinishingLocation)
+                                    </td>
+                                    <td>
+                                        <label>Journey Time: </label>&nbsp;@Html.DisplayFor(m => m.PossibleJourneyStartDateTime_Text)
+                                    </td>
+                                    <td>
+                                        <label>Vehicle Type: </label>&nbsp; @Model.Model.RequisitionVehicleType.Title_English
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Status: </label>&nbsp; @Html.DisplayFor(m => m.Status_Text)
+                                    </td>
+                                    <td>
+                                        <label>Wanted: </label>&nbsp; @Html.DisplayFor(m => m.Model.WantedCount)
+                                    </td>
+                                    <td colspan="2">
+                                        <label>Accepted: </label>&nbsp;@Html.DisplayFor(m => m.Model.AcceptedCount)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Verified By: </label>&nbsp; @Html.DisplayFor(m => m.Model.AppUser1.FullName)
+                                    </td>
+                                    <td>
+                                        <label>Verified At: </label>&nbsp;@Html.DisplayFor(m => m.VerifiedAt_Text)
+                                    </td>
+                                    <td>
+                                        <label>Raiser Note: </label>&nbsp; @Html.DisplayFor(m => m.Model.ClientNote)
+                                    </td>
+                                    <td>
+                                        <label>Approved Note: </label>&nbsp;@Html.DisplayFor(m => m.Model.ApproverNote)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Internally Hired Vehicle: </label><br>
+                                        @foreach (var item in Model.Model.InterCompanyRequisition_InternalVehicle.OrderBy(m => m.CreatedAt))
+                                        {
+                                            <text> <b>@item.Vehicle.RegistrationNumber</b><br>
+                                            <b>Note:</b>@item.Note<br>
+                                            <b>Assigned At:</b>@item.CreatedAt<br>
+                                            @if (@item.Vehicle.VehicleTrackingInformation != null && @item.Vehicle.VehicleTrackingInformation.VehicleTracking != null)
+                                            {
+                                                <text><a target='_blank' href='/tracking/Index_single_live?PK_Vehicle=@item.Vehicle.PK_Vehicle'>map</a></text>
+                                            }
+                                            </text>
+                                            <br>
+                                        }
+                                    </td>
+                                    <td>
+                                        <label>Externally Hired Vehicle: </label><br>
+                                        @foreach (var item in Model.Model.InterCompanyRequisition_ExternalVehicle.OrderBy(m => m.CreatedAt))
+                                        {
+                                            <text> <b>@item.Vehicle.RegistrationNumber</b><br>
+                                            <b>Note:</b>@item.Note<br>
+                                            <b>Assigned At:</b>@item.CreatedAt
+                                            </text>
+                                        }
+                                    </td>
+                                    <td>
+                                        <label>Externally Hired Troller: </label><br>
+                                        @foreach (var item in Model.Model.InterCompanyRequisition_ExternalTroller.OrderBy(m => m.CreatedAt))
+                                        {
+                                            <text> <b>@item.TrollerNumber</b><br>
+                                            <b>Note:</b>@item.Note<br>
+                                            <b>Assigned At:</b>@item.CreatedAt
+                                            </text>
+                                        }
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="box-footer">
+                        @*<button class="btn btn-facebook center-block" onclick="TrySubmit()">Bid</button>*@
+                        @*<input type="button" class="btn btn-facebook center-block" onclick="TrySubmit()" value="Confirm" />*@
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>

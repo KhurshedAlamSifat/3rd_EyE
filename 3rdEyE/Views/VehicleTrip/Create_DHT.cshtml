@@ -1,0 +1,151 @@
+﻿@model _3rdEyE.Models.VehicleTrip
+@{
+    ViewBag.Title = "Create";
+}
+
+@*Date picker*@
+<link href="~/Theme/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Create New Trip
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        <a class="btn btn-block btn-info btn-sm" href="@System.Web.HttpContext.Current.Request.UrlReferrer">Back To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Trip Information</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form name="ThisForm" class="form-horizontal" method="post" action="/VehicleTrip/Create_DHT" enctype="multipart/form-data">
+                    <div class="box-body col-md-12">
+                        @*FK_Vehicle*@
+                        <div class="form-group  col-md-6">
+                            <label class="col-md-4 control-label">Vehicle*</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Vehicle", ViewBag.Vehicles as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_Vehicle"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('select[name=FK_Vehicle]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_FK_Vehicle]').html("Vehicle is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        @*FK_Depo_From*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">From*</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Depo_From", ViewBag.Depoes as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_Depo_From"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('select[name=FK_Depo_From]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_FK_Depo_From]').html("From location is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        @*FK_Depo_To*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">To</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Depo_To", ViewBag.Depoes as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_Depo_To_DHT_PartyPoint"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        @*DHT_PartyPoint*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Party Point</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.DHT_PartyPoint, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+                        <script>
+                            validatorArray.push(
+                                function () {
+                                    var check = $('select[name=FK_Depo_To]').val();
+                                    var check2 = $('input[name=DHT_PartyPoint]').val();
+                                    if (check == "" && check2 == "") {
+                                        formValidity = false;
+                                        $('b[name=error_FK_Depo_To_DHT_PartyPoint]').html("To location or party point required.");
+                                    }
+                                });
+                        </script>
+                    </div>
+                    <div class="box-body col-md-12">
+                        @*CarriageOutword*@
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Carriage Outword*</label>
+                            <div class="col-md-8">
+                                @*@Html.EditorFor(model => model.CarriageOutword, new { htmlAttributes = new { @class = "form-control", @typ="number" } })*@
+                                @Html.EditorFor(model => model.CarriageOutword, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+                                <b class="errorMessage" data-category="errorMessage" name="error_CarriageOutword"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('input[name=CarriageOutword]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_CarriageOutword]').html("Carriage outword is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        @*<a class="btn btn-default" href="/Vehicle/Index">Back To List</a>*@
+                        @*<input type="button" class="btn btn-facebook pull-right" value="Create" onclick="TrySubmit()" />*@
+                        <div class="col-md-6">
+                            <input type="button" class="btn btn-facebook center-block" value="Save" onclick="TrySubmit()" />
+                        </div>
+                    </div>
+
+                    <!-- /.box-footer -->
+                </form>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+@*Date Picker*@
+<script src="~/Theme/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $('select').select2();
+    });
+</script>
+

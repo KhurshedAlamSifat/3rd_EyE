@@ -1,0 +1,763 @@
+﻿@model IEnumerable<_3rdEyE.Controllers.TrackingController.VM_VehicleTracking4>
+<style>
+    /*#data_table_wrapper .col-sm-6 {
+        width: 100% !important;
+    }*/
+</style>
+@{
+    string ConvertToDateTimeString(DateTime? dateTime)
+    {
+        return String.Format("{0:dd'/'MM'/'yy hh:mm tt}", dateTime);
+    }
+}
+<!-- select2 -->
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+
+<!-- Main content -->
+<section class="content">
+    <div class="row" id="topSlideBar">
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-body col-md-12">
+                    <div class="form-group col-md-3">
+                        <label class="col-md-3 control-label">Group Category:</label>
+                        <div class="col-md-9">
+                            @Html.DropDownList("Depo_Category", ViewBag.Depo_Categories as SelectList, "Select", new { @class = "form-control", @onchange = "relodeFK_Depo()" })
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label class="col-md-3 control-label">Group:</label>
+                        <div class="col-md-9">
+                            @Html.DropDownList("FK_Depo", ViewBag.Depoes as SelectList, "Select", new { @class = "form-control", @onchange = "relodeFK_DepoGroup()" })
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label class="col-md-3 control-label">Sub Group:</label>
+                        <div class="col-md-9">
+                            @Html.DropDownList("FK_DepoGroup", ViewBag.DepoGroups as SelectList, "Select", new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label class="col-md-3 control-label">Location:</label>
+                        <div class="col-md-9">
+                            @Html.DropDownList("InOut_FK_Location", ViewBag.InOut_Locations as SelectList, "Select", new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body col-md-12">
+                    <div class="form-group col-md-3">
+                        <label class="col-md-3 control-label">In WKSP:</label>
+                        <div class="col-md-9">
+                            @Html.DropDownList("IsInWorkshop", ViewBag.IsInWorkshop as SelectList, "Select", new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label class="col-md-3 control-label">Trip Destination:</label>
+                        <div class="col-md-9">
+                            @Html.DropDownList("CurrentTripToward_FK_Location", ViewBag.CurrentTripToward_Locations as SelectList, "Select", new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <div class="col-md-3 control-label">
+                            <button id="filterButton" type="submit" class="btn btn-primary center-block" onclick="filterByInputToRedirectView()">Filter</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-footer">
+                    <!--need to exists for design-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="map-container" style="position:relative;">
+        <div class="row" id="map">
+            <script async defer
+                    @*src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDVkwHNr_8HlH6zM8-mIOnKxErJKLHEpo0&callback=initMap">*@
+                    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDVkwHNr_8HlH6zM8-mIOnKxErJKLHEpo0">
+            </script>
+        </div>
+        <div id="leftSlideBar" style="height:auto; width:330px; display:block; background:#fff; position:absolute; top:40px; padding :15px; border:2px solid rgb(0,192,239);border-radius: 5px;">
+            @*<h4 id="leftSlideBarTitle"></h4>*@
+            <div class="row" style="font-size:10px;">
+                <div class="col-md-3">
+                    <input type="checkbox" id="check_AL" onclick="filterLeftSideAndMap()" checked="checked" />&nbsp;<label id="label_AL">AL @Model.Count()</label>
+                </div>
+                <div class="col-md-3">
+                    <input type="checkbox" id="check_running" onclick="filterLeftSideAndMap()" />&nbsp;<label id="label_running">RN</label>
+                </div>
+                <div class="col-md-3">
+                    <input type="checkbox" id="check_standBy" onclick="filterLeftSideAndMap()" />&nbsp;<label id="label_standBy">SB</label>
+                </div>
+                <div class="col-md-3">
+                    <input type="checkbox" id="check_egnitionOff" onclick="filterLeftSideAndMap()" />&nbsp;<label id="label_egnitionOff">EO</label>
+                </div>
+                <div class="col-md-3">
+                    <input type="checkbox" id="check_timeLapsed" onclick="filterLeftSideAndMap()" />&nbsp;<label id="label_timeLapsed">TL</label>
+                </div>
+                <div class="col-md-3">
+                    <input type="checkbox" id="check_disconnected" onclick="filterLeftSideAndMap()" />&nbsp;<label id="label_disconnected">DC</label>
+                </div>
+                <div class="col-md-3">
+                    <input type="checkbox" id="check_deviceRemoved" onclick="filterLeftSideAndMap()" />&nbsp;<label id="label_deviceRemoved">DR</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <input class="form-control" id="searchTextBox" placeholder="Search here..." onkeyup="filterLeftSideAndMap()" />
+                </div>
+            </div>
+            <div class="row">
+                <div id="data_table_container" style="width:320px; overflow-y:scroll;">
+                    <table id="data_table" class="table table-bordered" style="font-size: 11px;">
+                        @*<thead>
+                                <tr style="background-color: white;">
+                                    <th style="font-size:15px; text-align:center;">
+                                        @Model.Count() vehicle(s) found
+                                    </th>
+                                </tr>
+                            </thead>*@
+                        <tbody id="data_tbody">
+                            @foreach (var item in Model)
+                            {
+                                <tr id="tr_@item.PK_Vehicle" data-category="tr_all">
+                                    <td id="td_1_@item.PK_Vehicle">
+                                        @item.RegistrationNumber <br />
+                                        UG: @item.Depo_Name <br />
+                                        @(item.Location_InOrOut == true && item.Location_Name != null && item.Location_InOrOutDateTime != null ? "Entered in "+ item.Location_Name : "")
+                                        @(item.Location_InOrOut == false && item.Location_Name != null && item.Location_InOrOutDateTime != null ? "Exit from "+ item.Location_Name : "")<br />
+                                        @(item.Location_InOrOutDateTime != null ? " At "+ ConvertToDateTimeString(item.Location_InOrOutDateTime) : "")
+                                    </td>
+                                    <td id="td_2_@item.PK_Vehicle">
+                                        T.Status: <span id="tracking_status_@item.PK_Vehicle"></span><br />
+                                        Updated At: <span id="update_time_@item.PK_Vehicle"></span><br />
+                                        <button class="btn btn-xs btn-warning" onclick="findMarker('@item.PK_Vehicle')">Find</button>
+                                        <a target='_blank' href='/Tracking/Index_single_live?PK_Vehicle=@item.PK_Vehicle'><button id='view_button_" + updatedDataList[i].PK_Vehicle + "' type='button' class='btn btn-info btn-xs'>View</button></a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+        <div id="rightSlideBar" style="height:auto; width:300px; display:block; background:#fff; position:absolute; top:40px; right:0px; padding :10px; border:2px solid rgb(243,156,18); border-radius: 5px; display:none; font-size:10px;">
+            <div style="width:100%;"> <button class="btn-warning" onclick="hideRightSlideBar()">X</button></div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th id="right_table_RegistrationNumber"></th>
+                    </tr>
+                </thead>
+                <tbody id="right_table_tbody">
+                    @*<tr>
+                            <td data-category="right_table_containers" id="right_table_ContactNumber"></td>
+                        </tr>
+                        <tr>
+                            <td data-category="right_table_containers" id="right_table_RequisitionTripInfo"></td>
+                        </tr>*@
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</section>
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<!-- DataTables -->
+<script src="~/Theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/Theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+
+@*Manage UI*@
+<script>
+    $(function () {
+        $('select').select2();
+        $('#data_table_container').css("height", $(window).height() - 400);
+    });
+
+    function relodeFK_Depo() {
+        var Depo_Category = $('select[name=Depo_Category]').val();
+        if (Depo_Category == '') {
+            return;
+        }
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/Depo/GetAccessibleDepoByCategory/",
+            data: JSON.stringify({ Category: Depo_Category }),
+            success: function (data) {
+                $('select[name=FK_Depo]').html("");
+                var result = "<option value=''>Select</option>";
+                for (var i = 0; i < data.length; i++) {
+                    result = result + "<option value='" + data[i].PK_Depo + "'>" + data[i].Name + "</option>";
+                }
+                $('select[name=FK_Depo]').html(result);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: relodeFK_Depo()");
+            }
+        });
+    }
+    function relodeFK_DepoGroup() {
+        var FK_Depo = $('select[name=FK_Depo]').val();
+        if (FK_Depo == '') {
+            return;
+        }
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/DepoGroup/GetDepoGroupBy_FK_Depo/",
+            data: JSON.stringify({ FK_Depo: FK_Depo }),
+            success: function (data) {
+                $('select[name=FK_DepoGroup]').html("");
+                var result = "<option value=''>Select</option>";
+                for (var i = 0; i < data.length; i++) {
+                    result = result + "<option value='" + data[i].PK_DepoGroup + "'>" + data[i].Name + "</option>";
+                }
+                $('select[name=FK_DepoGroup]').html(result);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: relodeFK_DepoGroup()");
+            }
+        });
+    }
+    function toggleTopSlideBar() {
+        var item = $("#topSlideBar");
+        if (item.is(":visible")) {
+            item.slideUp(1000);
+            $('#topSlideButton').removeClass('glyphicon-menu-up');
+            $('#topSlideButton').addClass('glyphicon-menu-down');
+        } else {
+            item.slideDown(1000);
+            $('#topSlideButton').removeClass('glyphicon-menu-down');
+            $('#topSlideButton').addClass('glyphicon-menu-up');
+        }
+    }
+    function toggleLeftSlideBar() {
+        var item = $("#leftSlideBar");
+        if (item.is(":visible")) {
+            $(item).hide(1000);
+            $('#leftSlideButton').removeClass('glyphicon-menu-left');
+            $('#leftSlideButton').addClass('glyphicon-menu-right');
+        } else {
+            $(item).show(1000);
+            $('#leftSlideButton').removeClass('glyphicon-menu-right');
+            $('#leftSlideButton').addClass('glyphicon-menu-left');
+        }
+    }
+    function filterByInputToRedirectView() {
+        var url = "/Tracking/Index_all5?LoadReport=yes&";
+        var Depo_Category = $("select[name=Depo_Category]").val();
+        if (Depo_Category != '') {
+            url = url + "Depo_Category=" + Depo_Category;
+        }
+
+        var FK_Depo = $("select[name=FK_Depo]").val();
+        if (FK_Depo != '') {
+            url = url + "&FK_Depo=" + FK_Depo;
+        }
+
+        var FK_DepoGroup = $("select[name=FK_DepoGroup]").val();
+        if (FK_DepoGroup != '') {
+            url = url + "&FK_DepoGroup=" + FK_DepoGroup;
+        }
+
+
+        var InOut_FK_Location = $("select[name=InOut_FK_Location]").val();
+        if (InOut_FK_Location != '') {
+            url = url + "&InOut_FK_Location=" + InOut_FK_Location;
+        }
+
+        var IsInWorkshop = $("select[name=IsInWorkshop]").val();
+        if (IsInWorkshop != '') {
+            url = url + "&IsInWorkshop=" + IsInWorkshop;
+        }
+
+        var CurrentTripToward_FK_Location = $("select[name=CurrentTripToward_FK_Location]").val();
+        if (CurrentTripToward_FK_Location != '') {
+            url = url + "&CurrentTripToward_FK_Location=" + CurrentTripToward_FK_Location;
+        }
+
+        window.location = url;
+    }
+</script>
+
+@*Manage Data*@
+<script>
+    var initMap_CallingTime = 3000;
+    var loadData_CallingTime = 5000;
+    var reloadData_CallingTime = 20000;
+    $(function () {
+        @foreach (var item in Model)
+        {
+        <text>
+        vehicle_list_all.push({
+            PK_Vehicle: '@item.PK_Vehicle',
+            RegistrationNumber: '@item.RegistrationNumber',
+        });
+        </text>
+        }
+    });
+
+    var vehicle_list_all = [];
+    var global_list = []
+
+    function loadData() {
+        console.log("loadData()");
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/Tracking/Index_all5_GetTrackingDataFirstTime/",
+            //data: JSON.stringify({ FK_Depo: FK_Depo }),
+            success: function (list) {
+                //console.log(list);
+                global_list = list;
+                loadLeftSlideBar();
+                loadMarkerList();
+
+                setTimeout(reloadData, reloadData_CallingTime);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: GetInitialDataByDepo()");
+            }
+        });
+    }
+    function loadLeftSlideBar() {
+        $("#label_running").html("RN:" + global_list.filter(function (item) { return item.Status == 2; }).length);
+        $("#label_standBy").html("SB:" + global_list.filter(function (item) { return item.Status == 1; }).length);
+        $("#label_egnitionOff").html("EO:" + global_list.filter(function (item) { return item.Status == 0; }).length);
+        $("#label_timeLapsed").html("TL:" + global_list.filter(function (item) { return item.Status == -1; }).length);
+        $("#label_disconnected").html("DC:" + global_list.filter(function (item) { return item.Status == -2; }).length);
+        $("#label_deviceRemoved").html("DR:" + global_list.filter(function (item) { return item.Status == -3; }).length);
+
+        for (var i = 0; i < global_list.length; i++) {
+            if (global_list[i].Status == 2) {
+                $('#tr_' + global_list[i].PK_Vehicle).css('background-color', '#b6f57f');//green
+                $('#tracking_status_' + global_list[i].PK_Vehicle).html('Running');
+            }
+            else if (global_list[i].Status == 1) {
+                $('#tr_' + global_list[i].PK_Vehicle).css('background-color', '#FF7F27');//yellow
+                $('#tracking_status_' + global_list[i].PK_Vehicle).html('Stand By');
+            }
+            else if (global_list[i].Status == 0) {
+                $('#tr_' + global_list[i].PK_Vehicle).css('background-color', '#f5a798');//light red
+                $('#tracking_status_' + global_list[i].PK_Vehicle).html('Engition Off');
+            }
+            else if (global_list[i].Status == -1) {
+                $('#tr_' + global_list[i].PK_Vehicle).css('background-color', '#f55233');//dark red
+                $('#tracking_status_' + global_list[i].PK_Vehicle).html('Time Lapsed');
+            }
+            else if (global_list[i].Status == -2) {
+                $('#tr_' + global_list[i].PK_Vehicle).css('background-color', '#f55233');//dark red
+                $('#tracking_status_' + global_list[i].PK_Vehicle).html('Disconnected');
+            }
+            else if (global_list[i].Status == -3) {
+                $('#tr_' + global_list[i].PK_Vehicle).css('background-color', '#f55233');//dark red
+                $('#tracking_status_' + global_list[i].PK_Vehicle).html('Device Removed');
+            }
+
+            $('#update_time_' + global_list[i].PK_Vehicle).html(global_list[i].UpdateTime);
+        }
+    }
+
+    function reloadData() {
+        console.log("reloadData()");
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/Tracking/Index_all5_GetTrackingDataCyclicTime/",
+            //data: JSON.stringify({ FK_Depo: FK_Depo }),
+            success: function (list) {
+                //console.log(list);
+                global_list = list;
+                reloadLeftSlideBar();
+                reloadMarkerList();
+                filterLeftSideAndMap();
+
+                setTimeout(reloadData, reloadData_CallingTime);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: GetInitialDataByDepo()");
+            }
+        });
+    }
+    function reloadLeftSlideBar() {
+        $("#label_running").html("RN:" + global_list.filter(function (item) { return item.Status == 2; }).length);
+        $("#label_standBy").html("SB:" + global_list.filter(function (item) { return item.Status == 1; }).length);
+        $("#label_egnitionOff").html("EO:" + global_list.filter(function (item) { return item.Status == 0; }).length);
+        $("#label_timeLapsed").html("TL:" + global_list.filter(function (item) { return item.Status == -1; }).length);
+        $("#label_disconnected").html("DC:" + global_list.filter(function (item) { return item.Status == -2; }).length);
+        $("#label_deviceRemoved").html("DR:" + global_list.filter(function (item) { return item.Status == -3; }).length);
+
+        for (var i = 0; i < global_list.length; i++) {
+            if (global_list[i].Status == 2) {
+                $('#tr_' + global_list[i].PK_Vehicle).css('background-color', '#b6f57f');//green
+                $('#tracking_status_' + global_list[i].PK_Vehicle).html('Running');
+            }
+            else if (global_list[i].Status == 1) {
+                $('#tr_' + global_list[i].PK_Vehicle).css('background-color', '#FF7F27');//yellow
+                $('#tracking_status_' + global_list[i].PK_Vehicle).html('Stand By');
+            }
+            else if (global_list[i].Status == 0) {
+                $('#tr_' + global_list[i].PK_Vehicle).css('background-color', '#f5a798');//light red
+                $('#tracking_status_' + global_list[i].PK_Vehicle).html('Engition Off');
+            }
+            else if (global_list[i].Status == -1) {
+                $('#tr_' + global_list[i].PK_Vehicle).css('background-color', '#f55233');//dark red
+                $('#tracking_status_' + global_list[i].PK_Vehicle).html('Time Lapsed');
+            }
+            else if (global_list[i].Status == -2) {
+                $('#tr_' + global_list[i].PK_Vehicle).css('background-color', '#f55233');//dark red
+                $('#tracking_status_' + global_list[i].PK_Vehicle).html('Disconnected');
+            }
+            else if (global_list[i].Status == -3) {
+                $('#tr_' + global_list[i].PK_Vehicle).css('background-color', '#f55233');//dark red
+                $('#tracking_status_' + global_list[i].PK_Vehicle).html('Device Removed');
+            }
+
+            $('#update_time_' + global_list[i].PK_Vehicle).html(global_list[i].UpdateTime);
+        }
+    }
+
+    function filterLeftSideAndMap() {
+        setTimeout(function () { },1000);
+        var _all = document.getElementById('check_AL').checked;
+        var _running = document.getElementById('check_running').checked;
+        var _standBy = document.getElementById('check_standBy').checked;
+        var _egnitionOff = document.getElementById('check_egnitionOff').checked;
+        var _timeLapsed = document.getElementById('check_timeLapsed').checked;
+        var _disconnected = document.getElementById('check_disconnected').checked;
+        var _deviceRemoved = document.getElementById('check_deviceRemoved').checked;
+        if (_all == true) {
+            $('tr[data-category=tr_all]').show();
+            for (var i = 0; i < markerList.length; i++) {
+                markerList[i].setMap(map);
+            }
+        }
+        else {
+            for (var i = 0; i < global_list.length; i++) {
+
+                if (_running == true && global_list[i].Status == 2) {
+                    $("#tr_" + global_list[i].PK_Vehicle).show();
+                    var marker = markerList.find(x => x.id == global_list[i].PK_Vehicle);
+                    if (marker != null) {
+                        marker.setMap(map);
+                    }
+                }
+                else if (_standBy == true && global_list[i].Status == 1) {
+                    $("#tr_" + global_list[i].PK_Vehicle).show();
+                    var marker = markerList.find(x => x.id == global_list[i].PK_Vehicle);
+                    if (marker != null) {
+                        marker.setMap(map);
+                    }
+                }
+                else if (_egnitionOff == true && global_list[i].Status == 0) {
+                    $("#tr_" + global_list[i].PK_Vehicle).show();
+                    var marker = markerList.find(x => x.id == global_list[i].PK_Vehicle);
+                    if (marker != null) {
+                        marker.setMap(map);
+                    }
+                }
+                else if (_timeLapsed == true && global_list[i].Status == -1) {
+                    $("#tr_" + global_list[i].PK_Vehicle).show();
+                    var marker = markerList.find(x => x.id == global_list[i].PK_Vehicle);
+                    if (marker != null) {
+                        marker.setMap(map);
+                    }
+                }
+                else if (_disconnected == true && global_list[i].Status == -2) {
+                    $("#tr_" + global_list[i].PK_Vehicle).show();
+                    var marker = markerList.find(x => x.id == global_list[i].PK_Vehicle);
+                    if (marker != null) {
+                        marker.setMap(map);
+                    }
+                }
+               else  if (_deviceRemoved == true && global_list[i].Status == -3) {
+                    $("#tr_" + global_list[i].PK_Vehicle).show();
+                    var marker = markerList.find(x => x.id == global_list[i].PK_Vehicle);
+                    if (marker != null) {
+                        marker.setMap(map);
+                    }
+                }
+                else {
+                    $("#tr_" + global_list[i].PK_Vehicle).hide();
+                var marker = markerList.find(x => x.id == global_list[i].PK_Vehicle);
+                    if (marker != null) {
+                        marker.setMap(null);
+                    }
+                }
+            }
+        }
+        var searchText = $('#searchTextBox').val();
+        if (searchText != '') {
+            var nonSerchedVehicleList = global_list.filter((item) => {
+                return item.RegistrationNumber.indexOf(searchText.toUpperCase()) == -1;
+            });
+            for (var i = 0; i < nonSerchedVehicleList.length; i++) {
+                $("#tr_" + nonSerchedVehicleList[i].PK_Vehicle).hide();
+                var marker = markerList.find(x => x.id == nonSerchedVehicleList[i].PK_Vehicle);
+                if (marker != null) {
+                    marker.setMap(null);
+                }
+            }
+        }
+    }
+    function findMarker(PK_Vehicle) {
+        var marker = markerList.find(x => x.id == PK_Vehicle);
+
+        if (marker != undefined) {
+            map.setCenter(new google.maps.LatLng(marker.getPosition().lat(), marker.getPosition().lng()));
+            var vehicle = vehicle_list_all.find(x => x.PK_Vehicle == PK_Vehicle);
+
+            var infoWindowContent = vehicle.RegistrationNumber;
+            var infowindow = new google.maps.InfoWindow();
+            if (lastInfoWindow != undefined) {
+                lastInfoWindow.close();
+            }
+            infowindow.setContent(infoWindowContent);
+            infowindow.open(map, marker);
+            lastInfoWindow = infowindow;
+            loadRightSlideBar(PK_Vehicle);
+        }
+    }
+    function loadRightSlideBar(PK_Vehicle) {
+        var vehicle = vehicle_list_all.find(x => x.PK_Vehicle == PK_Vehicle);
+        $("#right_table_RegistrationNumber").html('Loading..  '+vehicle.RegistrationNumber);
+        $("#right_table_tbody").html('');
+
+        var item = $("#rightSlideBar");
+        $(item).show(1000);
+
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/Tracking/Index_all5_GetVehicleDetailData/",
+            data: JSON.stringify({ PK_Vehicle: PK_Vehicle }),
+            success: function (data) {
+                console.log(data);
+                $("#right_table_RegistrationNumber").html(vehicle.RegistrationNumber);
+
+                var tbody_content = "";
+
+                //Image
+                if (true) {
+                    tbody_content = tbody_content + "<tr><td>";
+                    tbody_content = tbody_content + "<img src='" + data.BasicInfo.Data.ImageLink + "' width='200' height='120'>" + "<br>";
+                    tbody_content = tbody_content + "</td></tr>";
+                }
+
+                //BasicInfo
+                if (true) {
+                    tbody_content = tbody_content + "<tr><td>";
+                    tbody_content = tbody_content + "<b>" + data.BasicInfo.DisplayName + "</b><br>";
+                    tbody_content = tbody_content + "PRG Type: " + data.BasicInfo.Data.PRG_Type + "<br>";
+                    tbody_content = tbody_content + "Group Type: " + data.BasicInfo.Data.DepotCategory + "<br>";
+                    tbody_content = tbody_content + "Group: " + data.BasicInfo.Data.Depot + "<br>";
+                    tbody_content = tbody_content + "Subgroup: " + data.BasicInfo.Data.DepoGroup + "<br>";
+                    tbody_content = tbody_content + "Contact No: " + data.BasicInfo.Data.ContactNumber;
+                    tbody_content = tbody_content + "</td></tr>";
+                }
+
+                //TrackingInformatoin
+                if (true) {
+                    tbody_content = tbody_content + "<tr><td>";
+                    tbody_content = tbody_content + "<b>" + data.TrackingInfo.DisplayName + "</b><br>";
+                    tbody_content = tbody_content + "Device Model: " + data.TrackingInfo.Data.GpsDeviceModel + "<br>";
+                    tbody_content = tbody_content + "Update Time: " + data.TrackingInfo.Data.UpdateTime + "<br>";
+                    tbody_content = tbody_content + "Last Location: " + data.TrackingInfo.Data.MapLocation + "<br>";
+                    tbody_content = tbody_content + "Speed: " + data.TrackingInfo.Data.Speed + "<br>";
+                    tbody_content = tbody_content + "Temperature: " + data.TrackingInfo.Data.Temperature + "<br>";
+                    tbody_content = tbody_content + "Status: " + data.TrackingInfo.Data.Status + "<br>";
+                    tbody_content = tbody_content + "</td></tr>";
+                }
+
+                //RequisitionTripInfo
+                if (!jQuery.isEmptyObject(data.RequisitionTripInfo.Data)) {
+
+                    tbody_content = tbody_content + "<tr><td>";
+                    tbody_content = tbody_content + "<b>" + data.RequisitionTripInfo.DisplayName + "</b><br>";
+                    tbody_content = tbody_content + "Trip: " + data.RequisitionTripInfo.Data.TrackingID + "<br>";
+                    tbody_content = tbody_content + "From: " + data.RequisitionTripInfo.Data.FromLocation + "<br>";
+                    tbody_content = tbody_content + "To: " + data.RequisitionTripInfo.Data.ToLocation + "<br>";
+                    tbody_content = tbody_content + "Started at: " + data.RequisitionTripInfo.Data.StartedAt + "<br>";
+                    if (data.RequisitionTripInfo.Data.TentativeFinishingDateTime != "") {
+                        tbody_content = tbody_content + "Tent Finish Time: " + data.RequisitionTripInfo.Data.TentativeFinishingDateTime;
+                    }
+                    tbody_content = tbody_content + "</td></tr>";
+                }
+
+                //ParkingInOutInfo
+                if (!jQuery.isEmptyObject(data.ParkingInOutInfo.Data)) {
+
+                    tbody_content = tbody_content + "<tr><td>";
+                    tbody_content = tbody_content + "<b>" + data.ParkingInOutInfo.DisplayName + "</b><br>";
+                    tbody_content = tbody_content + "Entered " + data.ParkingInOutInfo.Data.ParkingName;
+                    tbody_content = tbody_content + " at " + data.ParkingInOutInfo.Data.ParkingInTime;
+                    tbody_content = tbody_content + "</td></tr>";
+                }
+
+                $("#right_table_tbody").html(tbody_content);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: GetInitialDataByDepo()");
+            }
+        });
+    }
+    function hideRightSlideBar() {
+        var item = $("#rightSlideBar");
+        $(item).hide(1000);
+    }
+</script>
+
+
+@*Manage Map*@
+<script>
+    $(function () {
+        setTimeout(initMap, initMap_CallingTime);
+    });
+    var map;
+    var vehicle_move = '/Content/Images/icon_green.png';
+    var vehicle_nonMove = '/Content/Images/icon_yellow.png';
+    var vehicle_egnition_off = '/Content/Images/icon_light_red.png';
+    var vehicle_notConnected = '/Content/Images/icon_dark_red.png';
+    var markerList = [];
+    var lastInfoWindow;
+    //var marker;
+    //var markerMoveFrequency = 10;
+    //var intervalTime = 1000;
+    //var line;
+    //var flightPath;
+
+    function initMap() {
+        console.log("initMap()");
+        $("#map").css("height", $(window).height());
+        map = new google.maps.Map(document.getElementById('map'), {
+            disableDefaultUI: true,
+            zoom: 8,
+            center: { lat: 23, lng: 90 }
+        });
+
+        var trafficLayer = new google.maps.TrafficLayer();
+        trafficLayer.setMap(map);
+
+        const customButtonContainer = document.createElement("div");
+        customButtonContainer.style.width = "auto";
+        customButtonContainer.style.marginTop = "2px";
+        customButtonContainer.style.marginLeft = "16px";
+
+        //top slide button
+        const topSlideButton = document.createElement("button");
+        topSlideButton.setAttribute("id", "topSlideButton");
+        topSlideButton.classList.add("btn");
+        topSlideButton.classList.add("btn-primary");
+        topSlideButton.classList.add("glyphicon");
+        topSlideButton.classList.add("glyphicon-menu-up");
+        topSlideButton.addEventListener("click", () => {
+            toggleTopSlideBar();
+        });
+        customButtonContainer.appendChild(topSlideButton);
+
+        //left slide button
+        const leftSlideButton = document.createElement("button");
+        leftSlideButton.setAttribute("id", "leftSlideButton");
+
+        leftSlideButton.style.marginLeft = "16px";
+        leftSlideButton.classList.add("btn");
+        leftSlideButton.classList.add("btn-info");
+        leftSlideButton.classList.add("glyphicon");
+        leftSlideButton.classList.add("glyphicon-menu-left");
+        leftSlideButton.addEventListener("click", () => {
+            toggleLeftSlideBar();
+        });
+        customButtonContainer.appendChild(leftSlideButton);
+
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(customButtonContainer);
+
+        setTimeout(loadData, loadData_CallingTime);
+    }
+    function loadMarkerList() {
+        for (var i = 0; i < global_list.length; i++) {
+            var marker = new google.maps.Marker({
+                id: global_list[i].PK_Vehicle,
+                position: { lat: Number(global_list[i].Latitude), lng: Number(global_list[i].Longitude) },
+                map: map,
+            });
+
+            if (global_list[i].Status == 2) {
+                marker.setIcon(vehicle_move);
+            }
+            else if (global_list[i].Status == 1) {
+                marker.setIcon(vehicle_nonMove);
+            }
+            else if (global_list[i].Status == 0) {
+                marker.setIcon(vehicle_egnition_off);
+            }
+            else if (global_list[i].Status == -1) {
+                marker.setIcon(vehicle_notConnected);
+            }
+            else if (global_list[i].Status == -2) {
+                marker.setIcon(vehicle_notConnected);
+            }
+            else if (global_list[i].Status == -3) {
+                marker.setIcon(vehicle_notConnected);
+            }
+
+            var infoWindowContent = "<a id='" + global_list[i].PK_Vehicle + "' onClick='loadRightSlideBar(this.id)'>" + global_list[i].RegistrationNumber + "</a>";//global_list[i].RegistrationNumber;
+            var infowindow = new google.maps.InfoWindow();
+            google.maps.event.addListener(marker, 'click', (function (marker, html, infowindow) {
+                return function () {
+                    if (lastInfoWindow != undefined) {
+                        lastInfoWindow.close();
+                    }
+                    infowindow.setContent(html);
+                    infowindow.open(map, marker);
+                    lastInfoWindow = infowindow;
+                    console.log(global_list[i]);
+                };
+            })(marker, infoWindowContent, infowindow));
+
+            markerList.push(marker);
+        }
+    }
+
+    function reloadMarkerList() {
+        for (var i = 0; i < global_list.length; i++) {
+            var marker = markerList.find(x => x.id == global_list[i].PK_Vehicle);
+
+            if (global_list[i].Status == 2) {
+                marker.setIcon(vehicle_move);
+            }
+            else if (global_list[i].Status == 1) {
+                marker.setIcon(vehicle_nonMove);
+            }
+            else if (global_list[i].Status == 0) {
+                marker.setIcon(vehicle_egnition_off);
+            }
+            else if (global_list[i].Status == -1) {
+                marker.setIcon(vehicle_notConnected);
+            }
+            else if (global_list[i].Status == -2) {
+                marker.setIcon(vehicle_notConnected);
+            }
+            else if (global_list[i].Status == -3) {
+                marker.setIcon(vehicle_notConnected);
+            }
+
+            marker.setPosition(new google.maps.LatLng(global_list[i].Latitude, global_list[i].Longitude));
+        }
+    }
+
+</script>

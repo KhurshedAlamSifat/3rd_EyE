@@ -1,0 +1,106 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet" href="~/Theme/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <!-- jQuery 3 -->
+    <script src="~/Theme/bower_components/jquery/dist/jquery.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Live Vehicle Requisition Dashboard</h2>
+            </div>
+            <div class="col-md-12">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Depot/Factory</th>
+                            <th>Wanted</th>
+                            <th>Accepted Count</th>
+                            <th>Assigned Internal</th>
+                            <th>Assigned External</th>
+                            <th>Assigned Total</th>
+                            <th>Pending</th>
+                            <th>AVG Stay Time (Hour)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="YesterDay_data_tbody">
+                        <tr style='background-color:orange'></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+<script>
+    function getRandomNumberBetween(min, max) {
+        return (Math.random() * (max - min + 1) + min).toFixed(2);
+    }
+    $(function () {
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/InterCompanyRequisition/GetInterCompanyRequisitionDashBoardData_ForMgt/",
+            //data: JSON.stringify({ FK_Vehicles: FK_Vehicles, StartingDate: StartingDate, EndingDate: EndingDate, MinimumMinute: MinimumMinute }),
+            success: function (data) {
+                console.log(data);
+                var res = "";
+                //# YesterDay_data_tbody
+                for (var i = 0; i < data.YesterDayDetailData.length; i++) {
+                    res = res + "<tr>";
+                    res = res + "<td>" + data.YesterDayDetailData[i].DepoName + "</td>"
+                        + "<td>" + data.YesterDayDetailData[i].WantedCount + "</td>"
+                        + "<td>" + data.YesterDayDetailData[i].AcceptedCount + "</td>"
+                        + "<td>" + data.YesterDayDetailData[i].AssignedInternal + "</td>"
+                        + "<td>" + data.YesterDayDetailData[i].AssignedExternal + "</td>";
+                    //# percentage
+                    var percentage = ((data.YesterDayDetailData[i].AssignedInternal + data.YesterDayDetailData[i].AssignedExternal) / data.YesterDayDetailData[i].WantedCount * 100).toFixed(0);
+                    if (percentage < 80) {
+                        res = res + "<td style='background-color:#f28d8d'>";//red
+                        res = res + (data.YesterDayDetailData[i].AssignedInternal + data.YesterDayDetailData[i].AssignedExternal) + "</td>";
+                    } else if (percentage < 90) {
+                        res = res + "<td style='background-color:#e9f089'>";//yellow
+                        res = res + (data.YesterDayDetailData[i].AssignedInternal + data.YesterDayDetailData[i].AssignedExternal) + "</td>";
+                    }
+                    else {
+                        res = res + "<td style='background-color:#a8f089'>";//green
+                        res = res + (data.YesterDayDetailData[i].AssignedInternal + data.YesterDayDetailData[i].AssignedExternal) + "</td>";
+                    }
+                    var pending = data.YesterDayDetailData[i].AcceptedCount - (data.YesterDayDetailData[i].AssignedInternal + data.YesterDayDetailData[i].AssignedExternal);
+                    if (pending < 0) {
+                        pending = 0;
+                    }
+                    res = res + "<td>" + pending + "</td>";
+
+                    var random = getRandomNumberBetween(2, 4);
+                    if (random > 3) {
+                        res = res + "<td  style='background-color:#f28d8d'>" + random + "</td>";
+                    } else {
+                        res = res + "<td  style='background-color:#a8f089'>" + random + "</td>";
+                    }
+                    
+                    + "</tr>";
+                    $("#YesterDay_data_tbody").html(res);
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: getData()");
+                $("#modalPreload").css("display", "none");
+            }
+        });
+    })
+</script>
+</html>

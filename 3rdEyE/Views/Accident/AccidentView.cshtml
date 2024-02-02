@@ -1,0 +1,386 @@
+﻿@model _3rdEyE.ViewModels.VM_Accident
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        View Accident
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        <a class="btn btn-block btn-info btn-sm" href="@Request.ServerVariables["HTTP_REFERER"]">Go Back</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/PoliceCase/Create" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <h3 class="box-title" style="color: red;">Accident ID: @Model.Model.TrackingID</h3>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <!-- /.box-header -->
+                            <!-- form start -->
+                            @*FK_Vehicle*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Vehicle*</label>
+                                    <div class="col-md-8">
+                                        @Html.DisplayFor(viewModel => viewModel.Model.Vehicle.RegistrationNumber)
+                                    </div>
+                                </div>
+                            </div>
+                            @*AccusedDriverStaffID*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Driver:</label>
+                                    <div class="col-md-8">
+                                        @*@Html.DisplayFor(viewModel => viewModel.Model.AccusedDriverStaffID + "-" + viewModel.Model.AccusedDriverName)*@
+                                        @Html.DisplayFor(viewModel => viewModel.Model.AccusedDriverStaffID)
+                                        @Html.DisplayFor(viewModel => viewModel.Model.AccusedDriverName)
+                                    </div>
+                                </div>
+                            </div>
+                            @*OccuranceDate*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Accident Date</label>
+                                    <div class="col-md-8">
+                                        @Html.DisplayFor(viewModel => viewModel.OccuranceDate_Text)
+                                    </div>
+                                </div>
+                            </div>
+                            @*Location*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Location</label>
+                                    <div class="col-md-8">
+                                        @Html.DisplayFor(viewModel => viewModel.Model.District.Name)
+                                        @Html.DisplayFor(viewModel => viewModel.Model.Upazila.Name)
+                                    </div>
+                                </div>
+                            </div>
+                            @*AccidentLocationDetail*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Accident Location Detail</label>
+                                    <div class="col-md-8">
+                                        @Html.DisplayFor(viewModel => viewModel.Model.AccidentLocationDetail)
+                                    </div>
+                                </div>
+                            </div>
+                            @*CurrentVehicleLocation*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Current Location</label>
+                                    <div class="col-md-8">
+                                        @Html.DisplayFor(viewModel => viewModel.Model.CurrentVehicleLocation)
+                                    </div>
+                                </div>
+                            </div>
+                            @*DamageType*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Damage Type</label>
+                                    <div class="col-md-8">
+                                        @Html.DisplayFor(viewModel => viewModel.Model.DamageType)
+                                    </div>
+                                </div>
+                            </div>
+                            @*DescriptionDuty*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Description Duty</label>
+                                    <div class="col-md-8">
+                                        @Html.DisplayFor(viewModel => viewModel.Model.DescriptionDuty)
+                                    </div>
+                                </div>
+                            </div>
+                            @*DescriptionAccident*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Description Accident</label>
+                                    <div class="col-md-8">
+                                        @Html.DisplayFor(viewModel => viewModel.Model.DescriptionAccident)
+                                    </div>
+                                </div>
+                            </div>
+                            @*PrimaryCause*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Primary Cause</label>
+                                    <div class="col-md-8">
+                                        @Html.DisplayFor(viewModel => viewModel.Model.PrimaryCause)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            @*ManLossCount*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Man Loss Count</label>
+                                    <div class="col-md-8">
+                                        @Html.DisplayFor(viewModel => viewModel.Model.ManLossCount)
+                                    </div>
+                                </div>
+                            </div>
+                            @*DamageProductCost*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Damage Product Cost</label>
+                                    <div class="col-md-8">
+                                        @Html.DisplayFor(viewModel => viewModel.Model.DamageProductCost)
+                                    </div>
+                                </div>
+                            </div>
+                            @*DamageVehicleDetail*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Damage Vehicle Detail</label>
+                                    <div class="col-md-8">
+                                        @Html.DisplayFor(viewModel => viewModel.Model.DamageVehicleDetail)
+                                    </div>
+                                </div>
+                            </div>
+                            @*OtherDamage*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Other Damage</label>
+                                    <div class="col-md-8">
+                                        @Html.DisplayFor(viewModel => viewModel.Model.OtherDamage)
+                                    </div>
+                                </div>
+                            </div>
+                            @*FK_DepoFollowUp*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Following User Group*</label>
+                                    <div class="col-md-8">
+                                        @Html.DisplayFor(viewModel => viewModel.Model.Depo.Name)
+                                    </div>
+                                </div>
+                            </div>
+                            @*ActionTakenStaffID*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Assigned Staff:</label>
+                                    <div class="col-md-8">
+                                        @Html.DisplayFor(viewModel => viewModel.Model.ActionTakenStaffID) - @Html.DisplayFor(viewModel => viewModel.Model.ActionTakenStaffName)
+                                    </div>
+                                </div>
+                            </div>
+                            @*Note*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Note</label>
+                                    <div class="col-md-8">
+                                        @Html.DisplayFor(viewModel => viewModel.Model.Note)
+                                    </div>
+                                </div>
+                            </div>
+                            @*OthersCost*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Others Cost</label>
+                                    <div class="col-md-8">
+                                        @Html.DisplayFor(viewModel => viewModel.Model.OthersCost)
+                                    </div>
+                                </div>
+                            </div>
+                            @*OthersNote*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Others Note</label>
+                                    <div class="col-md-8">
+                                        @Html.DisplayFor(viewModel => viewModel.Model.OthersNote)
+                                    </div>
+                                </div>
+                            </div>
+                            @*CompensationTaken*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Others Cost</label>
+                                    <div class="col-md-8">
+                                        @Html.DisplayFor(viewModel => viewModel.Model.CompensationTaken)
+                                    </div>
+                                </div>
+                            </div>
+                            @*CompensationTakenFrom*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Others Note</label>
+                                    <div class="col-md-8">
+                                        @Html.DisplayFor(viewModel => viewModel.Model.CompensationTakenFrom)
+                                    </div>
+                                </div>
+                            </div>
+                            @*CompensationTakenStaffID*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Driver:</label>
+                                    <div class="col-md-8">
+                                        @Html.DisplayFor(viewModel => viewModel.Model.CompensationTakenStaffID)
+                                        @Html.DisplayFor(viewModel => viewModel.Model.CompensationTakenStaffName)
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*DeductionTakenFromDriver*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Settlement Amount</label>
+                                    <div class="col-md-8">
+                                        @Html.DisplayFor(viewModel => viewModel.Model.DeductionTakenFromDriver)
+                                    </div>
+                                </div>
+                            </div>
+                            @*SettlementNote*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Settlement Amount</label>
+                                    <div class="col-md-8">
+                                        @Html.DisplayFor(viewModel => viewModel.Model.SettlementNote)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Document List</h3>
+                                <input type="text" name="rowCount" id="rowCount" value="0" style="display:none" />
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table id="data_table" class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 5%">
+                                                        SL
+                                                    </th>
+                                                    <th style="width: 30%">
+                                                        Document Type
+                                                    </th>
+                                                    <th style="width: 20%">
+                                                        Name
+                                                    </th>
+                                                    <th style="width: 20%">
+                                                        Number
+                                                    </th>
+                                                    <th style="width: 25%">
+                                                        Download
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbody">
+                                                @{
+                                                    int i = 0;
+                                                }
+                                                @foreach (var item in Model.Model.AccidentDocuments)
+                                                {
+                                                    i = i + 1;
+                                                    <tr>
+                                                        <td>@i</td>
+                                                        <td>@item.Title</td>
+                                                        <td>@item.IdentitficaitonKey</td>
+                                                        <td>@item.IdentitficaitonValue</td>
+                                                        <td><a href="/Accident/AccidentDocumentDownload?id=@item.PK_AccidentDocument" class="btn btn-block btn-success btn-xs">Download</a></td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Expense List</h3>
+                                <input type="text" name="rowCount" id="rowCount" value="0" style="display:none" />
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table id="data_table" class="table table-bordered table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>TrackingID </th>
+                                                    <th>OccuranceDate </th>
+                                                    <th>PaidAmount </th>
+                                                    <th>Purpose </th>
+                                                    <th>Status </th>
+                                                    <th>InternalTakerStaffID </th>
+                                                    <th>InternalTakerStaffName </th>
+                                                    <th>ExternalTakerName </th>
+                                                    <th>ExternalTakerContactNumber </th>
+                                                    <th>ExternalTakerContactAddress </th>
+                                                    <th>FK_PaidByUser </th>
+                                                    <th>PaidAt </th>
+                                                    <th>CreatedAt </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in Model.Model.AccidentExpenses.Where(m => m.IsDeleted != true))
+                                                {
+                                                    <tr>
+                                                        <td>@item.TrackingID </td>
+                                                        <td>@item.OccuranceDate </td>
+                                                        <td>@item.PaidAmount </td>
+                                                        <td>@item.Purpose </td>
+                                                        <td>@item.Status </td>
+                                                        <td>@item.InternalTakerStaffID </td>
+                                                        <td>@item.InternalTakerStaffName </td>
+                                                        <td>@item.ExternalTakerName </td>
+                                                        <td>@item.ExternalTakerContactNumber </td>
+                                                        <td>@item.ExternalTakerContactAddress </td>
+                                                        <td>@item.FK_PaidByUser </td>
+                                                        <td>@item.PaidAt </td>
+                                                        <td>@item.CreatedAt </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-footer">
+                        @*<a class="btn btn-default" href="/PoliceCase/Index">Back To List</a>*@
+                        @*<input type="button" class="btn btn-facebook center-block" value="Create" onclick="TrySubmit()" />*@
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+
+</section>
+<!-- /.content -->
+
+
+<script>
+    $('document').ready(function () {
+        $('input').attr("disabled", "disabled");
+        $('textarea').attr("disabled", "disabled");
+        $('select').attr("disabled", "disabled");
+    });
+</script>

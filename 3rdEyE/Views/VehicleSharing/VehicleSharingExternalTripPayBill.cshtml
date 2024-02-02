@@ -1,0 +1,135 @@
+﻿@model _3rdEyE.Models.VehicleSharingExternalTrip
+@{
+    ViewBag.Title = "";
+}
+
+<section class="content-header">
+    <h1>
+        External Trip Pay
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        <a class="btn btn-block btn-info btn-sm" href="/InstantRequisition/IndexBy_PaymentReceiver">Go To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/VehicleSharing/VehicleSharingExternalTripPayBill" enctype="multipart/form-data">
+        <input name="PK_VehicleSharingExternalTrip" value="@Model.PK_VehicleSharingExternalTrip" style="display:none;" />
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="col-md-12">
+                        <div class="col-md-12">
+                            <div class="col-md-6">
+                                <label>বিলের নং:</label>
+                                <label> EV @Model.VehicleSharingBidding.VehicleSharing.TrackingID</label>
+                            </div>
+                            <div class="col-md-6">
+                                <label>বিলের টাইপ:</label>
+                                <label>Expense Voucher</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-6">
+                                <label>বিলের তারিখ:</label>
+                                <label>@Model.AssingedAt</label>
+                            </div>
+                            <div class="col-md-6">
+                                <label>গাড়ি নং:</label>
+                                <label>@Model.Vehicle.RegistrationNumber</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-12">
+                                <label>ট্র্যান্সপোর্ট এজেন্টের নাম:</label>
+                                <label>@Model.VehicleSharingBidding.AppUser.FullName</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-12">
+                                <label>বুকিং ডিপো:</label>
+                                <label>@Model.VehicleSharingBidding.VehicleSharing.Depo.Name &nbsp; @Model.VehicleSharingBidding.VehicleSharing.StartingLocation</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-12">
+                                <label>ডেস্টিনেসন ডিপো:</label>
+                                <label>@Model.VehicleSharingBidding.VehicleSharing.Depo1.Name  &nbsp; @Model.VehicleSharingBidding.VehicleSharing.FinishingLocation</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-12">
+                                <label>মোট দূরত্ব:</label>
+                                <label>@Model.VehicleSharingBidding.VehicleSharing.DistanceGoogle KM</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-12">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>নং</th>
+                                            <th>খরচের খাত</th>
+                                            <th>প্রক্রিত চাহিদা</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>নং</td>
+                                            <td>খরচের খাত</td>
+                                            <td>প্রক্রিত চাহিদা</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>
+                                                    ১
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <label>
+                                                    Rent
+                                                </label>
+                                            </td>
+                                            <td style="float:right;">
+                                                <label>
+                                                    <b>@Model.VehicleSharingBidding.PricePerQuantity</b>
+                                                </label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><label></label></td>
+                                            <td>
+                                                <label>
+                                                    মোট টাকা
+                                                </label>
+                                            </td>
+                                            <td style="float:right;">
+                                                <label>
+                                                    <b>@Model.VehicleSharingBidding.PricePerQuantity</b>
+                                                </label>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        @if (Model.PaymentStatusText != "Approved Bill")
+                        {
+                            <input type="button" class="btn btn-facebook center-block" value="Confirm Bill Giving" onclick="TrySubmit()" />
+                        }
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+
+</section>
+

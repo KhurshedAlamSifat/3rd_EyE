@@ -1,0 +1,283 @@
+﻿@model IEnumerable<_3rdEyE.Models.RFID_Entry>
+@{
+    ViewBag.Title = "Inter Company Vehicle Requisition";
+}
+
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Inter Company Vehicle Requisition : Raiser View
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        <a class="btn btn-block btn-facebook btn-sm" href="/VehicleSharing/DemandCreate">Create New</a>
+    </div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-body col-md-12">
+                    @*<div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Starting Date:</label>
+                            <div class="input-group col-md-8">
+                                <div class="col-md-12 input-append date form_datetime" data-link-field="dtp_input1">
+                                    <input id="StartingDate" name="StartingDate" class="form-control col-md-12" type="text" value="@ViewBag.StartingDate" readonly="readonly" style="background-color: white;">
+                                    <span class="add-on"><i class="icon-remove"></i></span>
+                                    <span class="add-on"><i class="icon-th"></i></span>
+                                </div>
+                                <input type="hidden" id="dtp_input1" value="" style="display:none;" /><br />
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Ending Date:</label>
+                            <div class="input-group col-md-8">
+                                <div class="col-md-12 input-append date form_datetime" data-link-field="dtp_input1">
+                                    <input id="EndingDate" name="EndingDate" class="form-control col-md-12" type="text" value="@ViewBag.EndingDate" readonly="readonly" style="background-color: white;">
+                                    <span class="add-on"><i class="icon-remove"></i></span>
+                                    <span class="add-on"><i class="icon-th"></i></span>
+                                </div>
+                                <input type="hidden" id="dtp_input2" value="" style="display:none;" /><br />
+                            </div>
+                        </div>*@
+                    <div class="form-group col-md-4">
+                        <button class="btn btn-facebook" onclick="getData()">Get Data</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.col -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Inter Company Vehicle Requisition</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="data_table" class="table table-bordered table-striped" style="font-size:15px;">
+                        <thead>
+                            <tr>
+                                <th>
+                                    ID
+                                </th>
+                                <th>
+                                    Total Raw
+                                </th>
+                                <th>
+                                    Last Entry
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                                <th>
+                                    Dist Raw
+                                </th>
+                                <th>
+                                    Dist ID
+                                </th>
+                                <th>
+                                    Dist Auto
+                                </th>
+                                <th>
+                                    Dist Manual
+                                </th>
+                                <th>
+                                    Dist API
+                                </th>
+                                <th>
+                                    Letter Raw
+                                </th>
+                                <th>
+                                    Letter ID
+                                </th>
+                                <th>
+                                    LetterText_Auto
+                                </th>
+                                <th>
+                                    Letter Manual
+                                </th>
+                                <th>
+                                    Letter API
+                                </th>
+                                <th>
+                                    Last Raw
+                                </th>
+                                <th>
+                                    Last Manual
+                                </th>
+                                <th>
+                                    Total API
+                                </th>
+                                <th>
+                                    In
+                                <th>
+                                    In Time
+                                </th>
+                                <th>
+                                    Out
+                                </th>
+                                <th>
+                                    Out Time
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="detail_tbody">
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.ID
+                                    </td>
+                                    <td>
+                                        @item.TotalText_Raw
+                                    </td>
+                                    <td>
+                                        @item.LastEntryAt
+                                    </td>
+                                    <td>
+                                        @item.Status
+                                    </td>
+                                    <td>
+                                        @item.DistText_Raw
+                                    </td>
+                                    <td>
+                                        @item.FK_Dist_ID
+                                    </td>
+                                    <td>
+                                        @item.DistText_Auto
+                                    </td>
+                                    <td>
+                                        @item.DistText_Manual
+                                    </td>
+                                    <td>
+                                        @item.DistText_API
+                                    </td>
+                                    <td>
+                                        @item.LetterText_Raw
+                                    </td>
+                                    <td>
+                                        @item.FK_Letter_ID
+                                    </td>
+                                    <td>
+                                        @item.LetterText_Auto
+                                    </td>
+                                    <td>
+                                        @item.LetterText_Manual
+                                    </td>
+                                    <td>
+                                        @item.LetterText_API
+                                    </td>
+                                    <td>
+                                        @item.LastText_Raw
+                                    </td>
+                                    <td>
+                                        @item.LastText_Manual
+                                    </td>
+                                    <td>
+                                        @item.TotalText_API
+                                    </td>
+                                    <td>
+                                        @item.GateInID
+                                    <td>
+                                        @item.GateInDateTime
+                                    </td>
+                                    <td>
+                                        @item.GateOutID
+                                    </td>
+                                    <td>
+                                        @item.GateOutDateTime
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- DataTablesExportable -->
+<script src="~/Scripts/Custom/DataTableExportable/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.flash.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/jszip.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/pdfmake.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/vfs_fonts.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.html5.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.print.min.js"></script>
+<!-- page script -->
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+<script>
+    $(function () {
+        $('.form_datetime').datetimepicker({
+            format: 'yyyy-mm-dd HH:ii P',
+            todayBtn: 1,
+            autoclose: 1,
+        });
+        @if (Model.Count() > 0)
+        {
+        <text>
+        makeDataTable();
+        </text>
+        }
+    });
+</script>
+<script>
+    function makeDataTable() {
+        var table = $('#data_table').DataTable({
+            paging: false,
+            scrollY: '100vh',
+            scrollCollapse: true,
+            scrollX: '50vh',
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'pdfHtml5',
+                    orientation: 'landscape',
+                    pageSize: 'LEGAL'
+                },
+                {
+                    extend: 'print',
+                    title: 'Event Report [@ViewBag.StartingDate - @ViewBag.EndingDate]',
+                    customize: function (win) {
+                        $(win.document.body)
+                            .css('font-size', '10pt');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', '15px');
+                            }
+                },
+                {
+                    extend: 'excel'
+                }
+            ],
+        });
+    }
+</script>
+<script>
+    function getData() {
+        //var StartingDate = $('Input[name=StartingDate]').val();
+        //var EndingDate = $('Input[name=EndingDate]').val();
+        //if (StartingDate == '' || EndingDate == '') {
+        //    alert("Please, Select starting date and ending date.");
+        //    return;
+        //}
+        //window.location = '/RFID/EntryIndex?StartingDate=' + StartingDate + '&EndingDate=' + EndingDate;
+        window.location = '/RFID/EntryIndex;
+    }
+</script>

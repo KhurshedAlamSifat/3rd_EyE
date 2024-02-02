@@ -1,0 +1,141 @@
+﻿@model _3rdEyE.Models.Vehicle
+@{
+    ViewBag.Title = "Edit";
+}
+<section class="content-header">
+    <h1>
+        Update Vehicle KPL
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        <a class="btn btn-block btn-info btn-sm" href="@System.Web.HttpContext.Current.Request.UrlReferrer">Back To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Update KPL for @Model.RegistrationNumber</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form name="ThisForm" class="form-horizontal" method="post" action="/Vehicle/SetKPL">
+                    <input name="PK_Vehicle" value="@Model.PK_Vehicle" type="text" class="form-control" style="display:none;">
+                    <div class="box-body col-md-6">
+                        @*KPL_Loaded*@
+                        <div class="form-group col-md-8">
+                            <label class="col-md-4 control-label">Loaded</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Internal_KPL_Loaded, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-6">
+                        @*KPL_Loaded_Plastic*@
+                        <div class="form-group col-md-8">
+                            <label class="col-md-4 control-label">Loaded Plastic</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Internal_KPL_Loaded_Plastic, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-6">
+                        @*KPL_Empty*@
+                        <div class="form-group col-md-8">
+                            <label class="col-md-4 control-label">Empty</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Internal_KPL_Empty, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-6">
+                        @*KPL_InterCity*@
+                        <div class="form-group col-md-8">
+                            <label class="col-md-4 control-label">Inter City</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Internal_KPL_InterCity, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-6">
+                        @*KPL_InterCHT*@
+                        <div class="form-group col-md-8">
+                            <label class="col-md-4 control-label">Inter CHT</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Internal_KPL_InterCHT, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-6">
+                        @*KPL_Hill*@
+                        <div class="form-group col-md-8">
+                            <label class="col-md-4 control-label">Hill</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Internal_KPL_Hill, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-6">
+                        @*KPL_OnlyMover*@
+                        <div class="form-group col-md-8">
+                            <label class="col-md-4 control-label">OnlyMover</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Internal_KPL_OnlyMover, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-6">
+                        @*KPL_Loaded_8_To_12_Tons*@
+                        <div class="form-group col-md-8">
+                            <label class="col-md-4 control-label">Loaded 8 To 12 Tons</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Internal_KPL_Loaded_8_To_12_Tons, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-6">
+                        @*KPL_Loaded_12_To_25_Tons*@
+                        <div class="form-group col-md-8">
+                            <label class="col-md-4 control-label">Loaded 12 To 25 Tons</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Internal_KPL_Loaded_12_To_25_Tons, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-body col-md-6">
+                        @*KPL_Loaded_8_To_12_Tons_Out*@
+                        <div class="form-group col-md-8">
+                            <label class="col-md-4 control-label">Loaded 8 To 12 Tons Out</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Internal_KPL_Loaded_8_To_12_Tons_Out, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-6">
+                        @*KPL_Loaded_12_To_25_Tons_Out*@
+                        <div class="form-group col-md-8">
+                            <label class="col-md-4 control-label">Loaded 12 To 25 Tons Out</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Internal_KPL_Loaded_12_To_25_Tons_Out, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-footer">
+                        @*<a class="btn btn-default" href="/Vehicle/Index">Back To List</a>*@
+                        <input type="button" class="btn btn-info center-block" value="Update" onclick="TrySubmit()" />
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+

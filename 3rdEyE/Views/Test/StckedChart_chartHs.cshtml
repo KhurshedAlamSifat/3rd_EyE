@@ -1,0 +1,331 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    @*<script src="dashboard_md_files/jquery.js"></script>*@
+    <script src="~/Scripts/Custom/md_pran_dhashboard_files/jquery.js"></script>
+    @*<script src="dashboard_md_files/bootstrap.js"></script>*@
+    <script src="~/Scripts/Custom/md_pran_dhashboard_files/bootstrap.js"></script>
+    @*<link rel="stylesheet" href="dashboard_md_files/bootstrap.css">*@
+    <link href="~/Scripts/Custom/md_pran_dhashboard_files/bootstrap.css" rel="stylesheet" />
+    @*<script src="dashboard_md_files/adminlte.js"></script>*@
+    <script src="~/Scripts/Custom/md_pran_dhashboard_files/adminlte.js"></script>
+    @*<link rel="stylesheet" href="dashboard_md_files/AdminLTE.css">*@
+    <link href="~/Scripts/Custom/md_pran_dhashboard_files/AdminLTE.css" rel="stylesheet" />
+    @*<script src="dashboard_md_files/Chart.js"></script>*@
+    <script>
+        var summury_chart_data_lebels = [];
+        var summury_chart_data_assigned = [];
+        var summury_chart_data_unassigned = [];
+    </script>
+    <style>
+
+        * {
+            font-size: 16px;
+        }
+
+        .span-legend {
+            content: "";
+            display: inline-block;
+            height: 12px;
+            width: 12px;
+        }
+
+        .span-legent-green {
+            background-color: #80ffaa;
+        }
+
+        .span-legent-orange {
+            background-color: #ffc266;
+        }
+
+        .span-legent-red {
+            background-color: #ff6666;
+        }
+
+        table {
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        table, th, td {
+            border: 1px solid #000000;
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+
+        #table_fixed {
+            width: 1150px;
+            padding-right: 5px;
+        }
+
+        #table_scroll_container {
+            height: 600px;
+            overflow-y: scroll;
+            width: auto;
+        }
+
+        #table_scroll {
+            width: 1150px;
+            margin-top: 10px;
+            margin-bottom: 50px;
+        }
+
+        .col_tracking_id {
+            width: 70px;
+            /*overflow: hidden;*/
+            /*text-overflow: ellipsis;*/
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        .col_locaiton_from {
+            width: 100px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        .col_locaiton_from_concern {
+            width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        .col_locaiton_to {
+            width: 100px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        .col_assign_status {
+            width: 160px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        .col_trip_status {
+            width: 80px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        .col_tentative_arriving_time {
+            width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        .col_comming_vehicle_info {
+            width: 250px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        .col_comming_vehicle_pick {
+            /*width: 300;*/
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <canvas id="barChart" style="height:100px; width: 500px;"></canvas>
+    </div>
+    <script src="~/Theme/bower_components/chart.js/2.4.0/Chart.min.js"></script>
+    <script>
+        //const ctx = document.getElementById('barChart').getContext('2d');
+        //const data = {
+        //    labels: summury_chart_data_lebels,
+        //    datasets: [{
+        //        label: "Assigned",
+        //        backgroundColor: '#1b751a',
+        //        borderColor: '#1b751a',
+        //        data: summury_chart_data_assigned,
+        //    },
+        //    {
+        //        label: "Unassigned",
+        //        backgroundColor: '#b83939',
+        //        borderColor: '#b83939',
+        //        data: summury_chart_data_unassigned,
+        //    }]
+        //};
+        //#Setup
+        //const labels = ['a', 'b', 'c'];
+        //const data = {
+        //    labels: labels,
+        //    datasets: [
+        //        {
+        //            label: 'Dataset 1',
+        //            data: [10, 15, 20],
+        //            backgroundColor: '#1b751a',
+        //        },
+        //        {
+        //            label: 'Dataset 2',
+        //            data: [10, 15, 20],
+        //            backgroundColor: '#19751a',
+        //        },
+        //        {
+        //            label: 'Dataset 3',
+        //            data: [-10, -15, -20],
+        //            backgroundColor: '#1b751a',
+        //        },
+        //    ]
+        //};
+
+        //var barChartData = {
+        //    labels: labels,
+        //    datasets: [{
+        //        label: 'Dataset 1',
+        //        data: [10, 15, 20],
+        //        backgroundColor: '#1b751a',
+        //    }, {
+        //        label: 'Dataset 2',
+        //        data: [10, 15, 20],
+        //        backgroundColor: '#19751a',
+        //    }, {
+        //        label: 'Dataset 3',
+        //        data: [-10, -15, -20],
+        //        backgroundColor: '#1b751a',
+        //    }
+        //    ]
+
+        //};
+
+        //#Config
+        //const config = {
+        //    type: 'bar',
+        //    data: data,
+        //    options: {
+        //        plugins: {
+        //            title: {
+        //                display: true,
+        //                text: 'Chart.js Bar Chart - Stacked'
+        //            },
+        //        },
+        //        responsive: true,
+        //        scales: {
+        //            x: {
+        //                stacked: true,
+        //            },
+        //            y: {
+        //                stacked: true
+        //            }
+        //        }
+        //    }
+        //};
+        //var _chart = new Chart(ctx, config);
+    </script>
+    <script>
+
+
+        var barChartData = {
+            labels: ['a','b','c'],
+            datasets: [{
+                label: 'Hub-1',
+                backgroundColor: '#205650',
+                data: [1, 2, 3]
+            }, {
+                label: 'Hub-2',
+                backgroundColor: '#2a756c',
+                data: [1, 2, 3]
+            }]
+
+        };
+
+        var ctx = document.getElementById('barChart').getContext('2d');
+
+        window.myBar = new Chart(ctx, {
+            type: 'bar',
+            data: barChartData,
+            options: {
+                legend: {
+                    display: false,
+                },
+                title: {
+                    display: false,
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false
+                },
+                responsive: true,
+
+                scales: {
+                    xAxes: [{
+                        stacked: true,
+                        gridLines: {
+                            drawOnChartArea: false
+                        },
+                        ticks: {
+                            beginAtZero: true,
+                            fontFamily: "PTSans-Regular",
+                            fontColor: "#000000"
+
+                        },
+                    }],
+                    yAxes: [{
+                        stacked: true,
+                        gridLines: {
+                            drawOnChartArea: false
+                        },
+                        ticks: {
+                            //callback: function (value, index, values) {
+                            //    return String(value).commarize();
+                            //},
+                            beginAtZero: true,
+                            fontFamily: "PTSans-Regular",
+                            fontColor: "#000000"
+                        }
+                    }]
+                },
+                //tooltips: {
+                //    mode: 'label',
+                //    intersect: false,
+                //    titleFontFamily: "PTSans-Regular",
+                //    bodyFontFamily: "PTSans-Regular",
+                //    footerFontFamily: "PTSans-Regular",
+                //    callbacks: {
+                //        afterTitle: function () {
+                //            window.total = 0;
+                //        },
+                //        label: function (tooltipItem, data) {
+                //            var hub = data.datasets[tooltipItem.datasetIndex].label;
+                //            var valor = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                //            window.total += valor;
+                //            return hub + ": " + thousands_separators(parseFloat(valor).toFixed(2).toString());
+                //        },
+                //        footer: function () {
+                //            return "Total: " + thousands_separators(parseFloat(window.total).toFixed(2).toString());
+                //        }
+                //    }
+                //}
+            }
+        });
+
+
+    </script>
+</body>
+</html>

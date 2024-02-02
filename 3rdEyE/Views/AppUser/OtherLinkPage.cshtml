@@ -1,0 +1,162 @@
+﻿@{
+    var RolePermissionList = (List<_3rdEyE.ManagingTools.Permission>)Session["RolePermissionList"];
+}
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        <small></small>
+    </h1>
+    @if (RolePermissionList.Where(m => m.FullName == "AppUser-create").Any())
+    {
+        <div class="breadcrumb">
+            <a class="btn btn-block btn-info btn-sm" href="/AppUser/PreCreate">Create New</a>
+        </div>
+    }
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-success">
+                <div class="box-header">
+                    <h3 class="box-title">Other Link</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="data_table_other_link" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Title
+                                </th>
+                                <th>
+                                    Link
+                                </th>
+                                <th>
+                                    Note
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Mappings</td>
+                                <td><a href="/Mapping/Index">Link</a></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Map Location</td>
+                                <td><a href="/MapLocation/Index">Link</a></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>VTS Device Add</td>
+                                <td><a href="/GPS_Device/GPS_DeviceExisting_Create">Link</a></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Pran Organization</td>
+                                <td><a href="/PranOrganization/Index">Link</a></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>RFL Organization</td>
+                                <td><a href="/RFLOrganization/Index">Link</a></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Location Department</td>
+                                <td><a href="/LocationDepartment/Index">Link</a></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Location Building</td>
+                                <td><a href="/LocationBuilding/Index">Link</a></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Loading Bay</td>
+                                <td><a href="/LoadingBay/Index">Link</a></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Transport Agnecy</td>
+                                <td><a href="/TransportAgency/Index">Link</a></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-header">
+                    <h3 class="box-title">Various Data</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="data_table_test_link" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Title
+                                </th>
+                                <th>
+                                    Link
+                                </th>
+                                <th>
+                                    Note
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Top Hired 10 DHT</td>
+                                <td><a href="/Data/RequisitionTrip_TopHired_Index">Link</a></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Vehicle Stay More than 10 min</td>
+                                <td><a href="/Data/TrackingOwnVehicleWaitingOutSide">Link</a></td>
+                                <td>Vehicle: OWN vehicle tracking | Time Block: Gate out to Gate In | Filter: Egnition off more than 10 Min</td>
+                            </tr>
+                            <tr>
+                                <td>Vehicle Stay More than 10 min [Auto Generated]</td>
+                                <td><a href="/Data/TrackingOwnVehicleWaitingOutSide_AutoGenerated">Link</a></td>
+                                <td>Vehicle: OWN vehicle tracking | Time Block: Gate out to Gate In | Filter: Egnition off more than 10 Min</td>
+                            </tr>
+                            <tr>
+                                <td>Vehicle Weight Transections</td>
+                                <td><a href="/TestAPI/Index">Link</a></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+<!-- DataTables -->
+<script src="~/Theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/Theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<!-- page script -->
+<script>
+    $(function () {
+        $('#data_table_other_link').DataTable({ "ordering": false, "paging": false });
+        $('#data_table_test_link').DataTable({ "ordering": false, "paging": false });
+    });
+</script>
+

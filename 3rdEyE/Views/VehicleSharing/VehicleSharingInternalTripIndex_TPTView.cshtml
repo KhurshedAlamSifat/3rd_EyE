@@ -1,0 +1,240 @@
+﻿@model IEnumerable<_3rdEyE.Models.VehicleSharingInternalTrip>
+@{
+    ViewBag.Title = "";
+}
+
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Internal Trip List : View 2
+        <small></small>
+    </h1>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-body col-md-12">
+                    <div class="form-group col-md-4">
+                        <label class="col-md-4 control-label">Starting Date:</label>
+                        <div class="input-group col-md-8">
+                            <div class="col-md-12 input-append date form_datetime" data-link-field="dtp_input1">
+                                <input id="StartingDate" name="StartingDate" class="form-control col-md-12" type="text" value="@ViewBag.StartingDate" readonly="readonly" style="background-color: white;">
+                                <span class="add-on"><i class="icon-remove"></i></span>
+                                <span class="add-on"><i class="icon-th"></i></span>
+                            </div>
+                            <input type="hidden" id="dtp_input1" value="" style="display:none;" /><br />
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="col-md-4 control-label">Ending Date:</label>
+                        <div class="input-group col-md-8">
+                            <div class="col-md-12 input-append date form_datetime" data-link-field="dtp_input1">
+                                <input id="EndingDate" name="EndingDate" class="form-control col-md-12" type="text" value="@ViewBag.EndingDate" readonly="readonly" style="background-color: white;">
+                                <span class="add-on"><i class="icon-remove"></i></span>
+                                <span class="add-on"><i class="icon-th"></i></span>
+                            </div>
+                            <input type="hidden" id="dtp_input2" value="" style="display:none;" /><br />
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <button class="btn btn-facebook" onclick="getData()">Get Data</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.col -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Inter Company Vehicle Requisition</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="data_table" class="table table-bordered table-striped" style="font-size:15px;">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Assigned At
+                                </th>
+                                <th>
+                                    Loaded/Empty
+                                </th>
+                                <th>
+                                    Tracking ID
+                                </th>
+                                <th>
+                                    Vehicle
+                                </th>
+                                <th>
+                                    Driver
+                                </th>
+                                <th>
+                                    From
+                                </th>
+                                <th>
+                                    To
+                                </th>
+                                <th>
+                                    Vehicle Type
+                                </th>
+                                <th>
+                                    Note By Assigner
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                                <th>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="detail_tbody">
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.AssingedAt
+                                    </td>
+                                    <td>
+                                        @(item.VehicleSharing.LoadedOrEmpty == true ? "Loaded" : "Empty")
+                                    </td>
+                                    <td>
+                                        @item.VehicleSharing.TrackingID
+                                    </td>
+                                    <td>
+                                        @item.Vehicle.RegistrationNumber
+                                    </td>
+                                    <td>
+                                        @if (item.AppUser != null)
+                                        {
+                                            <text> @item.AppUser.FullName - @item.AppUser.ContactNumber</text>
+                                        }
+                                    </td>
+                                    <td>
+                                        @item.VehicleSharing.Depo.Name &nbsp; @item.VehicleSharing.StartingLocation
+                                    </td>
+                                    <td>
+                                        @item.VehicleSharing.Depo1.Name &nbsp; @item.VehicleSharing.FinishingLocation
+                                    </td>
+                                    <td>
+                                        @item.VehicleSharing.RequisitionVehicleType.Title_English
+                                    </td>
+                                    <td>
+                                        @item.VehicleSharing.SharingNote
+                                    </td>
+                                    <td>
+                                        @item.StatusText @(item.IsNotifiedToDriver == true ? " (Notified)" : " (Not notified)")
+                                    </td>
+                                    <td>
+                                        <a href="/VehicleSharing/ViewSharing?id=@item.VehicleSharing.PK_VehicleSharing">View Sharing</a>&nbsp;|&nbsp;
+                                        <a href="/VehicleSharing/VehicleSharingInternalTripView?id=@item.PK_VehicleSharingInternalTrip">View Trip</a>&nbsp;|&nbsp;
+
+                                        @if (item.StatusText == "Assigned" || item.StatusText == "Entered Starting Location")
+                                        {
+                                            @*<a href="/VehicleSharing/VehicleSharingInternalTrip_StartLoading?id=@item.PK_VehicleSharingInternalTrip">Start Loading</a><text>&nbsp;|&nbsp;</text>*@
+                                            <a href="/VehicleSharing/VehicleSharingInternalTrip_StartLoading?id=@item.PK_VehicleSharingInternalTrip">@(item.VehicleSharing.LoadedOrEmpty == true ? "Start Loading" : "Start Empty Trip")</a><text>&nbsp;|&nbsp;</text>
+                                        }
+                                        else if (item.StatusText == "Started Loading")
+                                        {
+                                            <a href="/VehicleSharing/VehicleSharingInternalTrip_FinishLoading?id=@item.PK_VehicleSharingInternalTrip">Finish Loading</a><text>&nbsp;|&nbsp;</text>
+                                        }
+                                        else if (item.StatusText == "Entered Finishing Location")
+                                        {
+                                            <a href="/VehicleSharing/VehicleSharingInternalTrip_StartUnloading?id=@item.PK_VehicleSharingInternalTrip">Start Unloding</a><text>&nbsp;|&nbsp;</text>
+                                        }
+                                        else if (item.StatusText == "Started Unloading")
+                                        {
+                                            @*<a href="/VehicleSharing/VehicleSharingInternalTrip_FinishUnloading?id=@item.PK_VehicleSharingInternalTrip">Finish Unloading</a>*@<text>&nbsp;|&nbsp;</text>
+                                            <a href="/VehicleSharing/VehicleSharingInternalTrip_FinishUnloading?id=@item.PK_VehicleSharingInternalTrip">@(item.VehicleSharing.LoadedOrEmpty == true ? "Finish Unloading" : "Finish Empty Trip")</a><text>&nbsp;|&nbsp;</text>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- DataTablesExportable -->
+<script src="~/Scripts/Custom/DataTableExportable/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.flash.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/jszip.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/pdfmake.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/vfs_fonts.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.html5.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.print.min.js"></script>
+<!-- page script -->
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+<script>
+    $(function () {
+        $('.form_datetime').datetimepicker({
+            format: 'yyyy-mm-dd HH:ii P',
+            todayBtn: 1,
+            autoclose: 1,
+        });
+        @if (Model.Count() > 0)
+        {
+        <text>
+        makeDataTable();
+        </text>
+        }
+    });
+</script>
+<script>
+    function makeDataTable() {
+        var table = $('#data_table').DataTable({
+            paging: false,
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'pdfHtml5',
+                    orientation: 'landscape',
+                    pageSize: 'LEGAL'
+                },
+                {
+                    extend: 'print',
+                    title: 'Event Report [@ViewBag.StartingDate - @ViewBag.EndingDate]',
+                    customize: function (win) {
+                        $(win.document.body)
+                            .css('font-size', '10pt');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', '15px');
+                            }
+                },
+                {
+                    extend: 'excel'
+                }
+            ],
+        });
+    }
+</script>
+<script>
+    function getData() {
+        var StartingDate = $('Input[name=StartingDate]').val();
+        var EndingDate = $('Input[name=EndingDate]').val();
+        if (StartingDate == '' || EndingDate == '') {
+            alert("Please, Select starting date and ending date.");
+            return;
+        }
+        window.location = '/VehicleSharing/VehicleSharingInternalTripIndex_TPTView?StartingDate=' + StartingDate + '&EndingDate=' + EndingDate;
+    }
+</script>

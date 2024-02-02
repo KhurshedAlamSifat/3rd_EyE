@@ -1,0 +1,164 @@
+﻿@model _3rdEyE.Models.Requisition
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+
+<!--Date picker-->
+<link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+<script src="~/Theme/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="~/Theme/bower_components/jquery-ui/jquery-ui.min.js"></script>
+<!--/Date picker-->
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Approve Demand
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        <a class="btn btn-block btn-info btn-sm" href="/Requisition/RequisitionIndex_Client">Go To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/Requisition/Approve" enctype="multipart/form-data">
+        <input name="PK_Requisition" value="@Model.PK_Requisition" style="display:none" />
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">#@Model.TrackingID</h3>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5">
+                                    @*FK_Depo_From*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <label class="col-md-3">From</label>
+                                            <div class="col-md-9">
+                                                @Html.DisplayFor(model => model.Location.Name) <br>
+                                                @Html.DisplayFor(model => model.StartingLocation) <br>
+                                                @Html.DisplayFor(model => model.OrganizationCode) &nbsp; @Html.DisplayFor(model => model.OrganizationName)<br>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*FK_Depo_To*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <label class="col-md-3">To</label>
+                                            <div class="col-md-9">
+                                                @Html.DisplayFor(model => model.Location1.Name) <br>
+                                                @Html.DisplayFor(model => model.FinishingLocation) <br>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <b class="errorMessage col-md-12" data-category="errorMessage" name="distance_message"></b>
+                                    @*VehicleType*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <label class="col-md-3">Vehicle Type</label>
+                                            <div class="col-md-9">
+                                                @Html.DisplayFor(model => model.RequisitionVehicleType.Title_English)
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*WantedCount*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <label class="col-md-3">Wanted Quantity</label>
+                                            <div class="col-md-9">
+                                                @Html.DisplayFor(model => model.WantedCount)
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*PossibleJourneyStartDateTime*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <label class="col-md-3">Start Time</label>
+                                            <div class="col-md-9">
+                                                @Html.DisplayFor(model => model.PossibleJourneyStartDateTime)
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*ClientNote*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <label class="col-md-3">Client Note</label>
+                                            <div class="col-md-9">
+                                                @Html.DisplayFor(model => model.ClientNote)
+                                            </div>
+                                        </div>
+                                        <b class="errorMessage col-md-2" data-category="errorMessage" name="error_Note"></b>
+                                    </div>
+                                </div>
+                                <div class="col-md-5 col-md-offset-1">
+                                    @*StatusText*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <label class="col-md-3 control-label">Accept/Reject</label>
+                                            <div class="col-md-7">
+                                                <select name="StatusText" class="form-control">
+                                                    <option value="Accepted">Accept</option>
+                                                    <option value="Rejected">Reject</option>
+                                                </select>
+                                            </div>
+                                            <b class="errorMessage col-md-7 col-md-offset-3" data-category="errorMessage" name="error_VehicleType"></b>
+                                        </div>
+                                        <script>
+                                            validatorArray.push(
+                                                function () {
+                                                    var check = $('select[name=StatusText]').val();
+                                                    if (check == "") {
+                                                        formValidity = false;
+                                                        $('b[name=error_VehicleType]').html("*required");
+                                                    }
+                                                });
+                                        </script>
+                                    </div>
+                                    @*AcceptedCount*@
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <label class="col-md-3 control-label">Accepted Quantity</label>
+                                            <div class="col-md-7">
+                                                <input name="AcceptedCount" value="@Model.WantedCount" class="form-control" />
+                                            </div>
+                                        </div>
+                                        <b class="errorMessage col-md-2" data-category="errorMessage" name="error_AcceptedCount"></b>
+                                        <script>
+                                            validatorArray.push(
+                                                function () {
+                                                    var check = $('input[name=AcceptedCount]').val();
+                                                    if (check == "") {
+                                                        formValidity = false;
+                                                        $('b[name=error_AcceptedCount]').html("*required");
+                                                    }
+                                                });
+                                        </script>
+                                    </div>
+                                    <div class="box-body col-md-12">
+                                        <div class="form-group col-md-12">
+                                            <button type="button" class="btn btn-facebook center-block" onclick="TrySubmit()"> Save </button>
+                                            @*<input type="button" class="btn btn-info center-block" value="Save" onclick="TrySubmit()" />*@
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-footer">
+                        @*<input type="button" class="btn btn-facebook left" value="Save" onclick="TrySubmit()" />*@
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+
+</section>
+<!-- /.content -->

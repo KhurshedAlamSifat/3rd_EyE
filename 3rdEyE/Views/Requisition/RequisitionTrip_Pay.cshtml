@@ -1,0 +1,162 @@
+﻿@model _3rdEyE.Models.RequisitionTrip
+@{
+    ViewBag.Title = "Create";
+}
+
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+<!--Date picker-->
+<link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+<script src="~/Theme/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="~/Theme/bower_components/jquery-ui/jquery-ui.min.js"></script>
+<!--/Date picker-->
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        External Trip Pay
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        <a class="btn btn-block btn-info btn-sm" href="@Request.ServerVariables["HTTP_REFERER"]">Go Back</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/Requisition/RequisitionTrip_Pay" enctype="multipart/form-data">
+        <input name="PK_RequisitionTrip" value="@Model.PK_RequisitionTrip" style="display:none" />
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <h3 class="box-title" style="color: red;">@Model.TrackingID</h3>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <!-- /.box-header -->
+                            <!-- form start -->
+                            @*PaidAt*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Issue Date</label>
+                                    <div class="col-md-4">
+                                        <input name="PaidAt" id="PaidAt" class="form-control" readonly="readonly">
+                                        <b class="errorMessage" data-category="errorMessage" name="error_PaidAt"></b>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <strong>YYYY-MM-DD</strong>
+                                    </div>
+                                </div>
+                                <script>
+                                    validatorArray.push(
+                                        function () {
+                                            var check = $('input[name=PaidAt]').val();
+                                            if (check == "") {
+                                                formValidity = false;
+                                                $('b[name=error_PaidAt]').html("Paymnet date is required.");
+                                            }
+                                        });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-footer">
+                        @*<a class="btn btn-default" href="/PoliceCase/Index">Back To List</a>*@
+                        <input type="button" class="btn btn-facebook center-block" value="Save" onclick="TrySubmit()" />
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+
+</section>
+<!-- /.content -->
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $('select').select2();
+    });
+</script>
+
+@*Date picker*@
+<script>
+    $(document).ready(function () {
+        $("#PaidAt").datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true, yearRange: '1990:2023' });
+        $("#AlertDate").datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true, yearRange: '1990:2023' });
+    });
+</script>
+
+<script>
+    $('document').ready(function () {
+        manageUI_IsAlertable_Element();
+    });
+    function manageUI_IsAlertable_Element() {
+        $('div[data-category=yes_IsAlertable_Element]').hide();
+        var IsAlertable = $('select[name=IsAlertable]').val();
+        if (IsAlertable == "True") {
+            $('div[data-category=yes_IsAlertable_Element]').show();
+        }
+    }
+</script>
+<script>
+    $('document').ready(function () {
+        $('input[data-category=amountCalculation]').on('keyup', function (e) {
+            calculateTotalAmount();
+        });
+    });
+    function calculateTotalAmount() {
+
+        var totalAmount = 0;
+
+        var PrimaryAmount = $("#PrimaryAmount").val();
+        if (PrimaryAmount != "") {
+            totalAmount = totalAmount + Number(PrimaryAmount);
+        }
+
+        var FineAmount = $("#FineAmount").val();
+        if (FineAmount != "") {
+            totalAmount = totalAmount + Number(FineAmount);
+        }
+
+        var AdditionalAmount = $("#AdditionalAmount").val();
+        if (AdditionalAmount != "") {
+            totalAmount = totalAmount + Number(AdditionalAmount);
+        }
+
+        var OtherAmount = $("#OtherAmount").val();
+        if (OtherAmount != "") {
+            totalAmount = totalAmount + Number(OtherAmount);
+        }
+
+        $("#TotalAmount").val(totalAmount);
+    }
+</script>
+<script>
+    function relodeFK_Upazila() {
+        var FK_District = $('select[name=FK_District]').val();
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/PoliceCase/GetUpazilasOfDistrict",
+            data: JSON.stringify({ FK_District: FK_District }),
+            success: function (data) {
+                $('select[name=FK_Upazila]').html("");
+                var result = "<option >Select</option>";
+                for (var i = 0; i < data.length; i++) {
+                    result = result + "<option value='" + data[i].PK_Upazila + "'>" + data[i].Name + "</option>";
+                }
+                $('select[name=FK_Upazila]').html(result);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: relodeFK_Upazila()");
+            }
+        });
+    }
+</script>

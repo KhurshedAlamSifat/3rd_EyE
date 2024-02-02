@@ -1,0 +1,279 @@
+﻿@model _3rdEyE.Models.InstantRequisition
+@{
+    ViewBag.Title = "Create";
+}
+
+<section class="content-header">
+    <h1>
+        View Instant Requisition
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/InstantRequisition/PayAdjustmnet" enctype="multipart/form-data">
+        <input name="PK_InstantRequisition" value="@Model.PK_InstantRequisition" style="display:none;" />
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="col-md-12">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">EV @Model.PK_InstantRequisition.ToString("000000") &nbsp;&nbsp;&nbsp; MR No: @Model.MRNumber</h3>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="col-md-12">
+                            <div class="box-body col-md-12">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <label>Status: </label>&nbsp; @(Model.Status == 0 ? "Created" : Model.Status == 1 ? "Bill Paid" : "Adjusted")
+                                            </td>
+                                            <td>
+                                                <label>Agent: </label>&nbsp; @Html.DisplayFor(m => m.AppUser.FullName)
+                                            </td>
+                                            <td>
+                                                <label>Created: </label>&nbsp;@Html.DisplayFor(m => m.CreatedAt)
+                                            </td>
+                                            <td>
+                                                <label>Vehicle: </label>&nbsp; @Html.DisplayFor(m => m.Vehicle.RegistrationNumber)
+                                            </td>
+                                        </tr>
+                                        <tr>
+
+                                            <td>
+                                                <label>Driver st.ID: </label>&nbsp; @Html.DisplayFor(m => m.DriverStaffID) &nbsp;@Html.DisplayFor(m => m.DriverName)
+                                            </td>
+                                            <td>
+                                                <label>Helper Info: </label>&nbsp;@Html.DisplayFor(m => m.HelperInfo)
+                                            </td>
+                                            <td>
+                                                <label>Booking Depo: </label>&nbsp; @Html.DisplayFor(m => m.Depo.Name)
+                                            </td>
+                                            <td>
+                                                <label>Destination Depo: </label>&nbsp; @Html.DisplayFor(m => m.Depo1.Name)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>Starting Locaiton: </label>&nbsp; @Html.DisplayFor(m => m.StartingLocation)
+                                            </td>
+                                            <td>
+                                                <label>Finishing Location: </label>&nbsp; @Html.DisplayFor(m => m.FinishingLocation)
+                                            </td>
+                                            <td>
+                                                <label>Trip Fare: </label>&nbsp; @Html.DisplayFor(m => m.TripFare1)
+                                            </td>
+                                            <td>
+                                                <label>Advanced To Driver: </label>&nbsp; @Html.DisplayFor(m => m.AdvancedToDriver1)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>Empty1 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.Distance_Empty1) /  @Html.DisplayFor(m => m.KPL_Empty1)
+                                            </td>
+                                            <td>
+                                                <label>Loaded1 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.Distance_Loaded1) /  @Html.DisplayFor(m => m.KPL_Loaded1)
+                                            </td>
+                                            <td>
+                                                <label>Loaded 8-12 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.Distance_Loaded_8_To_12_Tons_Out1) /  @Html.DisplayFor(m => m.KPL_Loaded_8_To_12_Tons_Out1)
+                                            </td>
+                                            <td>
+                                                <label>Loaded 12-25 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.Distance_Loaded_12_To_25_Tons_Out1) /  @Html.DisplayFor(m => m.KPL_Loaded_12_To_25_Tons_Out1)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>Fuel Consumed Litre1: </label>&nbsp; @Html.DisplayFor(m => m.FuelConsumedLitre1)
+                                            </td>
+                                            <td>
+                                                <label>Fuel Price Per Litre1: </label>&nbsp; @Html.DisplayFor(m => m.FuelPricePerLitre1)
+                                            </td>
+                                            <td>
+                                                <label>Fuel Expence1: </label>&nbsp; @Html.DisplayFor(m => m.FuelExpence1)
+                                            </td>
+                                            <td>
+                                                <label>Stay Charge1: </label>&nbsp; @Html.DisplayFor(m => m.StayCharge1)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>Trip Bill Driver1: </label>&nbsp; @Html.DisplayFor(m => m.TripBillDriver1)
+                                            </td>
+                                            <td>
+                                                <label>TripBill Helper1: </label>&nbsp; @Html.DisplayFor(m => m.TripBillHelper1)
+                                            </td>
+                                            <td>
+                                                <label>Entertainment A Charge1: </label>&nbsp; @Html.DisplayFor(m => m.EntertainmentACharge1)
+                                            </td>
+                                            <td>
+                                                <label>Repair Charge1: </label>&nbsp; @Html.DisplayFor(m => m.RepairCharge1)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>Bridge Toll Ferry Charge1: </label>&nbsp; @Html.DisplayFor(m => m.BridgeTollFerryCharge1)
+                                            </td>
+                                            <td>
+                                                <label>OpenBody Charge1: </label>&nbsp; @Html.DisplayFor(m => m.OpenBodyCharge1)
+                                            </td>
+                                            <td>
+                                                <label>Transport Agency: </label>&nbsp;  @Html.DisplayFor(m => m.TransportAgencyName)&nbsp; @Html.DisplayFor(m => m.TransportAgencyContactNumber)
+                                            </td>
+                                            <td>
+                                                <label>Responsible Parson: </label>&nbsp;  @Html.DisplayFor(m => m.ResponsibleParsonName)&nbsp; @Html.DisplayFor(m => m.ResponsibleParsonContactNumber)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3">
+                                                <label>Note1: </label>&nbsp; @Html.DisplayFor(m => m.Note1)
+                                            </td>
+                                            <td>
+                                                <label>Total1: </label>&nbsp; @Html.DisplayFor(m => m.TotalParent1)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4">
+                                                <h3>Adjustment-Given</h3>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>DriversMoney2: </label>&nbsp; @Html.DisplayFor(m => m.DriversMoney2)
+                                            </td>
+                                            <td>
+                                                <label>HelpersMoney21: </label>&nbsp; @Html.DisplayFor(m => m.HelpersMoney2)
+                                            </td>
+                                            <td>
+                                                <label>TPTsMoney2: </label>&nbsp;  @Html.DisplayFor(m => m.TPTsMoney2)
+                                            </td>
+                                            <td>
+                                                <label>ScaleCharge2: </label>&nbsp;  @Html.DisplayFor(m => m.ScaleCharge2)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>NightStayCharge2: </label>&nbsp; @Html.DisplayFor(m => m.NightStayCharge2)
+                                            </td>
+                                            <td>
+                                                <label>StayCharge2: </label>&nbsp; @Html.DisplayFor(m => m.StayCharge2)
+                                            </td>
+                                            <td>
+                                                <label>TransportCommissionCharge2: </label>&nbsp;  @Html.DisplayFor(m => m.TransportCommissionCharge2)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>EntertainmentACharge2: </label>&nbsp; @Html.DisplayFor(m => m.EntertainmentACharge2)
+                                            </td>
+                                            <td>
+                                                <label>GiveDemerageCharge2: </label>&nbsp; @Html.DisplayFor(m => m.DemerageChargeGiven2)
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3">
+                                                <label>Note2: </label>&nbsp; @Html.DisplayFor(m => m.Note2)
+                                            </td>
+                                            <td>
+                                                <label>TotalGiven2: </label>&nbsp; @Html.DisplayFor(m => m.TotalGiven2)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4">
+                                                <h3>Adjustment-Taken</h3>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>Empty3 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.Distance_Empty3) /  @Html.DisplayFor(m => m.KPL_Empty1)
+                                            </td>
+                                            <td>
+                                                <label>Loaded3 Dist/KPL: </label>&nbsp; @Html.DisplayFor(m => m.Distance_Loaded3) /  @Html.DisplayFor(m => m.KPL_Loaded1)
+                                            </td>
+                                            <td>
+                                                <label>Loaded 8-12 Dist/KPL3: </label>&nbsp; @Html.DisplayFor(m => m.Distance_Loaded_8_To_12_Tons_Out3) /  @Html.DisplayFor(m => m.KPL_Loaded_8_To_12_Tons_Out1)
+                                            </td>
+                                            <td>
+                                                <label>Loaded 12-25 Dist/KPL3: </label>&nbsp; @Html.DisplayFor(m => m.Distance_Loaded_12_To_25_Tons_Out3) /  @Html.DisplayFor(m => m.KPL_Loaded_12_To_25_Tons_Out1)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>Fuel Consumed Litre3: </label>&nbsp; @Html.DisplayFor(m => m.FuelConsumedLitre3)
+                                            </td>
+                                            <td>
+                                                <label>Fuel Price Per Litre3: </label>&nbsp; @Html.DisplayFor(m => m.FuelPricePerLitre3)
+                                            </td>
+                                            <td>
+                                                <label>Fuel Expence3: </label>&nbsp; @Html.DisplayFor(m => m.FuelExpence3)
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>BridgeTollFerryCharge3: </label>&nbsp; @Html.DisplayFor(m => m.BridgeTollFerryCharge3)
+                                            </td>
+                                            <td>
+                                                <label>TakeDemerageCharge3: </label>&nbsp; @Html.DisplayFor(m => m.DemerageChargeTaken3)
+                                            </td>
+                                            <td>
+                                                <label>TPTsMoney3: </label>&nbsp; @Html.DisplayFor(m => m.TPTsMoney3)
+                                            </td>
+                                            <td>
+                                                <label>AdjustedEvAmount: </label>&nbsp; @Html.DisplayFor(m => m.AdjustedEvAmount)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>BridgeTollFerryCharge3: </label>&nbsp; @Html.DisplayFor(m => m.BridgeTollFerryCharge3)
+                                            </td>
+                                            <td>
+                                            </td>
+                                            <td>
+                                                <label>TPTsMoney3: </label>&nbsp; @Html.DisplayFor(m => m.TPTsMoney3)
+                                            </td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3">
+                                                <label>Note3: </label>&nbsp; @Html.DisplayFor(m => m.Note3)
+                                            </td>
+                                            <td>
+                                                <label>TotalTaken3: </label>&nbsp; @Html.DisplayFor(m => m.TotalTaken3)
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <label>NetProfit4: </label>&nbsp; @Html.DisplayFor(m => m.NetProfit4)
+                                            </td>
+                                            <td>
+                                                <label>GrossProfit4: </label>&nbsp; @Html.DisplayFor(m => m.GrossProfit4)
+                                            </td>
+                                            <td colspan="2">
+                                                <label>DepositeToAcccountLocation: </label>&nbsp; @Html.DisplayFor(m => m.DepositeToAcccountLocation)
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        @*    <input type="button" class="btn btn-facebook center-block" value="Save" onclick="TrySubmit()" />*@
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+
+</section>

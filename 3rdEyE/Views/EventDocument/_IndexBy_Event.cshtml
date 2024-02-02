@@ -1,0 +1,117 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_EmptyLayout.cshtml";
+}
+
+@model IEnumerable<_3rdEyE.ViewModels.VM_EventDocument>
+
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">Document List</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <table id="data_table" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                Title
+                            </th>
+                            <th>
+                                View
+                            </th>
+                            <th>
+                                Download
+                            </th>
+                            @if (ViewBag.CurrentUser.PermissionDelete== true)
+                            {
+                                <th></th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Model.Title)
+                                </td>
+                                <td>
+                                    <a href="/EventDocument/View?id=@item.Model.PK_EventDocument" class="btn btn-block btn-success btn-xs">view</a>
+                                </td>
+                                <td>
+                                    <a href="/EventDocument/Download?id=@item.Model.PK_EventDocument" class="btn btn-block btn-success btn-xs">Download</a>
+                                </td>
+
+                                @if (ViewBag.CurrentUser.PermissionDelete== true)
+                                {
+                                    <td>
+                                        <button class="btn btn-block btn-danger btn-xs" onclick="showModalDelete('@item.Model.PK_EventDocument','@item.Model.Title')">Delete</button>
+                                    </td>
+                                }
+
+                            </tr>
+
+                        }
+                    </tbody>
+                </table>
+                <div class="box-footer">
+                    @*<a class="btn btn-default" href="/Vehicle/Index">Back To List</a>*@
+                    @if (ViewBag.CurrentUser.PermissionAdd == true)
+                    {
+                        <a class="btn btn-info pull-right" href="/EventDocument/Create?parentKey=@ViewBag.parentKey">Create New</a>
+                    }
+
+                </div>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+    <!-- /.col -->
+</div>
+
+@*MODAL DELETE START*@
+<div id="modalDelete" class="modal fade modal-" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div id="modalDelete_hiddenKey" style="display:none;"></div>
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+            </div>
+            <div id="modalDelete_body" class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="tryDelete()">Yes</button>
+                <button type="button" class="btn btn-primary" onclick="$('#modalDelete').modal('hide');">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*MODAL DELETE END*@
+
+<!-- DataTables -->
+<script src="~/Theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/Theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<!-- page script -->
+<script>
+    $(function () {
+        $('#data_table').DataTable({ "scrollX": true });
+    });
+    function showModalDelete(model_id, model_name) {
+        $('#modalDelete_hiddenKey').html(model_id);
+        $('#modalDelete_body').html("Do you want to delete compnay (" + model_name + ")?");
+        $("#modalDelete").modal('show');
+    }
+    function tryDelete() {
+        var id = $("#modalDelete_hiddenKey").html();
+        window.location.href = "/EventDocument/Delete?id=" + id;
+    }
+</script>
+

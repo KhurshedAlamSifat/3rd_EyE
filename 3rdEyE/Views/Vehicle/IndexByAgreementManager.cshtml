@@ -1,0 +1,138 @@
+﻿@model IEnumerable<_3rdEyE.ViewModels.VM_Vehicle>
+
+@{
+    ViewBag.Title = "Vehicle list";
+}
+<!-- DataTablesExportable -->
+<link href="~/Content/ExportableDatatable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/ExportableDatatable/buttons.dataTables.min.css" rel="stylesheet" />
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Vehicle List
+        <small></small>
+    </h1>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-header">
+                    <h3 class="box-title">Vehicle List</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body" style="overflow-x:scroll;">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Registration No
+                                </th>
+                                <th>
+                                    Financing Company
+                                </th>
+                                <th>
+                                    Depo
+                                </th>
+                                <th>
+                                    Aggrement No
+                                </th>
+                                <th>
+                                    Number Of Vehicle
+                                </th>
+                                <th>
+                                    Matutrity Date
+                                </th>
+                                <th>
+                                    GRN/MRR
+                                </th>
+                                <th>
+                                    GRN/MRR Date
+                                </th>
+                                <th>
+                                    Maturity
+                                </th>
+                                <th>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Model.RegistrationNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Model.FinancingCompany.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Model.Depo.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Model.Internal_FinancingAgrementNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Model.Internal_FinancingAgrementNumberOfVehicle)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Internal_FinancingAgrementMaturityDate_Text)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Model.Internal_FinancingAgrementGRN_MRR)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Internal_FinancingAgrementGRN_MRR_Date_Text)
+                                    </td>
+                                    <td>
+                                        @( item.Model.Internal_FinancingAgrementNumber == null || item.Model.Internal_FinancingAgrementNumber == "" ? "N/A" : item.Model.Internal_FinancingAgrementIsMatured == true ? "Yes" : "No")
+                                    </td>
+
+                                    <td>
+                                        @if (item.Model.Internal_FinancingAgrementNumber == null)
+                                        {
+                                            <text>&nbsp;</text><a title="Add Aggrement Info" href="/Vehicle/SetAgreementMaturity_OWN?id=@item.Model.PK_Vehicle"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></a><text>&nbsp;</text>
+                                        }
+                                        @if (item.Model.Internal_FinancingAgrementNumber != null && item.Model.Internal_FinancingAgrementIsMatured != true)
+                                        {
+                                            <text>&nbsp;</text><a title="Change Maturity Status" href="/Vehicle/SetAgreementMaturity_OWN?id=@item.Model.PK_Vehicle"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a><text>&nbsp;</text>
+                                        }
+                                    </td>
+                                </tr>
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+<!-- DataTablesExportable -->
+<script src="~/Scripts/Custom/DataTableExportable/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.flash.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/jszip.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/pdfmake.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/vfs_fonts.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.html5.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.print.min.js"></script>
+<script>
+    $(function () {
+        var table = $('#data_table').DataTable({
+            //"lengthMenu": [[50, 100, -1], [50, 100, "All"]],
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+    });
+</script>
+

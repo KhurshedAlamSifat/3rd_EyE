@@ -1,0 +1,333 @@
+﻿
+@{
+    ViewBag.Title = "Detail Halt Report";
+}
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Detail Halt Report
+        <small></small>
+    </h1>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-body col-md-12">
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2 control-label">Vehicles:</label>
+                        <div class="col-md-10">
+                            @Html.DropDownList("FK_Vehicles", ViewBag.Vehicles as SelectList, "Select", new { @class = "form-control", multiple = "multiple" })
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body col-md-12">
+                    <div class="form-group col-md-4">
+                        <label class="col-md-4 control-label">Starting Date:</label>
+                        <div class="col-md-8">
+                            <input name="StartingDate" type="date" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="col-md-4 control-label">Einding Date:</label>
+                        <div class="col-md-8">
+                            <input name="EndingDate" type="date" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="col-md-4 control-label">Minimum Delay:</label>
+                        <div class="col-md-8">
+                            <select name="MinimumMinute" class="form-control">
+                                <option value="0">0 Minute</option>
+                                <option value="1">1 Minute</option>
+                                <option value="2">2 Minute</option>
+                                <option value="5">5 Minute</option>
+                                <option value="10">10 Minute</option>
+                                <option value="30">30 Minute</option>
+                                <option value="60">1 Hour</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body col-md-12">
+                    <button class="btn btn-facebook" onclick="getData()">Get Data</button>
+                    <button class="btn btn-facebook" onclick="downloadExcel()">Download (Current)</button>
+                    <button class="btn btn-facebook" onclick="downloadExcel2()">Download2</button>
+                </div>
+            </div>
+        </div>
+        <!-- /.col -->
+    </div>
+    <div class="row">
+        <div class="col-md-11">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Detail Halt Report</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr style="background-color:#3B5998; color:white;">
+                                <td>Vehicle Registration Number</td>
+                                <td>Halt Start</td>
+                                <td>Halt End</td>
+                                <td>Halt duration (minute)</td>
+                                <td>Location</td>
+                                <td>Engine Status</td>
+                                <td>Speed</td>
+                                <td>View map</td>
+                            </tr>
+                        </thead>
+                        <tbody id="data_tbody"></tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <div class="col-md-1">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">raw data</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="data_table2" class="table table-bordered table-striped">
+                        <thead>
+                            <tr style="background-color:#3B5998; color:white;">
+                                <td>Bar</td>
+                            </tr>
+                        </thead>
+                        <tbody id="data_tbody2"></tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+@*MODAL Company START*@
+<div id="modalPreload" class="modal  modal-" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content" style="background-color:transparent; margin-top:200px;">
+            <img src="~/Content/Images/Preload.gif" />
+        </div>
+    </div>
+</div>
+@*MODAL Company END*@
+<!-- /.content -->
+<!-- DataTables -->
+<script src="~/Theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/Theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<!-- page script -->
+<script>
+    $(function () {
+        //$('#data_table').DataTable({ "scrollX": true });
+    });
+</script>
+
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $('select[name=FK_Vehicles]').select2();
+    });
+</script>
+<script>
+    function getData() {
+        var FK_Vehicles_strings = $('select[name=FK_Vehicles]').val();
+        var StartingDate = $('Input[name=StartingDate]').val();
+        var EndingDate = $('Input[name=EndingDate]').val();
+        var MinimumMinute = $('select[name=MinimumMinute]').val();
+        if (FK_Vehicles_strings == '' || StartingDate == '' || EndingDate == '') {
+            alert("Please, Select vehicle, starting date and ending date.");
+            $('#data_tbody').html("");
+            return;
+        }
+        $("#modalPreload").css("display", "block");
+        var FK_Vehicles = "";
+        for (var i = 0; i < FK_Vehicles_strings.length; i++) {
+            FK_Vehicles = FK_Vehicles + FK_Vehicles_strings[i] + ",";
+        }
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/Report/GetVehicleHaltTime/",
+            data: JSON.stringify({ FK_Vehicles: FK_Vehicles, StartingDate: StartingDate, EndingDate: EndingDate, MinimumMinute: MinimumMinute }),
+            success: function (list) {
+                if (list.length == 0) {
+                    alert("No data is found for given condition.");
+                }
+                console.log(list);
+                $('#data_tbody').html("");
+                var res = "";
+                var haltTime_newDate = 0;
+                var haltCount_newDate = 0;
+
+                var haltCount_newVehicle = 0;
+                var haltTime_newVehicle = 0;
+
+                var _useRowSpan = false;
+                var _rowSpan = 0;
+                for (var i = 0; i < list.length; i++) {
+                    if (list[i]._rowType == 'NewVehicle_start') {
+                        _useRowSpan = true;
+                        var _rowSpan = list[i]._rowSpan;
+
+                        haltTime_newDate = 0;
+                        haltTime_newVehicle = 0;
+
+                        haltCount_newDate = 0;
+                        haltCount_newVehicle = 0;
+                    }
+                    if (list[i]._rowType == 'data' || list[i]._rowType == 'data_last') {
+                        if (_useRowSpan == true) {
+                            res = res + "<tr>";
+                            res = res + "<td  rowspan='" + _rowSpan + "'><b>" + list[i].VehicleRegistrationNumber + "</b></td>";
+                            _useRowSpan = false;
+                        }
+                        else {
+                            res = res + "<tr>";
+                        }
+
+                        var _gapHour = Math.floor(Number(list[i].HaltTime) / 60);
+                        var _gapMin = Number(list[i].HaltTime) % 60;
+
+                        res = res + "<td>" + list[i].StartTime + "</td>";
+                        res = res + "<td>" + list[i].EndTime + "</td>";
+                        res = res + "<td>" + (_gapHour > 0 ? _gapHour + " hour " : " ") + (_gapMin > 0 ? _gapMin + " min " : " ") + "</td>";
+                        res = res + "<td>" + list[i].NearestMapLocationDistance + " KM far from " + list[i].NearestMapLocation + "</td>";
+
+                        if (list[i].EngineStatus == '1') {
+                            res = res + "<td style='background-color:green; color: white;'>" + list[i].EngineStatus + "</td>";
+                        } else {
+                            res = res + "<td style='background-color:red; color: white;'>" + list[i].EngineStatus + "</td>";
+                        }
+                        if (list[i].Speed != '0') {
+                            res = res + "<td style='background-color:green; color: white;'>" + list[i].Speed + "</td>";
+                        } else {
+                            res = res + "<td style='background-color:red; color: white;'>" + list[i].Speed + "</td>";
+                        }
+                        res = res + "<td><a target='_blank' href='/Report/ShowMapWithMarker?latitude=" + list[i].Latitude + "&longitude=" + list[i].Longitude + "'>" + "Map link" + "</a></td>";
+                        res = res + "</tr>";
+
+                        haltTime_newDate = haltTime_newDate + Number(list[i].HaltTime);
+                        haltCount_newDate = haltCount_newDate + 1;
+                    }
+                    else if (list[i]._rowType == 'NewDate_end') {
+                        var _gapHour = Math.floor(haltTime_newDate / 60);
+                        var _gapMin = haltTime_newDate % 60;
+
+                        res = res + "<tr style='background-color: #E69696;'>";
+                        res = res + "<td>" + list[i].DateString + "</td>";
+                        res = res + "<td>" + (_gapHour > 0 ? _gapHour + " hour " : " ") + (_gapMin > 0 ? _gapMin + " min " : " ") + "</td>";
+                        res = res + "<td>" + "Nuber of halt: " + haltCount_newDate + "</td>";
+                        res = res + "<td>" + "</td>";
+                        res = res + "</tr>";
+
+                        haltTime_newVehicle = haltTime_newVehicle + haltTime_newDate;
+                        haltTime_newDate = 0;
+                        haltCount_newVehicle = haltCount_newVehicle + haltCount_newDate;
+                        haltCount_newDate = 0;
+                    }
+                    else if (list[i]._rowType == 'NewVehicle_end') {
+                        var _gapHour = Math.floor(haltTime_newVehicle / 60);
+                        var _gapMin = haltTime_newVehicle % 60;
+
+                        res = res + "<tr style='background-color: red; color: white;'>";
+                        res = res + "<td>" + list[i].StartingDate + " to " + list[i].EndingDate + "</td>";
+                        res = res + "<td>" + (_gapHour > 0 ? _gapHour + " hour " : " ") + (_gapMin > 0 ? _gapMin + " min " : " ") + "</td>";
+                        res = res + "<td>" + "Nuber of halt: " + haltCount_newVehicle + "</td>";
+                        res = res + "<td>" + "</td>";
+                        res = res + "</tr>";
+
+                        haltTime_newDate = 0;
+                        haltTime_newVehicle = 0;
+                        haltCount_newDate = 0;
+                        haltCount_newVehicle = 0;
+                    }
+                }
+                $('#data_tbody').html(res);
+                $("#modalPreload").css("display", "none");
+                makeBarView();
+
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: getData()");
+                $("#modalPreload").css("display", "none");
+            }
+        });
+    }
+    function makeBarView() {
+        var FK_Vehicles_strings = $('select[name=FK_Vehicles]').val();
+        var StartingDate = $('Input[name=StartingDate]').val();
+        var EndingDate = $('Input[name=EndingDate]').val();
+        var MinimumMinute = $('select[name=MinimumMinute]').val();
+        if (FK_Vehicles_strings == '' || StartingDate == '' || EndingDate == '') {
+            alert("Please, Select vehicle, starting date and ending date.");
+            $('#data_tbody').html("");
+            return;
+        }
+        $("#modalPreload").css("display", "block");
+        var FK_Vehicle = FK_Vehicles_strings[0];
+        $("#modalPreload").css("display", "block");
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/Report/GetVehicleHistoryDetail/",
+            data: JSON.stringify({ FK_Vehicle: FK_Vehicle, StartingDate: StartingDate, EndingDate: EndingDate }),
+            success: function (list) {
+                console.log(list);
+                if (list.length == 0) {
+                    alert("No data is found for given condition.");
+                }
+                $('#data_tbody2').html("");
+                var res = "";
+                var style = "";
+                for (var i = 0; i < list.length; i++) {
+                    if (list[i].EngineStatus == "1" && list[i].Speed != "0") {
+                        style = "background-color:green; color: black;";
+                    } else if (list[i].EngineStatus == "0" && list[i].Speed != "0") {
+                        style = "background-color:#41f449; color: black;";
+                    } else if (list[i].EngineStatus == "1" && list[i].Speed == "0") {
+                        style = "background-color:#4174f4; color: black;";
+                    }
+                    else {
+                        style = "background-color:red; color: white;";
+                    }
+                    res = res + "<tr>";
+                    res = res + "<td style='" + style + "'>" + list[i].UpdateTime + "</td>";
+                    res = res + "</tr>";
+                }
+                $('#data_tbody2').html(res);
+                $("#modalPreload").css("display", "none");
+
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: getData()");
+                $("#modalPreload").css("display", "none");
+            }
+        });
+    }
+    function downloadExcel() {
+        tableToExcel('data_table', 'Detail Halt Report', 'Detail Halt Report.xls')
+    }
+    function downloadExcel2() {
+        tableToExcel('data_table2', 'Detail Halt Report', 'Detail Halt Report.xls')
+    }
+</script>

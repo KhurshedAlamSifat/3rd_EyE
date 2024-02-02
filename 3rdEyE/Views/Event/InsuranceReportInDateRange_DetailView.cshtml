@@ -1,0 +1,92 @@
+﻿@model IEnumerable<_3rdEyE.ViewModels.VM_Event>
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /*.table {
+            border-collapse: collapse;
+        }
+
+        td, th {
+            border: 1px solid black;
+        }*/
+    </style>
+</head>
+<body>
+    <h3 style="text-align:center;  font-size: 30px;">
+        Company Wise Vehicle Insurance Report
+    </h3>
+    <h4 style="text-align:center; font-size:25px">
+        From:@ViewBag.StartingDate_View &nbsp; To:@ViewBag.EndingDate_View
+    </h4>
+    <table align="center" cellpadding="10" style="font-size: 30px; border-collapse: collapse;">
+        <thead>
+            <tr>
+                <th style="border: 1px solid black;">
+                    SL
+                </th>
+                <th style="border: 1px solid black;">
+                    Vehicle
+                </th>
+                <th style="border: 1px solid black;">
+                    Capacity
+                </th>
+                <th style="border: 1px solid black;">
+                    Policy
+                </th>
+                <th style="border: 1px solid black;">
+                    Renewal Date
+                </th>
+
+                <th style="border: 1px solid black;">
+                    Premium
+                </th>
+
+            </tr>
+        </thead>
+        <tbody id="detail_tbody">
+            @{ var sl = 0;}
+            @foreach (var group in Model.OrderBy(m => m.Model.Vehicle.FK_Company).GroupBy(m => m.Model.Vehicle.FK_Company))
+            {
+                <tr>
+                    <td style="border: 1px solid black;" colspan="6">
+                        <b>
+                            @if (group.FirstOrDefault().Model.Vehicle.FK_Company != null)
+                            {
+                                <text>@group.FirstOrDefault().Model.Vehicle.Company.Name</text>
+                            }
+                            else
+                            {
+                                <text>Not Assigned</text>
+                            }
+                        </b>
+                        &nbsp;&nbsp;<b>Total:</b> @Model.Where(m => m.Model.Vehicle.FK_Company == group.FirstOrDefault().Model.Vehicle.FK_Company).Count() vehicles
+                    </td>
+                </tr>
+                foreach (var item in group)
+                {
+                    sl++;
+                    <tr>
+                        <td style="border: 1px solid black;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @sl</td>
+                        <td style="border: 1px solid black;">@item.Model.Vehicle.RegistrationNumber</td>
+                        <td style="border: 1px solid black;">@item.Model.Vehicle.CapacityTon tons</td>
+                        <td style="border: 1px solid black;">@item.Model.PolicyNumber</td>
+                        <td style="border: 1px solid black;">@item.ExpirationDate_Text</td>
+                        <td style="border: 1px solid black; text-align:right;">@item.Model.PremiumAmount</td>
+                    </tr>
+                }
+                <tr>
+                    <td style="border: 1px solid black; text-align: right;" colspan="5"><b>Total</b></td>
+                    <td style="border: 1px solid black; text-align:right;"><b>@group.Select(n => n.Model.PremiumAmount).Sum()</b></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>
+</html>

@@ -1,0 +1,82 @@
+﻿@model _3rdEyE.Models.AccidentExpense
+@{
+    ViewBag.Title = "Create";
+}
+
+<!--Date picker-->
+<link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+<script src="~/Theme/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="~/Theme/bower_components/jquery-ui/jquery-ui.min.js"></script>
+<!--/Date picker-->
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Accident Expense Pay
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        <a class="btn btn-block btn-info btn-sm" href="@Request.ServerVariables["HTTP_REFERER"]">Go Back</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <form name="ThisForm" class="form-horizontal" method="post" action="/Accident/ExpenceApprove" enctype="multipart/form-data">
+        <input name="PK_AccidentExpense" value="@Model.PK_AccidentExpense" style="display:none" />
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Horizontal Form -->
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <h3 class="box-title" style="color: red;">@Model.TrackingID</h3>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <!-- /.box-header -->
+                            <!-- form start -->
+                            @*PaidAt*@
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">Issue Date</label>
+                                    <div class="col-md-4">
+                                        <input name="PaidAt" id="PaidAt" class="form-control" readonly="readonly">
+                                        <b class="errorMessage" data-category="errorMessage" name="error_PaidAt"></b>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <strong>YYYY-MM-DD</strong>
+                                    </div>
+                                </div>
+                                <script>
+                                    validatorArray.push(
+                                        function () {
+                                            var check = $('input[name=PaidAt]').val();
+                                            if (check == "") {
+                                                formValidity = false;
+                                                $('b[name=error_PaidAt]').html("Paymnet date is required.");
+                                            }
+                                        });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-footer">
+                        @*<a class="btn btn-default" href="/PoliceCase/Index">Back To List</a>*@
+                        <input type="button" class="btn btn-facebook center-block" value="Save" onclick="TrySubmit()" />
+                    </div>
+                    <!-- /.box-footer -->
+                </div>
+                <!-- /.box -->
+            </div>
+        </div>
+    </form>
+
+</section>
+<!-- /.content -->
+
+@*Date picker*@
+<script>
+    $(document).ready(function () {
+        $("#PaidAt").datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true, yearRange: '1990:2023' });
+    });
+</script>

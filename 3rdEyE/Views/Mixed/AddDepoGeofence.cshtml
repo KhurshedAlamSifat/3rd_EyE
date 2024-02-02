@@ -1,0 +1,217 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+<!-- Content Header (Page header) -->
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <form id="ThisForm" class="col-md-3" method="post" action="/Mixed/AddDepoGeofence" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-md-12 form-group" style="margin-bottom:10px;">
+                    <label style="font-size:x-large;">Set Depo Geofence</label>
+                </div>
+                <div class="col-md-10 form-group">
+                    <select name="FK_Depo" id="FK_Depo" class="form-control" onchange="ChangeMapCenterToDepo()">
+                        <option value="">select</option>
+                    </select>
+                    <input id="LatLongs" name="LatLongs" style="display:none;" />
+                </div>
+            </div>
+            <div class="row" style="margin-top:10px;">
+                <div class="col-md-6 form-group">
+                    <button type="button" class="btn btn-danger" onclick="clearDepoBorderList()">Cleare</button>
+                </div>
+                <div class="col-md-6 form-group">
+                    <button type="button" class="btn btn-success" onclick="SubmitToAddDepoGeofence()">Submit</button>
+                </div>
+            </div>
+            <div class="row" style="margin-top:10px;">
+                <div id="leftSlideDiv" class="col-md-10" style="overflow: scroll; ">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>sl</th>
+                                <th>Latitude</th>
+                                <th>Longitude</th>
+                            </tr>
+                        </thead>
+                        <tbody id="data_tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+        <div class="col-md-9" id="mapDiv"></div>
+        <script async defer
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDVkwHNr_8HlH6zM8-mIOnKxErJKLHEpo0">
+        </script>
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+<!-- DataTables -->
+<script src="~/Theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/Theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+
+<script>
+    function ResizeElements() {
+        var mapheight = $(window).height() - $(".main-header").height();
+        $("#mapDiv").height(mapheight.toString() + "px");
+        $("#leftSlideDiv").height((mapheight - 100).toString() + "px");
+    }
+
+    $(document).ready(function () {
+        ResizeElements();
+        setTimeout(InitiateMap, 2000);
+        GetDepoListForGeoFence();
+    });
+
+    $(window).resize(function () {
+        ResizeElements();
+    });
+</script>
+
+
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    var map;
+    var depoList;
+    var depoMarker;
+    var depoMarkerIcon;
+    var depoBorderList = [];
+    var depoBorderMarkerList = [];
+    var polyLine;
+    function InitiateMap() {
+        map = new google.maps.Map(document.getElementById('mapDiv'), {
+            zoom: 14,
+            center: { lat: 23.8103, lng: 90.4125 }
+        });
+        depoMarkerIcon = '/Content/Images/icon_green.png';
+        google.maps.event.addListener(map, 'click', function (event) {
+            depoBorderList.push({
+                lat: event.latLng.lat(),
+                lng: event.latLng.lng()
+            });
+            var depoBorderMarker = new google.maps.Marker({
+                position: { lat: event.latLng.lat(), lng: event.latLng.lng() },
+                map: map
+            });
+            depoBorderMarkerList.push(depoBorderMarker);
+            if (depoBorderList.length == 2) {
+                //console.log(depoBorderList);
+                console.log(depoBorderList);
+                polyLine = new google.maps.Polyline({
+                    path: depoBorderList,
+                    geodesic: true,
+                    strokeColor: '#FF0000',
+                    strokeOpacity: 1.0,
+                    strokeWeight: 1
+                });
+                polyLine.setMap(map);
+            } else if (depoBorderList.length > 2) {
+                //console.log(depoBorderList);
+                if (polyLine != null) {
+                    polyLine.setMap(null);
+                    polyLine = null;
+                }
+                var _depoBorderList = [];
+                //var _depoBorderList = [{ lat: 23.949554477443755, lng: 90.60657937093356 }, { lat: 23.94296527005996, lng: 90.6106563286362 }, { lat: 23.943867383810268, lng: 90.60069996877291 }, { lat: 23.949554477443755, lng: 90.60657937093356 }];
+                for (var i = 0; i < depoBorderList.length; i++) {
+                    _depoBorderList.push({ lat: depoBorderList[i].lat, lng: depoBorderList[i].lng });
+                }
+                _depoBorderList.push({ lat: depoBorderList[0].lat, lng: depoBorderList[0].lng });
+                console.log("_depoBorderList"); console.log(_depoBorderList);
+                polyLine = new google.maps.Polyline({
+                    path: _depoBorderList,
+                    geodesic: true,
+                    strokeColor: '#FF0000',
+                    strokeOpacity: 1.0,
+                    strokeWeight: 1
+                });
+                polyLine.setMap(map);
+            }
+
+            $("#data_table").append("<tr><td>" + depoBorderList.length + "</td><td>" + event.latLng.lat() + "</td><td>" + event.latLng.lng() + "</td></tr>");
+        });
+    }
+
+    function GetDepoListForGeoFence() {
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/Mixed/GetDepoListForGeoFence/",
+            //data: JSON.stringify({ FK_DepoGroup: FK_DepoGroup }),
+            success: function (list) {
+                depoList = list;
+                var res = "";
+                for (var i = 0; i < depoList.length; i++) {
+                    res = res + "<option value='" + depoList[i].PK_Depo + "'>" + depoList[i].Name + "</option>";
+                }
+                $("#FK_Depo").append(res);
+                $("#FK_Depo").select2();
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: GetLatestData()");
+            }
+        });
+    }
+    function ChangeMapCenterToDepo() {
+        var FK_Depo = $("#FK_Depo").val();
+        var depo = depoList.find(x => x.PK_Depo === FK_Depo);
+        if (depo.Latitude != null && depo.Latitude != "" && depo.Longitude != null && depo.Longitude != "") {
+            var myLatLng = { lat: Number(depo.Latitude), lng: Number(depo.Longitude) };
+            map.setCenter(myLatLng);
+            map.setZoom(15);
+            if (depoMarker == undefined) {
+                depoMarker = new google.maps.Marker({
+                    position: myLatLng,
+                    map: map,
+                    icon: '/Content/Images/icon_green.png'
+                });
+            } else {
+                depoMarker.setMap(null);
+                depoMarker = new google.maps.Marker({
+                    position: myLatLng,
+                    map: map,
+                    icon: '/Content/Images/icon_green.png'
+                });
+            }
+        }
+        clearDepoBorderList();
+    }
+    function clearDepoBorderList() {
+        for (var i = 0; i < depoBorderMarkerList.length; i++) {
+            depoBorderMarkerList[i].setMap(null);
+        }
+        depoBorderList = [];
+        depoBorderMarkerList = [];
+        $("#data_tbody").html("");
+        if (polyLine != null) {
+            polyLine.setMap(null);
+            polyLine = null;
+        }
+    }
+    function SubmitToAddDepoGeofence() {
+        var check = $('select[name=FK_Depo]').val();
+        if (check == "") {
+            alert("Select Depo first."); return;
+        }
+        if (depoBorderList.length == 0) {
+            alert("Click Depo Borders."); return;
+        }
+        var res = "";
+        for (var i = 0; i < depoBorderList.length; i++) {
+            res = res + depoBorderList[i].lat + "*" + depoBorderList[i].lng + "#";
+        }
+        res = res.substring(0, res.length - 1)
+        $('#LatLongs').val(res);
+        $('#ThisForm').submit();
+    }
+</script>

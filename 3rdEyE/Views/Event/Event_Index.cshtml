@@ -1,0 +1,315 @@
+﻿@model IEnumerable<_3rdEyE.Models.Event>
+@{
+    var RolePermissionList = (List<_3rdEyE.ManagingTools.Permission>)Session["RolePermissionList"];
+}
+
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+<!-- DataTablesExportable -->
+<link href="~/Content/ExportableDatatable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/ExportableDatatable/buttons.dataTables.min.css" rel="stylesheet" />
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Event List
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        @*<a class="btn btn-block btn-info btn-sm" href="/TemporaryVehicle/Create">Create</a>*@
+    </div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-header">
+                    <h3 class="box-title"></h3>
+                </div>
+
+                <div class="row">
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Starting Date:</label>
+                            <div class="col-md-8">
+                                <input name="StartingDate" type="date" value="@ViewBag.StartingDate" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Einding Date:</label>
+                            <div class="col-md-8">
+                                <input name="EndingDate" type="date" value="@ViewBag.EndingDate" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Event Type:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_EventType", ViewBag.EventTypes as SelectList, "Select", new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">User Group:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Depo", ViewBag.Depoes as SelectList, "Select", new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Registration Number:</label>
+                            <div class="col-md-8">
+                                <input id="RegistrationNumber" name="RegistrationNumber" value="@ViewBag.RegistrationNumber" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="col-md-2">
+                            <button class="btn btn-facebook" onclick="FilterByInputToRedirectView()">Filter</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- /.box-header -->
+                <div class="box-body" style="overflow-x:scroll;">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>
+                                    User Group
+                                </th>
+                                <th>
+                                    Vehicle
+                                </th>
+                                <th>
+                                    Event Type
+                                </th>
+                                <th>
+                                    Issue Date
+                                </th>
+                                <th>
+                                    Deposit Date
+                                </th>
+                                <th>
+                                    Expiration Date
+                                </th>
+                                <th>
+                                    Policy Number
+                                </th>
+                                <th>
+                                    Fees
+                                </th>
+                                <th>
+                                    Premium Amount
+                                </th>
+                                <th>
+                                    Advanced Income Tax
+                                </th>
+                                <th>
+                                    Digital Registration Fee
+                                </th>
+                                <th>
+                                    Hire purchase
+                                </th>
+                                <th>
+                                    Fine Amount
+                                </th>
+                                <th>
+                                    Sup. Duty
+                                </th>
+                                <th>
+                                    C.F.A Fund
+                                </th>
+                                <th>
+                                    Additional Amount
+                                </th>
+                                <th>
+                                    Other Amount
+                                </th>
+                                <th>
+                                    Other Note
+                                </th>
+                                <th>
+                                    Total Amount
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.OrderBy(m => m.IssueDate))
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Vehicle.Depo.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Vehicle.RegistrationNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.EventType.Title) @Html.DisplayFor(modelItem => item.OtherEventTypeDetail)
+                                    </td>
+                                    <td>
+                                        @item.IssueDate
+                                    </td>
+                                    <td>
+                                        @item.DepositDate
+                                    </td>
+                                    <td>
+                                        @item.ExpirationDate
+                                    </td>
+                                    <td>
+                                        @item.PolicyNumber
+                                    </td>
+                                    <td>
+                                        @item.PrimaryAmount
+                                    </td>
+                                    <td>
+                                        @item.PremiumAmount
+                                    </td>
+                                    <td>
+                                        @item.AdvancedIncomeTax
+                                    </td>
+                                    <td>
+                                        @item.DigitalRegistrationFee
+                                    </td>
+                                    <td>
+                                        @item.HirePurchase
+                                    </td>
+                                    <td>
+                                        @item.FineAmount
+                                    </td>
+
+                                    <td>
+                                        @item.SupplementaryDutyAmount
+                                    </td>
+                                    <td>
+                                        @item.FinancialAssistanceFund
+                                    </td>
+                                    <td>
+                                        @item.AdditionalAmount
+                                    </td>
+                                    <td>
+                                        @item.OtherAmount
+                                    </td>
+                                    <td>
+                                        @item.OtherNote
+                                    </td>
+                                    <td>
+                                        @item.TotalAmount
+                                    </td>
+                                    <td>
+                                        @item.StatusText
+                                    </td>
+                                    <td>
+                                        @if (item.StatusText == "Created")
+                                        {
+                                            if (true/*RolePermissionList.Where(m => m.FullName == "PoliceCase-solve").Any()*/)
+                                            {
+                                                <a href="/Event/Event_Issue?PK_Event=@item.PK_Event">Issue</a>
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+<script>
+    $(function () {
+        $('select').select2();
+        $('.form_datetime').datetimepicker({
+            format: 'yyyy-mm-dd HH:ii P',
+            todayBtn: 1,
+            autoclose: 1,
+        });
+    });
+</script>
+<!-- DataTablesExportable -->
+<script src="~/Scripts/Custom/DataTableExportable/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.flash.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/jszip.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/pdfmake.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/vfs_fonts.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.html5.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.print.min.js"></script>
+<script>
+    $(function () {
+        $('#data_table').DataTable({
+            "ordering": true,
+            "paging": false,
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+    });
+</script>
+<script>
+    function FilterByInputToRedirectView() {
+        var url = "/Event/Event_Index?";
+
+        var StartingDate = $("input[name=StartingDate]").val();
+        if (StartingDate != '') {
+            url = url + "&StartingDate=" + StartingDate;
+        } else {
+            url = url + "&StartingDate=";
+        }
+
+        var EndingDate = $("input[name=EndingDate]").val();
+        if (EndingDate != '') {
+            url = url + "&EndingDate=" + EndingDate;
+        } else {
+            url = url + "&EndingDate=";
+        }
+
+        var FK_Depo = $("select[name=FK_Depo]").val();
+        if (FK_Depo != '') {
+            url = url + "&FK_Depo=" + FK_Depo;
+        } else {
+            url = url + "&FK_Depo=";
+        }
+
+        var FK_EventType = $("select[name=FK_EventType]").val();
+        if (FK_EventType != '') {
+            url = url + "&FK_EventType=" + FK_EventType;
+        } else {
+            url = url + "&FK_EventType=";
+        }
+
+        var RegistrationNumber = $("input[name=RegistrationNumber]").val();
+        if (RegistrationNumber != '') {
+            url = url + "&RegistrationNumber=" + RegistrationNumber;
+        } else {
+            url = url + "&RegistrationNumber=";
+        }
+
+        if (StartingDate == '' && RegistrationNumber == '') {
+            alert("Please, Select starting date or give registration number");
+            return;
+        }
+
+        window.location = url;
+    }
+
+</script>
+

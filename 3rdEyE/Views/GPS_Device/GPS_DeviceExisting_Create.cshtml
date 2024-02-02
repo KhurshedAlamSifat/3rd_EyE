@@ -1,0 +1,79 @@
+﻿<section class="content-header">
+    <h1>
+        Add VTS Device
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        @*<a class="btn btn-block btn-default btn-sm" href="/Driver/Index">Back To List</a>*@
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-6">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title"></h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form name="ThisForm" class="form-horizontal" method="post" action="/GPS_Device/GPS_DeviceExisting_Create">
+
+                    @*GpsIMEINumber*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">IMEI*</label>
+                            <div class="col-md-10">
+                                <input name="GpsIMEINumber" type="text" class="form-control" style="text-transform:uppercase">
+                                <b class="errorMessage" data-category="errorMessage" GpsIMEINumber="error_GpsIMEINumber"></b>
+                            </div>
+                        </div>
+                        <script>
+                            validatorArray.push(
+                                function () {
+                                    var check = $('input[GpsIMEINumber=GpsIMEINumber]').val();
+                                    if (check == "") {
+                                        formValidity = false;
+                                        $('b[GpsIMEINumber=error_GpsIMEINumber]').html("IMEI is required.");
+                                    }
+                                });
+                        </script>
+                    </div>
+                    @*FK_Depo*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Model*</label>
+                            <div class="col-md-10">
+                                @Html.DropDownList("GpsDeviceModel", ViewBag.GpsDeviceModelDict as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_Depo"></b>
+                            </div>
+                        </div>
+                        <script>
+                            validatorArray.push(
+                                function () {
+                                    var check = $('select[name=GpsDeviceModel]').val();
+                                    if (check == "") {
+                                        formValidity = false;
+                                        $('b[name=error_FK_Depo]').html("Model is required.");
+                                    }
+                                });
+                        </script>
+                    </div>
+                    <div class="box-footer">
+                        @*<a class="btn btn-default" href="/Driver/Index">Back To List</a>*@
+                        <input type="button" class="btn btn-info pull-right" value="Create" onclick="TrySubmit()" />
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+<script>
+    $(function () {
+    });
+</script>

@@ -1,0 +1,139 @@
+﻿@model IEnumerable<_3rdEyE.Models.Vehicle>
+
+@{
+    ViewBag.Title = "View";
+}
+<!-- DataTables -->
+<link rel="stylesheet" href="~/Theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Update Dairy Vehicles
+        <small></small>
+    </h1>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <input type="button" class="btn btn-warning pull-left" onclick="clearDataAll()" value="Clear All" />
+                    <input type="button" class="btn btn-facebook pull-right" onclick="TryUpdateUserPermission()" value="Confirm" />
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form name="ThisForm" class="form-horizontal" method="post" action="/DairyVehicleManagement/UpdateList" enctype="multipart/form-data">
+                    <input name="item_total" value="@Model.Count()" style="display:none;" />
+                    <div class="box-body col-md-8">
+                        <table id="data_table" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Registration Number
+                                    </th>
+                                    <th>
+                                        User Group
+                                    </th>
+                                    <th>
+                                        Destination
+                                    </th>
+                                    <th>
+                                        Start Time
+                                    </th>
+                                    <th>
+                                        End Time
+                                    </th>
+                                    <th>
+                                        Clear
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="data_tbody">
+                                @{
+                                    var i = 0;
+                                }
+                                @foreach (var item in Model)
+                                {
+                                    i = i + 1;
+                                <tr>
+                                    <td>
+                                        @item.RegistrationNumber
+                                        <input name="PK_DairyVehicle_@i" type="text" value="@item.PK_Vehicle" style="display:none;" />
+                                    </td>
+                                    <td>
+                                        @item.Depo.Name
+                                    </td>
+                                    <td><input name="Destination_@i" type="text" style="width:500px;" value="@(item.DairyVehicle != null? item.DairyVehicle.Destination: "")" /></td>
+                                    <td>
+                                        <div class='input-group date form_datetime' id='datetimepicker_@i' @*data-date="1979-09-16T05:25:07Z"*@>
+                                            <input name="StartTime_@i" type='text' class="input_datetime" value="@(item.DairyVehicle != null? item.DairyVehicle.StartTime.ToString("yyyy-MM-dd h:mm tt"): "")" style="width:200px;" readonly="readonly" />
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class='input-group date form_datetime' id='datetimepicker2_@i' @*data-date="1979-09-16T05:25:07Z"*@>
+                                            <input name="EndTime_@i" type='text' class="input_datetime" value="@(item.DairyVehicle != null? item.DairyVehicle.EndTime.ToString("yyyy-MM-dd h:mm tt"): "")" style="width:200px;" readonly="readonly" />
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="button btn-warning" onclick="clearData('@i')">clear</button>
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="box-footer">
+                        @*<button class="btn btn-facebook center-block" onclick="TrySubmit()">Bid</button>*@
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+<!-- DataTables -->
+<script src="~/Theme/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/Theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+<script>
+    var dataTable;
+    $(function () {
+        dataTable = $('#data_table').DataTable({
+            "paging": false
+        });
+        $('.form_datetime').datetimepicker({
+            format: 'yyyy-mm-dd HH:ii P',
+            startDate: '+0d',
+            endDate: '+2d',
+            autoclose: 1,
+            setDate: new Date()
+            //minDate: moment().add('d', 1).toDate()
+        });
+    });
+    function clearData(id) {
+        $("input[name=Destination_" + id + "]").val('');
+        $("input[name=StartTime_" + id + "]").val('');
+    }
+    function clearDataAll() {
+        $("input[name^='Destination_']").val('');
+        $("input[name^='StartTime_']").val('');
+    }
+    function TryUpdateUserPermission() {
+        dataTable.destroy();
+        $('form[name=ThisForm]').submit();
+    }
+</script>

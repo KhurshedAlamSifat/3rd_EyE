@@ -1,0 +1,547 @@
+﻿@using System.Data
+@*@model DataTable*@
+@model Tuple<DataTable, DataTable>
+
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+@*DateTimePicker*@
+<link href="~/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+<!-- DataTablesExportable -->
+<link href="~/Content/ExportableDatatable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/ExportableDatatable/buttons.dataTables.min.css" rel="stylesheet" />
+@{
+    string ConvertToDateTimeString(DateTime? dateTime)
+    {
+        return String.Format("{0:yyyy/MM/dd HH:mm}", dateTime);
+    }
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Stay Report
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        @*<a class="btn btn-block btn-info btn-sm" href="/TemporaryVehicle/Create">Create</a>*@
+    </div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-header">
+                    <h3 class="box-title">
+                    </h3>
+                </div>
+
+                <div class="row">
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-3">
+                            <label class="col-md-4 control-label">Inside/Outside:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("InsideOrOutside", ViewBag.InsideOrOutsideList as SelectList, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="col-md-4 control-label">Date Time:</label>
+                            <div class="input-group col-md-8">
+                                <div class="col-md-12 input-append date form_datetime" data-link-field="dtp_input1">
+                                    <input id="ReportDateTime" name="ReportDateTime" class="form-control col-md-12" type="text" value="@ViewBag.ReportDateTime" readonly="readonly" style="background-color: white;">
+                                    <span class="add-on"><i class="icon-remove"></i></span>
+                                    <span class="add-on"><i class="icon-th"></i></span>
+                                </div>
+                                <input type="hidden" id="dtp_input1" value="" style="display:none;" /><br />
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="col-md-4 control-label">O/M/D:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("OWN_MHT_DHT", ViewBag.OWN_MHT_DHT as SelectList, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="col-md-4 control-label">PRG Type:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("PRG_Type", ViewBag.PRG_Type as SelectList, new { @class = "form-control", onchange = "relode_FK_Depo()" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-3">
+                            <label class="col-md-4 control-label">Group Category:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("Depo_Category", ViewBag.Depo_Categories as SelectList, "Select", new { @class = "form-control"})
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="col-md-4 control-label">User Group:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Depo", ViewBag.DepoList as SelectList, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="col-md-4 control-label">Location:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Location", ViewBag.Locations as SelectList, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="col-md-4 control-label">Vehicle:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Vehicles", ViewBag.Vehicles as MultiSelectList, "Select", new { @class = "form-control", multiple = "multiple" })
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-3">
+                            <label class="col-md-4 control-label">Destination:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Destination", ViewBag.FK_Destination as SelectList, "Select", new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="col-md-4 control-label">Min Waiting Hour:</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("MinStayTimeHour", ViewBag.MinStayTimeHourDict as SelectList, "Select", new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="col-md-2">
+                            <button class="btn btn-facebook" onclick="FilterByInputToRedirectView()">Filter</button>
+                        </div>
+                    </div>
+                </div>
+
+                @if (ViewBag.InsideOrOutside == "Inside")
+                {
+                    <!-- /.box-header -->
+                    <div class="box-body" style="overflow-x:scroll;">
+                        <table id="inside_data_table" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Tr.Id
+                                    </th>
+                                    <th>
+                                        Vehicle
+                                    </th>
+                                    <th>
+                                        Contact No
+                                    </th>
+                                    <th>
+                                        O/M/D
+                                    </th>
+                                    <th>
+                                        Group
+                                    </th>
+                                    <th>
+                                        Location
+                                    </th>
+                                    <th>
+                                        Group Categoty
+                                    </th>
+                                    <th>
+                                        User Group
+                                    </th>
+                                    <th>
+                                        In Gate
+                                    </th>
+                                    <th>
+                                        Destination
+                                    </th>
+                                    <th>
+                                        In Time
+                                    </th>
+                                    <th class="data_table_hidden_col">
+                                        In Reason
+                                    </th>
+                                    <th>
+                                        In Status
+                                    </th>
+                                    <th>
+                                        Out Gate
+                                    </th>
+                                    <th>
+                                        Out Time
+                                    </th>
+                                    <th class="data_table_hidden_col">
+                                        Out Reason
+                                    </th>
+                                    <th>
+                                        Out Status
+                                    </th>
+                                    <th>
+                                        In Stay Time (hh:mm)
+                                    </th>
+                                    <th class="data_table_hidden_col">
+                                        In Stay Time (hh)
+                                    </th>
+                                    <th>
+                                        Out Stay Time (hh:mm)
+                                    </th>
+                                    <th class="data_table_hidden_col">
+                                        User Group Category
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (DataRow row in Model.Item1.Rows)
+                                {
+                                <tr>
+                                    <td>
+                                        G @row["PK_VehicleInOutManual"]
+                                    </td>
+                                    <td>
+                                        @row["RegistrationNumber"]
+                                    </td>
+                                    <td>
+                                        @row["VehicleContactNumber"]
+                                    </td>
+                                    <td>
+                                        @row["Vehicle_OWN_MHT_DHT"]
+                                    </td>
+                                    <td>
+                                        @(row["Vehicle_OWN_MHT_DHT"].ToString() != "DHT" ? row["Depo_PRG_Type"] : row["InGate_PRG_Type"])
+                                    </td>
+                                    <td>
+                                        @row["Location_Name"]
+                                    </td>
+                                    <td>
+                                        @row["Depo_Category"]
+                                    </td>
+                                    <td>
+                                        @row["Depo_Name"]
+                                    </td>
+                                    <td>
+                                        @row["InGate_FullName"]
+                                    </td>
+                                    <td>
+                                        @row["Destination"]
+                                    </td>
+                                    <td>
+                                        @row["In_IssueDateTime"]
+                                    </td>
+                                    <td class="data_table_hidden_col">
+                                        @row["InReason_TitleBangla"]
+                                    </td>
+                                    <td>
+                                        @row["In_LoadOrEmpty"]
+                                    </td>
+                                    <td>
+                                        @row["OutGate_FullName"]
+                                    </td>
+                                    <td>
+                                        @row["Out_IssueDateTime"]
+                                    </td>
+                                    <td class="data_table_hidden_col">
+                                        @row["OutReason_TitleBangla"]
+                                    </td>
+                                    <td>
+                                        @row["Out_LoadOrEmpty"]
+                                    </td>
+                                    <td>
+                                        @row["InStayTime_Formatted"]
+                                    </td>
+                                    <td class="data_table_hidden_col">
+                                        @row["InStayTime_Hour"]
+                                    </td>
+                                    <td>
+                                        @row["OutStayTime_Formatted"]
+                                    </td>
+                                    <td class="data_table_hidden_col">
+                                        @row["Depo_Category"]
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.box-body -->
+                }
+                else if (ViewBag.InsideOrOutside == "Outside")
+                {
+                    <!-- /.box-header -->
+                    <div class="box-body" style="overflow-x:scroll;">
+                        <table id="outside_data_table" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Vehicle
+                                    </th>
+                                    <th>
+                                        Contact No
+                                    </th>
+                                    <th>
+                                        O/M/D
+                                    </th>
+                                    <th>
+                                        Group
+                                    </th>
+                                    <th>
+                                        Group Categoty
+                                    </th>
+                                    <th>
+                                        User Group
+                                    </th>
+                                    <th>
+                                        Begining Time
+                                    </th>
+                                    <th>
+                                        Ending Time
+                                    </th>
+                                    <th>
+                                        Out Stay Time (hh:mm)
+                                    </th>
+                                    <th>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (DataRow row in Model.Item2.Rows)
+                                {
+                                <tr>
+                                    <td>
+                                        @row["RegistrationNumber"]
+                                    </td>
+                                    <td>
+                                        @row["VehicleContactNumber"]
+                                    </td>
+                                    <td>
+                                        @row["Vehicle_OWN_MHT_DHT"]
+                                    </td>
+                                    <td>
+                                        @row["Depo_PRG_Type"]
+
+                                    </td>
+                                    <td>
+                                        @row["Depo_Category"]
+                                    </td>
+                                    <td>
+                                        @row["Depo_Name"]
+                                    </td>
+                                    <td>
+                                        @row["StartedAt"]
+                                    </td>
+                                    <td>
+                                        @row["EndedAt"]
+                                    </td>
+                                    <td>
+                                        @row["OutStayTime_Formatted"]
+                                    </td>
+                                    <td>
+                                        <a href='http://3rdeye.prangroup.com:7698/Report/ShowMapWithMarker?latitude=@row["Latitude"]&longitude=@row["Longitude"]' target="_blank">Map Link</a>
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.box-body -->
+                }
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+@*DateTimePicker*@
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+<script>
+    $(function () {
+        $('#InsideOrOutside').select2();
+        $('#OWN_MHT_DHT').select2();
+        $('#PRG_Type').select2();
+        $('#FK_Depo').select2();
+        $('#FK_Location').select2();
+        $('#MinStayTimeHour').select2();
+        $("#FK_Vehicles").select2({
+            tags: true,
+            multiple: true,
+            tokenSeparators: [',', ' '],
+            minimumInputLength: 4,
+            minimumResultsForSearch: 10,
+            ajax: {
+                url: "/Vehicle/GetAllVehicleByRegistrationNumber",
+                dataType: "json",
+                type: "GET",
+                data: function (params) {
+                    var OWN_MHT_DHT = $('#OWN_MHT_DHT').val();
+                    var PRG_Type = $('#PRG_Type').val();
+                    var queryParameters = {
+                        VehicleRegNumSearch: params.term,
+                        OWN_MHT_DHT: OWN_MHT_DHT,
+                        PRG_Type: PRG_Type
+                    }
+                    return queryParameters;
+                },
+                processResults: function (data) {
+                    return {
+                        results: $.map(data, function (item) {
+                            return {
+                                text: item.RegistrationNumber,
+                                id: item.PK_Vehicle
+                            }
+                        })
+                    };
+                }
+            }
+        });
+
+        $('.form_datetime').datetimepicker({
+            format: 'yyyy-mm-dd HH:ii P',
+            todayBtn: 1,
+            autoclose: 1,
+        });
+    });
+</script>
+<!-- DataTablesExportable -->
+<script src="~/Scripts/Custom/DataTableExportable/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.flash.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/jszip.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/pdfmake.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/vfs_fonts.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.html5.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.print.min.js"></script>
+<script>
+    $(function () {
+        if ('@ViewBag.InsideOrOutside' == 'Inside') {
+            var inside_data_table = $('#inside_data_table').DataTable({
+            "ordering": false,
+            "paging": false,
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
+            });
+            inside_data_table.columns('.data_table_hidden_col').visible(false);
+        }
+        else if('@ViewBag.InsideOrOutside' == 'Outside') {
+            $('#outside_data_table').DataTable({
+            "ordering": false,
+            "paging": false,
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]});
+        }
+    });
+</script>
+<script>
+    function relode_FK_Depo() {
+        var PRG_Type = $('select[name=PRG_Type]').val();
+        console.log(PRG_Type);
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/Depo/GetDepo_ByPRG_Type/",
+            data: JSON.stringify({ PRG_Type: PRG_Type }),
+            success: function (data) {
+                console.log(data);
+                $('select[name=FK_Depo]').html("");
+                var result = "<option value='all'>" + "All" + "</option>";
+                for (var i = 0; i < data.length; i++) {
+                    result = result + "<option value='" + data[i].Value + "'>" + data[i].Text + "</option>";
+                }
+                $('select[name=FK_Depo]').html(result);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: relode_FK_Depo()");
+            }
+        });
+    }
+    function FilterByInputToRedirectView() {
+        var url = "/VehicleGateNew/StayReport?";
+
+        var InsideOrOutside = $("select[name=InsideOrOutside]").val();
+        if (InsideOrOutside != '') {
+            url = url + "&InsideOrOutside=" + InsideOrOutside;
+        } else {
+            url = url + "&InsideOrOutside=null";
+        }
+
+        var ReportDateTime = $("input[name=ReportDateTime]").val();
+        if (ReportDateTime != '') {
+            url = url + "&ReportDateTime=" + ReportDateTime;
+        } else {
+            url = url + "&ReportDateTime=";
+        }
+
+        var OWN_MHT_DHT = $("select[name=OWN_MHT_DHT]").val();
+        if (OWN_MHT_DHT != '') {
+            url = url + "&OWN_MHT_DHT=" + OWN_MHT_DHT;
+        } else {
+            url = url + "&OWN_MHT_DHT=null";
+        }
+
+        var PRG_Type = $("select[name=PRG_Type]").val();
+        if (PRG_Type != '') {
+            url = url + "&PRG_Type=" + PRG_Type;
+        } else {
+            url = url + "&PRG_Type=null";
+        }
+        var Depo_Category = $("select[name=Depo_Category]").val();
+        if (Depo_Category != '') {
+            url = url + "&Depo_Category=" + Depo_Category;
+        }
+
+        var FK_Depo = $("select[name=FK_Depo]").val();
+        if (FK_Depo != '') {
+            url = url + "&FK_Depo=" + FK_Depo;
+        } else {
+            url = url + "&FK_Depo=null";
+        }
+
+        var FK_Location = $("select[name=FK_Location]").val();
+        if (FK_Location != '') {
+            url = url + "&FK_Location=" + FK_Location;
+        } else {
+            url = url + "&FK_Location=null";
+        }
+
+        var FK_Vehicles_strings = $('select[name=FK_Vehicles]').val();
+        var FK_Vehicles = "";
+        for (var i = 0; i < FK_Vehicles_strings.length; i++) {
+            FK_Vehicles = FK_Vehicles + FK_Vehicles_strings[i] + ",";
+        }
+
+        if (FK_Vehicles.lastIndexOf(',') > 0) {
+            FK_Vehicles = FK_Vehicles.slice(0, -1);
+        }
+        if (FK_Vehicles != '') {
+            url = url + "&FK_Vehicles=" + FK_Vehicles;
+        } else {
+            url = url + "&FK_Vehicles=";
+        }
+
+        var FK_Destination = $("select[name=FK_Destination]").val();
+        if (FK_Destination != '') {
+            url = url + "&FK_Destination=" + FK_Destination;
+        } else {
+            url = url + "&FK_Destination=";
+        }
+
+        var MinStayTimeHour = $("select[name=MinStayTimeHour]").val();
+        if (MinStayTimeHour != '') {
+            url = url + "&MinStayTimeHour=" + MinStayTimeHour;
+        } else {
+            url = url + "&MinStayTimeHour=";
+        }
+        console.log(url);
+        window.location = url;
+    }
+
+</script>
+

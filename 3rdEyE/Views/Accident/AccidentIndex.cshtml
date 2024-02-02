@@ -1,0 +1,408 @@
+﻿@model IEnumerable<_3rdEyE.Models.Accident>
+@{
+    var RolePermissionList = (List<_3rdEyE.ManagingTools.Permission>)Session["RolePermissionList"];
+}
+<!--Date picker-->
+<link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+<!-- DataTablesExportable -->
+<link href="~/Content/ExportableDatatable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/ExportableDatatable/buttons.dataTables.min.css" rel="stylesheet" />
+<style>
+    tfoot input {
+        width: 100%;
+        padding: 3px;
+        box-sizing: border-box;
+    }
+</style>
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Accident List
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<a class="btn btn-block btn-facebook btn-sm" href="/VehicleTrip/Create_DHT">Create New</a>*@
+    </div>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-body col-md-12">
+                    <div class="form-group col-md-4">
+                        <label class="col-md-4 control-label">Accident ID:</label>
+                        <div class="input-group col-md-8">
+                            <input class="form-control" name="TrackingID" id="TrackingID" value="@ViewBag.TrackingID" />
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="col-md-4 control-label">Accident Date From:</label>
+                        <div class="input-group col-md-8">
+                            <input class="form-control form_datetime" name="StartingDate" id="StartingDate" value="@ViewBag.StartingDate" />
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="col-md-4 control-label">Accident Date To:</label>
+                        <div class="input-group col-md-8">
+                            <input class="form-control form_datetime" name="EndingDate" id="EndingDate" value="@ViewBag.EndingDate" />
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body col-md-12">
+                    <div class="col-md-2">
+                        <button class="btn btn-facebook" onclick="getData()">Get Data</button>
+                    </div>
+                    @*<div class="col-md-2">
+                            <button class="btn btn-facebook" onclick="FilterByInputToExportExcel()">Download Excel</button>
+                        </div>*@
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-header">
+                    <h3 class="box-title">Accident List</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>
+                                </th>
+                                <th>
+                                    Accident ID
+                                </th>
+                                <th>
+                                    PRG Type
+                                </th>
+                                <th>
+                                    User Group
+                                </th>
+                                <th>
+                                    Vehicle
+                                </th>
+                                <th>
+                                    Driver Id
+                                </th>
+                                <th>
+                                    Driver Name
+                                </th>
+                                <th>
+                                    Accident Date
+                                </th>
+                                <th class="data_table_hidden_col">
+                                    Location
+                                </th>
+                                <th class="data_table_hidden_col">
+                                    Location Detail
+                                </th>
+                                <th class="data_table_hidden_col">
+                                    Current Location
+                                </th>
+                                <th class="data_table_hidden_col">
+                                    Damage Type
+                                </th>
+                                <th class="data_table_hidden_col">
+                                    Description Duty
+                                </th>
+                                <th class="data_table_hidden_col">
+                                    Description Accident
+                                </th>
+                                <th class="data_table_hidden_col">
+                                    Primary Cause
+                                </th>
+                                <th class="data_table_hidden_col">
+                                    Man Loss Count
+                                </th>
+                                <th class="data_table_hidden_col">
+                                    Damage Product Cost
+                                </th>
+                                <th class="data_table_hidden_col">
+                                    Damage Vehicle Detail
+                                </th>
+                                <th class="data_table_hidden_col">
+                                    Other Damage
+                                </th>
+                                <th class="data_table_hidden_col">
+                                    Following User Group
+                                </th>
+                                <th>
+                                    Assigned Staff Id
+                                </th>
+                                <th>
+                                    Assigned Staff Name
+                                </th>
+                                <th class="data_table_hidden_col">
+                                    Note
+                                </th>
+                                <th class="data_table_hidden_col">
+                                    Settled By St Id
+                                </th>
+                                <th class="data_table_hidden_col">
+                                    Settled By St Name
+                                </th>
+                                <th>
+                                    Settled At
+                                </th>
+                                <th>
+                                    Others Cost
+                                </th>
+                                <th class="data_table_hidden_col">
+                                    Others Note
+                                </th>
+                                <th>
+                                    Compensation Taken
+                                </th>
+                                <th class="data_table_hidden_col">
+                                    Compensation From
+                                </th>
+                                <th class="data_table_hidden_col">
+                                    Compensation Taken St Id
+                                </th>
+                                <th class="data_table_hidden_col">
+                                    Compensation Taken St Name
+                                </th>
+                                <th>
+                                    Driver Deduction
+                                </th>
+                                <th>
+                                    Total Expense Amount
+                                </th>
+                                <th>
+                                    Company Bearing
+                                </th>
+                                <th class="data_table_hidden_col">
+                                    Settlement Note
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <a href="/Accident/AccidentView?id=@item.PK_Accident">View</a>
+                                        @if (item.Status == 0)
+                                        {
+
+                                            if (RolePermissionList.Where(m => m.FullName == "AccidentExpense-create").Any())
+                                            {
+                                                <text> | </text><a href="/Accident/ExpenceCreate?id=@item.PK_Accident">Add Expense</a>
+                                            }
+                                        }
+                                        @if (item.Status == 0)
+                                        {
+                                            if (RolePermissionList.Where(m => m.FullName == "Accident-settle").Any())
+                                            {
+                                                <text> | </text> <a href="/Accident/AccidentSettle?id=@item.PK_Accident">Settle</a>
+                                            }
+                                        }
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.TrackingID)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Vehicle.Depo.PRG_Type)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Vehicle.Depo.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Vehicle.RegistrationNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.AccusedDriverStaffID)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.AccusedDriverName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.OccuranceDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.District.Name) &nbsp; @Html.DisplayFor(modelItem => item.Upazila.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.AccidentLocationDetail)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.CurrentVehicleLocation)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DamageType)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DescriptionDuty)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DescriptionAccident)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PrimaryCause)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ManLossCount)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DamageProductCost)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DamageVehicleDetail)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.OtherDamage)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Depo.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ActionTakenStaffID)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ActionTakenStaffName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Note)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.AppUser1.UniqueIDNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.AppUser1.FullName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.SettledAt)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.OthersCost)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.OthersNote)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.CompensationTaken)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.CompensationTakenFrom)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.CompensationTakenStaffID)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.CompensationTakenStaffName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DeductionTakenFromDriver)
+                                    </td>
+                                    <td>
+                                        @{
+                                            var totalExpenseAmount = item.AccidentExpenses.Select(m => m.PaidAmount).Sum() + item.OthersCost;
+                                            var companyBeearing = totalExpenseAmount - (item.DeductionTakenFromDriver ?? 0);
+                                        }
+                                        @totalExpenseAmount
+                                    </td>
+                                    <td>
+                                        @companyBeearing
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.SettlementNote)
+                                    </td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+@*MODAL DELETE START*@
+<div id="modalDelete" class="modal fade modal-" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div id="modalDelete_hiddenKey" style="display:none;"></div>
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+            </div>
+            <div id="modalDelete_body" class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="tryDelete()">Yes</button>
+                <button type="button" class="btn btn-primary" onclick="$('#modalDelete').modal('hide');">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*MODAL DELETE END*@
+<!-- /.content -->
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<!-- DataTablesExportable -->
+<script src="~/Scripts/Custom/DataTableExportable/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.flash.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/jszip.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/pdfmake.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/vfs_fonts.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.html5.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.print.min.js"></script>
+<!--Date picker-->
+<script src="~/Theme/bower_components/jquery-ui/jquery-ui.min.js"></script>
+<script>
+    $(function () {
+        $('.form_datetime').datepicker({
+            dateFormat: 'yy-mm-dd',
+            changeMonth: true,
+            changeYear: true
+        });
+    });
+</script>
+<script>
+    $(function () {
+        var data_table_exportableColum = [];
+        for (var i = 1; i < 36; i++) {
+            data_table_exportableColum.push(i);
+        }
+        var data_table = $('#data_table').DataTable({
+            //"scrollX": true,
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'excel',
+                    title: 'Accident List',
+                    filename: 'Accident List',
+                    footer: false,
+                    header: true,
+                    exportOptions: {
+                        columns: data_table_exportableColum
+                    }
+                }
+            ]
+        });
+        data_table.columns('.data_table_hidden_col').visible(false);
+    });
+</script>
+<script>
+    function getData() {
+        var StartingDate = $('Input[name=StartingDate]').val();
+        var EndingDate = $('Input[name=EndingDate]').val();
+        var TrackingID = $('Input[name=TrackingID]').val();
+        window.location = '/Accident/AccidentIndex?TrackingID=' + TrackingID + '&StartingDate=' + StartingDate + '&EndingDate=' + EndingDate;
+    }
+    function FilterByInputToExportExcel() {
+        var StartingDate = $('Input[name=StartingDate]').val();
+        var EndingDate = $('Input[name=EndingDate]').val();
+        var TrackingID = $('Input[name=TrackingID]').val();
+        window.location = '/Accident/AccidentExcelExport?TrackingID=' + TrackingID + '&StartingDate=' + StartingDate + '&EndingDate=' + EndingDate;
+    }
+</script>
+

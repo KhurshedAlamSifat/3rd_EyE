@@ -1,0 +1,183 @@
+﻿<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Table Info -->
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Event Expenses</h3>
+                </div>
+                <div class="box-body">
+                    <table class="table table-dark">
+                        <thead>
+                            <tr>
+                                <th scope="col"></th>
+                                <th scope="col">Fitness Paper</th>
+                                <th scope="col">Insurance</th>
+                                <th scope="col">Route Parmit</th>
+                                <th scope="col">Tax Token</th>
+                                <th scope="col">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="eventReport_tbody"></tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+
+        <div class="col-md-12" id="barChartBlock">
+            <!-- BAR CHART -->
+            <div class="box box-warning">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Depo-wise Fine Amount (Last Month)</h3>
+                </div>
+                <div class="box-body">
+                    <div class="chart">
+                        <canvas id="barChart" style="height:450px;" ></canvas>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col (RIGHT) -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+<!-- ChartJS -->
+<script src="~/Theme/bower_components/chart.js/2.4.0/Chart.min.js"></script>
+<script>
+    $(function () {
+        $.ajax({
+            traditional: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json",
+            url: "/Event/GetEventDashBoardData/",
+            //data: JSON.stringify({ FK_Vehicles: FK_Vehicles, StartingDate: StartingDate, EndingDate: EndingDate, MinimumMinute: MinimumMinute }),
+            success: function (data) {
+                console.log(data);
+                var res = "";
+                res = res + "<tr>";
+                res = res + "<td>" + "Last Month Cost" + "</td>";
+                res = res + "<td>" + data.LastMonth_fitness_paper_TotalExpense + "</td>";
+                res = res + "<td>" + data.LastMonth_insurance_TotalExpense + "</td>";
+                res = res + "<td>" + data.LastMonth_route_permit_TotalExpense + "</td>";
+                res = res + "<td>" + data.LastMonth_tax_token_TotalExpense + "</td>";
+                res = res + "<td>" + (data.LastMonth_fitness_paper_TotalExpense + data.LastMonth_insurance_TotalExpense + data.LastMonth_route_permit_TotalExpense + data.LastMonth_tax_token_TotalExpense) + "</td>";
+                res = res + "</tr>";
+
+                res = res + "<tr>";
+                res = res + "<td>" + "Last Month Fine" + "</td>";
+                res = res + "<td>" + data.LastMonth_fitness_paper_TotalFineAmount + "</td>";
+                res = res + "<td>" + data.LastMonth_insurance_TotalFineAmount + "</td>";
+                res = res + "<td>" + data.LastMonth_route_permit_TotalFineAmount + "</td>";
+                res = res + "<td>" + data.LastMonth_tax_token_TotalFineAmount + "</td>";
+                res = res + "<td>" + (data.LastMonth_fitness_paper_TotalFineAmount + data.LastMonth_insurance_TotalFineAmount + data.LastMonth_route_permit_TotalFineAmount + data.LastMonth_tax_token_TotalFineAmount) + "</td>";
+                res = res + "</tr>";
+
+                res = res + "<tr>";
+                res = res + "<td>" + "Last Year Cost" + "</td>";
+                res = res + "<td>" + data.LastYear_fitness_paper_TotalExpense + "</td>";
+                res = res + "<td>" + data.LastYear_insurance_TotalExpense + "</td>";
+                res = res + "<td>" + data.LastYear_route_permit_TotalExpense + "</td>";
+                res = res + "<td>" + data.LastYear_tax_token_TotalExpense + "</td>";
+                res = res + "<td>" + (data.LastYear_fitness_paper_TotalExpense + data.LastYear_insurance_TotalExpense + data.LastYear_route_permit_TotalExpense + data.LastYear_tax_token_TotalExpense) + "</td>";
+                res = res + "</tr>";
+
+                res = res + "<tr>";
+                res = res + "<td>" + "Last Year Fine" + "</td>";
+                res = res + "<td>" + data.LastYear_fitness_paper_TotalFineAmount + "</td>";
+                res = res + "<td>" + data.LastYear_insurance_TotalFineAmount + "</td>";
+                res = res + "<td>" + data.LastYear_route_permit_TotalFineAmount + "</td>";
+                res = res + "<td>" + data.LastYear_tax_token_TotalFineAmount + "</td>";
+                res = res + "<td>" + (data.LastYear_fitness_paper_TotalFineAmount + data.LastYear_insurance_TotalFineAmount + data.LastYear_route_permit_TotalFineAmount + data.LastYear_tax_token_TotalFineAmount) + "</td>";
+                res = res + "</tr>";
+                $("#eventReport_tbody").append(res);
+
+                //# Making bar chart
+                var total_LastMonthDepoWiseEventTotalFineAmount = 0;
+                if (data.LastMonthDepoWiseEventTotalFineAmount.length == 0) {
+                    $("#barChartBlock").hide();
+                    return;
+                } else {
+                    $("#barChartBlock").show();
+                }
+                for (var i = 0; i < data.LastMonthDepoWiseEventTotalFineAmount.length; i++) {
+                    total_LastMonthDepoWiseEventTotalFineAmount += data.LastMonthDepoWiseEventTotalFineAmount[i].Value1;
+                }
+                var chartLabel = "Total: " + total_LastMonthDepoWiseEventTotalFineAmount;
+                var data_labels = data.LastMonthDepoWiseEventTotalFineAmount.map(a => a.Key);
+                var dataset_data = data.LastMonthDepoWiseEventTotalFineAmount.map(a => a.Value1);
+                var ctx = document.getElementById('barChart').getContext('2d');
+                var chart = new Chart(ctx, {
+                    // The type of chart we want to create
+                    type: 'bar',
+
+                    // The data for our dataset
+                    data: {
+                        labels: data_labels,
+                        datasets: [{
+                            label: chartLabel,
+                            backgroundColor: 'rgb(244, 155, 66)',
+                            borderColor: 'rgb(244, 155, 66)',
+                            data: dataset_data,
+                        }]
+                    },
+
+                    // Configuration options go here
+                    options: {
+                        animation: {
+                            duration: 1,
+                            onComplete: function () {
+                                var chartInstance = this.chart,
+                                    ctx = chartInstance.ctx;
+
+                                //ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                                ctx.font = Chart.helpers.fontString(16, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                                ctx.textAlign = 'center';
+                                ctx.textBaseline = 'bottom';
+
+                                this.data.datasets.forEach(function (dataset, i) {
+                                    var meta = chartInstance.controller.getDatasetMeta(i);
+                                    meta.data.forEach(function (bar, index) {
+                                        var data = dataset.data[index];
+                                        ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                                    });
+                                });
+                            }
+                        },
+                        hover: {
+                            animationDuration: 0
+                        },
+                        tooltips: {
+                            enabled: false,
+                            //backgroundColor: 'rgba(0,0,0,0.8)',
+                            //callbacks: {
+                            //    label: function (tooltipItem, data) {
+                            //        var label = (Math.round(tooltipItem.yLabel * 100) / total_DepoWiseLast3monthsExpense).toFixed(2) + ' %';
+                            //        return label;
+                            //    }
+                            //}
+                        },
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+                    }
+
+                });
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log("Err on call: GetEventDashBoardData()");
+                $("#modalPreload").css("display", "none");
+            }
+        });
+    })
+</script>

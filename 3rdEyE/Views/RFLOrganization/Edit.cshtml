@@ -1,0 +1,114 @@
+﻿@model _3rdEyE.Models.RFLOrganization
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+<section class="content-header">
+    <h1>
+        Edit RFLOrganization
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        <a class="btn btn-block btn-info btn-sm" href="@System.Web.HttpContext.Current.Request.UrlReferrer">Back To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">RFLOrganization Information</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form name="ThisForm" class="form-horizontal" method="post" action="/RFLOrganization/Edit">
+                    <input name="PK_RFLOrganization" value="@Model.PK_RFLOrganization" type="text" class="form-control" style="display:none;">
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">OrganizationCode*</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(m => m.OrganizationCode, new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_Name"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('input[name=OrganizationCode]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_OrganizationCode]').html("OrganizationCode is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">OrganizationName*</label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(m => m.OrganizationName, new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_Name"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('input[name=OrganizationName]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_OrganizationName]').html("OrganizationName is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="col-md-4 control-label">Location*</label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("FK_Location", ViewBag.Locations as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-FK_Location="errorMessage" name="error_FK_Location"></b>
+                                <script>
+                                    validatorArray.push(
+                                        function () {
+                                            var check = $('select[name=FK_Location]').val();
+                                            if (check == "") {
+                                                formValidity = false;
+                                                $('b[name=error_FK_Location]').html("FK_Location is required.");
+                                            }
+                                        });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        @*<div class="form-group col-md-4">
+                                <label class="col-md-4 control-label">Latitude</label>
+                                <div class="col-md-8">
+                                    <input name="Latitude" value="@Model.Latitude" type="text" class="form-control" style="text-transform:uppercase">
+                                    <b class="errorMessage" data-category="errorMessage" name="error_Latitude"></b>
+                                </div>
+                            </div>*@
+
+                        @*<div class="form-group col-md-4">
+                                <label class="col-md-4 control-label">Longitude</label>
+                                <div class="col-md-8">
+                                    <input name="Longitude" value="@Model.Longitude" type="text" class="form-control" style="text-transform:uppercase">
+                                    <b class="errorMessage" data-category="errorMessage" name="error_Longitude"></b>
+                                </div>
+                            </div>*@
+
+                    </div>
+                    <div class="box-footer">
+                        <input type="button" class="btn btn-info center-block" value="Save" onclick="TrySubmit()" />
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $('select[name=FK_Location]').select2();
+    });
+</script>

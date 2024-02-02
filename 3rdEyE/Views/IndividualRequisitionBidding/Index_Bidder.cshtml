@@ -1,0 +1,186 @@
+﻿@model IEnumerable<_3rdEyE.ViewModels.VM_IndividualRequisitionBidding>
+
+@{
+    ViewBag.Title = "IndividualRequisition list";
+}
+
+<!-- DataTablesExportable -->
+<link href="~/Content/ExportableDatatable/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Content/ExportableDatatable/buttons.dataTables.min.css" rel="stylesheet" />
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Individual Requisition Bidding List
+        <small></small>
+    </h1>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Individual Requisition Bidding List</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="data_table" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Agent
+                                </th>
+                                <th>
+                                    Creation Date Time
+                                </th>
+                                <th>
+                                    Contact No
+                                </th>
+                                <th>
+                                    Company
+                                </th>
+                                <th>
+                                    From
+                                </th>
+                                <th>
+                                    To
+                                </th>
+                                <th>
+                                    Vehicle Required Date Time
+                                </th>
+                                <th>
+                                    Quantity
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                                <th>
+                                    Bid
+                                </th>
+                                <th>
+                                    Cancel
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Model.IndividualRequisition.AppUser.FullName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Model.IndividualRequisition.CreatedAt)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Model.IndividualRequisition.AppUser.ContactNumber)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Model.IndividualRequisition.AppUser.TransportCompany.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Model.IndividualRequisition.Depo.Name) @Html.DisplayFor(modelItem => item.Model.IndividualRequisition.StartingLocation)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Model.IndividualRequisition.Depo1.Name) @Html.DisplayFor(modelItem => item.Model.IndividualRequisition.FinishingLocation)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Model.IndividualRequisition.PossibleJourneyStartDateTime)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Model.IndividualRequisition.WantedCount)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Status_Text)
+                                </td>
+                                <td>
+                                    @if (item.Model.Status == 0)
+        {
+                            <a href="/IndividualRequisitionBidding/ViewForBidder_ToBid?PK_IndividualRequisitionBidding=@item.Model.PK_IndividualRequisitionBidding" class="btn btn-info btn-xs">Bid</a>
+}
+else if (item.Model.Status == 1)
+{
+                            <label>Bidded @item.Model.ManagableQuantity vehicle(s) BDT @item.Model.PricePerQuantity each</label>
+}
+else if (item.Model.Status == 2)
+{
+                            <label>Approved @item.Model.ManagableQuantity vehicle(s) BDT @item.Model.PricePerQuantity each</label>
+}
+else if (item.Model.Status == -2)
+{
+                            <label>Disapproved @item.Model.ManagableQuantity vehicle(s) BDT @item.Model.PricePerQuantity each</label>
+}
+                                </td>
+                                <td>
+                                    @if (item.Model.Status == 0 || item.Model.Status == 1)
+        {
+                            <button class="btn btn-danger btn-xs" onclick="showModalDelete('@item.Model.PK_IndividualRequisitionBidding')">Cancel</button>
+}
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+@*MODAL DELETE START*@
+<div id="modalDelete" class="modal fade modal-" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div id="modalDelete_hiddenKey" style="display:none;"></div>
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+            </div>
+            <div id="modalDelete_body" class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="tryDelete()">Yes</button>
+                <button type="button" class="btn btn-primary" onclick="$('#modalDelete').modal('hide');">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*MODAL DELETE END*@
+<!-- /.content -->
+<!-- DataTablesExportable -->
+<script src="~/Scripts/Custom/DataTableExportable/jquery.dataTables.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/dataTables.buttons.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.flash.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/jszip.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/pdfmake.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/vfs_fonts.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.html5.min.js"></script>
+<script src="~/Scripts/Custom/DataTableExportable/buttons.print.min.js"></script>
+<!-- page script -->
+<script>
+    $(function () {
+        var table = $('#data_table').DataTable({
+            ordering: false,
+            //"lengthMenu": [[50, 100, -1], [50, 100, "All"]],
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+    });
+    function showModalDelete(model_id) {
+        $('#modalDelete_hiddenKey').html(model_id);
+        $('#modalDelete_body').html("Do you want to cancel this bidding?");
+        $("#modalDelete").modal('show');
+    }
+    function tryDelete() {
+        var id = $("#modalDelete_hiddenKey").html();
+        window.location.href = "/IndividualRequisitionBidding/Cancel?id=" + id;
+    }
+</script>
+

@@ -1,0 +1,231 @@
+﻿@{
+    ViewBag.Title = "Edit";
+}
+
+@*Date picker*@
+<link href="~/Theme/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+@*Select2*@
+<link href="~/Theme/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Add New Contructual Agent
+        <small></small>
+    </h1>
+    <div class="breadcrumb">
+        @*<button type="button" class="btn btn-block btn-info btn-sm">Info</button>*@
+        <a class="btn btn-block btn-info btn-sm" href="@System.Web.HttpContext.Current.Request.UrlReferrer">Back To List</a>
+    </div>
+</section>
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Horizontal Form -->
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Contructual Agent Information</h3>
+                </div>
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form name="ThisForm" class="form-horizontal" method="post" action="/ContructualAgent/Create">
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Contructual Company</label>
+                            <div class="col-md-7">
+                                @Html.DropDownList("FK_ContructualRequisitionCompany", ViewBag.ContructualCompanies as SelectList, "Select", new { @class = "form-control" })
+                                <b class="errorMessage" data-category="errorMessage" name="error_FK_ContructualCompany"></b>
+                            </div>
+                            <button class="btn btn-facebook center-block col-md-1" onclick="showModalCompanyAdd(); return false;">+</button>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('select[name=FK_ContructualRequisitionCompany]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_FK_ContructualCompany]').html("Company is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Full Name*</label>
+                            <div class="col-md-8">
+                                <input name="FullName" value="@ViewBag.model.FullName" type="text" class="form-control" style="text-transform:uppercase">
+                                <b class="errorMessage" data-category="errorMessage" name="error_FullName"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('input[name=FullName]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_FullName]').html("Full Name is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Password*</label>
+                            <div class="col-md-8">
+                                <input name="Password" value="@ViewBag.model.Password" type="text" class="form-control">
+                                <b class="errorMessage" data-category="errorMessage" name="error_Password"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('input[name=Password]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_Password]').html("Password is required.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="box-body col-md-12">
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Contact Number*</label>
+                            <div class="col-md-8">
+                                <input name="ContactNumber" value="@ViewBag.model.ContactNumber" type="number" class="form-control" placeholder="11 digit mobile number">
+                                <b class="errorMessage" data-category="errorMessage" name="error_ContactNumber"></b>
+                            </div>
+                            <script>
+                                validatorArray.push(
+                                    function () {
+                                        var check = $('input[name=ContactNumber]').val();
+                                        if (check == "") {
+                                            formValidity = false;
+                                            $('b[name=error_ContactNumber]').html("Contact number is required.");
+                                        } else if (check.length != 11) {
+                                            formValidity = false;
+                                            $('b[name=error_ContactNumber]').html("Only 11 digit number is accepatbale.");
+                                        }
+                                    });
+                            </script>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="col-md-4 control-label">Contact Address</label>
+                            <div class="col-md-8">
+                                <textarea name="ContactAddress" class="form-control">@ViewBag.model.ContactAddress</textarea>
+                                <b class="errorMessage" data-category="errorMessage" name="error_ContactAddress"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <input type="button" class="btn btn-info center-block" value="Save" onclick="TrySubmit()" />
+                    </div>
+                    <!-- /.box-footer -->
+                </form>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+@*MODAL Company START*@
+<div id="modalCompanyAdd" class="modal fade modal-" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <script>
+        function showModalCompanyAdd() {
+            $("#modalCompanyAdd").modal('show');
+        }
+        var modalValidity = true;
+        var modalValidatorArray = [];
+    </script>
+
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Contruct Company Add</h4>
+            </div>
+            <div id="modalCompanyAdd_body" class="modal-body">
+                <form name="ModalForm" class="form-horizontal" method="post" action="/ContructualRequisition/CreateContructualRequisitionCompany_ByModal" enctype="multipart/form-data">
+                    @*Name*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Name*</label>
+                            <div class="col-md-8">
+                                <input name="Name" type="text" class="form-control" style="text-transform:uppercase">
+                                <b class="errorMessage" data-category="errorMessage" name="error_Name"></b>
+                            </div>
+                        </div>
+                        <script>
+                            modalValidatorArray.push(
+                                function () {
+                                    var check = $('input[name=Name]').val();
+                                    if (check == "") {
+                                        modalValidity = false;
+                                        $('b[name=error_Name]').html("Company name is required.");
+                                    }
+                                });
+                        </script>
+                    </div>
+                    @*RegistrationNumber*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Registration Number</label>
+                            <div class="col-md-8">
+                                <input RegistrationNumber="RegistrationNumber" type="text" class="form-control" style="text-transform:uppercase">
+                                <b class="errorMessage" data-category="errorMessage" RegistrationNumber="error_RegistrationNumber"></b>
+                            </div>
+                        </div>
+                    </div>
+                    @*ContactNumber*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Company Contact Number</label>
+                            <div class="col-md-8">
+                                <input ContactNumber="ContactNumber" type="text" class="form-control">
+                                <b class="errorMessage" data-category="errorMessage" ContactNumber="error_ContactNumber"></b>
+                            </div>
+                        </div>
+                    </div>
+                    @*ContactAddress*@
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Company Mailing Address</label>
+                            <div class="col-md-8">
+                                <textarea name="ContactAddress" class="form-control"></textarea>
+                                <b class="errorMessage" data-category="errorMessage" ContactAddress="error_ContactAddress"></b>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="TrySubmit_modal()">Add</button>
+                <button type="button" class="btn btn-default" onclick="$('#modalCompanyAdd').modal('hide');">No</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        function TrySubmit_modal() {
+            modalValidity = true;
+            $('b[data-category=errorMessage]').html("");
+            for (var i = 0; i < modalValidatorArray.length; i++) {
+                modalValidatorArray[i]();
+            }
+            if (modalValidity) {
+                $('form[name=ModalForm]').submit();
+            } else {
+                console.log("form validation failed");
+            }
+        }
+    </script>
+</div>
+@*MODAL Company END*@
+<!-- /.content -->
+@*Date Picker*@
+<script src="~/Theme/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+@*Select2*@
+<script src="~/Theme/bower_components/select2/dist/js/select2.min.js"></script>
+<script>
+    $(function () {
+        $('select').select2();
+    });
+</script>
+
